@@ -132,65 +132,61 @@
 }
 
 @media screen and (min-width: 1400px) {
-  
-  .login{
+  .login {
     padding: 5rem 1rem !important;
   }
 }
 
 @media screen and (min-width: 1700px) {
-  
-  .login{
+  .login {
     padding: 8rem 1rem !important;
   }
 
-  .title{
+  .title {
     font-size: 4.3rem !important;
   }
 
-  .content{
+  .content {
     font-size: 2.2rem !important;
   }
 }
 
 @media screen and (min-height: 1200px) {
-  .welcome{
+  .welcome {
     height: 40vh !important;
   }
-  
-  .login{
+
+  .login {
     padding: 10rem 1rem !important;
     height: 50vh !important;
   }
 }
 
-
 @media screen and (min-width: 2100px) {
-  
-  .login{
+  .login {
     padding: 12rem 1rem !important;
   }
 
-  .logo{
+  .logo {
     height: 3rem !important;
   }
 
-  .login_middle, .login_bottom{
+  .login_middle,
+  .login_bottom {
     font-size: 1.25rem !important;
   }
 
-  .greeting{
+  .greeting {
     padding-left: 8rem !important;
   }
 
-  .title{
+  .title {
     font-size: 4.5rem !important;
     margin-bottom: 3rem !important;
   }
 
-  .content{
+  .content {
     font-size: 2.4rem !important;
     width: 90%;
   }
 }
-

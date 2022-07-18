@@ -1,10 +1,10 @@
 import React from "react";
 import Head from "next/head";
-import { useSession, signIn, signOut } from 'next-auth/react'
+import { useSession, signIn, signOut } from "next-auth/react";
 import styles from "../styles/Login.module.css";
 
 const Login = () => {
-  const {data:session} = useSession();
+  const { data: session } = useSession();
   console.log(session);
 
   return (
@@ -29,10 +29,14 @@ const Login = () => {
             <div className={styles.login_middle}>
               Kindly login with your authorized Insitute credentials
             </div>
-            <button className={styles.button} onClick={() => signIn()}> <img src="gugul.png" alt="G" />
-            <span>Login with Google</span>
+            <button className={styles.button} onClick={() => signIn()}>
+              {" "}
+              <img src="gugul.png" alt="G" />
+              <span>Login with Google</span>
             </button>
-            <div className={styles.login_bottom}>Having trouble logging in? <a href="">Click here</a></div>
+            <div className={styles.login_bottom}>
+              Having trouble logging in? <a href="">Click here</a>
+            </div>
           </div>
         </div>
         <footer className={styles.footer}>Made by Qtanea</footer>
