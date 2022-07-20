@@ -20,7 +20,7 @@
   background-color: #9a2827;
   color: white;
   font-weight: 600;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 .navbar .nav_left,
@@ -57,7 +57,7 @@
 .navbar .nav_right .nav_btn {
   border: 1.6px solid white;
   border-radius: 8px;
-  padding: 0.4rem 2rem;
+  padding: 0.4rem 1.4rem;
 }
 
 .navbar .nav_right .nav_btn:hover {
@@ -73,7 +73,7 @@
 
 @media screen and (min-width: 1500px) {
   .navbar {
-    font-size: 1.3rem !important;
+    font-size: 1.25rem !important;
     padding: 0.6rem 10vw !important;
   }
 }

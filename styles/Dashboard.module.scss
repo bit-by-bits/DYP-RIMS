@@ -1,1 +1,18 @@
- 
+@mixin flex-box($dir: "row") {
+  display: flex;
+  flex-direction: $dir;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin font($col, $fwt, $fsz) {
+  color: $col;
+  font-weight: $fwt;
+  font-size: $fsz;
+}
+
+.wrapper {
+  .dashboard {
+    margin: 3rem 10vw;
+  }
+}

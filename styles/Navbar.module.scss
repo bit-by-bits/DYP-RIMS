@@ -19,7 +19,7 @@
   width: 100vw;
   @include flex-box();
   background-color: #9a2827;
-  @include font(white, 600, 1.2rem);
+  @include font(white, 600, 1.1rem);
 
   .nav_left,
   .nav_right {
@@ -40,7 +40,7 @@
     .nav_btn {
       border: 1.6px solid white;
       border-radius: 8px;
-      padding: 0.4rem 2rem;
+      padding: 0.4rem 1.4rem;
 
       &:hover {
         color: white;
@@ -58,7 +58,7 @@
 
 @media screen and (min-width: 1500px) {
   .navbar {
-    font-size: 1.3rem !important;
+    font-size: 1.25rem !important;
     padding: 0.6rem 10vw !important;
   }
 }
