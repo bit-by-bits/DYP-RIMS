@@ -1,8 +1,8 @@
 import React from "react";
 import Link from "next/link";
-import styles from "../styles/Navbar.module.css";
+import styles from "../styles/navbar.module.css";
 
-const Navbar = () => {
+const navbar = () => {
   return (
     <div className={styles.navbar}>
       <div className={styles.nav_left}>
@@ -11,10 +11,10 @@ const Navbar = () => {
         </Link>
       </div>
       <div className={styles.nav_right}>
-        <Link href="/Upload">
+        <Link href="/upload">
           <div>Add a file</div>
         </Link>
-        <Link href="/Login">
+        <Link href="/login">
           <div className={styles.nav_btn}>Logout</div>
         </Link>
       </div>
@@ -22,4 +22,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default navbar;

@@ -1,11 +1,11 @@
 import Head from "next/head";
-import styles from "../styles/Upload.module.css";
+import styles from "../styles/upload.module.css";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
-import Navbar from "./Navbar";
+import navbar from "./navbar";
 
-const Upload = () => {
+const upload = () => {
   return (
     <>
       <Head>
@@ -14,7 +14,7 @@ const Upload = () => {
       </Head>
 
       <main className={styles.wrapper}>
-        <Navbar />
+        <navbar />
         <div className={styles.upload_section}>
           <div className={styles.upload_left}>
             <img src="upload.png" className={styles.upload_img}></img>
@@ -68,4 +68,4 @@ const Upload = () => {
   );
 };
 
-export default Upload;
+export default upload;

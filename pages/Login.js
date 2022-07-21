@@ -1,9 +1,9 @@
 import React from "react";
 import Head from "next/head";
 import { useSession, signIn } from "next-auth/react";
-import styles from "../styles/Login.module.css";
+import styles from "../styles/login.module.css";
 
-const Login = () => {
+const login = () => {
   const { data: session } = useSession();
   console.log(session);
 
@@ -44,4 +44,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default login;
