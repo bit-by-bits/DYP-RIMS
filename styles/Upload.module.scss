@@ -17,8 +17,8 @@
 }
 
 .wrapper {
-  .upload_section {
-    margin: 5rem 10vw 0 10vw;
+  .upload_wrapper {
+    margin: 6rem 10vw 0 10vw;
     @include flex-box();
 
     .upload_left {

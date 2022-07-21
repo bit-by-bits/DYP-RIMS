@@ -12,11 +12,11 @@
 }
 
 .navbar {
-  position: absolute;
   top: 0;
   left: 0;
-  padding: 0.5rem 10vw;
   width: 100vw;
+  position: absolute;
+  padding: 0.5rem 10vw;
   @include flex-box();
   background-color: #9a2827;
   @include font(white, 600, 1.1rem);

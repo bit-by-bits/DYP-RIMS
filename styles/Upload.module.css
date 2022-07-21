@@ -1,5 +1,5 @@
-.wrapper .upload_section {
-  margin: 5rem 10vw 0 10vw;
+.wrapper .upload_wrapper {
+  margin: 6rem 10vw 0 10vw;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -15,7 +15,7 @@
           align-items: center;
 }
 
-.wrapper .upload_section .upload_left {
+.wrapper .upload_wrapper .upload_left {
   border: 1px dashed #9a2827;
   padding: 2.2rem 0;
   gap: 1rem;
@@ -36,24 +36,24 @@
           align-items: center;
 }
 
-.wrapper .upload_section .upload_left .upload_img {
+.wrapper .upload_wrapper .upload_left .upload_img {
   height: 4rem;
   width: 4rem;
 }
 
-.wrapper .upload_section .upload_left .upload_title {
+.wrapper .upload_wrapper .upload_left .upload_title {
   color: #9a2827;
   font-weight: 600;
   font-size: 3rem;
 }
 
-.wrapper .upload_section .upload_left .upload_msg {
+.wrapper .upload_wrapper .upload_left .upload_msg {
   color: #9a2827;
   font-weight: 400;
   font-size: 1.1rem;
 }
 
-.wrapper .upload_section .upload_left .label {
+.wrapper .upload_wrapper .upload_left .label {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -71,17 +71,17 @@
   gap: 1rem;
 }
 
-.wrapper .upload_section .upload_left .label .upload_input1 {
+.wrapper .upload_wrapper .upload_left .label .upload_input1 {
   display: none;
 }
 
-.wrapper .upload_section .upload_left .label .upload_text {
+.wrapper .upload_wrapper .upload_left .label .upload_text {
   color: #9a2827;
   font-weight: 700;
   font-size: 1.1rem;
 }
 
-.wrapper .upload_section .upload_left .upload_input2 {
+.wrapper .upload_wrapper .upload_left .upload_input2 {
   border: none;
   -webkit-appearance: none;
      -moz-appearance: none;
@@ -94,31 +94,31 @@
           box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
 }
 
-.wrapper .upload_section .upload_left ::-webkit-input-placeholder {
+.wrapper .upload_wrapper .upload_left ::-webkit-input-placeholder {
   color: #333333;
   font-weight: 400;
   font-size: 1rem;
 }
 
-.wrapper .upload_section .upload_left :-ms-input-placeholder {
+.wrapper .upload_wrapper .upload_left :-ms-input-placeholder {
   color: #333333;
   font-weight: 400;
   font-size: 1rem;
 }
 
-.wrapper .upload_section .upload_left ::-ms-input-placeholder {
+.wrapper .upload_wrapper .upload_left ::-ms-input-placeholder {
   color: #333333;
   font-weight: 400;
   font-size: 1rem;
 }
 
-.wrapper .upload_section .upload_left ::placeholder {
+.wrapper .upload_wrapper .upload_left ::placeholder {
   color: #333333;
   font-weight: 400;
   font-size: 1rem;
 }
 
-.wrapper .upload_section .upload_right {
+.wrapper .upload_wrapper .upload_right {
   gap: 4rem;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -136,7 +136,7 @@
   width: calc(25vw - 2rem);
 }
 
-.wrapper .upload_section .upload_right .upload_filters {
+.wrapper .upload_wrapper .upload_right .upload_filters {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -154,7 +154,7 @@
   gap: 2rem;
 }
 
-.wrapper .upload_section .upload_right .upload_filters .upload_filter {
+.wrapper .upload_wrapper .upload_right .upload_filters .upload_filter {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -175,13 +175,13 @@
   gap: 0.8rem;
 }
 
-.wrapper .upload_section .upload_right .upload_filters .upload_filter .heading {
+.wrapper .upload_wrapper .upload_right .upload_filters .upload_filter .heading {
   color: #333333;
   font-weight: 500;
   font-size: 0.9rem;
 }
 
-.wrapper .upload_section .upload_right .upload_filters .upload_filter .option {
+.wrapper .upload_wrapper .upload_right .upload_filters .upload_filter .option {
   padding: 1rem;
   width: 100%;
   background: #ffffff;
@@ -203,18 +203,18 @@
   border-radius: 8px;
 }
 
-.wrapper .upload_section .upload_right .upload_filters .upload_filter .option .down_arr:hover {
+.wrapper .upload_wrapper .upload_right .upload_filters .upload_filter .option .down_arr:hover {
   color: black;
 }
 
-.wrapper .upload_section .upload_right .upload_filters .upload_filter .option .down_arr,
-.wrapper .upload_section .upload_right .upload_filters .upload_filter .option span {
+.wrapper .upload_wrapper .upload_right .upload_filters .upload_filter .option .down_arr,
+.wrapper .upload_wrapper .upload_right .upload_filters .upload_filter .option span {
   color: #666666;
   font-weight: 400;
   font-size: 0.8rem;
 }
 
-.wrapper .upload_section .upload_right .upload_btn {
+.wrapper .upload_wrapper .upload_right .upload_btn {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
