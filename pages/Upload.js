@@ -3,7 +3,7 @@ import styles from "../styles/upload.module.css";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
-import navbar from "./navbar";
+import Navbar from "./navbar";
 
 const upload = () => {
   return (
@@ -14,8 +14,8 @@ const upload = () => {
       </Head>
 
       <main className={styles.wrapper}>
-        <navbar />
-        <div className={styles.upload_section}>
+        <Navbar />
+        <div className={styles.upload_wrapper}>
           <div className={styles.upload_left}>
             <img src="upload.png" className={styles.upload_img}></img>
             <div className={styles.upload_title}>Add a file</div>

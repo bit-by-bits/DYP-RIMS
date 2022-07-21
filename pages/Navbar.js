@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import styles from "../styles/navbar.module.css";
 
-const navbar = () => {
+const Navbar = () => {
   return (
     <div className={styles.navbar}>
       <div className={styles.nav_left}>
@@ -22,4 +22,4 @@ const navbar = () => {
   );
 };
 
-export default navbar;
+export default Navbar;

@@ -3,7 +3,7 @@ import styles from "../styles/Dashboard.module.css";
 import React from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown, faAngleRight } from "@fortawesome/free-solid-svg-icons";
-import navbar from "./navbar";
+import Navbar from "./navbar";
 
 export default function Home() {
   return (
@@ -14,7 +14,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.wrapper}>
-        <navbar />
+        <Navbar />
 
         <div className={styles.dashboard}>
           <div className={styles.title}>Dashboard</div>
