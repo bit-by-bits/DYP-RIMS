@@ -1,0 +1,203 @@
+@mixin flex-box($dir: "row") {
+  display: flex;
+  flex-direction: $dir;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin font($col, $fwt, $fsz) {
+  color: $col;
+  font-weight: $fwt;
+  font-size: $fsz;
+}
+
+@mixin white-bg {
+  background: #ffffff;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+}
+
+.wrapper {
+  .upload_section {
+    margin: 5rem 10vw 0 10vw;
+    @include flex-box();
+
+    .upload_left {
+      border: 1px dashed #9a2827;
+      padding: 2.2rem 0;
+      gap: 1rem;
+      width: 50vw;
+      border-radius: 32px;
+      @include flex-box(column);
+
+      .upload_img {
+        height: 4rem;
+        width: 4rem;
+      }
+
+      .upload_title {
+        @include font(#9a2827, 600, 3rem);
+      }
+
+      .upload_msg {
+        @include font(#9a2827, 400, 1.1rem);
+      }
+
+      .label {
+        @include flex-box();
+        margin: 1.4rem 0;
+        gap: 1rem;
+
+        .upload_input1 {
+          display: none;
+        }
+
+        .upload_text {
+          @include font(#9a2827, 700, 1.1rem);
+        }
+      }
+
+      .upload_input2 {
+        border: none;
+        appearance: none;
+        outline: none;
+        width: 30vw;
+        padding: 0.6rem 1.4rem;
+        @include white-bg();
+      }
+
+      ::placeholder {
+        @include font(#333333, 400, 1rem);
+      }
+    }
+
+    .upload_right {
+      gap: 4rem;
+      @include flex-box(column);
+      width: calc(25vw - 2rem);
+
+      .upload_filters {
+        @include flex-box(column);
+        width: 100%;
+        gap: 2rem;
+
+        .upload_filter {
+          @include flex-box(column);
+          align-items: flex-start;
+          width: 100%;
+          gap: 0.8rem;
+
+          .heading {
+            @include font(#333333, 500, 0.9rem);
+          }
+
+          .option {
+            padding: 1rem;
+            width: 100%;
+            @include white-bg();
+            @include flex-box();
+            border-radius: 8px;
+
+            .down_arr:hover {
+              color: black;
+            }
+
+            .down_arr,
+            span {
+              @include font(#666666, 400, 0.8rem);
+            }
+          }
+        }
+      }
+
+      .upload_btn {
+        width: max-content;
+      }
+    }
+  }
+}
+
+.upload_btn {
+  padding: 1rem 2rem;
+  @include font(white, 700, 1.1rem);
+  cursor: pointer;
+  background: #9a2827;
+  border-radius: 8px;
+}
+
+@media screen and (min-height: 1000px) {
+  .upload_left {
+    gap: 2rem !important;
+    padding: 3rem 0 !important;
+  }
+
+  .upload_right {
+    gap: 5rem !important;
+
+    .upload_filters {
+      gap: 2.5rem !important;
+
+      .upload_filter {
+        gap: 1.5rem !important;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  .upload_left {
+    gap: 1.5rem !important;
+    padding: 2.5rem 0 !important;
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  .wrapper {
+    margin-top: 8rem;
+
+    .upload_left {
+      gap: 2rem !important;
+      padding: 3rem !important;
+
+      .upload_input2 {
+        width: 25vw !important;
+        padding: 0.9rem 2rem !important;
+      }
+    }
+
+    .upload_right {
+      gap: 6rem !important;
+
+      .upload_filters {
+        gap: 3rem !important;
+
+        .upload_filter {
+          gap: 1.5rem !important;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .upload_left {
+    gap: 1.4rem !important;
+    .upload_img {
+      height: 3rem !important;
+      width: 3rem !important;
+    }
+
+    .upload_title {
+      font-size: 2.6rem !important;
+    }
+
+    .label {
+      .upload_btn {
+        padding: 0.7rem 1.4rem !important;
+      }
+    }
+
+    .upload_input2 {
+      padding: 0.7rem 1.2rem !important;
+    }
+  }
+}

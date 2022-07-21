@@ -1,0 +1,17 @@
+@mixin flex-box($dir: "row") {
+  display: flex;
+  flex-direction: $dir;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin font($col, $fwt, $fsz) {
+  color: $col;
+  font-weight: $fwt;
+  font-size: $fsz;
+}
+
+@mixin white-bg {
+  background: #ffffff;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+}
