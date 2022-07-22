@@ -19,7 +19,9 @@ const upload = () => {
           <div className={styles.upload_left}>
             <img src="upload.png" className={styles.upload_img}></img>
             <div className={styles.upload_title}>Add a file</div>
+
             <div className={styles.upload_msg}>Kindly upload a .pdf file.</div>
+
             <label htmlFor="file" className={styles.label}>
               <input
                 className={styles.upload_input1}
@@ -28,19 +30,23 @@ const upload = () => {
                 accept="application/pdf"
               />
               <div className={styles.upload_btn}>Select File</div>
+
               <div className={styles.upload_text}>No File Selected</div>
             </label>
             <div className={styles.upload_msg}>Or add a file using DOI</div>
+
             <input
               type="text"
               placeholder="Enter DOI"
               className={styles.upload_input2}
             ></input>
           </div>
+
           <div className={styles.upload_right}>
             <div className={styles.upload_filters}>
               <div className={styles.upload_filter}>
                 <div className={styles.heading}>Faculty</div>
+
                 <div className={styles.option}>
                   <span>Dr. Ayush Gupta</span>
                   <FontAwesomeIcon
@@ -49,8 +55,10 @@ const upload = () => {
                   />
                 </div>
               </div>
+
               <div className={styles.upload_filter}>
                 <div className={styles.heading}>Type of Publication</div>
+
                 <div className={styles.option}>
                   <span>Select Type</span>
                   <FontAwesomeIcon
@@ -60,6 +68,7 @@ const upload = () => {
                 </div>
               </div>
             </div>
+
             <div className={styles.upload_btn}>Upload</div>
           </div>
         </div>

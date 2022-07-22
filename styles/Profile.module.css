@@ -13,7 +13,8 @@
       -ms-flex-align: center;
           align-items: center;
   gap: 1.5rem;
-  margin: 6rem 10vw 4rem 10vw;
+  position: relative;
+  padding: 6rem 10vw;
 }
 
 .wrapper .profile_wrapper .profile_section {
@@ -293,6 +294,19 @@
 
 .wrapper .profile_wrapper .profile_box .profile_table td:nth-child(5n + 1) span:nth-child(4n).false {
   display: none;
+}
+
+.wrapper .profile_wrapper .footer {
+  width: 100vw;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 0.4rem 0;
+  text-align: center;
+  background: #9a2827;
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
 }
 
 @media screen and (min-width: 1500px) {

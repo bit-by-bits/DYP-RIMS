@@ -3,7 +3,6 @@ import styles from "../styles/profile.module.css";
 import Link from "next/link";
 import React from "react";
 import Navbar from "./navbar";
-import Footer from "./footer";
 
 const profile = () => {
   return (
@@ -402,8 +401,9 @@ const profile = () => {
               </div>
             </div>
           </div>
+
+          <div className={styles.footer}>Made by Qtanea</div>
         </div>
-        <Footer />
       </main>
     </>
   );

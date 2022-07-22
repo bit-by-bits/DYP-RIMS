@@ -10,6 +10,7 @@ const Navbar = () => {
           <div>Home</div>
         </Link>
       </div>
+
       <div className={styles.nav_right}>
         <Link href="/upload">
           <div>Add a file</div>
