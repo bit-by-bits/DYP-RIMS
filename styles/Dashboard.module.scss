@@ -22,12 +22,12 @@
     @include flex-box(column);
 
     .title {
-      @include font(#9a2827, 700, 1.8rem);
+      @include font(#9a2827, 700, 1.4rem);
       align-self: flex-start;
     }
 
     .search1 {
-      margin: 2rem 0 3rem 0;
+      margin: 1rem 0 3rem 0;
       display: flex;
       align-items: center;
       gap: 2rem;
@@ -41,6 +41,7 @@
         outline: none;
         border: none;
         width: 100%;
+        @include font(#333333, 400, 1rem);
       }
 
       ::placeholder {
@@ -50,12 +51,12 @@
 
     .options {
       gap: 1rem;
-      display: grid;
       width: 100%;
-      grid-template-columns: auto auto auto auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
 
       .heading {
-        @include font(#333333, 500, 1rem);
+        @include font(#333333, 500, 0.9rem);
       }
 
       .option {
@@ -70,14 +71,14 @@
 
         .down_arr,
         span {
-          @include font(#666666, 400, 0.9rem);
+          @include font(#666666, 400, 0.8rem);
         }
       }
 
       .download {
         cursor: pointer;
         justify-content: center;
-        gap: 1.4rem;
+        gap: 0.6rem;
 
         span {
           @include font(black, 500, 0.9rem);
@@ -88,22 +89,21 @@
     .graphs {
       gap: 1rem;
       display: grid;
-      width: 100%;
       margin: 2rem 0;
       grid-template-columns: auto auto;
 
       .graph {
         border-radius: 16px;
-        width: 38vw;
         @include white-bg();
-        height: 38vw;
+        width: calc(40vw - 1rem);
+        height: calc(40vw - 1rem);
       }
     }
 
     .datas {
-      display: grid;
-      width: 100%;
       gap: 1rem;
+      width: 100%;
+      display: grid;
       grid-template-columns: auto auto auto auto auto;
 
       .data {
@@ -113,19 +113,19 @@
         @include flex-box(column);
 
         .data_title {
-          @include font(#9a2827, 700, 4rem);
+          @include font(#9a2827, 700, 2.9rem);
         }
 
         .data_text {
-          @include font(#9a2827, 700, 1.25rem);
+          @include font(#9a2827, 700, 0.95rem);
         }
       }
     }
 
     .pub_grid {
       gap: 2rem;
-      display: grid;
       width: 100%;
+      display: grid;
       grid-template-columns: auto auto;
 
       .pub_col {
@@ -133,8 +133,8 @@
         @include flex-box(column);
 
         .col_title {
-          margin: 4rem 0 2rem 0;
-          @include font(#9a2827, 700, 1.4rem);
+          margin: 4rem 0 1.4rem 0;
+          @include font(#9a2827, 700, 1.2rem);
         }
 
         .col_content {
@@ -143,27 +143,36 @@
 
           .publisher {
             width: 100%;
-            border-bottom: 1px solid #9a2827;
             @include flex-box();
-            padding: 0.4rem 2rem;
+            padding: 0.5rem 1.5rem;
+            border-bottom: 1px solid #9a2827;
+
+            &:hover {
+              cursor: pointer;
+
+              .right_arr {
+                transform: translateX(10px);
+                transition: all 0.3s;
+              }
+            }
 
             div {
-              @include flex-box();
               gap: 1rem;
+              @include flex-box();
 
               .pub_img {
                 height: 3rem;
-                width: 3rem;
-                border-radius: 100%;
+                border-radius: 50%;
               }
 
               .pub_info {
                 @include flex-box(column);
                 align-items: flex-start;
-                gap: 0.3rem;
+                gap: 0.4rem;
 
                 .pub_name {
                   @include font(#9a2827, 600, 1rem);
+                  letter-spacing: 0.3px;
                 }
 
                 .pub_clg {
@@ -173,11 +182,69 @@
             }
 
             .right_arr {
-              @include font(#9a2827, 0, 1.25rem);
+              @include font(#9a2827, 0, 1.2rem);
             }
           }
         }
       }
     }
+  }
+}
+
+@media screen and (min-width: 1300px) {
+  .data_title {
+    font-size: 3.2rem !important;
+  }
+
+  .data_text {
+    font-size: 1.1rem !important;
+  }
+
+  .publisher {
+    padding: 0.5rem 2rem !important;
+
+    & > div {
+      gap: 1.5rem !important;
+    }
+  }
+}
+
+@media screen and (min-width: 2100px) {
+  .title {
+    font-size: 1.6rem !important;
+  }
+}
+
+@media screen and (min-width: 1700px) {
+  .heading {
+    font-size: 1.1rem !important;
+  }
+
+  .option {
+    padding: 1rem 3rem !important;
+
+    span {
+      letter-spacing: 0.3px;
+      font-size: 0.9rem !important;
+    }
+  }
+
+  .publisher {
+    padding: 0.6rem 3rem !important;
+    &> div {
+    gap: 2rem !important;
+
+    div {
+      gap: 0.7rem !important;
+    }
+  }
+}
+
+  .data_title {
+    font-size: 4rem !important;
+  }
+
+  .data_text {
+    font-size: 1.4rem !important;
   }
 }
