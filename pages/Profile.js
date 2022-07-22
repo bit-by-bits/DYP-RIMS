@@ -2,8 +2,6 @@ import Head from "next/head";
 import styles from "../styles/profile.module.css";
 import Link from "next/link";
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "./navbar";
 import Footer from "./footer";
 
