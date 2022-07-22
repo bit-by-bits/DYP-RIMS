@@ -21,6 +21,7 @@
   .profile_wrapper {
     @include flex-box(column);
     gap: 1.5rem;
+    min-height: 100vh;
     position: relative;
     padding: 6rem 10vw;
 
@@ -189,6 +190,7 @@
         }
       }
     }
+    
     .footer {
       width: 100vw;
       position: absolute;

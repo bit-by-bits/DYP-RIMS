@@ -13,6 +13,7 @@
       -ms-flex-align: center;
           align-items: center;
   gap: 1.5rem;
+  min-height: 100vh;
   position: relative;
   padding: 6rem 10vw;
 }

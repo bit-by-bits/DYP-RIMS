@@ -20,20 +20,27 @@ const profile = () => {
                 <img src="doctah.png" className={styles.profile_img}></img>
                 <div className={styles.profile_text}>
                   <div className={styles.profile_name}>Dr Aayush Gupta</div>
+
                   <div className={styles.profile_degree}>MBBS, M.D.</div>
+
                   <div className={styles.profile_post}>Associate Professor</div>
+
                   <div className={styles.profile_dept}>
                     Department of Dermatology
                   </div>
+
                   <div className={styles.profile_clg}>
                     Dr. D. Y. Patil Medical College
                   </div>
+
                   <div className={styles.profile_edit}>
                     Edit Profile Details
                   </div>
                 </div>
               </div>
+
               <div className={styles.profile_btn}>Add a file</div>
+
               <div className={styles.profile_btn}>Download CV</div>
             </div>
 
@@ -70,66 +77,86 @@ const profile = () => {
               </Link>
             </div>
           </div>
+
           <div id="awards" className={styles.profile_box}>
             <div className={styles.profile_head}>Awards & Achievements</div>
+
             <div className={styles.profile_bodygrid}>
               <div className={styles.profile_body}>
                 <div className={styles.profile_topic}>
                   Best paper award IJDVL
                 </div>
+
                 <div className={styles.profile_time}>Jan 2015</div>
               </div>
+
               <div className={styles.profile_body}>
                 <div className={styles.profile_topic}>
                   Best paper award IJDVL
                 </div>
+
                 <div className={styles.profile_time}>Jan 2015</div>
               </div>
+
               <div className={styles.profile_body}>
                 <div className={styles.profile_topic}>
                   Best paper award IJDVL
                 </div>
+
                 <div className={styles.profile_time}>Jan 2015</div>
               </div>
+
               <div className={styles.profile_body}>
                 <div className={styles.profile_topic}>
                   Best paper award IJDVL
                 </div>
+
                 <div className={styles.profile_time}>Jan 2015</div>
               </div>
             </div>
           </div>
+
           <div id="patents" className={styles.profile_box}>
             <div className={styles.profile_head}>Patents</div>
+
             <div className={styles.profile_bodygrid}>
               <div className={styles.profile_body}>
                 <div className={styles.profile_topic}>
                   Best paper award IJDVL
                 </div>
+
                 <div className={styles.profile_time}>Jan 2015</div>
               </div>
+
               <div className={styles.profile_body}>
                 <div className={styles.profile_topic}>
                   Best paper award IJDVL
                 </div>
+
                 <div className={styles.profile_time}>Jan 2015</div>
               </div>
+
               <div className={styles.profile_body}>
                 <div className={styles.profile_topic}>
                   Best paper award IJDVL
                 </div>
+
                 <div className={styles.profile_time}>Jan 2015</div>
               </div>
+
               <div className={styles.profile_body}>
                 <div className={styles.profile_topic}>
                   Best paper award IJDVL
                 </div>
+
                 <div className={styles.profile_time}>Jan 2015</div>
               </div>
             </div>
           </div>
+
           <div id="publications" className={styles.profile_box}>
             <div className={styles.profile_head}>Publications</div>
+
             <table className={styles.profile_table}>
               <tbody>
                 <tr className={styles.profile_thead}>
@@ -372,31 +399,40 @@ const profile = () => {
               </tbody>
             </table>
           </div>
+
           <div id="conferences" className={styles.profile_box}>
             <div className={styles.profile_head}>Conferences</div>
+
             <div className={styles.profile_bodygrid}>
               <div className={styles.profile_body}>
                 <div className={styles.profile_topic}>
                   Best paper award IJDVL
                 </div>
+
                 <div className={styles.profile_time}>Jan 2015</div>
               </div>
+
               <div className={styles.profile_body}>
                 <div className={styles.profile_topic}>
                   Best paper award IJDVL
                 </div>
+
                 <div className={styles.profile_time}>Jan 2015</div>
               </div>
+
               <div className={styles.profile_body}>
                 <div className={styles.profile_topic}>
                   Best paper award IJDVL
                 </div>
+
                 <div className={styles.profile_time}>Jan 2015</div>
               </div>
+
               <div className={styles.profile_body}>
                 <div className={styles.profile_topic}>
                   Best paper award IJDVL
                 </div>
+
                 <div className={styles.profile_time}>Jan 2015</div>
               </div>
             </div>
