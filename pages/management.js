@@ -10,6 +10,7 @@ const file = () => {
     <>
       <Head>
         <title>Management</title>
+        <link rel="icon" href="icon.png" />
       </Head>
 
       <main className={styles.wrapper}>
@@ -47,50 +48,64 @@ const file = () => {
               </div>
 
               <div className={styles.profile_scroll}>
-                <div className={styles.profile_scrolltop}>This weeks updates</div>
+                <div className={styles.profile_scrolltop}>
+                  This weeks updates
+                </div>
                 <div className={styles.profile_scrollbody}>
-                <div className={styles.profile_scrollitem}>
-                  <div className={styles.profile_scrollevent}>
-                    Dr Firstname Lastname has added a publication on the effects
-                    of XYZ.
+                  <div className={styles.profile_scrollitem}>
+                    <div className={styles.profile_scrollevent}>
+                      Dr Firstname Lastname has added a publication on the
+                      effects of XYZ.
+                    </div>
+                    <div className={styles.profile_scrolltime}>
+                      20 June 2021
+                    </div>
                   </div>
-                  <div className={styles.profile_scrolltime}>20 June 2021</div>
-                </div>
-                <div className={styles.profile_scrollitem}>
-                  <div className={styles.profile_scrollevent}>
-                    Dr Firstname Lastname has added a publication on the effects
-                    of XYZ.
+                  <div className={styles.profile_scrollitem}>
+                    <div className={styles.profile_scrollevent}>
+                      Dr Firstname Lastname has added a publication on the
+                      effects of XYZ.
+                    </div>
+                    <div className={styles.profile_scrolltime}>
+                      20 June 2021
+                    </div>
                   </div>
-                  <div className={styles.profile_scrolltime}>20 June 2021</div>
-                </div>
-                <div className={styles.profile_scrollitem}>
-                  <div className={styles.profile_scrollevent}>
-                    Dr Firstname Lastname has added a publication on the effects
-                    of XYZ.
+                  <div className={styles.profile_scrollitem}>
+                    <div className={styles.profile_scrollevent}>
+                      Dr Firstname Lastname has added a publication on the
+                      effects of XYZ.
+                    </div>
+                    <div className={styles.profile_scrolltime}>
+                      20 June 2021
+                    </div>
                   </div>
-                  <div className={styles.profile_scrolltime}>20 June 2021</div>
-                </div>
-                <div className={styles.profile_scrollitem}>
-                  <div className={styles.profile_scrollevent}>
-                    Dr Firstname Lastname has added a publication on the effects
-                    of XYZ.
+                  <div className={styles.profile_scrollitem}>
+                    <div className={styles.profile_scrollevent}>
+                      Dr Firstname Lastname has added a publication on the
+                      effects of XYZ.
+                    </div>
+                    <div className={styles.profile_scrolltime}>
+                      20 June 2021
+                    </div>
                   </div>
-                  <div className={styles.profile_scrolltime}>20 June 2021</div>
-                </div>
-                <div className={styles.profile_scrollitem}>
-                  <div className={styles.profile_scrollevent}>
-                    Dr Firstname Lastname has added a publication on the effects
-                    of XYZ.
+                  <div className={styles.profile_scrollitem}>
+                    <div className={styles.profile_scrollevent}>
+                      Dr Firstname Lastname has added a publication on the
+                      effects of XYZ.
+                    </div>
+                    <div className={styles.profile_scrolltime}>
+                      20 June 2021
+                    </div>
                   </div>
-                  <div className={styles.profile_scrolltime}>20 June 2021</div>
-                </div>
-                <div className={styles.profile_scrollitem}>
-                  <div className={styles.profile_scrollevent}>
-                    Dr Firstname Lastname has added a publication on the effects
-                    of XYZ.
+                  <div className={styles.profile_scrollitem}>
+                    <div className={styles.profile_scrollevent}>
+                      Dr Firstname Lastname has added a publication on the
+                      effects of XYZ.
+                    </div>
+                    <div className={styles.profile_scrolltime}>
+                      20 June 2021
+                    </div>
                   </div>
-                  <div className={styles.profile_scrolltime}>20 June 2021</div>
-                </div>
                 </div>
               </div>
 
