@@ -231,14 +231,14 @@
 
   .publisher {
     padding: 0.6rem 3rem !important;
-    &> div {
-    gap: 2rem !important;
+    & > div {
+      gap: 2rem !important;
 
-    div {
-      gap: 0.7rem !important;
+      div {
+        gap: 0.7rem !important;
+      }
     }
   }
-}
 
   .data_title {
     font-size: 4rem !important;

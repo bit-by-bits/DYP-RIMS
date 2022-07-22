@@ -14,7 +14,7 @@ const file = () => {
 
       <main className={styles.wrapper}>
         <Navbar />
-        
+
         <div className={styles.file_wrapper}>
           <div className={styles.file_text}>
             <div className={styles.file_title}>

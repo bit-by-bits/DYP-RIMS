@@ -172,16 +172,19 @@
             span:nth-child(4n + 1) {
               @include font(black, 600, 1rem);
             }
+
             span:nth-child(4n + 2),
             span:nth-child(4n + 3) {
               @include font(black, 400, 0.8rem);
             }
+
             span:nth-child(4n) {
               @include font(#9a2827, 600, 0.8rem);
 
               &.true {
                 display: block;
               }
+
               &.false {
                 display: none;
               }
@@ -190,7 +193,7 @@
         }
       }
     }
-    
+
     .footer {
       width: 100vw;
       position: absolute;

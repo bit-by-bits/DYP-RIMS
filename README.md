@@ -1,2 +1,2 @@
 ## DYP-RIMS-Portal
-#### Frontend
+#### Tech Stack: NEXTjs and SCSS
