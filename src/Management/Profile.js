@@ -32,7 +32,7 @@ export default function Profile(props) {
           </div>
 
           <div className={styles.search}>
-            <img src="search.png" />
+            <img src="icons/search.png" />
             <input
               type="text"
               placeholder="Search for Department or Faculty"

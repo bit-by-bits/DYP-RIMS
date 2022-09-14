@@ -34,7 +34,7 @@ export default function Options() {
         </div>
 
         <div className={`${styles.option} ${styles.download}`}>
-          <img src="download.png" />
+          <img src="icons/download.png" />
           <span>Download Data</span>
         </div>
       </div>

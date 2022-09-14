@@ -29,7 +29,7 @@ export default function Table(props) {
   for (let a = 0; a < 5; a++) {
     head.push(
       <th key={a}>
-        <span>{title[a]}</span> <img src="sort.png" />
+        <span>{title[a]}</span> <img src="icons/sort.png" />
       </th>
     );
   }
