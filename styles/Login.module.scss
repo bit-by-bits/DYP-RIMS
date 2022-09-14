@@ -70,23 +70,15 @@
       }
 
       .button {
-        @include flex-box();
-        justify-content: center;
         background: white;
         cursor: pointer;
         border: none;
-        padding: 1rem 2rem;
         box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
-        gap: 1rem;
         margin-top: 2rem;
 
-        img {
-          height: 1.5rem;
-        }
-
-        span {
-          @include font(#333333, 500, 1rem);
+        *{
+          border: 0;
         }
       }
 

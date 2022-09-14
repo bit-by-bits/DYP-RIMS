@@ -1,74 +1,38 @@
 .main {
   width: 100vw;
   height: 100vh;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: "row";
-          flex-direction: "row";
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
-  background: -webkit-gradient(linear, left bottom, left top, from(rgba(0, 0, 0, 0.4)), to(rgba(0, 0, 0, 0.4))), url("../public/login-bg.png") no-repeat;
+  flex-direction: "row";
+  justify-content: space-between;
+  align-items: center;
+  justify-content: flex-start;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../public/login-bg.png") no-repeat;
   background-size: cover;
 }
-
 .main .welcome {
   width: 85vw;
   height: 50vh;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: "row";
-          flex-direction: "row";
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  flex-direction: "row";
+  justify-content: space-between;
+  align-items: center;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), linear-gradient(153.54deg, rgba(255, 255, 255, 0.5) 1.04%, rgba(255, 255, 255, 0.25) 100%);
   border: 1px solid rgba(255, 255, 255, 0.4);
-  -webkit-box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.2);
-          box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.2);
   -webkit-backdrop-filter: blur(8px);
           backdrop-filter: blur(8px);
 }
-
 .main .welcome .greeting {
   color: white;
   width: 50vw;
   padding-left: 3rem;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   gap: 1rem;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
+  align-items: flex-start;
 }
-
 .main .welcome .greeting .title {
   color: white;
   font-weight: 800;
@@ -78,107 +42,62 @@
   width: max-content;
   text-align: center;
 }
-
 .main .welcome .greeting .content {
   color: white;
   font-weight: 700;
   font-size: 1.8rem;
 }
-
 .main .welcome .login {
   background-color: white;
-  -webkit-box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.2);
-          box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.2);
   width: 25vw;
   min-height: 60vh;
   text-align: center;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   gap: 1rem;
   padding: 3rem 0;
   border-radius: 16px;
 }
-
 .main .welcome .login .logo {
   height: 2rem;
 }
-
 .main .welcome .login .button {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: "row";
-          flex-direction: "row";
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
   background: white;
   cursor: pointer;
   border: none;
-  padding: 1rem 2rem;
-  -webkit-box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
-          box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  gap: 1rem;
   margin-top: 2rem;
 }
-
-.main .welcome .login .button img {
-  height: 1.5rem;
+.main .welcome .login .button * {
+  border: 0;
 }
-
-.main .welcome .login .button span {
-  color: #333333;
-  font-weight: 500;
-  font-size: 1rem;
-}
-
 .main .welcome .login .login_top {
   color: #9a2827;
   font-weight: 700;
   font-size: 1.7rem;
   margin-bottom: 2rem;
 }
-
 .main .welcome .login .login_middle {
   width: 80%;
   color: #333333;
   font-weight: 400;
   font-size: 1rem;
 }
-
 .main .welcome .login .login_bottom {
   color: #333333;
   font-weight: 400;
   font-size: 0.8rem;
 }
-
 .main .welcome .login .login_bottom a {
   color: #9a2827;
   font-weight: 400;
   font-size: 0.8rem;
   text-decoration: underline;
 }
-
 .main .footer {
   position: absolute;
   padding: 0.7rem;
@@ -188,7 +107,6 @@
   color: white;
   font-weight: 700;
   font-size: 1.2rem;
-  background: -webkit-gradient(linear, left bottom, left top, from(rgba(0, 0, 0, 0.2)), to(rgba(0, 0, 0, 0.2))), -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.5)), to(rgba(255, 255, 255, 0.25)));
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.25) 100%);
 }
 
@@ -202,14 +120,12 @@
     padding: 7rem 1rem !important;
   }
 }
-
 @media screen and (min-width: 1400px) {
   .login {
     padding: 5rem 1rem !important;
     width: 30vw !important;
   }
 }
-
 @media screen and (min-width: 1700px) {
   .main .login {
     border-radius: 30px !important;
@@ -238,7 +154,6 @@
     font-size: 2.2rem !important;
   }
 }
-
 @media screen and (min-width: 1700px) {
   .main .login {
     border-radius: 30px !important;
@@ -267,7 +182,6 @@
     font-size: 2.2rem !important;
   }
 }
-
 @media screen and (min-width: 2100px) {
   .main .login {
     min-height: 50vh !important;
@@ -304,14 +218,12 @@
     width: 40vw !important;
   }
 }
-
 @media screen and (max-width: 1400px) {
   .login {
     width: 28vw !important;
     padding: 3.5rem 1rem !important;
   }
 }
-
 @media screen and (max-width: 1200px) {
   .welcome {
     width: 95vw !important;
@@ -325,5 +237,4 @@
   .login {
     width: 34vw !important;
   }
-}
-/*# sourceMappingURL=login.module.css.map */
+}/*# sourceMappingURL=Login.module.css.map */

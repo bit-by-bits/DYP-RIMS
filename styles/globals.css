@@ -3,8 +3,7 @@
   padding: 0;
   margin: 0;
   font-family: "Inter", sans-serif;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 a {
@@ -28,10 +27,8 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #9a2827;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   cursor: -webkit-grab;
   cursor: grab;
   background: #ce1c19;
-}
-/*# sourceMappingURL=globals.css.map */
+}/*# sourceMappingURL=globals.css.map */

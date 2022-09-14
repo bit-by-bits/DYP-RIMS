@@ -1,106 +1,59 @@
 .wrapper .file_wrapper {
   min-height: 100vh;
   gap: 2rem;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   position: relative;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
+  align-items: flex-start;
   padding: 6rem 10vw;
 }
-
 .wrapper .file_wrapper .file_text {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  align-items: flex-start;
 }
-
 .wrapper .file_wrapper .file_text .file_title {
   color: #9a2827;
   font-weight: 600;
   font-size: 1.4rem;
   margin-bottom: 2rem;
 }
-
 .wrapper .file_wrapper .file_text .file_grid {
-  display: -ms-grid;
   display: grid;
   gap: 1rem;
-  -ms-grid-columns: auto auto;
-      grid-template-columns: auto auto;
+  grid-template-columns: auto auto;
 }
-
 .wrapper .file_wrapper .file_text .file_grid .file_head {
   color: #9a2827;
   font-weight: 600;
   font-size: 1rem;
 }
-
 .wrapper .file_wrapper .file_text .file_grid .file_body {
   color: black;
   font-weight: 400;
   font-size: 1rem;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
 }
-
 .wrapper .file_wrapper .file_text .file_grid .file_body .file_bodybold {
   color: black;
   font-weight: 600;
   font-size: 0.9rem;
   margin-bottom: 0.4rem;
 }
-
 .wrapper .file_wrapper .file_btns {
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
-  display: -webkit-box;
-  display: -ms-flexbox;
+  align-items: flex-start;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   gap: 1rem;
 }
-
 .wrapper .file_wrapper .file_btns .file_btn1,
 .wrapper .file_wrapper .file_btns .file_btn2 {
   color: #9a2827;
@@ -112,12 +65,10 @@
   border-radius: 8px;
   padding: 0.8rem 1.7rem;
 }
-
 .wrapper .file_wrapper .file_btns .file_btn1 {
   background-color: #9a2827;
   color: white;
 }
-
 .wrapper .footer {
   width: 100vw;
   position: absolute;
@@ -136,7 +87,6 @@
     gap: 1.8rem 1rem !important;
   }
 }
-
 @media screen and (min-width: 2100px) {
   .file_title {
     font-size: 1.6rem !important;
@@ -150,5 +100,4 @@
   .file_grid .file_head {
     margin-bottom: 0.6rem !important;
   }
-}
-/*# sourceMappingURL=file.module.css.map */
+}/*# sourceMappingURL=file.module.css.map */

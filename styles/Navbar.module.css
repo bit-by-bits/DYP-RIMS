@@ -5,62 +5,38 @@
   width: 100vw;
   position: absolute;
   padding: 0.5rem 10vw;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: "row";
-          flex-direction: "row";
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  flex-direction: "row";
+  justify-content: space-between;
+  align-items: center;
   background-color: #9a2827;
   color: white;
   font-weight: 600;
   font-size: 1.1rem;
 }
-
 .navbar .nav_left,
 .navbar .nav_right {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: "row";
-          flex-direction: "row";
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  flex-direction: "row";
+  justify-content: space-between;
+  align-items: center;
 }
-
 .navbar .nav_left div,
 .navbar .nav_right div {
   cursor: pointer;
 }
-
 .navbar .nav_left div:hover,
 .navbar .nav_right div:hover {
-  color: #e3dede;
+  color: rgb(227, 222, 222);
 }
-
 .navbar .nav_right {
   gap: 3rem;
 }
-
 .navbar .nav_right .nav_btn {
   border: 1.6px solid white;
   border-radius: 8px;
   padding: 0.4rem 1.4rem;
 }
-
 .navbar .nav_right .nav_btn:hover {
   color: white;
   background-color: rgba(255, 255, 255, 0.08);
@@ -71,11 +47,9 @@
     font-size: 1rem !important;
   }
 }
-
 @media screen and (min-width: 1599px) {
   .navbar {
     font-size: 1.2rem !important;
     padding: 0.6rem 10vw !important;
   }
-}
-/*# sourceMappingURL=navbar.module.css.map */
+}/*# sourceMappingURL=Navbar.module.css.map */
