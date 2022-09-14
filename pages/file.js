@@ -1,15 +1,23 @@
 import Head from "next/head";
 import styles from "../styles/file.module.css";
-import Link from "next/link";
 import React from "react";
-import Navbar from "./navbar";
+import { useRouter } from "next/router";
+import Navbar from "../src/Common/Navbar";
 
 const file = () => {
+  const router = useRouter();
+  const checkout =
+    typeof window !== "undefined"
+      ? localStorage.auth_token === "undefined"
+        ? router.push("/")
+        : null
+      : null;
+
   return (
     <>
       <Head>
         <title>File</title>
-        <link rel="icon" href="icon.png" />
+        <link rel="icon" href="logos/qtanea.png" />
       </Head>
 
       <main className={styles.wrapper}>

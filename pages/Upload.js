@@ -3,21 +3,35 @@ import styles from "../styles/upload.module.css";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
-import Navbar from "./navbar";
+import { useRouter } from "next/router";
+import Navbar from "../src/Common/Navbar";
 
-const upload = () => {
+const Upload = () => {
+  const router = useRouter();
+  const checkout =
+    typeof window !== "undefined"
+      ? localStorage.auth_token === "undefined"
+        ? router.push("/")
+        : null
+      : null;
+
+  function upload() {
+    if (document.getElementById("doi_text").value == '') alert('Please enter a DOI first.')
+    else router.push(`/uploading/${document.getElementById("doi_text").value}`);
+  }
+
   return (
     <>
       <Head>
         <title>Upload</title>
-        <link rel="icon" href="icon.png" />
+        <link rel="icon" href="logos/qtanea.png" />
       </Head>
 
       <main className={styles.wrapper}>
         <Navbar />
         <div className={styles.upload_wrapper}>
           <div className={styles.upload_left}>
-            <img src="upload.png" className={styles.upload_img}></img>
+            <img src="upload/upload.png" className={styles.upload_img}></img>
             <div className={styles.upload_title}>Add a file</div>
 
             <div className={styles.upload_msg}>Kindly upload a .pdf file.</div>
@@ -36,10 +50,11 @@ const upload = () => {
             <div className={styles.upload_msg}>Or add a file using DOI</div>
 
             <input
-              type="text"
+              type="number"
+              id="doi_text"
               placeholder="Enter DOI"
               className={styles.upload_input2}
-            ></input>
+            />
           </div>
 
           <div className={styles.upload_right}>
@@ -69,7 +84,9 @@ const upload = () => {
               </div>
             </div>
 
-            <div className={styles.upload_btn}>Upload</div>
+            <div onClick={upload} className={styles.upload_btn}>
+              Upload
+            </div>
           </div>
         </div>
       </main>
@@ -77,4 +94,4 @@ const upload = () => {
   );
 };
 
-export default upload;
+export default Upload;

@@ -2,14 +2,8 @@ config.autoAddCss = false;
 import "../styles/globals.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
-import { SessionProvider } from "next-auth/react";
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }) {
-  return (
-    <SessionProvider session={session}>
-      <Component {...pageProps} />
-    </SessionProvider>
-  );
+const MyApp = ({ Component, pageProps }) => {
+  return <Component {...pageProps} />
 }
-
-export default MyApp;
+export default MyApp

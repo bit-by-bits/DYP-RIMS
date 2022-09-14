@@ -1,315 +1,79 @@
 import Head from "next/head";
-import styles from "../styles/dashboard.module.css";
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown, faAngleRight } from "@fortawesome/free-solid-svg-icons";
-import Navbar from "./navbar";
+import axios from "axios";
+import jwtDecode from "jwt-decode";
+import styles from "../styles/login.module.css";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const router = useRouter();
+
+  React.useEffect(() => {
+    /* global google */
+
+    if (localStorage.getItem("user") === null) {
+      google.accounts.id.initialize({
+        client_id:
+          "827028625147-3sai220i70tsqd8rqr89i4gnrl2d6n2j.apps.googleusercontent.com",
+        callback: handleCallbackResponse,
+      });
+
+      google.accounts.id.renderButton(document.getElementById("signInDiv"), {
+        theme: "outline",
+        size: "medium",
+      });
+    }
+  }, []);
+
+  function handleCallbackResponse(response) {
+    var userToken = response.credential;
+
+    axios({ 
+      method: "POST",
+      url: `http://127.0.0.1:8000/api/v1/login/`,
+      data: { id_token: userToken },
+    }).then(function (response) {
+      localStorage.setItem("auth_token", response.data.token);
+      router.push('/dashboard');
+    });
+  }
+
   return (
     <>
       <Head>
-        <title>Dashboard</title>
-        <link rel="icon" href="icon.png" />
+        <title>DYPU | RIMS</title>
+        <link rel="icon" href="logos/qtanea.png" />
+        <script
+          src="https://accounts.google.com/gsi/client"
+          async
+          defer
+        ></script>
       </Head>
 
-      <main className={styles.wrapper}>
-        <Navbar />
+      <main className={styles.main}>
+        <div className={styles.welcome}>
+          <div className={styles.greeting}>
+            <div className={styles.title}>Welcome to RIMS</div>
 
-        <div className={styles.dashboard}>
-          <div className={styles.title}>Dashboard</div>
-
-          <div className={styles.search1}>
-            <img src="search.png" />
-            <input type="text" placeholder="Search" className={styles.input1} />
-          </div>
-
-          <div className={styles.options}>
-            <div className={styles.heading}>Department</div>
-
-            <div className={styles.heading}>Faculty</div>
-
-            <div className={styles.heading}>Time Period</div>
-
-            <div className={styles.heading}>&nbsp;</div>
-
-            <div className={styles.option}>
-              <span>Search Department</span>
-              <FontAwesomeIcon icon={faAngleDown} className={styles.down_arr} />
-            </div>
-
-            <div className={styles.option}>
-              <span>Dr. Aayush Gupta</span>
-              <FontAwesomeIcon icon={faAngleDown} className={styles.down_arr} />
-            </div>
-
-            <div className={styles.option}>
-              <span>Select Time Period</span>
-              <FontAwesomeIcon icon={faAngleDown} className={styles.down_arr} />
-            </div>
-
-            <div className={`${styles.option} ${styles.download}`}>
-              <img src="download.png" />
-              <span>Download Data</span>
+            <div className={styles.content}>
+              DY Patil University's Research Information Manangements System
             </div>
           </div>
 
-          <div className={styles.graphs}>
-            <div className={styles.graph}></div>
-
-            <div className={styles.graph}></div>
-          </div>
-
-          <div className={styles.datas}>
-            <div className={styles.data}>
-              <div className={styles.data_title}>24k</div>
-
-              <div className={styles.data_text}>Publications</div>
+          <div className={styles.login}>
+            <img src="logos/dpu.png" alt="DPU" className={styles.logo} />
+            <div className={styles.login_top}>Login to RIMS</div>
+            <div className={styles.login_middle}>
+              Kindly login with your authorized Insitute credentials
             </div>
-
-            <div className={styles.data}>
-              <div className={styles.data_title}>123</div>
-
-              <div className={styles.data_text}>Patents</div>
-            </div>
-
-            <div className={styles.data}>
-              <div className={styles.data_title}>1.3k</div>
-
-              <div className={styles.data_text}>Awards</div>
-            </div>
-
-            <div className={styles.data}>
-              <div className={styles.data_title}>2.4k</div>
-
-              <div className={styles.data_text}>Conferences</div>
-            </div>
-
-            <div className={styles.data}>
-              <div className={styles.data_title}>648</div>
-
-              <div className={styles.data_text}>Books</div>
-            </div>
-          </div>
-
-          <div className={styles.pub_grid}>
-            <div className={styles.pub_col}>
-              <div className={styles.col_title}>
-                Faculty with high impact publications
-              </div>
-
-              <div className={styles.col_content}>
-                <div className={styles.publisher}>
-                  <div>
-                    <img src="doctah.png" className={styles.pub_img} />
-                    <div className={styles.pub_info}>
-                      <div className={styles.pub_name}>
-                        Mr. FirstName LastName
-                      </div>
-
-                      <div className={styles.pub_clg}>
-                        Dr. DY Patil Medical College
-                      </div>
-                    </div>{" "}
-                  </div>
-
-                  <FontAwesomeIcon
-                    icon={faAngleRight}
-                    className={styles.right_arr}
-                  />
-                </div>
-
-                <div className={styles.publisher}>
-                  <div>
-                    <img src="doctah.png" className={styles.pub_img} />
-                    <div className={styles.pub_info}>
-                      <div className={styles.pub_name}>
-                        Mr. FirstName LastName
-                      </div>
-
-                      <div className={styles.pub_clg}>
-                        Dr. DY Patil Medical College
-                      </div>
-                    </div>{" "}
-                  </div>
-
-                  <FontAwesomeIcon
-                    icon={faAngleRight}
-                    className={styles.right_arr}
-                  />
-                </div>
-
-                <div className={styles.publisher}>
-                  <div>
-                    <img src="doctah.png" className={styles.pub_img} />
-                    <div className={styles.pub_info}>
-                      <div className={styles.pub_name}>
-                        Mr. FirstName LastName
-                      </div>
-
-                      <div className={styles.pub_clg}>
-                        Dr. DY Patil Medical College
-                      </div>
-                    </div>{" "}
-                  </div>
-
-                  <FontAwesomeIcon
-                    icon={faAngleRight}
-                    className={styles.right_arr}
-                  />
-                </div>
-
-                <div className={styles.publisher}>
-                  <div>
-                    <img src="doctah.png" className={styles.pub_img} />
-                    <div className={styles.pub_info}>
-                      <div className={styles.pub_name}>
-                        Mr. FirstName LastName
-                      </div>
-
-                      <div className={styles.pub_clg}>
-                        Dr. DY Patil Medical College
-                      </div>
-                    </div>{" "}
-                  </div>
-
-                  <FontAwesomeIcon
-                    icon={faAngleRight}
-                    className={styles.right_arr}
-                  />
-                </div>
-
-                <div className={styles.publisher}>
-                  <div>
-                    <img src="doctah.png" className={styles.pub_img} />
-                    <div className={styles.pub_info}>
-                      <div className={styles.pub_name}>
-                        Mr. FirstName LastName
-                      </div>
-
-                      <div className={styles.pub_clg}>
-                        Dr. DY Patil Medical College
-                      </div>
-                    </div>{" "}
-                  </div>
-
-                  <FontAwesomeIcon
-                    icon={faAngleRight}
-                    className={styles.right_arr}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.pub_col}>
-              <div className={styles.col_title}>
-                Faculty with no publications this month
-              </div>
-
-              <div className={styles.col_content}>
-                <div className={styles.publisher}>
-                  <div>
-                    <img src="doctah.png" className={styles.pub_img} />
-                    <div className={styles.pub_info}>
-                      <div className={styles.pub_name}>
-                        Mr. FirstName LastName
-                      </div>
-
-                      <div className={styles.pub_clg}>
-                        Dr. DY Patil Medical College
-                      </div>
-                    </div>{" "}
-                  </div>
-
-                  <FontAwesomeIcon
-                    icon={faAngleRight}
-                    className={styles.right_arr}
-                  />
-                </div>
-
-                <div className={styles.publisher}>
-                  <div>
-                    <img src="doctah.png" className={styles.pub_img} />
-                    <div className={styles.pub_info}>
-                      <div className={styles.pub_name}>
-                        Mr. FirstName LastName
-                      </div>
-
-                      <div className={styles.pub_clg}>
-                        Dr. DY Patil Medical College
-                      </div>
-                    </div>{" "}
-                  </div>
-
-                  <FontAwesomeIcon
-                    icon={faAngleRight}
-                    className={styles.right_arr}
-                  />
-                </div>
-
-                <div className={styles.publisher}>
-                  <div>
-                    <img src="doctah.png" className={styles.pub_img} />
-                    <div className={styles.pub_info}>
-                      <div className={styles.pub_name}>
-                        Mr. FirstName LastName
-                      </div>
-
-                      <div className={styles.pub_clg}>
-                        Dr. DY Patil Medical College
-                      </div>
-                    </div>{" "}
-                  </div>
-
-                  <FontAwesomeIcon
-                    icon={faAngleRight}
-                    className={styles.right_arr}
-                  />
-                </div>
-
-                <div className={styles.publisher}>
-                  <div>
-                    <img src="doctah.png" className={styles.pub_img} />
-                    <div className={styles.pub_info}>
-                      <div className={styles.pub_name}>
-                        Mr. FirstName LastName
-                      </div>
-
-                      <div className={styles.pub_clg}>
-                        Dr. DY Patil Medical College
-                      </div>
-                    </div>{" "}
-                  </div>
-
-                  <FontAwesomeIcon
-                    icon={faAngleRight}
-                    className={styles.right_arr}
-                  />
-                </div>
-
-                <div className={styles.publisher}>
-                  <div>
-                    <img src="doctah.png" className={styles.pub_img} />
-                    <div className={styles.pub_info}>
-                      <div className={styles.pub_name}>
-                        Mr. FirstName LastName
-                      </div>
-
-                      <div className={styles.pub_clg}>
-                        Dr. DY Patil Medical College
-                      </div>
-                    </div>{" "}
-                  </div>
-
-                  <FontAwesomeIcon
-                    icon={faAngleRight}
-                    className={styles.right_arr}
-                  />
-                </div>
-              </div>
+            <div className={styles.button} id="signInDiv"></div>
+            <div className={styles.login_bottom}>
+              Having trouble logging in? <a href="">Click here</a>
             </div>
           </div>
         </div>
+
+        <footer className={styles.footer}>Made by Qtanea</footer>
       </main>
     </>
   );
