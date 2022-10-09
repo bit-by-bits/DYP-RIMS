@@ -11,7 +11,7 @@ export default function Profile(props) {
       </div>
     );
   }
-  
+
   return (
     <>
       <div className={styles.profile_section}>
