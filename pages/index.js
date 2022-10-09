@@ -1,7 +1,6 @@
 import Head from "next/head";
 import React from "react";
 import axios from "axios";
-import jwtDecode from "jwt-decode";
 import styles from "../styles/login.module.css";
 import { useRouter } from "next/router";
 
@@ -11,30 +10,32 @@ export default function Home() {
   React.useEffect(() => {
     /* global google */
 
-    if (localStorage.getItem("user") === null) {
-      google.accounts.id.initialize({
-        client_id:
-          "827028625147-3sai220i70tsqd8rqr89i4gnrl2d6n2j.apps.googleusercontent.com",
-        callback: handleCallbackResponse,
-      });
+    google.accounts.id.initialize({
+      client_id:
+        "827028625147-3sai220i70tsqd8rqr89i4gnrl2d6n2j.apps.googleusercontent.com",
+      callback: handleCallbackResponse,
+    });
 
-      google.accounts.id.renderButton(document.getElementById("signInDiv"), {
-        theme: "outline",
-        size: "medium",
-      });
-    }
+    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
+      theme: "outline",
+      size: "medium",
+    });
   }, []);
 
   function handleCallbackResponse(response) {
     var userToken = response.credential;
 
-    axios({ 
+    axios({
       method: "POST",
       url: `http://127.0.0.1:8000/api/v1/login/`,
       data: { id_token: userToken },
     }).then(function (response) {
       localStorage.setItem("auth_token", response.data.token);
-      router.push('/dashboard');
+      localStorage.setItem("user_role", response.data.role);
+
+      if (localStorage.getItem("user_role") == "management")
+        router.push("/management");
+      else router.push("/profile");
     });
   }
 
@@ -43,11 +44,6 @@ export default function Home() {
       <Head>
         <title>DYPU | RIMS</title>
         <link rel="icon" href="logos/qtanea.png" />
-        <script
-          src="https://accounts.google.com/gsi/client"
-          async
-          defer
-        ></script>
       </Head>
 
       <main className={styles.main}>
