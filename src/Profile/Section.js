@@ -1,8 +1,15 @@
 import React from "react";
 import Link from "next/link";
 import styles from "../../styles/Profile.module.css";
+import { useRouter } from "next/router";
 
 export default function Section(props) {
+  const router = useRouter();
+
+  function add() {
+    router.push("/upload");
+  }
+
   console.log(props.data);
   return (
     <>
@@ -29,7 +36,9 @@ export default function Section(props) {
             </div>
           </div>
 
-          <div className={styles.profile_btn}>Add a file</div>
+          <div onClick={add} className={styles.profile_btn}>
+            Add a file
+          </div>
 
           <div className={styles.profile_btn}>Download CV</div>
         </div>
