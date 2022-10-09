@@ -33,7 +33,7 @@ export default function Home() {
 
     axios({
       method: "POST",
-      url: `http://127.0.0.1:8000/api/v1/login/`,
+      url: `http://rimsapi.journalchecker.com/api/v1/login/`,
       data: { id_token: userToken },
     }).then(function (response) {
       localStorage.setItem("auth_token", response.data.token);
