@@ -29,7 +29,7 @@ const Profile = () => {
       React.useEffect(() => {
         axios({
           method: "GET",
-          url: `http://rimsapi.journalchecker.com/api/v1/publication`,
+          url: `http://127.0.0.1:8000/api/v1/publication`,
           headers: { Authorization: `Bearer ${item}` },
         }).then(function (response) {
           temp = response.data.publications;
