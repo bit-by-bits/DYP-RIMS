@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React from "react";
 import styles from "../../styles/journal.module.css";
 
@@ -6,13 +7,18 @@ export default function Table(props) {
     rows = [],
     head = [];
 
-  for (let a = 0; a < 10; a++) {
+  function file(id) {
+    const router = useRouter();
+    router.push(`/file/${id}`);
+  }
+
+  for (let a = 0; a < props.data.length; a++) {
     rows.push(
-      <tr key={a}>
+      <tr onClick={file(props.data[a].id)} key={a}>
         <td>
           <span>{props.data[a].title}</span>
           <span>{props.data[a].authors}</span>
-          <span>{props.data[a].insti}</span>
+          <span>{props.data[a].journ}</span>
           <span className={styles.false}>
             No softcopy found for this publication. Kindly upload a softcopy.
           </span>
