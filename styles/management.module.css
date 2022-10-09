@@ -21,8 +21,8 @@
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 .wrapper .mgmt_wrapper .profile_section .profile_grid .profile_personal {
-  grid-column: 1/span 6;
-  grid-row: 1/span 3;
+  grid-column: 1 / span 6;
+  grid-row: 1 / span 3;
   background: #ffffff;
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -33,22 +33,44 @@
   justify-content: center;
   gap: 2rem;
 }
-.wrapper .mgmt_wrapper .profile_section .profile_grid .profile_personal .profile_img {
+.wrapper
+  .mgmt_wrapper
+  .profile_section
+  .profile_grid
+  .profile_personal
+  .profile_img {
   height: 7rem;
 }
-.wrapper .mgmt_wrapper .profile_section .profile_grid .profile_personal .profile_text {
+.wrapper
+  .mgmt_wrapper
+  .profile_section
+  .profile_grid
+  .profile_personal
+  .profile_text {
   color: #333333;
   font-weight: 400;
   font-size: 1rem;
 }
-.wrapper .mgmt_wrapper .profile_section .profile_grid .profile_personal .profile_text .profile_name {
+.wrapper
+  .mgmt_wrapper
+  .profile_section
+  .profile_grid
+  .profile_personal
+  .profile_text
+  .profile_name {
   color: #9a2827;
   font-weight: 700;
   font-size: 1.2rem;
   letter-spacing: 0.3px;
   margin-bottom: 0.8rem;
 }
-.wrapper .mgmt_wrapper .profile_section .profile_grid .profile_personal .profile_text .profile_edit {
+.wrapper
+  .mgmt_wrapper
+  .profile_section
+  .profile_grid
+  .profile_personal
+  .profile_text
+  .profile_edit {
   cursor: pointer;
   margin-top: 1.6rem;
   color: #9a2827;
@@ -59,7 +81,7 @@
 .wrapper .mgmt_wrapper .profile_section .profile_grid .profile_btn2 {
   width: 80%;
   justify-self: center;
-  grid-column: 1/span 3;
+  grid-column: 1 / span 3;
   cursor: pointer;
   border-radius: 8px;
   background-color: #9a2827;
@@ -73,7 +95,7 @@
   justify-content: center;
 }
 .wrapper .mgmt_wrapper .profile_section .profile_grid .profile_btn2 {
-  grid-column: 4/span 3;
+  grid-column: 4 / span 3;
 }
 .wrapper .mgmt_wrapper .profile_section .profile_grid .search {
   gap: 0.6rem;
@@ -82,15 +104,15 @@
   align-items: center;
   border-radius: 8px;
   padding: 1rem 2rem;
-  grid-column: 7/span 4;
+  grid-column: 7 / span 4;
   background: #ffffff;
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 }
 .wrapper .mgmt_wrapper .profile_section .profile_grid .search .input {
   -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   outline: none;
   border: none;
   width: 100%;
@@ -98,12 +120,22 @@
   font-weight: 400;
   font-size: 0.8rem;
 }
-.wrapper .mgmt_wrapper .profile_section .profile_grid .search ::-moz-placeholder {
+.wrapper
+  .mgmt_wrapper
+  .profile_section
+  .profile_grid
+  .search
+  ::-moz-placeholder {
   color: #333333;
   font-weight: 400;
   font-size: 0.8rem;
 }
-.wrapper .mgmt_wrapper .profile_section .profile_grid .search :-ms-input-placeholder {
+.wrapper
+  .mgmt_wrapper
+  .profile_section
+  .profile_grid
+  .search
+  :-ms-input-placeholder {
   color: #333333;
   font-weight: 400;
   font-size: 0.8rem;
@@ -122,16 +154,26 @@
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   padding: 1rem 1.5rem;
-  grid-column: 7/span 4;
-  grid-row: 2/span 3;
+  grid-column: 7 / span 4;
+  grid-row: 2 / span 3;
 }
-.wrapper .mgmt_wrapper .profile_section .profile_grid .profile_scroll .profile_scrolltop {
+.wrapper
+  .mgmt_wrapper
+  .profile_section
+  .profile_grid
+  .profile_scroll
+  .profile_scrolltop {
   color: #9a2827;
   font-weight: 700;
   font-size: 1.2rem;
   margin-bottom: -100%;
 }
-.wrapper .mgmt_wrapper .profile_section .profile_grid .profile_scroll .profile_scrollbody {
+.wrapper
+  .mgmt_wrapper
+  .profile_section
+  .profile_grid
+  .profile_scroll
+  .profile_scrollbody {
   gap: 0.4rem;
   max-height: 65%;
   width: 90%;
@@ -141,7 +183,13 @@
   align-items: center;
   overflow-y: scroll;
 }
-.wrapper .mgmt_wrapper .profile_section .profile_grid .profile_scroll .profile_scrollbody .profile_scrollitem {
+.wrapper
+  .mgmt_wrapper
+  .profile_section
+  .profile_grid
+  .profile_scroll
+  .profile_scrollbody
+  .profile_scrollitem {
   gap: 0.1rem;
   display: flex;
   flex-direction: column;
@@ -149,12 +197,26 @@
   align-items: center;
   align-items: flex-start;
 }
-.wrapper .mgmt_wrapper .profile_section .profile_grid .profile_scroll .profile_scrollbody .profile_scrollitem .profile_scrollevent {
+.wrapper
+  .mgmt_wrapper
+  .profile_section
+  .profile_grid
+  .profile_scroll
+  .profile_scrollbody
+  .profile_scrollitem
+  .profile_scrollevent {
   color: black;
   font-weight: 600;
   font-size: 0.9rem;
 }
-.wrapper .mgmt_wrapper .profile_section .profile_grid .profile_scroll .profile_scrollbody .profile_scrollitem .profile_scrolltime {
+.wrapper
+  .mgmt_wrapper
+  .profile_section
+  .profile_grid
+  .profile_scroll
+  .profile_scrollbody
+  .profile_scrollitem
+  .profile_scrolltime {
   color: #333333;
   font-weight: 400;
   font-size: 0.8rem;
@@ -279,7 +341,13 @@
 .wrapper .mgmt_wrapper .pub_grid .pub_col .col_content .publisher:hover {
   cursor: pointer;
 }
-.wrapper .mgmt_wrapper .pub_grid .pub_col .col_content .publisher:hover .right_arr {
+.wrapper
+  .mgmt_wrapper
+  .pub_grid
+  .pub_col
+  .col_content
+  .publisher:hover
+  .right_arr {
   transform: translateX(10px);
   transition: all 0.3s;
 }
@@ -294,7 +362,14 @@
   height: 3rem;
   border-radius: 50%;
 }
-.wrapper .mgmt_wrapper .pub_grid .pub_col .col_content .publisher div .pub_info {
+.wrapper
+  .mgmt_wrapper
+  .pub_grid
+  .pub_col
+  .col_content
+  .publisher
+  div
+  .pub_info {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -302,13 +377,29 @@
   align-items: flex-start;
   gap: 0.4rem;
 }
-.wrapper .mgmt_wrapper .pub_grid .pub_col .col_content .publisher div .pub_info .pub_name {
+.wrapper
+  .mgmt_wrapper
+  .pub_grid
+  .pub_col
+  .col_content
+  .publisher
+  div
+  .pub_info
+  .pub_name {
   color: #9a2827;
   font-weight: 600;
   font-size: 1rem;
   letter-spacing: 0.3px;
 }
-.wrapper .mgmt_wrapper .pub_grid .pub_col .col_content .publisher div .pub_info .pub_clg {
+.wrapper
+  .mgmt_wrapper
+  .pub_grid
+  .pub_col
+  .col_content
+  .publisher
+  div
+  .pub_info
+  .pub_clg {
   color: black;
   font-weight: 400;
   font-size: 0.8rem;
@@ -351,7 +442,7 @@
     justify-self: center;
   }
   .profile_btn1,
-.profile_btn2 {
+  .profile_btn2 {
     width: 70% !important;
     justify-self: end !important;
   }
@@ -364,7 +455,7 @@
     font-size: 1.1rem !important;
   }
   .profile_btn1,
-.profile_btn2 {
+  .profile_btn2 {
     width: 65% !important;
   }
   .option {
@@ -398,7 +489,7 @@
     width: 60% !important;
   }
   .profile_btn1,
-.profile_btn2 {
+  .profile_btn2 {
     width: 45% !important;
   }
-}/*# sourceMappingURL=Management.module.css.map */
+} /*# sourceMappingURL=Management.module.css.map */

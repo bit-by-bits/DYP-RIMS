@@ -49,8 +49,8 @@
 .wrapper .upload_wrapper .upload_left .upload_input2 {
   border: none;
   -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   outline: none;
   width: 30vw;
   padding: 0.6rem 1.4rem;
@@ -113,11 +113,29 @@
   align-items: center;
   border-radius: 8px;
 }
-.wrapper .upload_wrapper .upload_right .upload_filters .upload_filter .option .down_arr:hover {
+.wrapper
+  .upload_wrapper
+  .upload_right
+  .upload_filters
+  .upload_filter
+  .option
+  .down_arr:hover {
   color: black;
 }
-.wrapper .upload_wrapper .upload_right .upload_filters .upload_filter .option .down_arr,
-.wrapper .upload_wrapper .upload_right .upload_filters .upload_filter .option span {
+.wrapper
+  .upload_wrapper
+  .upload_right
+  .upload_filters
+  .upload_filter
+  .option
+  .down_arr,
+.wrapper
+  .upload_wrapper
+  .upload_right
+  .upload_filters
+  .upload_filter
+  .option
+  span {
   color: #666666;
   font-weight: 400;
   font-size: 0.8rem;
@@ -198,4 +216,4 @@
   .upload_left .upload_input2 {
     padding: 0.7rem 1.2rem !important;
   }
-}/*# sourceMappingURL=Upload.module.css.map */
+} /*# sourceMappingURL=Upload.module.css.map */

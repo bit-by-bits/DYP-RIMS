@@ -6,7 +6,8 @@
   justify-content: space-between;
   align-items: center;
   justify-content: flex-start;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../public/login-bg.png") no-repeat;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url("../public/login-bg.png") no-repeat;
   background-size: cover;
 }
 .main .welcome {
@@ -16,11 +17,16 @@
   flex-direction: "row";
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), linear-gradient(153.54deg, rgba(255, 255, 255, 0.5) 1.04%, rgba(255, 255, 255, 0.25) 100%);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    linear-gradient(
+      153.54deg,
+      rgba(255, 255, 255, 0.5) 1.04%,
+      rgba(255, 255, 255, 0.25) 100%
+    );
   border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.2);
   -webkit-backdrop-filter: blur(8px);
-          backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 .main .welcome .greeting {
   color: white;
@@ -107,7 +113,12 @@
   color: white;
   font-weight: 700;
   font-size: 1.2rem;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.25) 100%);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5) 0%,
+      rgba(255, 255, 255, 0.25) 100%
+    );
 }
 
 @media screen and (min-height: 1000px) {
@@ -237,4 +248,4 @@
   .login {
     width: 34vw !important;
   }
-}/*# sourceMappingURL=Login.module.css.map */
+} /*# sourceMappingURL=Login.module.css.map */
