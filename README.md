@@ -1,2 +1,3 @@
 ## DYP-RIMS-Portal
-#### Tech Stack: NEXTjs and SCSS
+
+Client side code for the portal, using NextJS
