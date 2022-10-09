@@ -8,7 +8,7 @@ export default function Details(props) {
   function submit() {
     axios({
       method: "POST",
-      url: `http://127.0.0.1:8000/api/v1/publication/upload`,
+      url: `http://rimsapi.journalchecker.com/api/v1/publication/upload`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
       },
