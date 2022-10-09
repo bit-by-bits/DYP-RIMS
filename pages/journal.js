@@ -41,7 +41,6 @@ const Journal = () => {
           metric2: "9.64%",
           year: pubs[a].year,
         };
-        console.log(pubs[a].author_name[0].searchable_name);
       }
 
       return (

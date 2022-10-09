@@ -7,6 +7,12 @@ import { useRouter } from "next/router";
 export default function Home() {
   const router = useRouter();
 
+  if (
+    typeof window !== "undefined" &&
+    localStorage.getItem("auth_token") != null
+  )
+    localStorage.clear();
+
   React.useEffect(() => {
     /* global google */
 

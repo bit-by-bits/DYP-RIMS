@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import styles from "../../styles/Profile.module.css";
+import styles from "../../styles/profile.module.css";
 import { useRouter } from "next/router";
 
 export default function Section(props) {
@@ -10,7 +10,6 @@ export default function Section(props) {
     router.push("/upload");
   }
 
-  console.log(props.data);
   return (
     <>
       <div className={styles.profile_section}>

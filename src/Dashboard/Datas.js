@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../../styles/Dashboard.module.css";
+import styles from "../../styles/dashboard.module.css";
 
 export default function Datas() {
   return (

@@ -1,5 +1,5 @@
 import Head from "next/head";
-import styles from "../styles/Profile.module.css";
+import styles from "../styles/profile.module.css";
 import axios from "axios";
 import React from "react";
 import Navbar from "../src/Common/Navbar";
