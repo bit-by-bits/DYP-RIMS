@@ -26,7 +26,7 @@ const Upload = () => {
 
       axios({
         method: "GET",
-        url: `http://rimsapi.journalchecker.com/api/v1/publication/upload`,
+        url: `https://rimsapi.journalchecker.com/api/v1/publication/upload`,
         headers: { Authorization: `Bearer ${item}` },
       }).then(function (response) {
         localStorage.setItem(
