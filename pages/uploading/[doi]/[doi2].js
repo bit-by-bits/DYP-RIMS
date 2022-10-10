@@ -1,15 +1,17 @@
 import Head from "next/head";
 import React, { useState } from "react";
-import Navbar from "../../src/Common/Navbar";
-import Status from "../../src/Upload/Status";
-import Details from "../../src/Upload/Details";
-import styles from "../../styles/uploading.module.css";
+import Navbar from "../../../src/Common/Navbar";
+import Status from "../../../src/Upload/Status";
+import Details from "../../../src/Upload/Details";
+import styles from "../../../styles/uploading.module.css";
 import { useRouter } from "next/router";
 
 const Uploading = () => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
   const { doi } = router.query;
+  const { doi2 } = router.query;
 
   if (typeof window !== "undefined") {
     if (!localStorage.auth_token) router.push("/");
@@ -20,7 +22,7 @@ const Uploading = () => {
         <>
           <Head>
             <title>{loading ? "Confirm Upload" : "Uploaded"}</title>
-            <link rel="icon" href="../logos/qtanea.png" />
+            <link rel="icon" href="../../logos/qtanea.png" />
           </Head>
 
           <main className={styles.wrapper}>
@@ -28,7 +30,9 @@ const Uploading = () => {
             <div className={styles.uploading_wrapper}>
               <Status
                 img={
-                  loading ? "../upload/uploading.png" : "../upload/uploaded.png"
+                  loading
+                    ? "../../upload/uploading.png"
+                    : "../../upload/uploaded.png"
                 }
                 top={
                   loading
@@ -41,10 +45,10 @@ const Uploading = () => {
               />
               {loading && (
                 <Details
-                  alert="../alert.png"
+                  alert="../../alert.png"
                   check={check}
                   authors={localStorage.getItem("authors")}
-                  doi={doi}
+                  doi={`${doi}/${doi2}`}
                 />
               )}
             </div>

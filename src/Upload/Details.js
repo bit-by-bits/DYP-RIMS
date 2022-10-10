@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import styles from "../../styles/Uploading.module.css";
+import styles from "../../styles/uploading.module.css";
 
 export default function Details(props) {
   const router = useRouter();
@@ -29,7 +29,7 @@ export default function Details(props) {
   return (
     <>
       <div className={styles.uploading_msg}>
-        <img src="../upload/alert.png" className={styles.uploading_alert} />
+        <img src={props.alert} className={styles.uploading_alert} />
         <span>You are uploading abcde.pdf</span>
       </div>
 

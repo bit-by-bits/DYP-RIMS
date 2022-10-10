@@ -70,7 +70,7 @@ const Upload = () => {
                 <div className={styles.upload_msg}>Or add a file using DOI</div>
 
                 <input
-                  type="number"
+                  type="text"
                   id="doi_text"
                   placeholder="Enter DOI"
                   className={styles.upload_input2}
@@ -83,7 +83,7 @@ const Upload = () => {
                     <div className={styles.heading}>Faculty</div>
 
                     <div className={styles.option}>
-                      <span id="author_text">Dr. Ayush Gupta</span>
+                      <span id="author_text">{localStorage.getItem("authors")}</span>
                       <FontAwesomeIcon
                         icon={faAngleDown}
                         className={styles.down_arr}
