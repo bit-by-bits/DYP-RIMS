@@ -13,7 +13,7 @@ const Mgmt = () => {
   const router = useRouter();
 
   if (typeof window !== "undefined") {
-    if (!localStorage.auth_token) router.push("/");
+    if (!localStorage.getItem("auth_token")) router.push("/");
     else {
       if (localStorage.getItem("user_role") != "management")
         router.push("/profile");

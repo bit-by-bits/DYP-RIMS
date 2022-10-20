@@ -9,16 +9,20 @@ import Options from "../src/Journal/Options";
 
 const Journal = () => {
   const router = useRouter();
+  const publications = [],
+    temp = [];
+  const [pubs, setPubs] = React.useState(temp);
+
+  React.useEffect(() => {
+    callback();
+  }, []);
 
   if (typeof window !== "undefined") {
-    if (!localStorage.auth_token) router.push("/");
+    if (!localStorage.getItem("auth_token")) router.push("/");
     else {
-      const publications = [],
-        temp = [];
       const item = localStorage.getItem("auth_token");
-      const [pubs, setPubs] = React.useState(temp);
 
-      React.useEffect(() => {
+      function callback() {
         axios({
           method: "GET",
           url: `https://rimsapi.journalchecker.com/api/v1/publication`,
@@ -27,7 +31,7 @@ const Journal = () => {
           temp = response.data.publications;
           setPubs(temp);
         });
-      }, []);
+      }
 
       for (let a = 0; a < pubs.length; a++) {
         publications[a] = {
@@ -50,7 +54,7 @@ const Journal = () => {
             <link rel="icon" href="logos/qtanea.png" />
           </Head>
 
-          <main className={styles.wrapper}>
+          <main onLoad={callback} className={styles.wrapper}>
             <Navbar />
 
             <div className={styles.mgmt_wrapper}>

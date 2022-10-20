@@ -14,7 +14,7 @@ const Uploading = () => {
   const { doi2 } = router.query;
 
   if (typeof window !== "undefined") {
-    if (!localStorage.auth_token) router.push("/");
+    if (!localStorage.getItem("auth_token")) router.push("/");
     else {
       const check = (load) => setLoading(load);
 

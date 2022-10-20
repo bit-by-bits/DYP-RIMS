@@ -9,20 +9,23 @@ import styles from "../styles/upload.module.css";
 
 const Upload = () => {
   const router = useRouter();
+  const [authorList, setAuthorList] = React.useState([]);
+  const [selectedOptions, setSelectedOptions] = React.useState([]),
+    setHandle = (e) => {
+      setSelectedOptions(
+        Array.isArray(e) ? e.map((author) => author.label) : []
+      );
+    };
+
+  React.useEffect(() => {
+    callback();
+  }, []);
 
   if (typeof window !== "undefined") {
-    if (!localStorage.auth_token) router.push("/");
+    if (!localStorage.getItem("auth_token")) router.push("/");
     else {
       const item = localStorage.getItem("auth_token"),
         animatedComponents = makeAnimated();
-      const [authorList, setAuthorList] = React.useState([]);
-
-      const [selectedOptions, setSelectedOptions] = React.useState([]),
-        setHandle = (e) => {
-          setSelectedOptions(
-            Array.isArray(e) ? e.map((author) => author.label) : []
-          );
-        };
 
       function upload() {
         if (document.getElementById("doi_text").value == "")
@@ -37,7 +40,7 @@ const Upload = () => {
         }
       }
 
-      React.useEffect(() => {
+      function callback() {
         axios({
           method: "GET",
           url: `https://rimsapi.journalchecker.com/api/v1/publication/upload`,
@@ -53,7 +56,7 @@ const Upload = () => {
 
           setAuthorList(tempA);
         });
-      }, []);
+      }
 
       return (
         <>
@@ -62,7 +65,7 @@ const Upload = () => {
             <link rel="icon" href="logos/qtanea.png" />
           </Head>
 
-          <main className={styles.wrapper}>
+          <main onLoad={callback} className={styles.wrapper}>
             <Navbar />
             <div className={styles.upload_wrapper}>
               <div className={styles.upload_left}>

@@ -10,32 +10,25 @@ import Table from "../src/Profile/Table";
 
 const Profile = () => {
   const router = useRouter();
+  const publications = [],
+    temp = [];
+  const [pubs, setPubs] = React.useState(temp),
+    [data, setData] = React.useState(temp);
 
   if (typeof window !== "undefined") {
-    if (!localStorage.auth_token) router.push("/");
+    if (!localStorage.getItem("auth_token")) router.push("/");
     else {
       if (localStorage.getItem("user_role") == "management")
         router.push("/management");
 
-      // const data = [4];
-      // for (let a = 0; a < 4; a++)
-      //   data[a] = { what: "Best paper award IJDVL", when: "Jan 2015" };
-
       const item = localStorage.getItem("auth_token");
-      const publications = [],
-        temp = [];
-
-      const [pubs, setPubs] = React.useState(temp),
-        [data, setData] = React.useState(temp);
-
-      React.useEffect(() => {
+      function callback() {
         axios({
           method: "GET",
           url: `https://rimsapi.journalchecker.com/api/v1/publication`,
           headers: { Authorization: `Bearer ${item}` },
         }).then(function (response) {
           temp = response.data.publications;
-          console.log(temp);
           setPubs(temp);
         });
 
@@ -50,7 +43,7 @@ const Profile = () => {
           temp = response.data.awards;
           setData(temp);
         });
-      }, []);
+      }
 
       for (let a = 0; a < pubs.length; a++)
         publications[a] = {
@@ -71,7 +64,7 @@ const Profile = () => {
             <link rel="icon" href="logos/qtanea.png" />
           </Head>
 
-          <main className={styles.wrapper}>
+          <main onLoad={callback} className={styles.wrapper}>
             <Navbar />
             <div className={styles.profile_wrapper}>
               <Section />

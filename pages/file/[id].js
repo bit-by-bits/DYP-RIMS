@@ -8,7 +8,7 @@ const ID = () => {
   const router = useRouter();
 
   if (typeof window !== "undefined") {
-    if (!localStorage.auth_token) router.push("/");
+    if (!localStorage.getItem("auth_token")) router.push("/");
     else {
       return (
         <>
