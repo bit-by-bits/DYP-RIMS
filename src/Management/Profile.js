@@ -1,8 +1,11 @@
+import axios from "axios";
 import React from "react";
 import styles from "../../styles/management.module.css";
 
 export default function Profile(props) {
-  const items = [];
+  const item = localStorage.getItem("auth_token"),
+    items = [];
+
   for (let a = 0; a < 6; a++) {
     items.push(
       <div key={a} className={styles.profile_scrollitem}>
@@ -12,12 +15,25 @@ export default function Profile(props) {
     );
   }
 
+  function download() {
+    axios({
+      method: "GET",
+      url: `https://rimsapi.journalchecker.com/api/v1/user/download_cv`,
+      headers: { Authorization: `Bearer ${item}` },
+    }).then(function (response) {
+      console.log(response.data);
+    });
+  }
+
   return (
     <>
       <div className={styles.profile_section}>
         <div className={styles.profile_grid}>
           <div className={styles.profile_personal}>
-            <img src="doctah.png" className={styles.profile_img}></img>
+            <img
+              src="https://source.boringavatars.com/"
+              className={styles.profile_img}
+            ></img>
             <div className={styles.profile_text}>
               <div className={styles.profile_name}>Dr FirstName LastName</div>
 
@@ -49,7 +65,7 @@ export default function Profile(props) {
             <span>Add a file</span>
           </div>
 
-          <div className={styles.profile_btn2}>
+          <div onClick={download} className={styles.profile_btn2}>
             <span>Download CV</span>
           </div>
         </div>
