@@ -1,12 +1,16 @@
 config.autoAddCss = false;
+import { config } from "@fortawesome/fontawesome-svg-core";
+
+import Head from "next/head";
 import "../styles/globals.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
-import { config } from "@fortawesome/fontawesome-svg-core";
 
 const MyApp = ({ Component, pageProps }) => {
   return (
     <>
-      <script async defer src="https://accounts.google.com/gsi/client"></script>
+      <Head>
+        <script async src="https://accounts.google.com/gsi/client"></script>
+      </Head>
       <Component {...pageProps} />
     </>
   );

@@ -1,5 +1,5 @@
 import Head from "next/head";
-import styles from "../styles/file.module.css";
+import styles from "../../styles/file.module.css";
 import React from "react";
 import { useRouter } from "next/router";
 import Navbar from "../../src/Common/Navbar";

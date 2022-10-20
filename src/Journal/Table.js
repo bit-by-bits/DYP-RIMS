@@ -9,7 +9,7 @@ export default function Table(props) {
 
   function file(id) {
     const router = useRouter();
-    router.push(`/file/${id}`);
+    // router.push(`/file/${id}`);
   }
 
   for (let a = 0; a < props.data.length; a++) {

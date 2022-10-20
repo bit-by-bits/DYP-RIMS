@@ -56,7 +56,7 @@ const Journal = () => {
             <div className={styles.mgmt_wrapper}>
               <div className={styles.title}>All Publications</div>
               <Options />
-              <form className={styles.form}>
+              {/* <form className={styles.form}>
                 <label htmlFor="metric1">
                   <img src="unchecked/unchecked.png" />
                   <span>Metric 1</span>
@@ -86,7 +86,7 @@ const Journal = () => {
                   <span>Metric 5</span>
                   <input type="checkbox" id="metric5" />
                 </label>
-              </form>
+              </form> */}
               <Table data={publications} />
               <div className={styles.footer}>Made by Qtanea</div>
             </div>

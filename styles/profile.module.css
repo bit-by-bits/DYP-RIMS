@@ -320,4 +320,24 @@
     margin-right: 1rem !important;
   }
 }
-/*# sourceMappingURL=profile.module.css.map */
+
+.btn_td {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn_div {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transform: translateY(0.5rem);
+  border-radius: 8px;
+  text-align: center;
+  background-color: #9a2827;
+  color: white;
+  font-weight: 700;
+}
+
+.btn_div:hover{
+  background-color: #7e1918;
+}

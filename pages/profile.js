@@ -35,6 +35,7 @@ const Profile = () => {
           headers: { Authorization: `Bearer ${item}` },
         }).then(function (response) {
           temp = response.data.publications;
+          console.log(temp);
           setPubs(temp);
         });
 
@@ -58,8 +59,8 @@ const Profile = () => {
           journ: pubs[a].journal_name,
           softcopy: false,
           citations: "44",
-          metric1: "12.3",
-          metric2: "9.64%",
+          h_index: pubs[a].h_index,
+          dept: pubs[a].department.name,
           year: pubs[a].year,
         };
 

@@ -2,7 +2,7 @@ import React from "react";
 import styles from "../../styles/profile.module.css";
 
 export default function Table(props) {
-  const title = ["Title", "Citations", "Metric 1", "Metric 2", "Year"],
+  const title = ["Title", "Year", "H-Index", "Department", "View More"],
     rows = [],
     head = [];
 
@@ -18,10 +18,10 @@ export default function Table(props) {
           </span>
         </td>
 
-        <td>{props.data[a].citations}</td>
-        <td>{props.data[a].metric1}</td>
-        <td>{props.data[a].metric2}</td>
         <td>{props.data[a].year}</td>
+        <td>{props.data[a].h_index}</td>
+        <td>{props.data[a].dept}</td>
+        <td className={styles.btn_td}><div className={styles.btn_div}>Click</div></td>
       </tr>
     );
   }
@@ -29,7 +29,8 @@ export default function Table(props) {
   for (let a = 0; a < 5; a++) {
     head.push(
       <th key={a}>
-        <span>{title[a]}</span> <img src="icons/sort.png" />
+        <span>{title[a]}</span>
+        <img src="icons/sort.png" />
       </th>
     );
   }
@@ -42,7 +43,6 @@ export default function Table(props) {
         <table className={styles.profile_table}>
           <tbody>
             <tr className={styles.profile_thead}>{head}</tr>
-
             {rows}
           </tbody>
         </table>
