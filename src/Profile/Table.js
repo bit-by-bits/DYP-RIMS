@@ -21,7 +21,9 @@ export default function Table(props) {
         <td>{props.data[a].year}</td>
         <td>{props.data[a].h_index}</td>
         <td>{props.data[a].dept}</td>
-        <td className={styles.btn_td}><div className={styles.btn_div}>Click</div></td>
+        <td className={styles.btn_td}>
+          <div className={styles.btn_div}>Click</div>
+        </td>
       </tr>
     );
   }
