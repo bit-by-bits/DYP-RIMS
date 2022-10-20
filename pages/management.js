@@ -29,7 +29,7 @@ const Mgmt = () => {
         publishers[a] = {
           name: "Dr Firstname Lastname",
           college: "Dr. DY Patil Medical College",
-          image: "doctah.png",
+          image: "https://source.boringavatars.com/",
         };
 
       return (
