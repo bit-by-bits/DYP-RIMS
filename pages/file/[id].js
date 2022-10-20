@@ -4,7 +4,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import Navbar from "../../src/Common/Navbar";
 
-const file = () => {
+const ID = () => {
   const router = useRouter();
 
   if (typeof window !== "undefined") {
@@ -139,4 +139,4 @@ const file = () => {
   }
 };
 
-export default file;
+export default ID;

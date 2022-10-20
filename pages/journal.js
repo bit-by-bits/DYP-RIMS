@@ -57,31 +57,31 @@ const Journal = () => {
               <div className={styles.title}>All Publications</div>
               <Options />
               <form className={styles.form}>
-                <label for="metric1">
+                <label htmlFor="metric1">
                   <img src="unchecked/unchecked.png" />
                   <span>Metric 1</span>
                   <input type="checkbox" id="metric1" />
                 </label>
 
-                <label for="metric2">
+                <label htmlFor="metric2">
                   <img src="unchecked/unchecked.png" />
                   <span>Metric 2</span>
                   <input type="checkbox" id="metric2" />
                 </label>
 
-                <label for="metric3">
+                <label htmlFor="metric3">
                   <img src="unchecked/unchecked.png" />
                   <span>Metric 3</span>
                   <input type="checkbox" id="metric3" />
                 </label>
 
-                <label for="metric4">
+                <label htmlFor="metric4">
                   <img src="unchecked/unchecked.png" />
                   <span>Metric 4</span>
                   <input type="checkbox" id="metric4" />
                 </label>
 
-                <label for="metric5">
+                <label htmlFor="metric5">
                   <img src="unchecked/unchecked.png" />
                   <span>Metric 5</span>
                   <input type="checkbox" id="metric5" />

@@ -43,10 +43,6 @@ const Upload = () => {
           url: `https://rimsapi.journalchecker.com/api/v1/publication/upload`,
           headers: { Authorization: `Bearer ${item}` },
         }).then(function (response) {
-          // for (let a = 0; a < response.data.authors.length; a++) {
-          //   const element = response.data.authors[a];
-
-          // }
           const tempA = [];
           for (let i = 0; i < response.data.authors.length; i++) {
             tempA.push({
