@@ -3,11 +3,13 @@
   min-height: 100vh;
   padding: 6rem 10vw;
 }
+
 .wrapper .mgmt_wrapper .title {
   color: #9a2827;
   font-weight: 600;
   font-size: 1.4rem;
 }
+
 .wrapper .mgmt_wrapper .options {
   gap: 1rem;
   width: 100%;
@@ -15,11 +17,13 @@
   margin-top: 2rem;
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
+
 .wrapper .mgmt_wrapper .options .heading {
   color: #333333;
   font-weight: 500;
   font-size: 0.9rem;
 }
+
 .wrapper .mgmt_wrapper .options .option {
   padding: 1rem;
   background: #ffffff;
@@ -31,25 +35,30 @@
   align-items: center;
   border-radius: 8px;
 }
+
 .wrapper .mgmt_wrapper .options .option .down_arr:hover {
   color: black;
 }
+
 .wrapper .mgmt_wrapper .options .option .down_arr,
 .wrapper .mgmt_wrapper .options .option span {
   color: #666666;
   font-weight: 400;
   font-size: 0.8rem;
 }
+
 .wrapper .mgmt_wrapper .options .download {
   cursor: pointer;
   justify-content: center;
   gap: 0.6rem;
 }
+
 .wrapper .mgmt_wrapper .options .download span {
   color: black;
   font-weight: 500;
   font-size: 0.9rem;
 }
+
 .wrapper .mgmt_wrapper .form {
   gap: 2rem;
   margin: 3rem 0 2rem 0;
@@ -61,6 +70,7 @@
   width: -moz-max-content;
   width: max-content;
 }
+
 .wrapper .mgmt_wrapper .form label {
   gap: 0.6rem;
   display: flex;
@@ -71,30 +81,37 @@
   width: -moz-max-content;
   width: max-content;
 }
+
 .wrapper .mgmt_wrapper .form label img {
   height: 1.1rem;
 }
+
 .wrapper .mgmt_wrapper .form label input {
   display: none;
 }
+
 .wrapper .mgmt_wrapper .form label span {
   color: #333333;
   font-weight: 400;
   font-size: 1rem;
 }
+
 .wrapper .mgmt_wrapper .profile_table {
   border-spacing: 0;
   margin-left: -5vw;
   width: 90vw;
 }
+
 .wrapper .mgmt_wrapper .profile_table th,
 .wrapper .mgmt_wrapper .profile_table td {
   padding: 0.5rem 0;
 }
+
 .wrapper .mgmt_wrapper .profile_table th:nth-child(5n + 1),
 .wrapper .mgmt_wrapper .profile_table td:nth-child(5n + 1) {
   width: 45vw;
 }
+
 .wrapper .mgmt_wrapper .profile_table .profile_thead {
   background-color: #9a2827;
   border-radius: 16px;
@@ -102,28 +119,34 @@
   font-weight: 600;
   font-size: 0.85rem;
 }
+
 .wrapper .mgmt_wrapper .profile_table .profile_thead th {
   text-align: center;
   cursor: default;
 }
+
 .wrapper .mgmt_wrapper .profile_table .profile_thead th:nth-child(1) {
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 }
+
 .wrapper .mgmt_wrapper .profile_table .profile_thead th:nth-child(5) {
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
 }
+
 .wrapper .mgmt_wrapper .profile_table .profile_thead img {
   margin-left: 0.3rem;
   height: 0.7rem;
 }
+
 .wrapper .mgmt_wrapper .profile_table td:not(:nth-child(5n + 1)) {
   text-align: center;
   color: black;
   font-weight: 500;
   font-size: 1rem;
 }
+
 .wrapper .mgmt_wrapper .profile_table td:nth-child(5n + 1) {
   display: flex;
   flex-direction: column;
@@ -132,6 +155,7 @@
   align-items: flex-start;
   gap: 0.4rem;
 }
+
 .wrapper
   .mgmt_wrapper
   .profile_table
@@ -141,6 +165,7 @@
   font-weight: 600;
   font-size: 1rem;
 }
+
 .wrapper
   .mgmt_wrapper
   .profile_table
@@ -155,11 +180,13 @@
   font-weight: 400;
   font-size: 0.8rem;
 }
+
 .wrapper .mgmt_wrapper .profile_table td:nth-child(5n + 1) span:nth-child(4n) {
   color: #9a2827;
   font-weight: 600;
   font-size: 0.8rem;
 }
+
 .wrapper
   .mgmt_wrapper
   .profile_table
@@ -167,6 +194,7 @@
   span:nth-child(4n).true {
   display: block;
 }
+
 .wrapper
   .mgmt_wrapper
   .profile_table
@@ -174,6 +202,7 @@
   span:nth-child(4n).false {
   display: none;
 }
+
 .wrapper .mgmt_wrapper .footer {
   width: 100vw;
   position: absolute;
@@ -192,20 +221,25 @@
     margin-left: 0.5rem !important;
   }
 }
+
 @media screen and (min-width: 1700px) {
   .heading {
     font-size: 1.1rem !important;
   }
+
   .option {
     padding: 1rem 3rem !important;
   }
+
   .option span {
     letter-spacing: 0.3px;
     font-size: 0.9rem !important;
   }
 }
+
 @media screen and (min-width: 2100px) {
   .title {
     font-size: 1.6rem !important;
   }
-} /*# sourceMappingURL=journal.module.css.map */
+}
+/*# sourceMappingURL=journal.module.css.map */

@@ -5,6 +5,7 @@
   justify-content: space-between;
   align-items: center;
 }
+
 .wrapper .upload_wrapper .upload_left {
   border: 1px dashed #9a2827;
   padding: 2.2rem 0;
@@ -16,20 +17,24 @@
   justify-content: space-between;
   align-items: center;
 }
+
 .wrapper .upload_wrapper .upload_left .upload_img {
   height: 4rem;
   width: 4rem;
 }
+
 .wrapper .upload_wrapper .upload_left .upload_title {
   color: #9a2827;
   font-weight: 600;
   font-size: 3rem;
 }
+
 .wrapper .upload_wrapper .upload_left .upload_msg {
   color: #9a2827;
   font-weight: 400;
   font-size: 1.1rem;
 }
+
 .wrapper .upload_wrapper .upload_left .label {
   display: flex;
   flex-direction: "row";
@@ -38,14 +43,17 @@
   margin: 1.4rem 0;
   gap: 1rem;
 }
+
 .wrapper .upload_wrapper .upload_left .label .upload_input1 {
   display: none;
 }
+
 .wrapper .upload_wrapper .upload_left .label .upload_text {
   color: #9a2827;
   font-weight: 700;
   font-size: 1.1rem;
 }
+
 .wrapper .upload_wrapper .upload_left .upload_input2 {
   border: none;
   -webkit-appearance: none;
@@ -57,21 +65,25 @@
   background: #ffffff;
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
 }
+
 .wrapper .upload_wrapper .upload_left ::-moz-placeholder {
   color: #333333;
   font-weight: 400;
   font-size: 1rem;
 }
+
 .wrapper .upload_wrapper .upload_left :-ms-input-placeholder {
   color: #333333;
   font-weight: 400;
   font-size: 1rem;
 }
+
 .wrapper .upload_wrapper .upload_left ::placeholder {
   color: #333333;
   font-weight: 400;
   font-size: 1rem;
 }
+
 .wrapper .upload_wrapper .upload_right {
   gap: 4rem;
   display: flex;
@@ -80,6 +92,7 @@
   align-items: center;
   width: calc(25vw - 2rem);
 }
+
 .wrapper .upload_wrapper .upload_right .upload_filters {
   display: flex;
   flex-direction: column;
@@ -88,6 +101,7 @@
   width: 100%;
   gap: 2rem;
 }
+
 .wrapper .upload_wrapper .upload_right .upload_filters .upload_filter {
   display: flex;
   flex-direction: column;
@@ -97,13 +111,14 @@
   width: 100%;
   gap: 0.8rem;
 }
+
 .wrapper .upload_wrapper .upload_right .upload_filters .upload_filter .heading {
   color: #333333;
   font-weight: 500;
   font-size: 0.9rem;
 }
+
 .wrapper .upload_wrapper .upload_right .upload_filters .upload_filter .option {
-  padding: 1rem;
   width: 100%;
   background: #ffffff;
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
@@ -113,6 +128,13 @@
   align-items: center;
   border-radius: 8px;
 }
+
+.authors > div {
+  border: none !important;
+  width: 100%;
+  padding: 0.3rem !important;
+}
+
 .wrapper
   .upload_wrapper
   .upload_right
@@ -122,6 +144,7 @@
   .down_arr:hover {
   color: black;
 }
+
 .wrapper
   .upload_wrapper
   .upload_right
@@ -140,6 +163,7 @@
   font-weight: 400;
   font-size: 0.8rem;
 }
+
 .wrapper .upload_wrapper .upload_right .upload_btn {
   width: -webkit-max-content;
   width: -moz-max-content;
@@ -161,59 +185,75 @@
     gap: 2rem !important;
     padding: 3rem 0 !important;
   }
+
   .upload_right {
     gap: 5rem !important;
   }
+
   .upload_right .upload_filters {
     gap: 2.5rem !important;
   }
+
   .upload_right .upload_filters .upload_filter {
     gap: 1.5rem !important;
   }
 }
+
 @media screen and (min-width: 1400px) {
   .upload_left {
     gap: 1.5rem !important;
     padding: 2.5rem 0 !important;
   }
 }
+
 @media screen and (min-width: 1400px) {
   .wrapper {
     margin-top: 8rem;
   }
+
   .wrapper .upload_left {
     gap: 2rem !important;
     padding: 3rem !important;
   }
+
   .wrapper .upload_left .upload_input2 {
     width: 25vw !important;
     padding: 0.9rem 2rem !important;
   }
+
   .wrapper .upload_right {
     gap: 6rem !important;
   }
+
   .wrapper .upload_right .upload_filters {
     gap: 3rem !important;
   }
+
   .wrapper .upload_right .upload_filters .upload_filter {
     gap: 1.5rem !important;
   }
 }
+
 @media screen and (max-width: 1200px) {
   .upload_left {
     gap: 1.4rem !important;
   }
+
   .upload_left .upload_img {
     height: 3rem !important;
     width: 3rem !important;
   }
+
   .upload_left .upload_title {
     font-size: 2.6rem !important;
   }
+
   .upload_left .label .upload_btn {
     padding: 0.7rem 1.4rem !important;
   }
+
   .upload_left .upload_input2 {
     padding: 0.7rem 1.2rem !important;
   }
-} /*# sourceMappingURL=upload.module.css.map */
+}
+/*# sourceMappingURL=upload.module.css.map */

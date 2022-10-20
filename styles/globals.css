@@ -27,8 +27,10 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #9a2827;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   cursor: -webkit-grab;
   cursor: grab;
   background: #ce1c19;
-} /*# sourceMappingURL=globals.css.map */
+}
+/*# sourceMappingURL=globals.css.map */

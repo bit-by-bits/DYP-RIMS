@@ -8,6 +8,7 @@
   position: relative;
   padding: 6rem 10vw;
 }
+
 .wrapper .profile_wrapper .profile_section {
   display: flex;
   flex-direction: "row";
@@ -16,11 +17,13 @@
   align-items: stretch;
   gap: 1rem;
 }
+
 .wrapper .profile_wrapper .profile_section .profile_grid {
   gap: 1rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+
 .wrapper .profile_wrapper .profile_section .profile_grid .profile_personal {
   grid-column: 1 / span 2;
   background: #ffffff;
@@ -34,6 +37,7 @@
   padding: 1.5rem;
   gap: 1rem;
 }
+
 .wrapper
   .profile_wrapper
   .profile_section
@@ -42,6 +46,7 @@
   .profile_img {
   height: 6rem;
 }
+
 .wrapper
   .profile_wrapper
   .profile_section
@@ -53,6 +58,7 @@
   font-weight: 400;
   font-size: 0.9rem;
 }
+
 .wrapper
   .profile_wrapper
   .profile_section
@@ -65,6 +71,7 @@
   font-size: 1.2rem;
   margin-bottom: 1rem;
 }
+
 .wrapper
   .profile_wrapper
   .profile_section
@@ -77,6 +84,7 @@
   font-weight: 600;
   font-size: 0.8rem;
 }
+
 .wrapper .profile_wrapper .profile_section .profile_grid .profile_btn {
   padding: 1rem;
   width: 100%;
@@ -88,11 +96,13 @@
   font-weight: 700;
   font-size: 1.1rem;
 }
+
 .wrapper .profile_wrapper .profile_section .profile_feats {
   gap: 1rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+
 .wrapper .profile_wrapper .profile_section .profile_feats .profile_feat {
   cursor: pointer;
   display: flex;
@@ -108,18 +118,21 @@
   padding: 0 2rem;
   justify-content: center;
 }
+
 .wrapper .profile_wrapper .profile_box .profile_head {
   color: #9a2827;
   font-weight: 600;
   font-size: 1.2rem;
   margin: 2rem 0 1rem 0;
 }
+
 .wrapper .profile_wrapper .profile_box .profile_bodygrid {
   display: grid;
   width: 80vw;
   gap: 1rem;
   grid-template-columns: auto auto;
 }
+
 .wrapper .profile_wrapper .profile_box .profile_bodygrid .profile_body {
   background: #ffffff;
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
@@ -132,6 +145,7 @@
   gap: 0.5rem;
   padding: 1rem 2rem;
 }
+
 .wrapper
   .profile_wrapper
   .profile_box
@@ -142,6 +156,7 @@
   font-weight: 600;
   font-size: 1rem;
 }
+
 .wrapper
   .profile_wrapper
   .profile_box
@@ -152,18 +167,22 @@
   font-weight: 400;
   font-size: 0.8rem;
 }
+
 .wrapper .profile_wrapper .profile_box .profile_table {
   border-spacing: 0;
   width: 90vw;
 }
+
 .wrapper .profile_wrapper .profile_box .profile_table th,
 .wrapper .profile_wrapper .profile_box .profile_table td {
   padding: 0.5rem 0;
 }
+
 .wrapper .profile_wrapper .profile_box .profile_table th:nth-child(5n + 1),
 .wrapper .profile_wrapper .profile_box .profile_table td:nth-child(5n + 1) {
   width: 45vw;
 }
+
 .wrapper .profile_wrapper .profile_box .profile_table .profile_thead {
   background-color: #9a2827;
   border-radius: 16px;
@@ -171,10 +190,12 @@
   font-weight: 600;
   font-size: 0.85rem;
 }
+
 .wrapper .profile_wrapper .profile_box .profile_table .profile_thead th {
   text-align: center;
   cursor: default;
 }
+
 .wrapper
   .profile_wrapper
   .profile_box
@@ -184,6 +205,7 @@
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 }
+
 .wrapper
   .profile_wrapper
   .profile_box
@@ -193,10 +215,12 @@
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
 }
+
 .wrapper .profile_wrapper .profile_box .profile_table .profile_thead img {
   margin-left: 0.3rem;
   height: 0.7rem;
 }
+
 .wrapper
   .profile_wrapper
   .profile_box
@@ -207,6 +231,7 @@
   font-weight: 500;
   font-size: 1rem;
 }
+
 .wrapper .profile_wrapper .profile_box .profile_table td:nth-child(5n + 1) {
   display: flex;
   flex-direction: column;
@@ -215,6 +240,7 @@
   align-items: flex-start;
   gap: 0.4rem;
 }
+
 .wrapper
   .profile_wrapper
   .profile_box
@@ -225,6 +251,7 @@
   font-weight: 600;
   font-size: 1rem;
 }
+
 .wrapper
   .profile_wrapper
   .profile_box
@@ -241,6 +268,7 @@
   font-weight: 400;
   font-size: 0.8rem;
 }
+
 .wrapper
   .profile_wrapper
   .profile_box
@@ -251,6 +279,7 @@
   font-weight: 600;
   font-size: 0.8rem;
 }
+
 .wrapper
   .profile_wrapper
   .profile_box
@@ -259,6 +288,7 @@
   span:nth-child(4n).true {
   display: block;
 }
+
 .wrapper
   .profile_wrapper
   .profile_box
@@ -267,6 +297,7 @@
   span:nth-child(4n).false {
   display: none;
 }
+
 .wrapper .profile_wrapper .footer {
   width: 100vw;
   position: absolute;
@@ -284,7 +315,9 @@
   .profile_thead img {
     margin-left: 0.5rem !important;
   }
+
   .profile_img {
     margin-right: 1rem !important;
   }
-} /*# sourceMappingURL=profile.module.css.map */
+}
+/*# sourceMappingURL=profile.module.css.map */
