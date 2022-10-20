@@ -1,11 +1,11 @@
-import Head from "next/head";
-import styles from "../styles/upload.module.css";
 import axios from "axios";
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import Head from "next/head";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 import { useRouter } from "next/router";
 import Navbar from "../src/Common/Navbar";
+import styles from "../styles/upload.module.css";
 
 const Upload = () => {
   const router = useRouter();
@@ -13,27 +13,51 @@ const Upload = () => {
   if (typeof window !== "undefined") {
     if (!localStorage.auth_token) router.push("/");
     else {
-      const item = localStorage.getItem("auth_token");
+      const item = localStorage.getItem("auth_token"),
+        animatedComponents = makeAnimated();
+      const [authorList, setAuthorList] = React.useState([]);
+
+      const [selectedOptions, setSelectedOptions] = React.useState([]),
+        setHandle = (e) => {
+          setSelectedOptions(
+            Array.isArray(e) ? e.map((author) => author.label) : []
+          );
+        };
 
       function upload() {
         if (document.getElementById("doi_text").value == "")
           alert("Please enter a DOI first.");
-        else
+        else if (selectedOptions.length == 0)
+          alert("Please select an author first.");
+        else {
+          localStorage.setItem("authors", selectedOptions);
           router.push(
             `/uploading/${document.getElementById("doi_text").value}`
           );
+        }
       }
 
-      axios({
-        method: "GET",
-        url: `https://rimsapi.journalchecker.com/api/v1/publication/upload`,
-        headers: { Authorization: `Bearer ${item}` },
-      }).then(function (response) {
-        localStorage.setItem(
-          "authors",
-          response.data.authors.substr(2, response.data.authors.length - 4)
-        );
-      });
+      React.useEffect(() => {
+        axios({
+          method: "GET",
+          url: `https://rimsapi.journalchecker.com/api/v1/publication/upload`,
+          headers: { Authorization: `Bearer ${item}` },
+        }).then(function (response) {
+          // for (let a = 0; a < response.data.authors.length; a++) {
+          //   const element = response.data.authors[a];
+
+          // }
+          const tempA = [];
+          for (let i = 0; i < response.data.authors.length; i++) {
+            tempA.push({
+              value: i + 1,
+              label: response.data.authors[i],
+            });
+          }
+
+          setAuthorList(tempA);
+        });
+      }, []);
 
       return (
         <>
@@ -82,25 +106,29 @@ const Upload = () => {
                   <div className={styles.upload_filter}>
                     <div className={styles.heading}>Faculty</div>
 
-                    <div className={styles.option}>
-                      <span id="author_text">{localStorage.getItem("authors")}</span>
-                      <FontAwesomeIcon
-                        icon={faAngleDown}
-                        className={styles.down_arr}
-                      />
-                    </div>
+                    <Select
+                      id="author_text"
+                      closeMenuOnSelect={false}
+                      className={`${styles.option} ${styles.authors}`}
+                      components={animatedComponents}
+                      options={authorList}
+                      onChange={setHandle}
+                      isMulti
+                    />
                   </div>
 
                   <div className={styles.upload_filter}>
                     <div className={styles.heading}>Type of Publication</div>
 
-                    <div className={styles.option}>
-                      <span>Select Type</span>
-                      <FontAwesomeIcon
-                        icon={faAngleDown}
-                        className={styles.down_arr}
-                      />
-                    </div>
+                    <Select
+                      closeMenuOnSelect={false}
+                      id="author_text"
+                      className={`${styles.option} ${styles.authors}`}
+                      components={animatedComponents}
+                      options={authorList}
+                      onChange={setHandle}
+                      isMulti
+                    />
                   </div>
                 </div>
 

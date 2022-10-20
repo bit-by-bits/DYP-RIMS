@@ -12,13 +12,13 @@ export default function Details(props) {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
       },
-      data: { doi: props.doi, authors: props.authors },
+      data: { doi: props.doi, authors: localStorage.getItem("authors") },
     })
       .then(function (response) {
         props.check(false);
       })
       .catch(function (error) {
-        alert("Oops! " + error.message + "\nCheck your DOI again.");
+        alert("Oops! " + error.message + "\nCheck your details again.");
       });
   }
 
