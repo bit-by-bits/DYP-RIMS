@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../../styles/Uploading.module.css";
+import styles from "../../styles/uploading.module.css";
 
 export default function Status(props) {
   return (

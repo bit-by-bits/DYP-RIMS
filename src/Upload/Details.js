@@ -1,24 +1,24 @@
 import React from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import styles from "../../styles/Uploading.module.css";
+import styles from "../../styles/uploading.module.css";
 
 export default function Details(props) {
   const router = useRouter();
   function submit() {
     axios({
       method: "POST",
-      url: `http://127.0.0.1:8000/api/v1/publication/upload`,
+      url: `https://rimsapi.journalchecker.com/api/v1/publication/upload`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
       },
-      data: { doi: props.doi, authors: props.authors },
+      data: { doi: props.doi, authors: localStorage.getItem("authors") },
     })
       .then(function (response) {
         props.check(false);
       })
       .catch(function (error) {
-        alert("Oops! " + error.message + "\nCheck your DOI again.");
+        alert("Oops! " + error.message + "\nCheck your details again.");
       });
   }
 
@@ -29,7 +29,7 @@ export default function Details(props) {
   return (
     <>
       <div className={styles.uploading_msg}>
-        <img src="../upload/alert.png" className={styles.uploading_alert} />
+        <img src={props.alert} className={styles.uploading_alert} />
         <span>You are uploading abcde.pdf</span>
       </div>
 

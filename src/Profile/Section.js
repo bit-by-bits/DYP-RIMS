@@ -1,13 +1,25 @@
 import React from "react";
+import axios from "axios";
 import Link from "next/link";
 import styles from "../../styles/profile.module.css";
 import { useRouter } from "next/router";
 
 export default function Section(props) {
   const router = useRouter();
+  const item = localStorage.getItem("auth_token");
 
   function add() {
     router.push("/upload");
+  }
+
+  function download() {
+    axios({
+      method: "GET",
+      url: `https://rimsapi.journalchecker.com/api/v1/user/download_cv`,
+      headers: { Authorization: `Bearer ${item}` },
+    }).then(function (response) {
+      console.log(response.data);
+    });
   }
 
   return (
@@ -15,7 +27,10 @@ export default function Section(props) {
       <div className={styles.profile_section}>
         <div className={styles.profile_grid}>
           <div className={styles.profile_personal}>
-            <img src="doctah.png" className={styles.profile_img}></img>
+            <img
+              src="https://source.boringavatars.com/"
+              className={styles.profile_img}
+            ></img>
             <div className={styles.profile_text}>
               <div className={styles.profile_name}>Dr Aayush Gupta</div>
 
@@ -39,7 +54,9 @@ export default function Section(props) {
             Add a file
           </div>
 
-          <div className={styles.profile_btn}>Download CV</div>
+          <div onClick={download} className={styles.profile_btn}>
+            Download CV
+          </div>
         </div>
 
         <div className={styles.profile_feats}>

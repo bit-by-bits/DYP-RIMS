@@ -17,23 +17,37 @@ const Profile = () => {
       if (localStorage.getItem("user_role") == "management")
         router.push("/management");
 
-      const awards = [4];
-      for (let a = 0; a < 4; a++)
-        awards[a] = { what: "Best paper award IJDVL", when: "Jan 2015" };
+      // const data = [4];
+      // for (let a = 0; a < 4; a++)
+      //   data[a] = { what: "Best paper award IJDVL", when: "Jan 2015" };
 
+      const item = localStorage.getItem("auth_token");
       const publications = [],
         temp = [];
-      const item = localStorage.getItem("auth_token");
-      const [pubs, setPubs] = React.useState(temp);
+
+      const [pubs, setPubs] = React.useState(temp),
+        [data, setData] = React.useState(temp);
 
       React.useEffect(() => {
         axios({
           method: "GET",
-          url: `http://127.0.0.1:8000/api/v1/publication`,
+          url: `https://rimsapi.journalchecker.com/api/v1/publication`,
           headers: { Authorization: `Bearer ${item}` },
         }).then(function (response) {
           temp = response.data.publications;
           setPubs(temp);
+        });
+
+        axios({
+          method: "GET",
+          url: `https://rimsapi.journalchecker.com/api/v1/user/profile/${localStorage.getItem(
+            "user_id"
+          )}`,
+          headers: { Authorization: `Bearer ${item}` },
+        }).then(function (response) {
+          localStorage.setItem("name", response.data.name);
+          temp = response.data.awards;
+          setData(temp);
         });
       }, []);
 
@@ -60,10 +74,10 @@ const Profile = () => {
             <Navbar />
             <div className={styles.profile_wrapper}>
               <Section />
-              <Boxes title="Awards & Achievements" data={awards} />
-              <Boxes title="Patents" data={awards} />
+              <Boxes title="Awards & Achievements" data={data} />
+              <Boxes title="Patents" data={data} />
               <Table title="Publications" data={publications} />
-              <Boxes title="Conferences" data={awards} />
+              <Boxes title="Conferences" data={data} />
               <div className={styles.footer}>Made by Qtanea</div>
             </div>
           </main>

@@ -6,7 +6,13 @@ const Navbar = () => {
   return (
     <div className={styles.navbar}>
       <div className={styles.nav_left}>
-        <Link href="/dashboard">
+        <Link
+          href={
+            localStorage.getItem("user_role") == "management"
+              ? "/management"
+              : "/profile"
+          }
+        >
           <div>Home</div>
         </Link>
       </div>
