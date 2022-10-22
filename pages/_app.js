@@ -7,7 +7,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 const MyApp = ({ Component, pageProps }) => {
   return (
     <>
-      <script src="https://accounts.google.com/gsi/client" />
+      <script async src="https://accounts.google.com/gsi/client" />
       <Component {...pageProps} />
     </>
   );

@@ -36,7 +36,7 @@ export default function Profile(props) {
             ></img>
             <div className={styles.profile_text}>
               <div className={styles.profile_name}>
-                {localStorage.getItem("name")}
+                {localStorage.getItem("user_name")}
               </div>
 
               <div className={styles.profile_post}>Associate Professor</div>

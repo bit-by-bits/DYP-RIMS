@@ -33,15 +33,17 @@ export default function Section(props) {
             ></img>
             <div className={styles.profile_text}>
               <div className={styles.profile_name}>
-                {localStorage.getItem("name")}
+                {localStorage.getItem("user_name")}
               </div>
 
               <div className={styles.profile_degree}>MBBS, M.D.</div>
 
-              <div className={styles.profile_post}>Associate Professor</div>
+              <div className={styles.profile_post}>
+                {localStorage.getItem("user_role")}
+              </div>
 
               <div className={styles.profile_dept}>
-                Department of Dermatology
+                Department of {localStorage.getItem("user_dept")}
               </div>
 
               <div className={styles.profile_clg}>

@@ -13,6 +13,10 @@ const Journal = () => {
     temp = [];
   const [pubs, setPubs] = React.useState(temp);
 
+  React.useEffect(() => {
+    callback();
+  }, []);
+
   if (typeof window !== "undefined") {
     if (!localStorage.getItem("auth_token")) router.push("/");
     else {
