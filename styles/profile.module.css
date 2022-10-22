@@ -183,6 +183,15 @@
   width: 45vw;
 }
 
+.wrapper .profile_wrapper .profile_box .profile_table th:nth-child(5n + 5),
+.wrapper .profile_wrapper .profile_box .profile_table td:nth-child(5n + 5) {
+  padding-right: 1rem;
+}
+
+.wrapper .profile_wrapper .profile_box .profile_table td:nth-child(5n + 1) {
+  padding-left: 1rem;
+}
+
 .wrapper .profile_wrapper .profile_box .profile_table .profile_thead {
   background-color: #9a2827;
   border-radius: 16px;
@@ -192,8 +201,9 @@
 }
 
 .wrapper .profile_wrapper .profile_box .profile_table .profile_thead th {
-  text-align: center;
+  min-width: 100px;
   cursor: default;
+  text-align: center;
 }
 
 .wrapper

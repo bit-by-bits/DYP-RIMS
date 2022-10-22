@@ -99,6 +99,7 @@
 .wrapper .mgmt_wrapper .profile_table {
   border-spacing: 0;
   margin-left: -5vw;
+  margin-top: 2rem;
   width: 90vw;
 }
 
@@ -112,6 +113,15 @@
   width: 45vw;
 }
 
+.wrapper .mgmt_wrapper .profile_table td:nth-child(5n + 1) {
+  padding-left: 1rem;
+}
+
+.wrapper .mgmt_wrapper .profile_table td:nth-child(5n + 5),
+.wrapper .mgmt_wrapper .profile_table th:nth-child(5n + 5) {
+  padding-right: 1rem;
+}
+
 .wrapper .mgmt_wrapper .profile_table .profile_thead {
   background-color: #9a2827;
   border-radius: 16px;
@@ -121,8 +131,9 @@
 }
 
 .wrapper .mgmt_wrapper .profile_table .profile_thead th {
-  text-align: center;
   cursor: default;
+  text-align: center;
+  min-width: 100px;
 }
 
 .wrapper .mgmt_wrapper .profile_table .profile_thead th:nth-child(1) {
@@ -242,4 +253,24 @@
     font-size: 1.6rem !important;
   }
 }
-/*# sourceMappingURL=journal.module.css.map */
+
+.btn_td {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn_div {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transform: translateY(0.5rem);
+  border-radius: 8px;
+  text-align: center;
+  background-color: #9a2827;
+  color: white;
+  font-weight: 700;
+}
+
+.btn_div:hover {
+  background-color: #7e1918;
+}

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import styles from "../../styles/profile.module.css";
 
@@ -6,26 +7,37 @@ export default function Table(props) {
     rows = [],
     head = [];
 
+  let author_str = "";
   for (let a = 0; a < props.data.length; a++) {
+    const b = props.data[a].authors;
+    const c = props.data[a].h_index;
+    for (let d = 0; d < b.length; d++) {
+      author_str += b[d].searchable_name + (d != b.length - 1 ? ", " : "");
+    }
+
     rows.push(
       <tr key={a}>
         <td>
           <span>{props.data[a].title}</span>
-          <span>{props.data[a].authors}</span>
-          <span>{props.data[a].journ}</span>
+          <span>{author_str}</span>
+          <span>{props.data[a].name}</span>
           <span className={styles.false}>
             No softcopy found for this publication. Kindly upload a softcopy.
           </span>
         </td>
 
         <td>{props.data[a].year}</td>
-        <td>{props.data[a].h_index}</td>
+        <td>{c == null ? "NA" : c}</td>
         <td>{props.data[a].dept}</td>
         <td className={styles.btn_td}>
-          <div className={styles.btn_div}>Click</div>
+          <Link href={"/file/" + props.data[a].id}>
+            <div className={styles.btn_div}>Click</div>
+          </Link>
         </td>
       </tr>
     );
+
+    author_str = "";
   }
 
   for (let a = 0; a < 5; a++) {

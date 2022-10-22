@@ -4,9 +4,9 @@ import axios from "axios";
 import React from "react";
 import Navbar from "../src/Common/Navbar";
 import Boxes from "../src/Profile/Boxes";
+import Table from "../src/Profile/Table";
 import Section from "../src/Profile/Section";
 import { useRouter } from "next/router";
-import Table from "../src/Profile/Table";
 
 const Profile = () => {
   const router = useRouter();
@@ -47,14 +47,20 @@ const Profile = () => {
 
       for (let a = 0; a < pubs.length; a++)
         publications[a] = {
+          id: pubs[a].id,
+          pubmed_id: pubs[a].pubmed_id,
+          doi_id: pubs[a].doi_id,
+          type: pubs[a].publication_type,
           title: pubs[a].publication_title,
-          authors: pubs[a].author_name[0].searchable_name,
-          journ: pubs[a].journal_name,
-          softcopy: false,
-          citations: "44",
-          h_index: pubs[a].h_index,
-          dept: pubs[a].department.name,
+          name: pubs[a].journal_name,
           year: pubs[a].year,
+          i_factor: pubs[a].impact_factor,
+          h_index: pubs[a].h_index,
+          region: pubs[a].region,
+          citations: pubs[a].citations,
+          dept: pubs[a].department.name,
+          authors: pubs[a].author_name,
+          softcopy: false,
         };
 
       return (

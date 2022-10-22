@@ -4,18 +4,14 @@ import axios from "axios";
 import React from "react";
 import Navbar from "../src/Common/Navbar";
 import Table from "../src/Journal/Table";
-import { useRouter } from "next/router";
 import Options from "../src/Journal/Options";
+import { useRouter } from "next/router";
 
 const Journal = () => {
   const router = useRouter();
   const publications = [],
     temp = [];
   const [pubs, setPubs] = React.useState(temp);
-
-  React.useEffect(() => {
-    callback();
-  }, []);
 
   if (typeof window !== "undefined") {
     if (!localStorage.getItem("auth_token")) router.push("/");
@@ -33,19 +29,23 @@ const Journal = () => {
         });
       }
 
-      for (let a = 0; a < pubs.length; a++) {
+      for (let a = 0; a < pubs.length; a++)
         publications[a] = {
           id: pubs[a].id,
+          pubmed_id: pubs[a].pubmed_id,
+          doi_id: pubs[a].doi_id,
+          type: pubs[a].publication_type,
           title: pubs[a].publication_title,
-          authors: pubs[a].author_name[0].searchable_name,
-          journ: pubs[a].journal_name,
-          softcopy: false,
-          citations: "44",
-          metric1: "12.3",
-          metric2: "9.64%",
+          name: pubs[a].journal_name,
           year: pubs[a].year,
+          i_factor: pubs[a].impact_factor,
+          h_index: pubs[a].h_index,
+          region: pubs[a].region,
+          citations: pubs[a].citations,
+          dept: pubs[a].department.name,
+          authors: pubs[a].author_name,
+          softcopy: false,
         };
-      }
 
       return (
         <>
@@ -60,37 +60,6 @@ const Journal = () => {
             <div className={styles.mgmt_wrapper}>
               <div className={styles.title}>All Publications</div>
               <Options />
-              {/* <form className={styles.form}>
-                <label htmlFor="metric1">
-                  <img src="unchecked/unchecked.png" />
-                  <span>Metric 1</span>
-                  <input type="checkbox" id="metric1" />
-                </label>
-
-                <label htmlFor="metric2">
-                  <img src="unchecked/unchecked.png" />
-                  <span>Metric 2</span>
-                  <input type="checkbox" id="metric2" />
-                </label>
-
-                <label htmlFor="metric3">
-                  <img src="unchecked/unchecked.png" />
-                  <span>Metric 3</span>
-                  <input type="checkbox" id="metric3" />
-                </label>
-
-                <label htmlFor="metric4">
-                  <img src="unchecked/unchecked.png" />
-                  <span>Metric 4</span>
-                  <input type="checkbox" id="metric4" />
-                </label>
-
-                <label htmlFor="metric5">
-                  <img src="unchecked/unchecked.png" />
-                  <span>Metric 5</span>
-                  <input type="checkbox" id="metric5" />
-                </label>
-              </form> */}
               <Table data={publications} />
               <div className={styles.footer}>Made by Qtanea</div>
             </div>
