@@ -12,7 +12,7 @@ export default function Details(props) {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
       },
-      data: { doi: props.doi, authors: localStorage.getItem("authors") },
+      data: { doi: props.doi, authors: localStorage.getItem("u_auth").split(',') },
     })
       .then(function (response) {
         props.check(false);
@@ -34,18 +34,21 @@ export default function Details(props) {
       </div>
 
       <div className={styles.uploading_flex}>
-        {/* <div className={styles.uploading_info}>
-          <div className={styles.uploading_title}>Title</div>
-          <div className={styles.uploading_box}>
-            Quality of life in acne vulgaris: Relationship to clinical severity
-            and demographic data
-          </div>
-        </div> */}
-
         <div className={styles.uploading_info}>
           <div className={styles.uploading_title}>Authors</div>
           <div className={styles.uploading_box}>
-            {props.authors == null ? "NA" : props.authors}
+            {localStorage.getItem("u_auth") == null
+              ? "NA"
+              : localStorage.getItem("u_auth")}
+          </div>
+        </div>
+
+        <div className={styles.uploading_info}>
+          <div className={styles.uploading_title}>Department</div>
+          <div className={styles.uploading_box}>
+            {localStorage.getItem("u_dept") == null
+              ? "NA"
+              : localStorage.getItem("u_dept")}
           </div>
         </div>
 

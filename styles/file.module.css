@@ -9,6 +9,7 @@
 
 .wrapper .file_wrapper .file_text {
   display: flex;
+  min-width: 60vw;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -24,7 +25,7 @@
 
 .wrapper .file_wrapper .file_text .file_grid {
   display: grid;
-  gap: 1rem;
+  gap: 1rem 3rem;
   grid-template-columns: auto auto;
 }
 
@@ -39,6 +40,7 @@
   font-weight: 400;
   font-size: 1rem;
   display: flex;
+  text-transform: capitalize;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;

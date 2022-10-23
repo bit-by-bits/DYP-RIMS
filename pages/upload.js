@@ -9,13 +9,18 @@ import styles from "../styles/upload.module.css";
 
 const Upload = () => {
   const router = useRouter();
-  const [authorList, setAuthorList] = React.useState([]);
-  const [selectedOptions, setSelectedOptions] = React.useState([]),
-    setHandle = (e) => {
-      setSelectedOptions(
-        Array.isArray(e) ? e.map((author) => author.label) : []
-      );
-    };
+  const [authorList, setAuthorList] = React.useState([
+      { value: 0, label: "A" },
+      { value: 1, label: "B" },
+      { value: 2, label: "C" },
+    ]),
+    [deptList, setDeptList] = React.useState([{ value: 1, label: "B" }]),
+    [selectedOptions, setSelectedOptions] = React.useState([]),
+    [selectedOptions2, setSelectedOptions2] = React.useState([]);
+
+  const setHandle = (e) => {
+    setSelectedOptions(Array.isArray(e) ? e.map((author) => author.label) : []);
+  };
 
   React.useEffect(() => {
     callback();
@@ -32,8 +37,12 @@ const Upload = () => {
           alert("Please enter a DOI first.");
         else if (selectedOptions.length == 0)
           alert("Please select an author first.");
+        else if (selectedOptions2 == null || selectedOptions2.length == 0)
+          alert("Please select a department first.");
         else {
-          localStorage.setItem("authors", selectedOptions);
+          localStorage.setItem("u_auth", selectedOptions);
+          localStorage.setItem("u_dept", selectedOptions2.label);
+
           router.push(
             `/uploading/${document.getElementById("doi_text").value}`
           );
@@ -41,21 +50,28 @@ const Upload = () => {
       }
 
       function callback() {
-        axios({
-          method: "GET",
-          url: `https://rimsapi.journalchecker.com/api/v1/publication/upload`,
-          headers: { Authorization: `Bearer ${item}` },
-        }).then(function (response) {
-          const tempA = [];
-          for (let i = 0; i < response.data.authors.length; i++) {
-            tempA.push({
-              value: i + 1,
-              label: response.data.authors[i],
-            });
-          }
-
-          setAuthorList(tempA);
-        });
+        // axios({
+        //   method: "GET",
+        //   url: `https://rimsapi.journalchecker.com/api/v1/publication/upload`,
+        //   headers: { Authorization: `Bearer ${item}` },
+        // }).then(function (response) {
+        //   const tempA = [],
+        //     tempB = [];
+        //   for (let i = 0; i < response.data.authors.length; i++) {
+        //     tempA.push({
+        //       value: i + 1,
+        //       label: response.data.authors[i],
+        //     });
+        //   }
+        //   for (let i = 0; i < response.data.departments.length; i++) {
+        //     tempB.push({
+        //       value: i + 1,
+        //       label: response.data.departments[i],
+        //     });
+        //   }
+        //   setAuthorList(tempA);
+        //   setDeptList(tempB);
+        // });
       }
 
       return (
@@ -103,7 +119,7 @@ const Upload = () => {
               <div className={styles.upload_right}>
                 <div className={styles.upload_filters}>
                   <div className={styles.upload_filter}>
-                    <div className={styles.heading}>Faculty</div>
+                    <div className={styles.heading}>Author</div>
 
                     <Select
                       id="author_text"
@@ -111,22 +127,22 @@ const Upload = () => {
                       className={`${styles.option} ${styles.authors}`}
                       components={animatedComponents}
                       options={authorList}
+                      onClick={console.log(selectedOptions)}
                       onChange={setHandle}
                       isMulti
                     />
                   </div>
 
                   <div className={styles.upload_filter}>
-                    <div className={styles.heading}>Type of Publication</div>
+                    <div className={styles.heading}>Department</div>
 
                     <Select
                       closeMenuOnSelect={false}
-                      id="author_text"
+                      id="dept_text"
                       className={`${styles.option} ${styles.authors}`}
-                      components={animatedComponents}
-                      options={authorList}
-                      onChange={setHandle}
-                      isMulti
+                      isClearable={true}
+                      onChange={setSelectedOptions2}
+                      options={deptList}
                     />
                   </div>
                 </div>
