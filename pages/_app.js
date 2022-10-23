@@ -1,12 +1,13 @@
 config.autoAddCss = false;
+import { config } from "@fortawesome/fontawesome-svg-core";
+
 import "../styles/globals.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
-import { config } from "@fortawesome/fontawesome-svg-core";
 
 const MyApp = ({ Component, pageProps }) => {
   return (
     <>
-      <script src="https://accounts.google.com/gsi/client"></script>
+      <script async src="https://accounts.google.com/gsi/client" />
       <Component {...pageProps} />
     </>
   );

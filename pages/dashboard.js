@@ -12,7 +12,7 @@ const Dashboard = () => {
   const router = useRouter();
 
   if (typeof window !== "undefined") {
-    if (!localStorage.auth_token) router.push("/");
+    if (!localStorage.getItem("auth_token")) router.push("/");
     else {
       const publishers = [];
       for (let a = 0; a < 5; a++)

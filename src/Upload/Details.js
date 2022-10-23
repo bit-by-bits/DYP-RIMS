@@ -34,18 +34,19 @@ export default function Details(props) {
       </div>
 
       <div className={styles.uploading_flex}>
-        <div className={styles.uploading_info}>
+        {/* <div className={styles.uploading_info}>
           <div className={styles.uploading_title}>Title</div>
-          {/* <input type="text" className={styles.uploading_box} placeholder={'Quality of life in acne vulgaris: Relationship to clinical severity and demographic data'} /> */}
           <div className={styles.uploading_box}>
             Quality of life in acne vulgaris: Relationship to clinical severity
             and demographic data
           </div>
-        </div>
+        </div> */}
 
         <div className={styles.uploading_info}>
           <div className={styles.uploading_title}>Authors</div>
-          <div className={styles.uploading_box}>{props.authors}</div>
+          <div className={styles.uploading_box}>
+            {props.authors == null ? "NA" : props.authors}
+          </div>
         </div>
 
         <div className={styles.uploading_info}>

@@ -1,15 +1,62 @@
 import Head from "next/head";
-import styles from "../styles/file.module.css";
+import styles from "../../styles/file.module.css";
 import React from "react";
 import { useRouter } from "next/router";
 import Navbar from "../../src/Common/Navbar";
+import axios from "axios";
 
-const file = () => {
+const ID = () => {
   const router = useRouter();
+  const { id } = router.query;
+  const temp = [];
+  const [pubs, setPubs] = React.useState(temp),
+    [authors, setAuthors] = React.useState("");
 
   if (typeof window !== "undefined") {
-    if (!localStorage.auth_token) router.push("/");
+    if (!localStorage.getItem("auth_token")) router.push("/");
     else {
+      const item = localStorage.getItem("auth_token");
+
+      let counter = setInterval(() => {
+        if (router.isReady) {
+          axios({
+            method: "GET",
+            url: "https://rimsapi.journalchecker.com/api/v1/publication/" + id,
+            headers: { Authorization: `Bearer ${item}` },
+          }).then(function (response) {
+            temp = response.data.publication;
+            setPubs(temp);
+
+            let extra = "";
+            for (let i = 0; i < temp.author_name.length; i++) {
+              setAuthors(
+                (extra +=
+                  temp.author_name[i].searchable_name +
+                  (i != temp.author_name.length - 1 ? ", " : ""))
+              );
+            }
+          });
+        }
+        if (!router.isReady) clearInterval(counter);
+      }, 1000);
+
+      // publication = {
+      //   id: pubs.id,
+      //   pubmed_id: pubs.pubmed_id,
+      //   doi_id: pubs.doi_id,
+      //   type: pubs.publication_type,
+      //   title: pubs.publication_title,
+      //   name: pubs.journal_name,
+      //   year: pubs.year,
+      //   i_factor: pubs.impact_factor,
+      //   h_index: pubs.h_index,
+      //   region: pubs.region,
+      //   citations: pubs.citations,
+      //   dept: pubs.department.name,
+      //   authors: "",
+      //   softcopy: false,
+      // };
+
       return (
         <>
           <Head>
@@ -23,27 +70,21 @@ const file = () => {
             <div className={styles.file_wrapper}>
               <div className={styles.file_text}>
                 <div className={styles.file_title}>
-                  Quality of life in acne vulgaris: Relationship to clinical
-                  severity and demographic data
+                  {pubs.publication_title}
                 </div>
 
                 <div className={styles.file_grid}>
                   <div className={styles.file_head}>Authors</div>
 
-                  <div className={styles.file_body}>
-                    Aayush Gupta, Yugal Kishore Sharma, Kedar Nath Dash, Nitin
-                    Dinkar Chaudhari, Sumit Jethani
-                  </div>
+                  <div className={styles.file_body}>{authors}</div>
 
                   <div className={styles.file_head}>Publication date</div>
 
-                  <div className={styles.file_body}>2016/1</div>
+                  <div className={styles.file_body}>{pubs.year}</div>
 
                   <div className={styles.file_head}>Journal</div>
 
-                  <div className={styles.file_body}>
-                    Indian Journal of Dermatology Venereology and Leprology
-                  </div>
+                  <div className={styles.file_body}>{pubs.journal_name}</div>
 
                   <div className={styles.file_head}>Publisher</div>
 
@@ -139,4 +180,4 @@ const file = () => {
   }
 };
 
-export default file;
+export default ID;

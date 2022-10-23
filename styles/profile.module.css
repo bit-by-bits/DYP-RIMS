@@ -78,6 +78,16 @@
   .profile_grid
   .profile_personal
   .profile_text
+  .profile_post {
+  text-transform: capitalize;
+}
+
+.wrapper
+  .profile_wrapper
+  .profile_section
+  .profile_grid
+  .profile_personal
+  .profile_text
   .profile_edit {
   margin-top: 0.5rem;
   color: #9a2827;
@@ -183,6 +193,15 @@
   width: 45vw;
 }
 
+.wrapper .profile_wrapper .profile_box .profile_table th:nth-child(5n + 5),
+.wrapper .profile_wrapper .profile_box .profile_table td:nth-child(5n + 5) {
+  padding-right: 1rem;
+}
+
+.wrapper .profile_wrapper .profile_box .profile_table td:nth-child(5n + 1) {
+  padding-left: 1rem;
+}
+
 .wrapper .profile_wrapper .profile_box .profile_table .profile_thead {
   background-color: #9a2827;
   border-radius: 16px;
@@ -192,8 +211,9 @@
 }
 
 .wrapper .profile_wrapper .profile_box .profile_table .profile_thead th {
-  text-align: center;
+  min-width: 100px;
   cursor: default;
+  text-align: center;
 }
 
 .wrapper
@@ -320,4 +340,24 @@
     margin-right: 1rem !important;
   }
 }
-/*# sourceMappingURL=profile.module.css.map */
+
+.btn_td {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn_div {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transform: translateY(0.5rem);
+  border-radius: 8px;
+  text-align: center;
+  background-color: #9a2827;
+  color: white;
+  font-weight: 700;
+}
+
+.btn_div:hover {
+  background-color: #7e1918;
+}

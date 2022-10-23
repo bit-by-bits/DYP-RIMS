@@ -5,6 +5,7 @@ import Status from "../../src/Upload/Status";
 import Details from "../../src/Upload/Details";
 import styles from "../../styles/uploading.module.css";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const Uploading = () => {
   const [loading, setLoading] = useState(true);
@@ -12,7 +13,7 @@ const Uploading = () => {
   const { doi } = router.query;
 
   if (typeof window !== "undefined") {
-    if (!localStorage.auth_token) router.push("/");
+    if (!localStorage.getItem("auth_token")) router.push("/");
     else {
       const check = (load) => setLoading(load);
 
@@ -46,6 +47,11 @@ const Uploading = () => {
                   authors={localStorage.getItem("authors")}
                   doi={doi}
                 />
+              )}
+              {!loading && (
+                <Link href="/journal">
+                  <div className={styles.final_btn}>Return</div>
+                </Link>
               )}
             </div>
           </main>

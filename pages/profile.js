@@ -4,31 +4,25 @@ import axios from "axios";
 import React from "react";
 import Navbar from "../src/Common/Navbar";
 import Boxes from "../src/Profile/Boxes";
+import Table from "../src/Profile/Table";
 import Section from "../src/Profile/Section";
 import { useRouter } from "next/router";
-import Table from "../src/Profile/Table";
 
 const Profile = () => {
   const router = useRouter();
+  const publications = [],
+    temp = [];
+  const [pubs, setPubs] = React.useState(temp),
+    [data, setData] = React.useState(temp);
 
   if (typeof window !== "undefined") {
-    if (!localStorage.auth_token) router.push("/");
+    if (!localStorage.getItem("auth_token")) router.push("/");
     else {
       if (localStorage.getItem("user_role") == "management")
         router.push("/management");
 
-      // const data = [4];
-      // for (let a = 0; a < 4; a++)
-      //   data[a] = { what: "Best paper award IJDVL", when: "Jan 2015" };
-
       const item = localStorage.getItem("auth_token");
-      const publications = [],
-        temp = [];
-
-      const [pubs, setPubs] = React.useState(temp),
-        [data, setData] = React.useState(temp);
-
-      React.useEffect(() => {
+      function callback() {
         axios({
           method: "GET",
           url: `https://rimsapi.journalchecker.com/api/v1/publication`,
@@ -45,22 +39,30 @@ const Profile = () => {
           )}`,
           headers: { Authorization: `Bearer ${item}` },
         }).then(function (response) {
-          localStorage.setItem("name", response.data.name);
+          localStorage.setItem("user_name", response.data.name);
+          localStorage.setItem("user_email", response.data.email);
+          localStorage.setItem("user_dept", response.data.department);
           temp = response.data.awards;
           setData(temp);
         });
-      }, []);
+      }
 
       for (let a = 0; a < pubs.length; a++)
         publications[a] = {
+          id: pubs[a].id,
+          pubmed_id: pubs[a].pubmed_id,
+          doi_id: pubs[a].doi_id,
+          type: pubs[a].publication_type,
           title: pubs[a].publication_title,
-          authors: pubs[a].author_name[0].searchable_name,
-          journ: pubs[a].journal_name,
-          softcopy: false,
-          citations: "44",
-          metric1: "12.3",
-          metric2: "9.64%",
+          name: pubs[a].journal_name,
           year: pubs[a].year,
+          i_factor: pubs[a].impact_factor,
+          h_index: pubs[a].h_index,
+          region: pubs[a].region,
+          citations: pubs[a].citations,
+          dept: pubs[a].department.name,
+          authors: pubs[a].author_name,
+          softcopy: false,
         };
 
       return (
@@ -70,7 +72,7 @@ const Profile = () => {
             <link rel="icon" href="logos/qtanea.png" />
           </Head>
 
-          <main className={styles.wrapper}>
+          <main onLoad={callback} className={styles.wrapper}>
             <Navbar />
             <div className={styles.profile_wrapper}>
               <Section />
