@@ -12,7 +12,10 @@ export default function Details(props) {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
       },
-      data: { doi: props.doi, authors: localStorage.getItem("u_auth").split(',') },
+      data: {
+        doi: props.doi,
+        authors: localStorage.getItem("u_auth").split(","),
+      },
     })
       .then(function (response) {
         props.check(false);

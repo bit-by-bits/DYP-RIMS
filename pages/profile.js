@@ -13,7 +13,9 @@ const Profile = () => {
   const publications = [],
     temp = [];
   const [pubs, setPubs] = React.useState(temp),
-    [data, setData] = React.useState(temp);
+    [data, setData] = React.useState(temp),
+    [awards, setAwards] = React.useState(0),
+    [publs, setPubls] = React.useState(0);
 
   if (typeof window !== "undefined") {
     if (!localStorage.getItem("auth_token")) router.push("/");
@@ -45,6 +47,18 @@ const Profile = () => {
           temp = response.data.awards;
           setData(temp);
         });
+
+        axios({
+          method: "GET",
+          url: `https://rimsapi.journalchecker.com/api/v1/user/stats`,
+          headers: { Authorization: `Bearer ${item}` },
+        }).then(function (response) {
+          temp = response.data.awards;
+          setAwards(temp);
+
+          temp = response.data.publications;
+          setPubls(temp);
+        });
       }
 
       for (let a = 0; a < pubs.length; a++)
@@ -75,7 +89,7 @@ const Profile = () => {
           <main onLoad={callback} className={styles.wrapper}>
             <Navbar />
             <div className={styles.profile_wrapper}>
-              <Section />
+              <Section awards={awards} publs={publs} />
               <Boxes title="Awards & Achievements" data={data} />
               <Boxes title="Patents" data={data} />
               <Table title="Publications" data={publications} />

@@ -41,11 +41,7 @@ const Uploading = () => {
                 }
               />
               {loading && (
-                <Details
-                  alert="../alert.png"
-                  check={check}
-                  doi={doi}
-                />
+                <Details alert="../alert.png" check={check} doi={doi} />
               )}
               {!loading && (
                 <Link href="/journal">

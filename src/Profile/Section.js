@@ -66,7 +66,7 @@ export default function Section(props) {
         <div className={styles.profile_feats}>
           <Link href="#Publications">
             <div className={styles.profile_feat}>
-              <span>49 Publications</span>
+              <span>{props.publs} Publications</span>
             </div>
           </Link>
           <Link href="#Patents">
@@ -81,17 +81,17 @@ export default function Section(props) {
           </Link>
           <Link href="#Awards & Achievements">
             <div className={styles.profile_feat}>
-              <span>12 Awards</span>
+              <span>{props.awards} Awards</span>
             </div>
           </Link>
           <Link href="#Awards & Achievements">
             <div className={styles.profile_feat}>
-              <span>12 Awards</span>
+              <span>{props.awards} Awards</span>
             </div>
           </Link>
           <Link href="#Awards & Achievements">
             <div className={styles.profile_feat}>
-              <span>12 Awards</span>
+              <span>{props.awards} Awards</span>
             </div>
           </Link>
         </div>
