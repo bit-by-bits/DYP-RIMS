@@ -44,6 +44,9 @@
   .profile_grid
   .profile_personal
   .profile_img {
+  border-radius: 50%;
+  transform: scale(1.1);
+  margin: 1rem;
   height: 6rem;
 }
 

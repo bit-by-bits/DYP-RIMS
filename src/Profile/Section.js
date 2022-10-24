@@ -28,9 +28,9 @@ export default function Section(props) {
         <div className={styles.profile_grid}>
           <div className={styles.profile_personal}>
             <img
-              src="https://source.boringavatars.com/"
+              src={localStorage.getItem("user_pic")}
               className={styles.profile_img}
-            ></img>
+            />
             <div className={styles.profile_text}>
               <div className={styles.profile_name}>
                 {localStorage.getItem("user_name")}

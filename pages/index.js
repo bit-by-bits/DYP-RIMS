@@ -39,6 +39,7 @@ export default function Home() {
       localStorage.setItem("auth_token", response.data.token);
       localStorage.setItem("user_id", response.data.id);
       localStorage.setItem("user_role", response.data.role);
+      localStorage.setItem("user_pic", response.data.picture);
 
       if (localStorage.getItem("user_role") == "management")
         router.push("/management");
