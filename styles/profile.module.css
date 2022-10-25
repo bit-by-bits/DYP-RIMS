@@ -119,6 +119,7 @@
 .wrapper .profile_wrapper .profile_section .profile_feats .profile_feat {
   cursor: pointer;
   display: flex;
+  font-size: 1.15rem;
   flex-direction: "row";
   justify-content: space-between;
   align-items: center;
@@ -127,7 +128,6 @@
   border-radius: 16px;
   color: #9a2827;
   font-weight: 600;
-  font-size: 1rem;
   padding: 0 2rem;
   justify-content: center;
 }

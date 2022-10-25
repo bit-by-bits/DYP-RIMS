@@ -8,10 +8,6 @@ export default function Section(props) {
   const router = useRouter();
   const item = localStorage.getItem("auth_token");
 
-  function add() {
-    router.push("/upload");
-  }
-
   function download() {
     axios({
       method: "GET",
@@ -54,9 +50,11 @@ export default function Section(props) {
             </div>
           </div>
 
-          <div onClick={add} className={styles.profile_btn}>
-            Add a file
+          <Link href="/journal">
+          <div className={styles.profile_btn}>
+            View Journals
           </div>
+          </Link>
 
           <div onClick={download} className={styles.profile_btn}>
             Download CV
@@ -77,16 +75,6 @@ export default function Section(props) {
           <Link href="#Conferences">
             <div className={styles.profile_feat}>
               <span>17 Conferences</span>
-            </div>
-          </Link>
-          <Link href="#Awards & Achievements">
-            <div className={styles.profile_feat}>
-              <span>{props.awards} Awards</span>
-            </div>
-          </Link>
-          <Link href="#Awards & Achievements">
-            <div className={styles.profile_feat}>
-              <span>{props.awards} Awards</span>
             </div>
           </Link>
           <Link href="#Awards & Achievements">
