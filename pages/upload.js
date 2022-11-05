@@ -9,12 +9,8 @@ import styles from "../styles/upload.module.css";
 
 const Upload = () => {
   const router = useRouter();
-  const [authorList, setAuthorList] = React.useState([
-      { value: 0, label: "A" },
-      { value: 1, label: "B" },
-      { value: 2, label: "C" },
-    ]),
-    [deptList, setDeptList] = React.useState([{ value: 1, label: "B" }]),
+  const [authorList, setAuthorList] = React.useState([]),
+    [deptList, setDeptList] = React.useState([]),
     [selectedOptions, setSelectedOptions] = React.useState([]),
     [selectedOptions2, setSelectedOptions2] = React.useState([]);
 
@@ -50,28 +46,28 @@ const Upload = () => {
       }
 
       function callback() {
-        // axios({
-        //   method: "GET",
-        //   url: `https://rimsapi.journalchecker.com/api/v1/publication/upload`,
-        //   headers: { Authorization: `Bearer ${item}` },
-        // }).then(function (response) {
-        //   const tempA = [],
-        //     tempB = [];
-        //   for (let i = 0; i < response.data.authors.length; i++) {
-        //     tempA.push({
-        //       value: i + 1,
-        //       label: response.data.authors[i],
-        //     });
-        //   }
-        //   for (let i = 0; i < response.data.departments.length; i++) {
-        //     tempB.push({
-        //       value: i + 1,
-        //       label: response.data.departments[i],
-        //     });
-        //   }
-        //   setAuthorList(tempA);
-        //   setDeptList(tempB);
-        // });
+        axios({
+          method: "GET",
+          url: `https://rimsapi.journalchecker.com/api/v1/publication/upload`,
+          headers: { Authorization: `Bearer ${item}` },
+        }).then(function (response) {
+          const tempA = [],
+            tempB = [];
+          for (let i = 0; i < response.data.authors.length; i++) {
+            tempA.push({
+              value: i + 1,
+              label: response.data.authors[i],
+            });
+          }
+          for (let i = 0; i < response.data.departments.length; i++) {
+            tempB.push({
+              value: i + 1,
+              label: response.data.departments[i],
+            });
+          }
+          setAuthorList(tempA);
+          setDeptList(tempB);
+        });
       }
 
       return (
@@ -127,7 +123,6 @@ const Upload = () => {
                       className={`${styles.option} ${styles.authors}`}
                       components={animatedComponents}
                       options={authorList}
-                      onClick={console.log(selectedOptions)}
                       onChange={setHandle}
                       isMulti
                     />
@@ -137,12 +132,12 @@ const Upload = () => {
                     <div className={styles.heading}>Department</div>
 
                     <Select
-                      closeMenuOnSelect={false}
                       id="dept_text"
+                      closeMenuOnSelect={false}
                       className={`${styles.option} ${styles.authors}`}
                       isClearable={true}
-                      onChange={setSelectedOptions2}
                       options={deptList}
+                      onChange={setSelectedOptions2}
                     />
                   </div>
                 </div>
