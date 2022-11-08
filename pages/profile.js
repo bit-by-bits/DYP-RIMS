@@ -44,6 +44,7 @@ const Profile = () => {
           localStorage.setItem("user_name", response.data.name);
           localStorage.setItem("user_email", response.data.email);
           localStorage.setItem("user_dept", response.data.department);
+          
           temp = response.data.awards;
           setData(temp);
         });

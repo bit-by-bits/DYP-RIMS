@@ -193,7 +193,7 @@
 
 .wrapper .profile_wrapper .profile_box .profile_table th:nth-child(5n + 1),
 .wrapper .profile_wrapper .profile_box .profile_table td:nth-child(5n + 1) {
-  width: 45vw;
+  width: 40vw;
 }
 
 .wrapper .profile_wrapper .profile_box .profile_table th:nth-child(5n + 5),
@@ -353,7 +353,7 @@
 .btn_div {
   cursor: pointer;
   padding: 0.5rem 1rem;
-  transform: translateY(0.5rem);
+  transform: translateY(40%);
   border-radius: 8px;
   text-align: center;
   background-color: #9a2827;
