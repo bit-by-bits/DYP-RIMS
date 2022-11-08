@@ -3,12 +3,19 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 
 import "../styles/globals.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
-import Script from "next/script";
+import Head from "next/head";
 
 const MyApp = ({ Component, pageProps }) => {
   return (
     <>
-      <Script src="https://accounts.google.com/gsi/client" />
+      <Head>
+        <script
+          src="https://accounts.google.com/gsi/client"
+          async
+          defer
+        ></script>
+      </Head>
+
       <Component {...pageProps} />
     </>
   );
