@@ -50,8 +50,8 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>DYPU | RIMS</title>
-        <link rel="icon" href="logos/qtanea.png" />
+        <title>DYPU / RIMS</title>
+        <link rel="icon" href="logos/dpu-2.png" />
       </Head>
 
       <main className={styles.main}>
@@ -60,24 +60,29 @@ export default function Home() {
             <div className={styles.title}>Welcome to RIMS</div>
 
             <div className={styles.content}>
-              DY Patil University's Research Information Manangements System
+              Dr. D.Y. Patil Medical College, Hospital and Research Center's
+              Research Information Manangement System
             </div>
           </div>
 
           <div className={styles.login}>
-            <img src="logos/dpu.png" alt="DPU" className={styles.logo} />
+            <img src="logos/dpu-1.png" alt="DPU" className={styles.logo} />
             <div className={styles.login_top}>Login to RIMS</div>
             <div className={styles.login_middle}>
-              Kindly login with your authorized Insitute credentials
+              Kindly login with your authorized Institute's credentials
             </div>
             <div className={styles.button} id="signInDiv"></div>
             <div className={styles.login_bottom}>
-              Having trouble logging in? <a href="">Click here</a>
+              Having trouble logging in?
+              <a href="mailto:rims@dpu.edu.in?cc=naac.medical@dpu.edu.in&subject=Login not working&body=I am unable to login RIMS with my email id // specify your email here //.">
+                Click here
+              </a>
             </div>
           </div>
         </div>
 
-        <footer className={styles.footer}>Made by Qtanea</footer>
+        {/* <footer className={styles.footer}>Made by Qtanea</footer> */}
+        <img className={styles.foot} src="logos/qtanea-white.png" />
       </main>
     </>
   );

@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: flex-start;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    url("../public/login-bg.png") no-repeat;
+    url("../public/login-bg.jpg") no-repeat;
   background-size: cover;
 }
 
@@ -28,6 +28,7 @@
   box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.2);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
+  transform: translateY(-1rem);
 }
 
 .main .welcome .greeting {
@@ -55,7 +56,7 @@
 .main .welcome .greeting .content {
   color: white;
   font-weight: 700;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
 }
 
 .main .welcome .login {
@@ -111,10 +112,16 @@
 }
 
 .main .welcome .login .login_bottom a {
+  margin-left: 0.4rem;
   color: #9a2827;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 0.8rem;
   text-decoration: underline;
+}
+
+.main .welcome .login .login_bottom a:hover {
+  color: rgb(180, 5, 5);
+  text-decoration: none;
 }
 
 .main .footer {
@@ -132,6 +139,13 @@
       rgba(255, 255, 255, 0.5) 0%,
       rgba(255, 255, 255, 0.25) 100%
     );
+}
+
+.foot {
+  position: absolute;
+  width: 4rem;
+  left: 50vw;
+  bottom: 0.8rem;
 }
 
 @media screen and (min-height: 1000px) {
@@ -185,7 +199,7 @@
   }
 
   .welcome .content {
-    font-size: 2.2rem !important;
+    font-size: 2rem !important;
   }
 }
 
@@ -221,7 +235,7 @@
   }
 
   .welcome .content {
-    font-size: 2.2rem !important;
+    font-size: 2rem !important;
   }
 }
 
@@ -266,7 +280,7 @@
   }
 
   .welcome .content {
-    font-size: 2.4rem !important;
+    font-size: 2.1rem !important;
     width: 40vw !important;
   }
 }
@@ -288,7 +302,7 @@
   }
 
   .welcome .content {
-    font-size: 1.4rem !important;
+    font-size: 1.2rem !important;
   }
 
   .login {

@@ -74,7 +74,7 @@ const Upload = () => {
         <>
           <Head>
             <title>Upload</title>
-            <link rel="icon" href="logos/qtanea.png" />
+            <link rel="icon" href="logos/dpu-2.png" />
           </Head>
 
           <main onLoad={callback} className={styles.wrapper}>

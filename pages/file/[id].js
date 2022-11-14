@@ -46,7 +46,7 @@ const ID = () => {
         <>
           <Head>
             <title>File</title>
-            <link rel="icon" href="logos/qtanea.png" />
+            <link rel="icon" href="logos/dpu-2.png" />
           </Head>
 
           <main className={styles.wrapper}>
@@ -140,7 +140,8 @@ const ID = () => {
                 <div className={styles.file_btn2}>Edit</div>
               </div>
 
-              <div className={styles.footer}>Made by Qtanea</div>
+              {/* <div className={styles.footer}>Made by Qtanea</div> */}
+              <img className={styles.foot} src="logos/qtanea-colour.png" />
             </div>
           </main>
         </>

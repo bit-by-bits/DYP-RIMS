@@ -55,7 +55,7 @@ const Journal = () => {
         <>
           <Head>
             <title>Journals</title>
-            <link rel="icon" href="logos/qtanea.png" />
+            <link rel="icon" href="logos/dpu-2.png" />
           </Head>
 
           <main onLoad={callback} className={styles.wrapper}>
@@ -65,7 +65,9 @@ const Journal = () => {
               <div className={styles.title}>All Publications</div>
               <Options />
               <Table data={publications} />
-              <div className={styles.footer}>Made by Qtanea</div>
+              
+              {/* <div className={styles.footer}>Made by Qtanea</div> */}
+              <img className={styles.foot} src="logos/qtanea-colour.png" />
             </div>
           </main>
         </>

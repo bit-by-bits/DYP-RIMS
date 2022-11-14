@@ -227,6 +227,13 @@
   font-size: 1rem;
 }
 
+.foot {
+  position: absolute;
+  width: 4rem;
+  left: 50vw;
+  bottom: 0.8rem;
+}
+
 @media screen and (min-width: 1500px) {
   .profile_thead img {
     margin-left: 0.5rem !important;

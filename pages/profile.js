@@ -84,7 +84,7 @@ const Profile = () => {
         <>
           <Head>
             <title>Profile</title>
-            <link rel="icon" href="logos/qtanea.png" />
+            <link rel="icon" href="logos/dpu-2.png" />
           </Head>
 
           <main onLoad={callback} className={styles.wrapper}>
@@ -95,7 +95,9 @@ const Profile = () => {
               <Boxes title="Patents" data={data} />
               <Table title="Publications" data={publications} />
               <Boxes title="Conferences" data={data} />
-              <div className={styles.footer}>Made by Qtanea</div>
+
+              {/* <div className={styles.footer}>Made by Qtanea</div> */}
+              <img className={styles.foot} src="logos/qtanea-colour.png" />
             </div>
           </main>
         </>

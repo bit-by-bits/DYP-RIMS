@@ -36,7 +36,7 @@ const Mgmt = () => {
         <>
           <Head>
             <title>Management</title>
-            <link rel="icon" href="logos/qtanea.png" />
+            <link rel="icon" href="logos/dpu-2.png" />
           </Head>
 
           <main className={styles.wrapper}>
@@ -49,7 +49,8 @@ const Mgmt = () => {
               <Datas />
               <Publishers data={publishers} />
 
-              <div className={styles.footer}>Made by Qtanea</div>
+              {/* <div className={styles.footer}>Made by Qtanea</div> */}
+              <img className={styles.foot} src="logos/qtanea-colour.png" />
             </div>
           </main>
         </>

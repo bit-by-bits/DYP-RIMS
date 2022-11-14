@@ -23,7 +23,7 @@ const Uploading = () => {
         <>
           <Head>
             <title>{loading ? "Confirm Upload" : "Uploaded"}</title>
-            <link rel="icon" href="../../logos/qtanea.png" />
+            <link rel="icon" href="../../logos/dpu-2.png" />
           </Head>
 
           <main className={styles.wrapper}>

@@ -26,7 +26,7 @@ const Dashboard = () => {
         <>
           <Head>
             <title>Dashboard</title>
-            <link rel="icon" href="logos/qtanea.png" />
+            <link rel="icon" href="logos/dpu-2.png" />
           </Head>
 
           <main className={styles.wrapper}>
