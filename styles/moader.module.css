@@ -1,0 +1,81 @@
+.modal_bg,
+.loader_bg {
+  top: 0;
+  left: 0;
+  z-index: 102;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.3);
+  position: absolute;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader_bg {
+  background-color: white;
+}
+
+.modal {
+  padding: 1rem;
+  border-radius: 18px;
+  background-color: white;
+
+  gap: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.modal_title {
+  color: #9a2827;
+  font-weight: 600;
+  font-size: 1.1rem;
+  position: relative;
+  text-transform: uppercase;
+  border-bottom: 1px solid #9a2827;
+}
+
+.x {
+  top: 0rem;
+  right: 0.4rem;
+  cursor: pointer;
+  position: absolute;
+}
+
+.modal_text {
+  margin: 2rem 0;
+}
+
+.loader {
+  width: 40px;
+  height: 40px;
+  color: #9a2827;
+  background: linear-gradient(currentColor 0 0),
+    linear-gradient(currentColor 0 0), linear-gradient(currentColor 0 0),
+    linear-gradient(currentColor 0 0);
+  background-size: 21px 21px;
+  background-repeat: no-repeat;
+  animation: sh5 1.5s infinite cubic-bezier(0.3, 1, 0, 1);
+}
+
+@keyframes sh5 {
+  0% {
+    background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+  }
+  33% {
+    background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+    width: 60px;
+    height: 60px;
+  }
+  66% {
+    background-position: 100% 0, 100% 100%, 0 100%, 0 0;
+    width: 60px;
+    height: 60px;
+  }
+  100% {
+    background-position: 100% 0, 100% 100%, 0 100%, 0 0;
+  }
+}

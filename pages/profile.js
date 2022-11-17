@@ -7,6 +7,7 @@ import Boxes from "../src/Profile/Boxes";
 import Table from "../src/Profile/Table";
 import Section from "../src/Profile/Section";
 import { useRouter } from "next/router";
+import Loader from "../src/Common/Loader";
 
 const Profile = () => {
   const router = useRouter();
@@ -15,7 +16,8 @@ const Profile = () => {
   const [pubs, setPubs] = React.useState(temp),
     [data, setData] = React.useState(temp),
     [awards, setAwards] = React.useState(0),
-    [publs, setPubls] = React.useState(0);
+    [publs, setPubls] = React.useState(0),
+    [visible, setVisible] = React.useState(true);
 
   if (typeof window !== "undefined") {
     if (!localStorage.getItem("auth_token")) router.push("/");
@@ -60,6 +62,10 @@ const Profile = () => {
           temp = response.data.publications;
           setPubls(temp);
         });
+
+        setTimeout(() => {
+          setVisible(false);
+        }, 2000);
       }
 
       for (let a = 0; a < pubs.length; a++)
@@ -88,6 +94,7 @@ const Profile = () => {
           </Head>
 
           <main onLoad={callback} className={styles.wrapper}>
+            <Loader visible={visible} />
             <Navbar />
             <div className={styles.profile_wrapper}>
               <Section awards={awards} publs={publs} />

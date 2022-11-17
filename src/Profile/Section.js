@@ -3,10 +3,17 @@ import axios from "axios";
 import Link from "next/link";
 import styles from "../../styles/profile.module.css";
 import { useRouter } from "next/router";
+import Modal from "../Common/Modal";
 
 export default function Section(props) {
   const router = useRouter();
   const item = localStorage.getItem("auth_token");
+
+  const [visible, setVisible] = React.useState(false);
+  const [modal, setModal] = React.useState({
+    text: "",
+    title: "",
+  });
 
   function download() {
     axios({
@@ -14,13 +21,24 @@ export default function Section(props) {
       url: `https://rimsapi.journalchecker.com/api/v1/user/download_cv`,
       headers: { Authorization: `Bearer ${item}` },
     }).then(function (response) {
-      console.log(response.data);
+      setVisible(true);
+      setModal({
+        text: response.data.error,
+        title: response.data.details,
+      });
     });
   }
 
   return (
     <>
       <div className={styles.profile_section}>
+        <Modal
+          setVisible={setVisible}
+          visible={visible}
+          text={modal.text}
+          title={modal.title}
+        />
+
         <div className={styles.profile_grid}>
           <div className={styles.profile_personal}>
             <img

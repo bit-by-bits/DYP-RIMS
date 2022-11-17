@@ -65,7 +65,7 @@ const Journal = () => {
               <div className={styles.title}>All Publications</div>
               <Options />
               <Table data={publications} />
-              
+
               {/* <div className={styles.footer}>Made by Qtanea</div> */}
               <img className={styles.foot} src="logos/qtanea-colour.png" />
             </div>
