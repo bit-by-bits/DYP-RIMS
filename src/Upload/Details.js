@@ -2,9 +2,17 @@ import React from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import styles from "../../styles/uploading.module.css";
+import Modal from "../Common/Modal";
 
 export default function Details(props) {
   const router = useRouter();
+
+  const [visible, setVisible] = React.useState(false);
+  const [modal, setModal] = React.useState({
+    text: "",
+    title: "",
+  });
+
   function submit() {
     axios({
       method: "POST",
@@ -21,7 +29,11 @@ export default function Details(props) {
         props.check(false);
       })
       .catch(function (error) {
-        alert("Oops! " + error.message + "\nCheck your details again.");
+        setVisible(true);
+        setModal({
+          text: error.message,
+          title: error.response.statusText,
+        });
       });
   }
 
@@ -31,6 +43,13 @@ export default function Details(props) {
 
   return (
     <>
+      <Modal
+        setVisible={setVisible}
+        visible={visible}
+        text={modal.text}
+        title={modal.title}
+      />
+
       <div className={styles.uploading_msg}>
         <img src={props.alert} className={styles.uploading_alert} />
         <span>You are uploading abcde.pdf</span>

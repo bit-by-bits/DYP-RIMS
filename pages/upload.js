@@ -53,18 +53,21 @@ const Upload = () => {
         }).then(function (response) {
           const tempA = [],
             tempB = [];
+
           for (let i = 0; i < response.data.authors.length; i++) {
             tempA.push({
               value: i + 1,
               label: response.data.authors[i],
             });
           }
+
           for (let i = 0; i < response.data.departments.length; i++) {
             tempB.push({
               value: i + 1,
               label: response.data.departments[i],
             });
           }
+
           setAuthorList(tempA);
           setDeptList(tempB);
         });
@@ -99,12 +102,12 @@ const Upload = () => {
                     id="file"
                     accept="application/pdf"
                   />
-                  <div className={styles.upload_btn}>Select File</div>
 
+                  <div className={styles.upload_btn}>Select File</div>
                   <div className={styles.upload_text}>No File Selected</div>
                 </label>
-                <div className={styles.upload_msg}>Or add a file using DOI</div>
 
+                <div className={styles.upload_msg}>Or add a file using DOI</div>
                 <input
                   type="text"
                   id="doi_text"
@@ -120,8 +123,12 @@ const Upload = () => {
 
                     <Select
                       id="author_text"
+                      defaultValue={{
+                        label: localStorage.getItem("user_name"),
+                        value: 0,
+                      }}
                       closeMenuOnSelect={false}
-                      className={`${styles.option} ${styles.authors}`}
+                      className={`${styles.option} ${styles.select}`}
                       components={animatedComponents}
                       options={authorList}
                       onChange={setHandle}
@@ -134,8 +141,12 @@ const Upload = () => {
 
                     <Select
                       id="dept_text"
+                      defaultValue={{
+                        label: localStorage.getItem("user_dept"),
+                        value: 0,
+                      }}
                       closeMenuOnSelect={false}
-                      className={`${styles.option} ${styles.authors}`}
+                      className={`${styles.option} ${styles.select}`}
                       isClearable={true}
                       options={deptList}
                       onChange={setSelectedOptions2}

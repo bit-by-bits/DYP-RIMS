@@ -66,6 +66,10 @@
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
 }
 
+.wrapper .upload_wrapper .upload_left .upload_input2:focus {
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.2);
+}
+
 .wrapper .upload_wrapper .upload_left ::-moz-placeholder {
   color: #333333;
   font-weight: 400;
@@ -129,9 +133,19 @@
   border-radius: 8px;
 }
 
-.authors > div {
-  border: none !important;
+.wrapper
+  .upload_wrapper
+  .upload_right
+  .upload_filters
+  .upload_filter
+  .option:hover {
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.select > div {
   width: 100%;
+  cursor: pointer !important;
+  border: none !important;
   padding: 0.3rem !important;
 }
 
@@ -171,13 +185,18 @@
 }
 
 .upload_btn {
-  padding: 1rem 2rem;
+  padding: 0.8rem 1.6rem;
   color: white;
   font-weight: 700;
   font-size: 1.1rem;
   cursor: pointer;
   background: #9a2827;
   border-radius: 8px;
+  align-self: flex-start;
+}
+
+.upload_btn:hover {
+  background-color: #7e1918;
 }
 
 @media screen and (min-height: 1000px) {
@@ -249,11 +268,10 @@
   }
 
   .upload_left .label .upload_btn {
-    padding: 0.7rem 1.4rem !important;
+    padding: 0.62rem 1.25rem !important;
   }
 
   .upload_left .upload_input2 {
     padding: 0.7rem 1.2rem !important;
   }
 }
-/*# sourceMappingURL=upload.module.css.map */

@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const Modal = (props) => {
+  window.scrollTo(0, 0);
+
   document.querySelector("body").style.overflowY = props.visible
     ? "hidden"
     : "auto";

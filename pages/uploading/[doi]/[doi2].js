@@ -48,7 +48,6 @@ const Uploading = () => {
                 <Details
                   alert="../../alert.png"
                   check={check}
-                  authors={localStorage.getItem("authors")}
                   doi={`${doi}/${doi2}`}
                 />
               )}

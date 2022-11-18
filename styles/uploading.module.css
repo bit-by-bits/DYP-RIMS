@@ -73,8 +73,7 @@
   gap: 2rem;
 }
 
-.wrapper .uploading_wrapper .uploading_btns .uploading_btn1,
-.wrapper .uploading_wrapper .uploading_btns .uploading_btn2 {
+.wrapper .uploading_wrapper .uploading_btns div {
   color: #9a2827;
   font-weight: 700;
   font-size: 1.2rem;
@@ -99,6 +98,15 @@
   padding: 0.8rem 1.8rem;
 }
 
+.wrapper .uploading_wrapper .uploading_btns .uploading_btn1:hover,
+.final_btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.wrapper .uploading_wrapper .uploading_btns .uploading_btn2:hover {
+  background-color: #7e1918;
+}
+
 @media screen and (min-height: 1000px) {
   .uploading_wrapper {
     gap: 3rem !important;
@@ -118,4 +126,3 @@
     gap: 2rem !important;
   }
 }
-/*# sourceMappingURL=uploading.module.css.map */
