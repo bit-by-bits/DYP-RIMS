@@ -3,6 +3,7 @@ import React from "react";
 import axios from "axios";
 import styles from "../styles/login.module.css";
 import { useRouter } from "next/router";
+import Script from "next/script";
 
 export default function Home() {
   const router = useRouter();
@@ -51,6 +52,7 @@ export default function Home() {
     <>
       <Head>
         <title>DYPU / RIMS</title>
+        <script src="https://accounts.google.com/gsi/client" />
         <link rel="icon" href="logos/dpu-2.png" />
       </Head>
 
