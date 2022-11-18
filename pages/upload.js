@@ -82,9 +82,10 @@ const Upload = () => {
             <div className={styles.upload_wrapper}>
               <div className={styles.upload_left}>
                 <img
+                  alt="ADD"
                   src="upload/upload.png"
                   className={styles.upload_img}
-                ></img>
+                />
                 <div className={styles.upload_title}>Add a file</div>
 
                 <div className={styles.upload_msg}>

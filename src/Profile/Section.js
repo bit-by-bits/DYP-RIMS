@@ -64,7 +64,7 @@ export default function Section(props) {
                 Dr. D. Y. Patil Medical College
               </div>
 
-              <div className={styles.profile_edit}>Edit Profile Details</div>
+              <div className={styles.profile_edit}>Edit Profile</div>
             </div>
           </div>
 

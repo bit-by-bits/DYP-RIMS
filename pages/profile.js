@@ -96,6 +96,7 @@ const Profile = () => {
           <main onLoad={callback} className={styles.wrapper}>
             <Loader visible={visible} />
             <Navbar />
+
             <div className={styles.profile_wrapper}>
               <Section awards={awards} publs={publs} />
               <Boxes title="Awards & Achievements" data={data} />
@@ -104,7 +105,17 @@ const Profile = () => {
               <Boxes title="Conferences" data={data} />
 
               {/* <div className={styles.footer}>Made by Qtanea</div> */}
-              <img className={styles.foot} src="logos/qtanea-colour.png" />
+              <a
+                href="https://www.qtanea.com/"
+                rel="noreferrer"
+                target="_blank"
+              >
+                <img
+                  alt="Q"
+                  className={styles.foot}
+                  src="logos/qtanea-colour.png"
+                />
+              </a>
             </div>
           </main>
         </>

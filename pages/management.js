@@ -50,7 +50,17 @@ const Mgmt = () => {
               <Publishers data={publishers} />
 
               {/* <div className={styles.footer}>Made by Qtanea</div> */}
-              <img className={styles.foot} src="logos/qtanea-colour.png" />
+              <a
+                href="https://www.qtanea.com/"
+                rel="noreferrer"
+                target="_blank"
+              >
+                <img
+                  alt="Q"
+                  className={styles.foot}
+                  src="logos/qtanea-colour.png"
+                />
+              </a>
             </div>
           </main>
         </>

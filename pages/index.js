@@ -82,7 +82,9 @@ export default function Home() {
         </div>
 
         {/* <footer className={styles.footer}>Made by Qtanea</footer> */}
-        <img className={styles.foot} src="logos/qtanea-white.png" />
+        <a href="https://www.qtanea.com/" rel="noreferrer" target="_blank">
+          <img alt="Q" className={styles.foot} src="logos/qtanea-white.png" />
+        </a>
       </main>
     </>
   );
