@@ -3,10 +3,11 @@ import React from "react";
 import axios from "axios";
 import styles from "../styles/login.module.css";
 import { useRouter } from "next/router";
-import Script from "next/script";
+import Loader from "../src/Common/Loader";
 
 export default function Home() {
   const router = useRouter();
+  const [visible, setVisible] = React.useState(true);
 
   if (
     typeof window !== "undefined" &&
@@ -48,6 +49,10 @@ export default function Home() {
     });
   }
 
+  setTimeout(() => {
+    setVisible(false);
+  }, 1400);
+
   return (
     <>
       <Head>
@@ -57,6 +62,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
+        <Loader visible={visible} />
         <div className={styles.welcome}>
           <div className={styles.greeting}>
             <div className={styles.title}>Welcome to RIMS</div>

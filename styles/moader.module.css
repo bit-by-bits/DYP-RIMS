@@ -58,10 +58,10 @@
     linear-gradient(currentColor 0 0);
   background-size: 21px 21px;
   background-repeat: no-repeat;
-  animation: sh5 1.5s infinite cubic-bezier(0.3, 1, 0, 1);
+  animation: load 1.5s infinite cubic-bezier(0.3, 1, 0, 1);
 }
 
-@keyframes sh5 {
+@keyframes load {
   0% {
     background-position: 0 0, 100% 0, 100% 100%, 0 100%;
   }

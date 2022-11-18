@@ -65,7 +65,7 @@ const Profile = () => {
 
         setTimeout(() => {
           setVisible(false);
-        }, 2000);
+        }, 1600);
       }
 
       for (let a = 0; a < pubs.length; a++)
