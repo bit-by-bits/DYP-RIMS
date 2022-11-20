@@ -2,8 +2,9 @@ import Head from "next/head";
 import styles from "../../styles/file.module.css";
 import React from "react";
 import { useRouter } from "next/router";
-import Navbar from "../../src/Common/Navbar";
 import axios from "axios";
+import Loader from "../../src/Common/Loader";
+import Navbar from "../../src/Common/Navbar";
 
 const ID = () => {
   const router = useRouter();
@@ -11,12 +12,17 @@ const ID = () => {
   const temp = [];
   const [pubs, setPubs] = React.useState(temp),
     [authors, setAuthors] = React.useState(""),
-    [dept, setDept] = React.useState("");
+    [dept, setDept] = React.useState(""),
+    [visible, setVisible] = React.useState(true);
 
   if (typeof window !== "undefined") {
     if (!localStorage.getItem("auth_token")) router.push("/");
     else {
       const item = localStorage.getItem("auth_token");
+
+      setTimeout(() => {
+        setVisible(false);
+      }, 2500);
 
       setInterval(() => {
         if (router.isReady) {
@@ -51,6 +57,7 @@ const ID = () => {
 
           <main className={styles.wrapper}>
             <Navbar />
+            <Loader visible={visible} />
 
             <div className={styles.file_wrapper}>
               <div className={styles.file_text}>
@@ -140,7 +147,6 @@ const ID = () => {
                 <div className={styles.file_btn2}>Edit</div>
               </div>
 
-              {/* <div className={styles.footer}>Made by Qtanea</div> */}
               <a
                 href="https://www.qtanea.com/"
                 rel="noreferrer"
@@ -149,7 +155,7 @@ const ID = () => {
                 <img
                   alt="Q"
                   className={styles.foot}
-                  src="logos/qtanea-colour.png"
+                  src="../logos/qtanea-colour.png"
                 />
               </a>
             </div>

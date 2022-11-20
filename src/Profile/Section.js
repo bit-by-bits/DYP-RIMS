@@ -51,7 +51,7 @@ export default function Section(props) {
               </div>
 
               <div className={styles.profile_degree}>MBBS, M.D.</div>
-              
+
               <div className={styles.profile_post}>
                 {localStorage.getItem("user_role")}
               </div>

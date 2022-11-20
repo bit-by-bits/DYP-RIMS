@@ -29,10 +29,12 @@ export default function Details(props) {
         props.check(false);
       })
       .catch(function (error) {
+        const stext = error.response.statusText;
+        console.log(error);
         setVisible(true);
         setModal({
-          text: error.message,
-          title: error.response.statusText,
+          text: `${error.message}. Please try again.`,
+          title: stext != "" ? stext : "An error occurred",
         });
       });
   }

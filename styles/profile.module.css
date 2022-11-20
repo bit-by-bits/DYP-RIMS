@@ -110,7 +110,7 @@
   font-size: 1.1rem;
 }
 .wrapper .profile_wrapper .profile_section .profile_grid .profile_btn:hover {
-background-color: #7e1918;
+  background-color: #7e1918;
 }
 
 .wrapper .profile_wrapper .profile_section .profile_feats {
@@ -135,7 +135,7 @@ background-color: #7e1918;
   justify-content: center;
 }
 .wrapper .profile_wrapper .profile_section .profile_feats .profile_feat:hover {
-  background-color: rgba(0,0,0,0.05);
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .wrapper .profile_wrapper .profile_box .profile_head {

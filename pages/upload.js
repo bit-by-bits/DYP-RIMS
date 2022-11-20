@@ -6,13 +6,29 @@ import makeAnimated from "react-select/animated";
 import { useRouter } from "next/router";
 import Navbar from "../src/Common/Navbar";
 import styles from "../styles/upload.module.css";
+import Modal from "../src/Common/Modal";
 
 const Upload = () => {
   const router = useRouter();
   const [authorList, setAuthorList] = React.useState([]),
-    [deptList, setDeptList] = React.useState([]),
-    [selectedOptions, setSelectedOptions] = React.useState([]),
-    [selectedOptions2, setSelectedOptions2] = React.useState([]);
+    [deptList, setDeptList] = React.useState([]);
+
+  const [visible, setVisible] = React.useState(false);
+  const [modal, setModal] = React.useState({
+    text: "",
+    title: "",
+  });
+
+  if (typeof window !== "undefined" && localStorage.getItem("auth_token")) {
+    var username = localStorage.getItem("user_name"),
+      userdept = localStorage.getItem("user_dept");
+  }
+
+  const [selectedOptions, setSelectedOptions] = React.useState([username]),
+    [selectedOptions2, setSelectedOptions2] = React.useState({
+      label: userdept,
+      value: 0,
+    });
 
   const setHandle = (e) => {
     setSelectedOptions(Array.isArray(e) ? e.map((author) => author.label) : []);
@@ -29,13 +45,25 @@ const Upload = () => {
         animatedComponents = makeAnimated();
 
       function upload() {
-        if (document.getElementById("doi_text").value == "")
-          alert("Please enter a DOI first.");
-        else if (selectedOptions.length == 0)
-          alert("Please select an author first.");
-        else if (selectedOptions2 == null || selectedOptions2.length == 0)
-          alert("Please select a department first.");
-        else {
+        if (document.getElementById("doi_text").value == "") {
+          setVisible(true);
+          setModal({
+            text: "Please enter a DOI first.",
+            title: "Incomplete Data",
+          });
+        } else if (selectedOptions.length == 0) {
+          setVisible(true);
+          setModal({
+            text: "Please select an author first.",
+            title: "Incomplete Data",
+          });
+        } else if (selectedOptions2 == null || selectedOptions2.length == 0) {
+          setVisible(true);
+          setModal({
+            text: "Please select a department first.",
+            title: "Incomplete Data",
+          });
+        } else {
           localStorage.setItem("u_auth", selectedOptions);
           localStorage.setItem("u_dept", selectedOptions2.label);
 
@@ -82,6 +110,13 @@ const Upload = () => {
 
           <main onLoad={callback} className={styles.wrapper}>
             <Navbar />
+            <Modal
+              setVisible={setVisible}
+              visible={visible}
+              text={modal.text}
+              title={modal.title}
+            />
+
             <div className={styles.upload_wrapper}>
               <div className={styles.upload_left}>
                 <img
@@ -123,10 +158,12 @@ const Upload = () => {
 
                     <Select
                       id="author_text"
-                      defaultValue={{
-                        label: localStorage.getItem("user_name"),
-                        value: 0,
-                      }}
+                      defaultValue={[
+                        {
+                          label: username,
+                          value: 0,
+                        },
+                      ]}
                       closeMenuOnSelect={false}
                       className={`${styles.option} ${styles.select}`}
                       components={animatedComponents}
@@ -142,7 +179,7 @@ const Upload = () => {
                     <Select
                       id="dept_text"
                       defaultValue={{
-                        label: localStorage.getItem("user_dept"),
+                        label: userdept,
                         value: 0,
                       }}
                       closeMenuOnSelect={false}
