@@ -24,19 +24,18 @@ const Upload = () => {
       userdept = localStorage.getItem("user_dept");
   }
 
-  const [selectedOptions, setSelectedOptions] = React.useState([username]),
-    [selectedOptions2, setSelectedOptions2] = React.useState({
-      label: userdept,
-      value: 0,
-    });
+  const [selectedOptions, setSelectedOptions] = React.useState([]),
+    [selectedOptions2, setSelectedOptions2] = React.useState([]);
+
+  // const [selectedOptions, setSelectedOptions] = React.useState([username]),
+  //   [selectedOptions2, setSelectedOptions2] = React.useState({
+  //     label: userdept,
+  //     value: 0,
+  //   });
 
   const setHandle = (e) => {
     setSelectedOptions(Array.isArray(e) ? e.map((author) => author.label) : []);
   };
-
-  React.useEffect(() => {
-    callback();
-  }, []);
 
   if (typeof window !== "undefined") {
     if (!localStorage.getItem("auth_token")) router.push("/");
@@ -73,31 +72,49 @@ const Upload = () => {
         }
       }
 
-      function callback() {
+      function find() {
+        const temp = [];
+
+        axios({
+          method: "POST",
+          url: `https://rimsapi.journalchecker.com/api/v1/publication/upload_1`,
+
+          headers: { Authorization: `Bearer ${item}` },
+          data: { doi: document.getElementById("doi_text").value },
+        }).then(function (res) {
+          axios({
+            method: "GET",
+            url: `https://rimsapi.journalchecker.com/api/v1/publication/upload_2/${res.data.publication_id}`,
+
+            headers: { Authorization: `Bearer ${item}` },
+          }).then(function (response) {
+            temp = [];
+
+            for (let i = 0; i < response.data.authors.length; i++) {
+              temp.push({
+                value: i + 1,
+                label: response.data.authors[i],
+              });
+            }
+            setAuthorList(temp);
+          });
+        });
+
         axios({
           method: "GET",
           url: `https://rimsapi.journalchecker.com/api/v1/publication/upload`,
+
           headers: { Authorization: `Bearer ${item}` },
         }).then(function (response) {
-          const tempA = [],
-            tempB = [];
-
-          for (let i = 0; i < response.data.authors.length; i++) {
-            tempA.push({
-              value: i + 1,
-              label: response.data.authors[i],
-            });
-          }
+          temp = [];
 
           for (let i = 0; i < response.data.departments.length; i++) {
-            tempB.push({
+            temp.push({
               value: i + 1,
               label: response.data.departments[i],
             });
           }
-
-          setAuthorList(tempA);
-          setDeptList(tempB);
+          setDeptList(temp);
         });
       }
 
@@ -108,7 +125,7 @@ const Upload = () => {
             <link rel="icon" href="logos/dpu-2.png" />
           </Head>
 
-          <main onLoad={callback} className={styles.wrapper}>
+          <main className={styles.wrapper}>
             <Navbar />
             <Modal
               setVisible={setVisible}
@@ -143,12 +160,17 @@ const Upload = () => {
                 </label>
 
                 <div className={styles.upload_msg}>Or add a file using DOI</div>
-                <input
-                  type="text"
-                  id="doi_text"
-                  placeholder="Enter DOI"
-                  className={styles.upload_input2}
-                />
+                <div className={styles.flex}>
+                  <input
+                    type="text"
+                    id="doi_text"
+                    placeholder="Enter DOI"
+                    className={styles.upload_input2}
+                  />
+                  <div onClick={find} className={styles.upload_btn}>
+                    Find
+                  </div>
+                </div>
               </div>
 
               <div className={styles.upload_right}>
@@ -158,12 +180,12 @@ const Upload = () => {
 
                     <Select
                       id="author_text"
-                      defaultValue={[
-                        {
-                          label: username,
-                          value: 0,
-                        },
-                      ]}
+                      // defaultValue={[
+                      //   {
+                      //     label: username,
+                      //     value: 0,
+                      //   },
+                      // ]}
                       closeMenuOnSelect={false}
                       className={`${styles.option} ${styles.select}`}
                       components={animatedComponents}
@@ -178,10 +200,10 @@ const Upload = () => {
 
                     <Select
                       id="dept_text"
-                      defaultValue={{
-                        label: userdept,
-                        value: 0,
-                      }}
+                      // defaultValue={{
+                      //   label: userdept,
+                      //   value: 0,
+                      // }}
                       closeMenuOnSelect={false}
                       className={`${styles.option} ${styles.select}`}
                       isClearable={true}
