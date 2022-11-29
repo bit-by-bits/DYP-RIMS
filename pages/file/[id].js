@@ -20,9 +20,11 @@ const ID = () => {
     else {
       const item = localStorage.getItem("auth_token");
 
-      setTimeout(() => {
-        setVisible(false);
-      }, 2500);
+      function loader() {
+        setTimeout(() => {
+          setVisible(false);
+        }, 1600);
+      }
 
       setInterval(() => {
         if (router.isReady) {
@@ -33,7 +35,6 @@ const ID = () => {
           }).then(function (response) {
             temp = response.data.publication;
             setPubs(temp);
-            console.log(temp);
             setDept(temp.department.name);
 
             let extra = "";
@@ -55,7 +56,7 @@ const ID = () => {
             <link rel="icon" href="logos/dpu-2.png" />
           </Head>
 
-          <main className={styles.wrapper}>
+          <main onLoad={loader} className={styles.wrapper}>
             <Navbar />
             <Loader visible={visible} />
 

@@ -30,7 +30,7 @@ export default function Details(props) {
       })
       .catch(function (error) {
         const stext = error.response.statusText;
-        console.log(error);
+        
         setVisible(true);
         setModal({
           text: `${error.message}. Please try again.`,

@@ -49,10 +49,6 @@ export default function Home() {
     });
   }
 
-  setTimeout(() => {
-    setVisible(false);
-  }, 1400);
-
   return (
     <>
       <Head>
@@ -63,7 +59,12 @@ export default function Home() {
 
       <main className={styles.main}>
         <Loader visible={visible} />
-        <div className={styles.welcome}>
+        <div
+          onLoad={setTimeout(() => {
+            setVisible(false);
+          }, 1600)}
+          className={styles.welcome}
+        >
           <div className={styles.greeting}>
             <div className={styles.title}>Welcome to RIMS</div>
 
