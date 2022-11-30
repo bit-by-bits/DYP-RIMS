@@ -8,6 +8,7 @@ import Table from "../src/Profile/Table";
 import Section from "../src/Profile/Section";
 import { useRouter } from "next/router";
 import Loader from "../src/Common/Loader";
+import Alert from "../src/Common/Alert";
 
 const Profile = () => {
   const router = useRouter();

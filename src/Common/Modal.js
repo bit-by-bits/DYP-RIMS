@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../../styles/moader.module.css";
+import styles from "../../styles/common.module.css";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";

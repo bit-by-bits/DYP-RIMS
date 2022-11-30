@@ -7,22 +7,30 @@ import { useRouter } from "next/router";
 import Navbar from "../src/Common/Navbar";
 import styles from "../styles/upload.module.css";
 import Modal from "../src/Common/Modal";
+import Alert from "../src/Common/Alert";
 
 const Upload = () => {
   const router = useRouter();
+
   const [authorList, setAuthorList] = React.useState([]),
     [deptList, setDeptList] = React.useState([]);
-
   const [visible, setVisible] = React.useState(false);
+
+  const [alert, setAlert] = React.useState({
+    display: "none",
+    text: "",
+    type: 0,
+  });
+
   const [modal, setModal] = React.useState({
     text: "",
     title: "",
   });
 
-  if (typeof window !== "undefined" && localStorage.getItem("auth_token")) {
-    var username = localStorage.getItem("user_name"),
-      userdept = localStorage.getItem("user_dept");
-  }
+  // if (typeof window !== "undefined" && localStorage.getItem("auth_token")) {
+  //   var username = localStorage.getItem("user_name"),
+  //     userdept = localStorage.getItem("user_dept");
+  // }
 
   const [selectedOptions, setSelectedOptions] = React.useState([]),
     [selectedOptions2, setSelectedOptions2] = React.useState([]);
@@ -44,6 +52,7 @@ const Upload = () => {
         animatedComponents = makeAnimated();
 
       function upload() {
+        console.log(selectedOptions, selectedOptions2);
         if (document.getElementById("doi_text").value == "") {
           setVisible(true);
           setModal({
@@ -63,8 +72,8 @@ const Upload = () => {
             title: "Incomplete Data",
           });
         } else {
-          localStorage.setItem("u_auth", selectedOptions);
-          localStorage.setItem("u_dept", selectedOptions2.label);
+          localStorage.setItem("up_auth", selectedOptions);
+          localStorage.setItem("up_dept", selectedOptions2.label);
 
           router.push(
             `/uploading/${document.getElementById("doi_text").value}`
@@ -74,6 +83,7 @@ const Upload = () => {
 
       function find() {
         const temp = [];
+        setAuthorList([]);
 
         axios({
           method: "POST",
@@ -81,24 +91,50 @@ const Upload = () => {
 
           headers: { Authorization: `Bearer ${item}` },
           data: { doi: document.getElementById("doi_text").value },
-        }).then(function (res) {
-          axios({
-            method: "GET",
-            url: `https://rimsapi.journalchecker.com/api/v1/publication/upload_2/${res.data.publication_id}`,
+        })
+          .then(function (res) {
+            const id = res.data.publication_id;
+            localStorage.setItem("up_id", id);
 
-            headers: { Authorization: `Bearer ${item}` },
-          }).then(function (response) {
-            temp = [];
+            axios({
+              method: "GET",
+              url: `https://rimsapi.journalchecker.com/api/v1/publication/upload_2/${id}`,
 
-            for (let i = 0; i < response.data.authors.length; i++) {
-              temp.push({
-                value: i + 1,
-                label: response.data.authors[i],
-              });
-            }
-            setAuthorList(temp);
+              headers: { Authorization: `Bearer ${item}` },
+            })
+              .then(function (response) {
+                temp = [];
+                console.log(2);
+
+                for (let i = 0; i < response.data.authors.length; i++) {
+                  temp.push({
+                    value: i + 1,
+                    label: response.data.authors[i],
+                  });
+                }
+
+                setAuthorList(temp);
+                // temp.length
+                //   ? setAlert({
+                //       display: "flex",
+                //       text: "Uploaded Successfully",
+                //       type: 1,
+                //     })
+                //   : setAlert({
+                //       display: "flex",
+                //       text: "Invalid DOI",
+                //       type: 2,
+                //     });
+              })
+              .catch(function (err) {});
+          })
+          .catch(function (err) {
+            // setAlert({
+            //   display: "flex",
+            //   text: "Invalid DOI",
+            //   type: 2,
+            // });
           });
-        });
 
         axios({
           method: "GET",
@@ -133,6 +169,11 @@ const Upload = () => {
               text={modal.text}
               title={modal.title}
             />
+            {/* <Alert
+              display={alert.display}
+              text={alert.text}
+              type={alert.type}
+            /> */}
 
             <div className={styles.upload_wrapper}>
               <div className={styles.upload_left}>
