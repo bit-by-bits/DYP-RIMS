@@ -199,14 +199,14 @@
   background-color: #7e1918;
 }
 
-.flex{
+.flex {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1rem;
 }
 
-.flex .upload_btn{
+.flex .upload_btn {
   padding: 0.5rem 0.8rem;
   display: inline;
 }

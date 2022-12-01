@@ -48,6 +48,13 @@ const Journal = () => {
           citations: pubs[a].citations,
           dept: pubs[a].department.name,
           authors: pubs[a].author_name,
+          sjr: pubs[a].sjr,
+          doaj: pubs[a].in_doaj,
+          embase: pubs[a].in_embase,
+          medline: pubs[a].in_medline,
+          pmc: pubs[a].in_pmc,
+          scie: pubs[a].in_scie,
+          scopus: pubs[a].in_scopus,
           softcopy: false,
         };
 

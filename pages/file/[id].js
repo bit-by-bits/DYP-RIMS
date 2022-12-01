@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import Loader from "../../src/Common/Loader";
 import Navbar from "../../src/Common/Navbar";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const ID = () => {
   const router = useRouter();
@@ -137,6 +139,49 @@ const ID = () => {
                       <div className={styles.file_bodyweak}>
                         {pubs.h_index == null ? "--" : pubs.h_index}
                       </div>
+                    </div>
+
+                    <div className={styles.file_bodyitem}>
+                      <div className={styles.file_bodybold}>SJR Quartile</div>
+                      <div className={styles.file_bodyweak}>
+                        {pubs.sjr == null ? "--" : pubs.sjr}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={styles.file_head}>Located In</div>
+                  <div className={styles.file_body}>
+                    <div className={styles.file_bodygrid}>
+                      <div className={styles.file_bodybold}>DOAB</div>
+                      <FontAwesomeIcon
+                        icon={pubs.in_doab ? faCheck : faXmark}
+                        style={{ color: pubs.in_doab ? "green" : "red" }}
+                      />
+                      <div className={styles.file_bodybold}>Embase</div>
+                      <FontAwesomeIcon
+                        icon={pubs.in_embase ? faCheck : faXmark}
+                        style={{ color: pubs.in_embase ? "green" : "red" }}
+                      />
+                      <div className={styles.file_bodybold}>Medline</div>
+                      <FontAwesomeIcon
+                        icon={pubs.in_medline ? faCheck : faXmark}
+                        style={{ color: pubs.in_medline ? "green" : "red" }}
+                      />
+                      <div className={styles.file_bodybold}>PMC</div>
+                      <FontAwesomeIcon
+                        icon={pubs.in_pmc ? faCheck : faXmark}
+                        style={{ color: pubs.in_pmc ? "green" : "red" }}
+                      />
+                      <div className={styles.file_bodybold}>Scie</div>
+                      <FontAwesomeIcon
+                        icon={pubs.in_scie ? faCheck : faXmark}
+                        style={{ color: pubs.in_scie ? "green" : "red" }}
+                      />
+                      <div className={styles.file_bodybold}>Scopus</div>
+                      <FontAwesomeIcon
+                        icon={pubs.in_scopus ? faCheck : faXmark}
+                        style={{ color: pubs.in_scopus ? "green" : "red" }}
+                      />
                     </div>
                   </div>
                 </div>

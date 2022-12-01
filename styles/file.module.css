@@ -48,6 +48,12 @@
   gap: 1rem;
 }
 
+.wrapper .file_wrapper .file_text .file_grid .file_body .file_bodygrid {
+  display: grid;
+  gap: 0.4rem 1rem;
+  grid-template-columns: 1fr 1fr;
+}
+
 .wrapper .file_wrapper .file_text .file_grid .file_body .file_bodybold {
   color: black;
   font-weight: 600;

@@ -6,7 +6,7 @@ import Modal from "../Common/Modal";
 
 export default function Details(props) {
   const router = useRouter();
-  
+
   const [visible, setVisible] = React.useState(false);
   const [modal, setModal] = React.useState({
     text: "",
@@ -31,7 +31,7 @@ export default function Details(props) {
         props.check(false);
       })
       .catch(function (error) {
-        console.log(error)
+        console.log(error);
         const stext = error.response.statusText;
 
         setVisible(true);
