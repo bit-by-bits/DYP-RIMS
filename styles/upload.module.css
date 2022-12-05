@@ -190,9 +190,9 @@
   font-weight: 700;
   font-size: 1.1rem;
   cursor: pointer;
-  background: #9a2827;
   border-radius: 8px;
   align-self: flex-start;
+  background: #9a2827;
 }
 
 .upload_btn:hover {
@@ -209,6 +209,22 @@
 .flex .upload_btn {
   padding: 0.5rem 0.8rem;
   display: inline;
+}
+
+.dots {
+  height: 6px;
+  margin: 0.43rem;
+  aspect-ratio: 4;
+  background: radial-gradient(circle closest-side, #fff 90%, #0000) 0 /
+    calc(100% / 3) 100% space;
+  clip-path: inset(0 100% 0 0);
+  animation: dotLoader 1s steps(4) infinite;
+}
+
+@keyframes dotLoader {
+  to {
+    clip-path: inset(0 -34% 0 0);
+  }
 }
 
 @media screen and (min-height: 1000px) {

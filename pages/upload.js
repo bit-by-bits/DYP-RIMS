@@ -14,10 +14,10 @@ const Upload = () => {
 
   const [authorList, setAuthorList] = React.useState([]),
     [deptList, setDeptList] = React.useState([]);
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = React.useState(false),
+    [visible2, setVisible2] = React.useState(false);
 
   const [alert, setAlert] = React.useState({
-    display: "none",
     text: "",
     type: 0,
   });
@@ -81,9 +81,12 @@ const Upload = () => {
         }
       }
 
-      function find() {
+      function search() {
         const temp = [];
+
+        document.getElementsByClassName(styles.upload_btn)[1].innerHTML = `<div class=${styles.dots} />`;
         setAuthorList([]);
+        setSelectedOptions([]);
 
         axios({
           method: "POST",
@@ -104,7 +107,6 @@ const Upload = () => {
             })
               .then(function (response) {
                 temp = [];
-                console.log(2);
 
                 for (let i = 0; i < response.data.authors.length; i++) {
                   temp.push({
@@ -113,27 +115,23 @@ const Upload = () => {
                   });
                 }
 
+                document.getElementsByClassName(styles.upload_btn)[1].innerHTML = "Search";
                 setAuthorList(temp);
-                // temp.length
-                //   ? setAlert({
-                //       display: "flex",
-                //       text: "Uploaded Successfully",
-                //       type: 1,
-                //     })
-                //   : setAlert({
-                //       display: "flex",
-                //       text: "Invalid DOI",
-                //       type: 2,
-                //     });
+                setVisible2(true);
+                setAlert({
+                  text: "Success: Select your authors.",
+                  type: 1,
+                });
               })
               .catch(function (err) {});
           })
           .catch(function (err) {
-            // setAlert({
-            //   display: "flex",
-            //   text: "Invalid DOI",
-            //   type: 2,
-            // });
+            document.getElementsByClassName(styles.upload_btn)[1].innerHTML = "Search";
+            setVisible2(true);
+            setAlert({
+              text: "Failed: Enter a valid DOI.",
+              type: 2,
+            });
           });
 
         axios({
@@ -169,11 +167,12 @@ const Upload = () => {
               text={modal.text}
               title={modal.title}
             />
-            {/* <Alert
-              display={alert.display}
+            <Alert
+              setVisible={setVisible2}
+              visible={visible2}
               text={alert.text}
               type={alert.type}
-            /> */}
+            />
 
             <div className={styles.upload_wrapper}>
               <div className={styles.upload_left}>
@@ -208,8 +207,9 @@ const Upload = () => {
                     placeholder="Enter DOI"
                     className={styles.upload_input2}
                   />
-                  <div onClick={find} className={styles.upload_btn}>
-                    Find
+                  <div className={styles.dots} />
+                  <div onClick={search} className={styles.upload_btn}>
+                    Search
                   </div>
                 </div>
               </div>
