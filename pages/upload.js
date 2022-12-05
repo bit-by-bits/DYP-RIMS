@@ -83,10 +83,13 @@ const Upload = () => {
 
       function search() {
         const temp = [];
+        document.getElementsByClassName(
+          styles.upload_btn
+        )[1].innerHTML = `<div class=${styles.dots} />`;
 
-        document.getElementsByClassName(styles.upload_btn)[1].innerHTML = `<div class=${styles.dots} />`;
         setAuthorList([]);
         setSelectedOptions([]);
+        setSelectedOptions2([]);
 
         axios({
           method: "POST",
@@ -115,7 +118,9 @@ const Upload = () => {
                   });
                 }
 
-                document.getElementsByClassName(styles.upload_btn)[1].innerHTML = "Search";
+                document.getElementsByClassName(
+                  styles.upload_btn
+                )[1].innerHTML = "Search";
                 setAuthorList(temp);
                 setVisible2(true);
                 setAlert({
@@ -126,7 +131,8 @@ const Upload = () => {
               .catch(function (err) {});
           })
           .catch(function (err) {
-            document.getElementsByClassName(styles.upload_btn)[1].innerHTML = "Search";
+            document.getElementsByClassName(styles.upload_btn)[1].innerHTML =
+              "Search";
             setVisible2(true);
             setAlert({
               text: "Failed: Enter a valid DOI.",
