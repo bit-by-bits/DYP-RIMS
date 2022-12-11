@@ -65,6 +65,17 @@
   font-size: 0.9rem;
 }
 
+.wrapper .uploading_wrapper .uploading_flex .uploading_info .uploading_select {
+  padding: 0;
+}
+
+.uploading_select > div {
+  width: 100%;
+  cursor: pointer !important;
+  border: none !important;
+  padding: 0rem !important;
+}
+
 .wrapper .uploading_wrapper .uploading_btns {
   display: flex;
   flex-direction: "row";
@@ -86,6 +97,7 @@
 .wrapper .uploading_wrapper .uploading_btns .uploading_btn2 {
   background-color: #9a2827;
   color: white;
+  display: inline;
 }
 
 .final_btn {
@@ -105,6 +117,23 @@
 
 .wrapper .uploading_wrapper .uploading_btns .uploading_btn2:hover {
   background-color: #7e1918;
+}
+
+.dots {
+  height: 6px;
+  scale: 0.6;
+  padding: 0.5rem 0rem !important;
+  aspect-ratio: 4;
+  background: radial-gradient(circle closest-side, #fff 90%, #0000) 0 /
+    calc(100% / 3) 100% space;
+  clip-path: inset(0 100% 0 0);
+  animation: dotLoader 1s steps(4) infinite;
+}
+
+@keyframes dotLoader {
+  to {
+    clip-path: inset(0 -34% 0 0);
+  }
 }
 
 @media screen and (min-height: 1000px) {

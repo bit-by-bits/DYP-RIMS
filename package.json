@@ -6,6 +6,7 @@
     "dev": "next dev -p 3001",
     "open": "explorer http://localhost:3001",
     "build": "next build",
+    "prt": "prettier --write .",
     "start": "next start -p 3001",
     "lint": "next lint"
   },

@@ -48,8 +48,8 @@ const Upload = () => {
   if (typeof window !== "undefined") {
     if (!localStorage.getItem("auth_token")) router.push("/");
     else {
-      const item = localStorage.getItem("auth_token"),
-        animatedComponents = makeAnimated();
+      const item = localStorage.getItem("auth_token");
+        // animatedComponents = makeAnimated();
 
       function upload() {
         console.log(selectedOptions, selectedOptions2);
@@ -82,7 +82,9 @@ const Upload = () => {
       }
 
       function search() {
-        const temp = [];
+        const temp = [],
+          doi = document.getElementById("doi_text").value;
+
         document.getElementsByClassName(
           styles.upload_btn
         )[1].innerHTML = `<div class=${styles.dots} />`;
@@ -96,39 +98,52 @@ const Upload = () => {
           url: `https://rimsapi.journalchecker.com/api/v1/publication/upload_1`,
 
           headers: { Authorization: `Bearer ${item}` },
-          data: { doi: document.getElementById("doi_text").value },
+          data: { doi: doi },
         })
           .then(function (res) {
-            const id = res.data.publication_id;
-            localStorage.setItem("up_id", id);
+            // const id = res.data.publication_id;
+            // localStorage.setItem("up_id", id);
 
-            axios({
-              method: "GET",
-              url: `https://rimsapi.journalchecker.com/api/v1/publication/upload_2/${id}`,
+            document.getElementsByClassName(styles.upload_btn)[1].innerHTML =
+              "Search";
+            setAuthorList(temp);
+            setVisible2(true);
+            setAlert({
+              text: "Success: Redirecting you now..",
+              type: 1,
+            });
 
-              headers: { Authorization: `Bearer ${item}` },
-            })
-              .then(function (response) {
-                temp = [];
+            setTimeout(() => {
+              router.push(`/uploading/${doi}`);
+            }, 1001);
 
-                for (let i = 0; i < response.data.authors.length; i++) {
-                  temp.push({
-                    value: i + 1,
-                    label: response.data.authors[i],
-                  });
-                }
+            // axios({
+            //   method: "GET",
+            //   url: `https://rimsapi.journalchecker.com/api/v1/publication/upload_2/${id}`,
 
-                document.getElementsByClassName(
-                  styles.upload_btn
-                )[1].innerHTML = "Search";
-                setAuthorList(temp);
-                setVisible2(true);
-                setAlert({
-                  text: "Success: Select your authors.",
-                  type: 1,
-                });
-              })
-              .catch(function (err) {});
+            //   headers: { Authorization: `Bearer ${item}` },
+            // })
+            //   .then(function (response) {
+            //     temp = [];
+
+            //     for (let i = 0; i < response.data.authors.length; i++) {
+            //       temp.push({
+            //         value: i + 1,
+            //         label: response.data.authors[i],
+            //       });
+            //     }
+
+            //     document.getElementsByClassName(
+            //       styles.upload_btn
+            //     )[1].innerHTML = "Search";
+            //     setAuthorList(temp);
+            //     setVisible2(true);
+            //     setAlert({
+            //       text: "Success: Select your authors.",
+            //       type: 1,
+            //     });
+            //   })
+            //   .catch(function (err) {});
           })
           .catch(function (err) {
             document.getElementsByClassName(styles.upload_btn)[1].innerHTML =
@@ -220,7 +235,7 @@ const Upload = () => {
                 </div>
               </div>
 
-              <div className={styles.upload_right}>
+              {/* <div className={styles.upload_right}>
                 <div className={styles.upload_filters}>
                   <div className={styles.upload_filter}>
                     <div className={styles.heading}>Author</div>
@@ -263,7 +278,7 @@ const Upload = () => {
                 <div onClick={upload} className={styles.upload_btn}>
                   Upload
                 </div>
-              </div>
+              </div> */}
             </div>
           </main>
         </>

@@ -13,7 +13,7 @@ const Alert = (props) => {
   props.visible &&
     setTimeout(() => {
       props.setVisible(false);
-    }, 6000);
+    }, 3000);
 
   function hide() {
     props.setVisible(false);

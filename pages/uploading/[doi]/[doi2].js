@@ -17,7 +17,8 @@ const Uploading = () => {
   if (typeof window !== "undefined") {
     if (!localStorage.getItem("auth_token")) router.push("/");
     else {
-      const check = (load) => setLoading(load);
+      const check = (load) => setLoading(load),
+        item = localStorage.getItem("auth_token");
 
       return (
         <>
@@ -47,6 +48,7 @@ const Uploading = () => {
               {loading && (
                 <Details
                   alert="../../alert.png"
+                  item={item}
                   check={check}
                   doi={`${doi}/${doi2}`}
                 />
