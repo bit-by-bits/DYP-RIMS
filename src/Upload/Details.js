@@ -38,7 +38,7 @@ export default function Details(props) {
     text: "",
     title: "",
   });
-  
+
   setTimeout(() => {
     axios({
       method: "POST",

@@ -49,7 +49,7 @@ const Upload = () => {
     if (!localStorage.getItem("auth_token")) router.push("/");
     else {
       const item = localStorage.getItem("auth_token");
-        // animatedComponents = makeAnimated();
+      // animatedComponents = makeAnimated();
 
       function upload() {
         console.log(selectedOptions, selectedOptions2);

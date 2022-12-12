@@ -149,10 +149,10 @@ const ID = () => {
                     </div>
                   </div>
 
-                  <div className={styles.file_head}>Located In</div>
+                  <div className={styles.file_head}>Indexed In</div>
                   <div className={styles.file_body}>
                     <div className={styles.file_bodygrid}>
-                      <div className={styles.file_bodybold}>DOAB</div>
+                      <div className={styles.file_bodybold}>DOAJ</div>
                       <FontAwesomeIcon
                         icon={pubs.in_doab ? faCheck : faXmark}
                         style={{ color: pubs.in_doab ? "green" : "red" }}
@@ -172,7 +172,7 @@ const ID = () => {
                         icon={pubs.in_pmc ? faCheck : faXmark}
                         style={{ color: pubs.in_pmc ? "green" : "red" }}
                       />
-                      <div className={styles.file_bodybold}>Scie</div>
+                      <div className={styles.file_bodybold}>SCIE</div>
                       <FontAwesomeIcon
                         icon={pubs.in_scie ? faCheck : faXmark}
                         style={{ color: pubs.in_scie ? "green" : "red" }}
