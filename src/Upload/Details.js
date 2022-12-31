@@ -27,7 +27,7 @@ export default function Details(props) {
     [visible2, setVisible2] = React.useState(false);
 
   const [ID, setID] = React.useState(0),
-    [title, setTitle] = React.useState("Please enter required details."),
+    [title, setTitle] = React.useState("Please check the required fields."),
     animatedComponents = makeAnimated();
 
   const setHandle = (e) => {
@@ -39,7 +39,8 @@ export default function Details(props) {
     title: "",
   });
 
-  setTimeout(() => {
+  React.useEffect(() => {
+    
     axios({
       method: "POST",
       url: `https://rimsapi.journalchecker.com/api/v1/publication/upload_1`,
@@ -83,7 +84,7 @@ export default function Details(props) {
         setDeptList(temp);
       });
     });
-  }, 1);
+  }, []);
 
   function submit() {
     if (selectedOptions.length == 0) {
