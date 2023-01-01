@@ -46,6 +46,8 @@ export default function Details(props) {
       headers: { Authorization: `Bearer ${props.item}` },
       data: { doi: props.doi },
     }).then(function (res) {
+      console.log(res, new Date());
+
       localStorage.setItem("upload_id", res.data.publication_id);
       res.data.publication_title != undefined &&
         setTitle("You are uploading " + res.data.publication_title + ".");
