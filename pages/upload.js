@@ -59,6 +59,9 @@ const Upload = () => {
           data: { doi: doi },
         })
           .then(function (res) {
+            localStorage.setItem("upload_id", res.data.publication_id);
+            localStorage.setItem("upload_title", res.data.publication_title);
+
             setSearching(false);
             setAuthorList(temp);
             setVisible2(true);
@@ -156,7 +159,7 @@ const Upload = () => {
                   <div className={styles.dots} />
                   {searching ? (
                     <div className={styles.upload_btn}>
-                      <div class={styles.dots} />
+                      <div className={styles.dots} />
                     </div>
                   ) : (
                     <div onClick={search} className={styles.upload_btn}>

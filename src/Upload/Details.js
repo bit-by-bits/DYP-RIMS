@@ -12,6 +12,9 @@ export default function Details(props) {
   if (typeof window !== "undefined" && localStorage.getItem("auth_token")) {
     var username = localStorage.getItem("user_name"),
       userdept = localStorage.getItem("user_dept");
+
+    var uploadtitle = localStorage.getItem("upload_title"),
+      uploadid = localStorage.getItem("upload_id");
   }
 
   const [selectedOptions, setSelectedOptions] = React.useState([username]),
@@ -39,50 +42,39 @@ export default function Details(props) {
   });
 
   React.useEffect(() => {
+    uploadtitle != "undefined" &&
+      setTitle("You are uploading " + uploadtitle + ".");
+
     axios({
-      method: "POST",
-      url: `https://rimsapi.journalchecker.com/api/v1/publication/upload_1`,
+      method: "GET",
+      url: `https://rimsapi.journalchecker.com/api/v1/publication/upload_2/${uploadid}`,
 
       headers: { Authorization: `Bearer ${props.item}` },
-      data: { doi: props.doi },
-    }).then(function (res) {
-      console.log(res, new Date());
+    }).then(function (response) {
+      const temp = [];
 
-      localStorage.setItem("upload_id", res.data.publication_id);
-      res.data.publication_title != undefined &&
-        setTitle("You are uploading " + res.data.publication_title + ".");
+      for (let i = 0; i < response.data.authors.length; i++)
+        temp.push({
+          value: i + 1,
+          label: response.data.authors[i],
+        });
+      setAuthorList(temp);
+    });
 
-      axios({
-        method: "GET",
-        url: `https://rimsapi.journalchecker.com/api/v1/publication/upload_2/${res.data.publication_id}`,
+    axios({
+      method: "GET",
+      url: `https://rimsapi.journalchecker.com/api/v1/publication/upload`,
 
-        headers: { Authorization: `Bearer ${props.item}` },
-      }).then(function (response) {
-        const temp = [];
+      headers: { Authorization: `Bearer ${props.item}` },
+    }).then(function (response) {
+      const temp = [];
 
-        for (let i = 0; i < response.data.authors.length; i++)
-          temp.push({
-            value: i + 1,
-            label: response.data.authors[i],
-          });
-        setAuthorList(temp);
-      });
-
-      axios({
-        method: "GET",
-        url: `https://rimsapi.journalchecker.com/api/v1/publication/upload`,
-
-        headers: { Authorization: `Bearer ${props.item}` },
-      }).then(function (response) {
-        const temp = [];
-
-        for (let i = 0; i < response.data.departments.length; i++)
-          temp.push({
-            value: i + 1,
-            label: response.data.departments[i],
-          });
-        setDeptList(temp);
-      });
+      for (let i = 0; i < response.data.departments.length; i++)
+        temp.push({
+          value: i + 1,
+          label: response.data.departments[i],
+        });
+      setDeptList(temp);
     });
   }, []);
 
@@ -114,7 +106,7 @@ export default function Details(props) {
         },
         data: {
           doi: props.doi,
-          authors: selectedOptions2,
+          authors: selectedOptions,
         },
       })
         .then(function (response) {
