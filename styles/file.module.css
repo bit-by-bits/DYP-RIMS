@@ -57,8 +57,12 @@
 
 .file_abs {
   font-size: 0.9rem;
-  color: rgba(0, 0, 0, 0.6);
-  margin-top: 2rem;
+  padding: 1rem;
+  border-radius: 6px;
+  color: rgba(0, 0, 0, 0.65);
+  margin: 1rem;
+  border: solid 2px #9a2827;
+  box-shadow: inset 0px 0px 5px #9a2827;
 }
 
 .wrapper .file_wrapper .file_text .file_grid .file_body .file_bodygrid {
@@ -89,6 +93,7 @@
   font-weight: 700;
   font-size: 1rem;
   width: 100%;
+  cursor: pointer;
   text-align: center;
   border: 2px solid #9a2827;
   border-radius: 8px;
