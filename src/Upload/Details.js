@@ -26,8 +26,7 @@ export default function Details(props) {
   const [visible, setVisible] = React.useState(false),
     [visible2, setVisible2] = React.useState(false);
 
-  const [ID, setID] = React.useState(0),
-    [title, setTitle] = React.useState("Please check the required fields."),
+  const [title, setTitle] = React.useState("Please check the required fields."),
     animatedComponents = makeAnimated();
 
   const setHandle = (e) => {
@@ -40,7 +39,6 @@ export default function Details(props) {
   });
 
   React.useEffect(() => {
-    
     axios({
       method: "POST",
       url: `https://rimsapi.journalchecker.com/api/v1/publication/upload_1`,
@@ -48,13 +46,13 @@ export default function Details(props) {
       headers: { Authorization: `Bearer ${props.item}` },
       data: { doi: props.doi },
     }).then(function (res) {
-      setID(res.data.publication_id);
+      localStorage.setItem("upload_id", res.data.publication_id);
       res.data.publication_title != undefined &&
         setTitle("You are uploading " + res.data.publication_title + ".");
 
       axios({
         method: "GET",
-        url: `https://rimsapi.journalchecker.com/api/v1/publication/upload_2/${ID}`,
+        url: `https://rimsapi.journalchecker.com/api/v1/publication/upload_2/${res.data.publication_id}`,
 
         headers: { Authorization: `Bearer ${props.item}` },
       }).then(function (response) {
@@ -106,7 +104,9 @@ export default function Details(props) {
 
       axios({
         method: "POST",
-        url: `https://rimsapi.journalchecker.com/api/v1/publication/upload_2/${ID}`,
+        url: `https://rimsapi.journalchecker.com/api/v1/publication/upload_2/${localStorage.getItem(
+          "upload_id"
+        )}`,
         headers: {
           Authorization: `Bearer ${props.item}`,
         },
@@ -117,6 +117,7 @@ export default function Details(props) {
       })
         .then(function (response) {
           props.check(false);
+          localStorage.removeItem("upload_id");
         })
         .catch(function (error) {
           console.log(error);
