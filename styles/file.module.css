@@ -24,6 +24,13 @@
 }
 
 .wrapper .file_wrapper .file_text .file_grid {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: space-around;
+}
+
+.wrapper .file_wrapper .file_text .file_grid > div {
   display: grid;
   gap: 1rem 3rem;
   grid-template-columns: auto auto;
@@ -46,6 +53,12 @@
   align-items: center;
   align-items: flex-start;
   gap: 1rem;
+}
+
+.file_abs {
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.6);
+  margin-top: 2rem;
 }
 
 .wrapper .file_wrapper .file_text .file_grid .file_body .file_bodygrid {

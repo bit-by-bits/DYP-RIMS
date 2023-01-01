@@ -1,8 +1,6 @@
 import axios from "axios";
 import React from "react";
 import Head from "next/head";
-import Select from "react-select";
-import makeAnimated from "react-select/animated";
 import { useRouter } from "next/router";
 import Navbar from "../src/Common/Navbar";
 import styles from "../styles/upload.module.css";
