@@ -23,26 +23,58 @@
   margin-bottom: 2rem;
 }
 
-.wrapper .file_wrapper .file_text .file_grid {
+.wrapper .file_wrapper .file_text .file_flex {
   display: flex;
   width: 100%;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: space-around;
+  gap: 1.6rem;
 }
 
-.wrapper .file_wrapper .file_text .file_grid > div {
-  display: grid;
-  gap: 1rem 3rem;
-  grid-template-columns: auto auto;
+.wrapper .file_wrapper .file_text .file_flex .file_flex_child {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem 3rem;
 }
 
-.wrapper .file_wrapper .file_text .file_grid .file_head {
+.smooth {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0)
+  );
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.37);
+  border-radius: 10px;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  padding: 1rem;
+  min-width: 20vw;
+}
+
+.smooth_row {
+  display: flex;
+  flex-direction: row;
+  gap: 0.6rem;
+}
+
+.abstract {
+  margin: 1rem 0;
+  text-align: justify;
+  gap: 1rem;
+}
+
+.wrapper .file_wrapper .file_text .file_flex .file_head,
+.smooth .file_head {
   color: #9a2827;
   font-weight: 600;
   font-size: 1rem;
 }
 
-.wrapper .file_wrapper .file_text .file_grid .file_body {
+.wrapper .file_wrapper .file_text .file_flex .file_body {
   color: black;
   font-weight: 400;
   font-size: 1rem;
@@ -55,23 +87,19 @@
   gap: 1rem;
 }
 
-.file_abs {
-  font-size: 0.9rem;
-  padding: 1rem;
-  border-radius: 6px;
-  color: rgba(0, 0, 0, 0.65);
-  margin: 1rem;
-  border: solid 2px #9a2827;
-  box-shadow: inset 0px 0px 5px #9a2827;
-}
-
-.wrapper .file_wrapper .file_text .file_grid .file_body .file_bodygrid {
+.wrapper .file_wrapper .file_text .file_flex .file_body .file_bodygrid {
   display: grid;
-  gap: 0.4rem 1rem;
-  grid-template-columns: 1fr 1fr;
+  text-transform: capitalize;
+  width: 100%;
+  gap: 0.5rem 1rem;
+  grid-template-columns: auto auto auto auto;
 }
 
-.wrapper .file_wrapper .file_text .file_grid .file_body .file_bodybold {
+.bi_grid {
+  grid-template-columns: auto auto !important;
+}
+
+.wrapper .file_wrapper .file_text .file_flex .file_body .file_bodybold {
   color: black;
   font-weight: 600;
   font-size: 0.9rem;
@@ -105,6 +133,14 @@
   color: white;
 }
 
+.file_btn1:hover {
+  background-color: #7e1918 !important;
+}
+
+.file_btn2:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
 .wrapper .footer {
   width: 100vw;
   position: absolute;
@@ -125,9 +161,26 @@
   bottom: 0.8rem;
 }
 
+@media screen and (min-width: 1400px) {
+  .smooth {
+    box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.37);
+  }
+
+  .abstract {
+    margin: 2rem 0;
+    padding: 1rem 2rem;
+  }
+
+  .file_flex_child {
+    gap: 2rem !important;
+  }
+}
+
 @media screen and (min-width: 1700px) {
-  .file_grid {
-    gap: 1.8rem 1rem !important;
+  .smooth {
+    border-radius: 14px;
+    box-shadow: 0 8px 40px 0 rgba(0, 0, 0, 0.37);
+    padding: 1.4rem 2rem;
   }
 }
 
@@ -136,15 +189,23 @@
     font-size: 1.6rem !important;
   }
 
-  .file_grid {
-    gap: 1rem !important;
+  .smooth {
+    border-radius: 20px;
+    box-shadow: 0 8px 50px 0 rgba(0, 0, 0, 0.37);
+    padding: 1.4rem 2.2rem;
   }
 
-  .file_grid * {
+  .abstract {
+    flex-direction: column;
+    margin: 3rem;
+    padding: 2rem 3rem;
+  }
+
+  .file_flex * {
     font-size: 1.1rem !important;
   }
 
-  .file_grid .file_head {
+  .file_flex .file_head {
     margin-bottom: 0.6rem !important;
   }
 }

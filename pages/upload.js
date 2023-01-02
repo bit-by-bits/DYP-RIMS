@@ -60,7 +60,6 @@ const Upload = () => {
             localStorage.setItem("upload_id", res.data.publication_id);
             localStorage.setItem("upload_title", res.data.publication_title);
 
-            setSearching(false);
             setAuthorList(temp);
             setVisible2(true);
             setAlert({
@@ -69,6 +68,7 @@ const Upload = () => {
             });
 
             setTimeout(() => {
+              setSearching(false);
               router.push(`/uploading/${doi}`);
             }, 1001);
           })
