@@ -17,13 +17,15 @@ export default function Details(props) {
       uploadid = localStorage.getItem("upload_id");
   }
 
-  const [selectedOptions, setSelectedOptions] = React.useState([username]),
-    [selectedOptions2, setSelectedOptions2] = React.useState({
+  const [selectedAuthors, setSelectedAuthors] = React.useState([username]),
+    [selectedDisplay, setSelectedDisplay] = React.useState([username]),
+    [selectedDept, setSelectedDept] = React.useState({
       label: userdept,
       value: 0,
     });
 
   const [authorList, setAuthorList] = React.useState([]),
+    [displayList, setDisplayList] = React.useState([]),
     [deptList, setDeptList] = React.useState([]);
 
   const [visible, setVisible] = React.useState(false),
@@ -32,8 +34,16 @@ export default function Details(props) {
   const [title, setTitle] = React.useState("Please check the required fields."),
     animatedComponents = makeAnimated();
 
-  const setHandle = (e) => {
-    setSelectedOptions(Array.isArray(e) ? e.map((author) => author.label) : []);
+  const setHandle = (newArray) => {
+    setSelectedAuthors(
+      Array.isArray(newArray) ? newArray.map((eachItem) => eachItem.label) : []
+    );
+
+    setSelectedDisplay(
+      Array.isArray(newArray)
+        ? newArray.map((eachItem) => authorList[eachItem.value].label)
+        : []
+    );
   };
 
   const [modal, setModal] = React.useState({
@@ -51,14 +61,32 @@ export default function Details(props) {
 
       headers: { Authorization: `Bearer ${props.item}` },
     }).then(function (response) {
-      const temp = [];
+      const temp1 = [
+        {
+          value: 0,
+          label: username,
+        },
+      ];
 
       for (let i = 0; i < response.data.authors.length; i++)
-        temp.push({
+        temp1.push({
           value: i + 1,
           label: response.data.authors[i],
         });
-      setAuthorList(temp);
+      setAuthorList(temp1);
+
+      const temp2 = [
+        {
+          value: 0,
+          label: username + " - " + userdept,
+        },
+      ];
+      for (let i = 0; i < response.data.display_authors.length; i++)
+        temp2.push({
+          value: i + 1,
+          label: response.data.display_authors[i],
+        });
+      setDisplayList(temp2);
     });
 
     axios({
@@ -79,13 +107,13 @@ export default function Details(props) {
   }, []);
 
   function submit() {
-    if (selectedOptions.length == 0) {
+    if (selectedAuthors.length == 0) {
       setVisible(true);
       setModal({
-        text: "Please select an author first.",
+        text: "Please select an eachItem first.",
         title: "Incomplete Data",
       });
-    } else if (selectedOptions2 == null || selectedOptions2.length == 0) {
+    } else if (selectedDept == null || selectedDept.length == 0) {
       setVisible(true);
       setModal({
         text: "Please select a department first.",
@@ -106,7 +134,8 @@ export default function Details(props) {
         },
         data: {
           doi: props.doi,
-          authors: selectedOptions,
+          authors: selectedAuthors,
+          initial_authors: authorList.map((author) => author.label),
         },
       })
         .then(function (response) {
@@ -152,16 +181,16 @@ export default function Details(props) {
           <div className={styles.uploading_title}>Authors</div>
           <Select
             id="author_text"
-            defaultValue={[
-              {
-                label: username,
-                value: 0,
-              },
-            ]}
+            // defaultValue={[
+            //   {
+            //     label: username,
+            //     value: 0,
+            //   },
+            // ]}
             closeMenuOnSelect={false}
             className={`${styles.uploading_box} ${styles.uploading_select}`}
             components={animatedComponents}
-            options={authorList}
+            options={displayList}
             onChange={setHandle}
             isMulti
           />
@@ -179,7 +208,7 @@ export default function Details(props) {
             className={`${styles.uploading_box} ${styles.uploading_select}`}
             isClearable={true}
             options={deptList}
-            onChange={setSelectedOptions2}
+            onChange={setSelectedDept}
           />
         </div>
 
