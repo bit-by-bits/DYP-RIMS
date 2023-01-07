@@ -17,8 +17,8 @@ export default function Details(props) {
       uploadid = localStorage.getItem("upload_id");
   }
 
-  const [selectedAuthors, setSelectedAuthors] = React.useState([username]),
-    [selectedDisplay, setSelectedDisplay] = React.useState([username]),
+  const [selectedAuthors, setSelectedAuthors] = React.useState([]),
+    [selectedDisplay, setSelectedDisplay] = React.useState([]),
     [selectedDept, setSelectedDept] = React.useState({
       label: userdept,
       value: 0,
@@ -28,23 +28,25 @@ export default function Details(props) {
     [displayList, setDisplayList] = React.useState([]),
     [deptList, setDeptList] = React.useState([]);
 
-  const [visible, setVisible] = React.useState(false),
-    [visible2, setVisible2] = React.useState(false);
-
   const [title, setTitle] = React.useState("Please check the required fields."),
-    animatedComponents = makeAnimated();
+    [visible, setVisible] = React.useState(false);
 
-  const setHandle = (newArray) => {
-    setSelectedAuthors(
-      Array.isArray(newArray) ? newArray.map((eachItem) => eachItem.label) : []
-    );
+  const animatedComponents = makeAnimated(),
+    setHandle = (currentDisplay) => {
+      setSelectedDisplay(
+        Array.isArray(currentDisplay)
+          ? currentDisplay.map((eachDisplay) => eachDisplay.label)
+          : []
+      );
 
-    setSelectedDisplay(
-      Array.isArray(newArray)
-        ? newArray.map((eachItem) => authorList[eachItem.value].label)
-        : []
-    );
-  };
+      setSelectedAuthors(
+        Array.isArray(currentDisplay)
+          ? currentDisplay.map(
+              (eachDisplay) => authorList[eachDisplay.value].label
+            )
+          : []
+      );
+    };
 
   const [modal, setModal] = React.useState({
     text: "",
@@ -73,6 +75,7 @@ export default function Details(props) {
           value: i + 1,
           label: response.data.authors[i],
         });
+
       setAuthorList(temp1);
 
       const temp2 = [
@@ -81,11 +84,13 @@ export default function Details(props) {
           label: username + " - " + userdept,
         },
       ];
+
       for (let i = 0; i < response.data.display_authors.length; i++)
         temp2.push({
           value: i + 1,
           label: response.data.display_authors[i],
         });
+
       setDisplayList(temp2);
     });
 
@@ -102,6 +107,7 @@ export default function Details(props) {
           value: i + 1,
           label: response.data.departments[i],
         });
+
       setDeptList(temp);
     });
   }, []);
@@ -110,7 +116,7 @@ export default function Details(props) {
     if (selectedAuthors.length == 0) {
       setVisible(true);
       setModal({
-        text: "Please select an eachItem first.",
+        text: "Please select an author first.",
         title: "Incomplete Data",
       });
     } else if (selectedDept == null || selectedDept.length == 0) {
@@ -120,9 +126,8 @@ export default function Details(props) {
         title: "Incomplete Data",
       });
     } else {
-      document.getElementsByClassName(
-        styles.uploading_btn2
-      )[0].innerHTML = `<div class=${styles.dots} />`;
+      let btn2 = document.getElementsByClassName(styles.uploading_btn2)[0];
+      btn2.innerHTML = `<div class=${styles.dots} />`;
 
       axios({
         method: "POST",
@@ -139,17 +144,24 @@ export default function Details(props) {
         },
       })
         .then(function (response) {
+          console.log(
+            selectedAuthors,
+            authorList.map((author) => author.label)
+          );
           props.check(false);
           localStorage.removeItem("upload_id");
         })
         .catch(function (error) {
           console.log(error);
+
+          console.log(
+            selectedAuthors,
+            authorList.map((author) => author.label)
+          );
           const status_text = error.response.statusText;
-
-          document.getElementsByClassName(styles.uploading_btn2)[0].innerHTML =
-            "Upload";
-
+          btn2.innerHTML = "Upload";
           setVisible(true);
+
           setModal({
             text: `${error.message}. Please try again.`,
             title: status_text != "" ? status_text : "An error occurred",

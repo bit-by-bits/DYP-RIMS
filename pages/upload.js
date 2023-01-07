@@ -4,35 +4,18 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Navbar from "../src/Common/Navbar";
 import styles from "../styles/upload.module.css";
-import Modal from "../src/Common/Modal";
 import Alert from "../src/Common/Alert";
 
 const Upload = () => {
   const router = useRouter();
 
-  const [authorList, setAuthorList] = React.useState([]),
-    [deptList, setDeptList] = React.useState([]);
-
   const [visible, setVisible] = React.useState(false),
     [visible2, setVisible2] = React.useState(false);
 
-  const [selectedOptions, setSelectedOptions] = React.useState([]),
-    [selectedOptions2, setSelectedOptions2] = React.useState([]);
-
   const [searching, setSearching] = React.useState(false);
-
-  const setHandle = (e) => {
-    setSelectedOptions(Array.isArray(e) ? e.map((author) => author.label) : []);
-  };
-
   const [alert, setAlert] = React.useState({
     text: "",
     type: 0,
-  });
-
-  const [modal, setModal] = React.useState({
-    text: "",
-    title: "",
   });
 
   if (typeof window !== "undefined") {
@@ -43,11 +26,7 @@ const Upload = () => {
       function search() {
         const temp = [],
           doi = document.getElementById("doi_text").value;
-
         setSearching(true);
-        setAuthorList([]);
-        setSelectedOptions([]);
-        setSelectedOptions2([]);
 
         axios({
           method: "POST",
@@ -60,7 +39,6 @@ const Upload = () => {
             localStorage.setItem("upload_id", res.data.publication_id);
             localStorage.setItem("upload_title", res.data.publication_title);
 
-            setAuthorList(temp);
             setVisible2(true);
             setAlert({
               text: "Success: Redirecting you now..",
@@ -80,23 +58,6 @@ const Upload = () => {
               type: 2,
             });
           });
-
-        axios({
-          method: "GET",
-          url: `https://rimsapi.journalchecker.com/api/v1/publication/upload`,
-
-          headers: { Authorization: `Bearer ${item}` },
-        }).then(function (response) {
-          temp = [];
-
-          for (let i = 0; i < response.data.departments.length; i++) {
-            temp.push({
-              value: i + 1,
-              label: response.data.departments[i],
-            });
-          }
-          setDeptList(temp);
-        });
       }
 
       return (
@@ -108,12 +69,6 @@ const Upload = () => {
 
           <main className={styles.wrapper}>
             <Navbar />
-            <Modal
-              setVisible={setVisible}
-              visible={visible}
-              text={modal.text}
-              title={modal.title}
-            />
             <Alert
               setVisible={setVisible2}
               visible={visible2}
