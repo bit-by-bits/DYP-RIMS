@@ -144,20 +144,14 @@ export default function Details(props) {
         },
       })
         .then(function (response) {
-          console.log(
-            selectedAuthors,
-            authorList.map((author) => author.label)
-          );
+          props.set(response.data.pub_id);
           props.check(false);
+
           localStorage.removeItem("upload_id");
+          localStorage.removeItem("upload_title");
         })
         .catch(function (error) {
           console.log(error);
-
-          console.log(
-            selectedAuthors,
-            authorList.map((author) => author.label)
-          );
           const status_text = error.response.statusText;
           btn2.innerHTML = "Upload";
           setVisible(true);

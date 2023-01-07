@@ -7,7 +7,6 @@ import {
   faBookOpenReader,
   faCalendarDays,
   faCheck,
-  faFile,
   faFileAlt,
   faFileMedical,
   faHospitalUser,
@@ -31,6 +30,7 @@ const FileInfo = (props) => {
 
       console.log(temp);
       let extra = [];
+
       for (let i = 0; i < temp.author_name.length; i++)
         extra.push(
           <div key={i}>
@@ -42,6 +42,7 @@ const FileInfo = (props) => {
             {temp.author_name[i].searchable_name}
           </div>
         );
+
       setAuthors(extra);
     });
   }, []);

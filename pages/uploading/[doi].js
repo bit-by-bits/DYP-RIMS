@@ -8,16 +8,18 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 const Uploading = () => {
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [loading, setLoading] = useState(true),
+    [ID, setID] = useState(0);
 
   const { doi } = router.query;
 
   if (typeof window !== "undefined") {
     if (!localStorage.getItem("auth_token")) router.push("/");
     else {
-      const check = (load) => setLoading(load),
-        item = localStorage.getItem("auth_token");
+      const item = localStorage.getItem("auth_token"),
+        setI = (id) => setID(id),
+        setL = (load) => setLoading(load);
 
       return (
         <>
@@ -45,14 +47,15 @@ const Uploading = () => {
               {loading && (
                 <Details
                   alert="../alert.png"
-                  check={check}
+                  check={setL}
+                  set={setI}
                   item={item}
                   doi={doi}
                 />
               )}
               {!loading && (
-                <Link href="/journal">
-                  <div className={styles.final_btn}>Return</div>
+                <Link href={`/file/${ID}`}>
+                  <div className={styles.final_btn}>Continue</div>
                 </Link>
               )}
             </div>
