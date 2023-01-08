@@ -1,9 +1,9 @@
 import Head from "next/head";
 import React, { useState } from "react";
-import Navbar from "../../../src/Common/Navbar";
-import Status from "../../../src/Upload/Status";
-import Details from "../../../src/Upload/Details";
-import styles from "../../../styles/uploading.module.css";
+import Navbar from "../../src/Common/Navbar";
+import Status from "../../src/Upload/Status";
+import Details from "../../src/Upload/Details";
+import styles from "../../styles/uploading.module.css";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
@@ -13,7 +13,12 @@ const Uploading = () => {
     [ID, setID] = useState(0);
 
   const { doi } = router.query;
-  const { doi2 } = router.query;
+  const [string, setString] = useState("");
+
+  React.useEffect(() => {
+    if (!router.isReady) return;
+    setString(doi.join("/"));
+  }, [router.isReady]);
 
   if (typeof window !== "undefined") {
     if (!localStorage.getItem("auth_token")) router.push("/");
@@ -26,7 +31,7 @@ const Uploading = () => {
         <>
           <Head>
             <title>{loading ? "Confirm Upload" : "Uploaded"}</title>
-            <link rel="icon" href="../../logos/dpu-2.png" />
+            <link rel="icon" href="../logos/dpu-2.png" />
           </Head>
 
           <main className={styles.wrapper}>
@@ -34,9 +39,7 @@ const Uploading = () => {
             <div className={styles.uploading_wrapper}>
               <Status
                 img={
-                  loading
-                    ? "../../upload/uploading.png"
-                    : "../../upload/uploaded.png"
+                  loading ? "/../upload/uploading.png" : "/../upload/uploaded.png"
                 }
                 top={
                   loading
@@ -49,11 +52,11 @@ const Uploading = () => {
               />
               {loading && (
                 <Details
-                  alert="../../alert.png"
+                  alert="/../alert.png"
                   check={setL}
                   set={setI}
                   item={item}
-                  doi={`${doi}/${doi2}`}
+                  doi={string}
                 />
               )}
               {!loading && (
