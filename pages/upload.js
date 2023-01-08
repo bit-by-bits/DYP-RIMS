@@ -109,7 +109,6 @@ const Upload = () => {
                     placeholder="Enter DOI"
                     className={styles.upload_input2}
                   />
-                  <div className={styles.dots} />
                   {searching ? (
                     <div className={styles.upload_btn}>
                       <div className={styles.dots} />

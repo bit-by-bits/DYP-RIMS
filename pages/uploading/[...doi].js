@@ -39,7 +39,9 @@ const Uploading = () => {
             <div className={styles.uploading_wrapper}>
               <Status
                 img={
-                  loading ? "/../upload/uploading.png" : "/../upload/uploaded.png"
+                  loading
+                    ? "/../upload/uploading.png"
+                    : "/../upload/uploaded.png"
                 }
                 top={
                   loading

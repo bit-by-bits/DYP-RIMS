@@ -15,6 +15,15 @@ export default function Section(props) {
     title: "",
   });
 
+  function edit() {
+    
+    setVisible(true);
+    setModal({
+      text: "It appears that this feature is still unavailable.",
+      title: "OOPS!",
+    });
+  }
+
   function download() {
     axios({
       method: "GET",
@@ -23,8 +32,8 @@ export default function Section(props) {
     }).then(function (response) {
       setVisible(true);
       setModal({
-        text: response.data.error,
-        title: response.data.details,
+        text: "Perhaps you haven't posted your CV yet.",
+        title: "THERE SEEMS TO be an error",
       });
     });
   }
@@ -41,10 +50,19 @@ export default function Section(props) {
 
         <div className={styles.profile_grid}>
           <div className={styles.profile_personal}>
-            <img
-              src={localStorage.getItem("user_pic")}
-              className={styles.profile_img}
-            />
+            <div className={styles.img_wrapper}>
+              <img
+                className={styles.profile_img}
+                src={localStorage.getItem("user_pic")}
+              />
+              <svg className={styles.img_border1} viewBox="0 0 100 100">
+                <path d="M95,50 A45,45 0 0,1 5,50 A45,45 0 0,1 50,5" />
+              </svg>
+              <svg className={styles.img_border2} viewBox="0 0 100 100">
+                <path d="M95,50 A45,45 0 0,1 5,50 A45,45 0 0,1 50,5" />
+              </svg>
+            </div>
+
             <div className={styles.profile_text}>
               <div className={styles.profile_name}>
                 {localStorage.getItem("user_name")}
@@ -64,7 +82,7 @@ export default function Section(props) {
                 Dr. D. Y. Patil Medical College
               </div>
 
-              <div className={styles.profile_edit}>Edit Profile</div>
+              <div onClick={edit} className={styles.profile_edit}>Edit Profile</div>
             </div>
           </div>
 

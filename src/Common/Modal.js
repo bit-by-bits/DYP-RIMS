@@ -12,14 +12,11 @@ const Modal = (props) => {
     : "auto";
 
   function check(e) {
-    let ele = e.target.className;
+    const ele = e.target.className;
 
-    if (
-      ele != styles.modal &&
-      ele != styles.modal_title &&
-      ele != styles.modal_text
-    )
-      props.setVisible(false);
+    ele != styles.modal && ele != styles.modal_title && ele != styles.modal_text
+      ? props.setVisible(false)
+      : null;
   }
 
   return (

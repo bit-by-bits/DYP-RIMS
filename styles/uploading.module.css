@@ -13,7 +13,7 @@
 
 .wrapper .uploading_wrapper .uploading_head {
   color: #9a2827;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1.5rem;
   display: flex;
   flex-direction: column;
@@ -24,7 +24,7 @@
 
 .wrapper .uploading_wrapper .uploading_msg {
   color: #9a2827;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1rem;
   display: flex;
   flex-direction: "row";

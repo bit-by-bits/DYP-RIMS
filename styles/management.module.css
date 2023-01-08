@@ -81,7 +81,7 @@
   cursor: pointer;
   margin-top: 1.6rem;
   color: #9a2827;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.8rem;
 }
 
@@ -225,7 +225,7 @@
   .profile_scrollitem
   .profile_scrollevent {
   color: black;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.9rem;
 }
 
@@ -431,7 +431,7 @@
   .pub_info
   .pub_name {
   color: #9a2827;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1rem;
   letter-spacing: 0.3px;
 }

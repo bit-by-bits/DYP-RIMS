@@ -6,16 +6,15 @@ import Navbar from "../src/Common/Navbar";
 import Boxes from "../src/Profile/Boxes";
 import Table from "../src/Profile/Table";
 import Section from "../src/Profile/Section";
-import { useRouter } from "next/router";
 import Loader from "../src/Common/Loader";
-import Alert from "../src/Common/Alert";
+import { useRouter } from "next/router";
 
 const Profile = () => {
   const router = useRouter();
-  const publications = [],
-    temp = [];
-  const [pubs, setPubs] = React.useState(temp),
-    [data, setData] = React.useState(temp),
+  const publications = [];
+
+  const [pubs, setPubs] = React.useState([]),
+    [data, setData] = React.useState([]),
     [awards, setAwards] = React.useState(0),
     [publs, setPubls] = React.useState(0),
     [visible, setVisible] = React.useState(true);
@@ -32,10 +31,7 @@ const Profile = () => {
           method: "GET",
           url: `https://rimsapi.journalchecker.com/api/v1/publication`,
           headers: { Authorization: `Bearer ${item}` },
-        }).then(function (response) {
-          temp = response.data.publications;
-          setPubs(temp);
-        });
+        }).then((response) => setPubs(response.data.publications));
 
         axios({
           method: "GET",
@@ -48,8 +44,7 @@ const Profile = () => {
           localStorage.setItem("user_email", response.data.email);
           localStorage.setItem("user_dept", response.data.department);
 
-          temp = response.data.awards;
-          setData(temp);
+          setData(response.data.awards);
         });
 
         axios({
@@ -57,16 +52,11 @@ const Profile = () => {
           url: `https://rimsapi.journalchecker.com/api/v1/user/stats`,
           headers: { Authorization: `Bearer ${item}` },
         }).then(function (response) {
-          temp = response.data.awards;
-          setAwards(temp);
-
-          temp = response.data.publications;
-          setPubls(temp);
+          setAwards(response.data.awards);
+          setPubls(response.data.publications);
         });
 
-        setTimeout(() => {
-          setVisible(false);
-        }, 1600);
+        setTimeout(() => setVisible(false), 1600);
       }
 
       for (let a = 0; a < pubs.length; a++)

@@ -27,7 +27,7 @@
 .wrapper .profile_wrapper .profile_section .profile_grid .profile_personal {
   grid-column: 1 / span 2;
   background: #ffffff;
-  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.2);
   border-radius: 16px;
   display: flex;
   flex-direction: "row";
@@ -38,16 +38,39 @@
   gap: 1rem;
 }
 
-.wrapper
-  .profile_wrapper
-  .profile_section
-  .profile_grid
-  .profile_personal
-  .profile_img {
+.img_wrapper {
+  position: relative;
+  height: 8rem;
+  width: 8rem;
+}
+
+.profile_img {
+  position: absolute;
+  top: 0;
+  left: 0;
   border-radius: 50%;
-  transform: scale(1.1);
-  margin: 1rem;
-  height: 6rem;
+  padding: 1.4rem;
+  height: 100%;
+}
+
+.img_border1,
+.img_border2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  padding: 0.7rem;
+  fill: none;
+  stroke: #9a2827;
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.img_border2 {
+  stroke-width: 5;
+  stroke: #7e1918;
+  padding: 0;
+  transform: rotate(180deg);
 }
 
 .wrapper
@@ -93,8 +116,10 @@
   .profile_text
   .profile_edit {
   margin-top: 0.5rem;
+  width: max-content;
+  cursor: pointer;
   color: #9a2827;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.8rem;
 }
 
@@ -127,10 +152,10 @@
   justify-content: space-between;
   align-items: center;
   background: #ffffff;
-  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.2);
   border-radius: 16px;
   color: #9a2827;
-  font-weight: 600;
+  font-weight: 700;
   padding: 0 2rem;
   justify-content: center;
 }
@@ -140,7 +165,7 @@
 
 .wrapper .profile_wrapper .profile_box .profile_head {
   color: #9a2827;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1.2rem;
   margin: 2rem 0 1rem 0;
 }
@@ -154,7 +179,7 @@
 
 .wrapper .profile_wrapper .profile_box .profile_bodygrid .profile_body {
   background: #ffffff;
-  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.2);
   border-radius: 16px;
   display: flex;
   flex-direction: column;
@@ -172,7 +197,7 @@
   .profile_body
   .profile_topic {
   color: black;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1rem;
 }
 
@@ -215,7 +240,7 @@
   background-color: #9a2827;
   border-radius: 16px;
   color: white;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.85rem;
 }
 
@@ -277,7 +302,7 @@
   td:nth-child(5n + 1)
   span:nth-child(4n + 1) {
   color: black;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1rem;
 }
 
@@ -305,7 +330,7 @@
   td:nth-child(5n + 1)
   span:nth-child(4n) {
   color: #9a2827;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.8rem;
 }
 

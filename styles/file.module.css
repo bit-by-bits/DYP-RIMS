@@ -18,7 +18,7 @@
 
 .wrapper .file_wrapper .file_text .file_title {
   color: #9a2827;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1.4rem;
   margin-bottom: 2rem;
 }
@@ -70,7 +70,7 @@
 .wrapper .file_wrapper .file_text .file_flex .file_head,
 .smooth .file_head {
   color: #9a2827;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1rem;
 }
 
@@ -101,7 +101,7 @@
 
 .wrapper .file_wrapper .file_text .file_flex .file_body .file_bodybold {
   color: black;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.9rem;
   margin-bottom: 0.4rem;
 }

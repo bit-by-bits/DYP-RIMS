@@ -6,7 +6,7 @@
 
 .wrapper .mgmt_wrapper .title {
   color: #9a2827;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1.4rem;
 }
 
@@ -126,7 +126,7 @@
   background-color: #9a2827;
   border-radius: 16px;
   color: white;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.85rem;
 }
 
@@ -173,7 +173,7 @@
   td:nth-child(5n + 1)
   span:nth-child(4n + 1) {
   color: black;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1rem;
 }
 
@@ -194,7 +194,7 @@
 
 .wrapper .mgmt_wrapper .profile_table td:nth-child(5n + 1) span:nth-child(4n) {
   color: #9a2827;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.8rem;
 }
 
