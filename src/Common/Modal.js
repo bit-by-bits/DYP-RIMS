@@ -11,6 +11,10 @@ const Modal = (props) => {
     ? "hidden"
     : "auto";
 
+  document.querySelector("body").style.paddingRight = props.visible
+    ? "10px"
+    : "0";
+
   function check(e) {
     const ele = e.target.className;
 

@@ -6,7 +6,7 @@
   height: 100vh;
   width: 100vw;
   background-color: rgba(0, 0, 0, 0.3);
-  position: absolute;
+  position: fixed;
   overflow: hidden;
 
   display: flex;
@@ -36,6 +36,7 @@
   color: #9a2827;
   font-weight: 700;
   font-size: 1.1rem;
+  padding-right: 2rem;
   position: relative;
   text-transform: uppercase;
   border-bottom: 2px solid #9a2827;

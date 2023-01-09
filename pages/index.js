@@ -28,24 +28,26 @@ export default function Home() {
       theme: "outline",
       size: "medium",
     });
+
+    setTimeout(() => setVisible(false), 1600);
   }, []);
 
   function handleCallbackResponse(response) {
-    var userToken = response.credential;
-
     axios({
       method: "POST",
       url: `https://rimsapi.journalchecker.com/api/v1/login/`,
-      data: { id_token: userToken },
-    }).then(function (response) {
-      localStorage.setItem("auth_token", response.data.token);
-      localStorage.setItem("user_id", response.data.id);
-      localStorage.setItem("user_role", response.data.role);
-      localStorage.setItem("user_pic", response.data.picture);
+      data: { id_token: response.credential },
+    }).then(function (res) {
+      localStorage.setItem("auth_token", res.data.token);
+      localStorage.setItem("user_id", res.data.id);
+      localStorage.setItem("user_role", res.data.role);
+      localStorage.setItem("user_pic", res.data.picture);
 
-      if (localStorage.getItem("user_role") == "management")
-        router.push("/management");
-      else router.push("/profile");
+      router.push(
+        localStorage.getItem("user_role") == "management"
+          ? "/management"
+          : "/profile"
+      );
     });
   }
 
@@ -59,12 +61,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <Loader visible={visible} />
-        <div
-          onLoad={setTimeout(() => {
-            setVisible(false);
-          }, 1600)}
-          className={styles.welcome}
-        >
+        <div className={styles.welcome}>
           <div className={styles.greeting}>
             <div className={styles.title}>Welcome to RIMS</div>
 

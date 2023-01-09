@@ -120,7 +120,7 @@
 }
 
 .main .welcome .login .login_bottom a:hover {
-  color: rgb(180, 5, 5);
+  color: red;
   text-decoration: none;
 }
 

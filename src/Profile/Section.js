@@ -16,7 +16,6 @@ export default function Section(props) {
   });
 
   function edit() {
-    
     setVisible(true);
     setModal({
       text: "It appears that this feature is still unavailable.",
@@ -82,7 +81,9 @@ export default function Section(props) {
                 Dr. D. Y. Patil Medical College
               </div>
 
-              <div onClick={edit} className={styles.profile_edit}>Edit Profile</div>
+              <div onClick={edit} className={styles.profile_edit}>
+                Edit Profile
+              </div>
             </div>
           </div>
 

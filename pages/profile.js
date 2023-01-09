@@ -55,8 +55,6 @@ const Profile = () => {
           setAwards(response.data.awards);
           setPubls(response.data.publications);
         });
-
-        setTimeout(() => setVisible(false), 1600);
       }
 
       for (let a = 0; a < pubs.length; a++)
@@ -99,7 +97,11 @@ const Profile = () => {
               <Section awards={awards} publs={publs} />
               <Boxes title="Awards & Achievements" data={data} />
               <Boxes title="Patents" data={data} />
-              <Table title="Publications" data={publications} />
+              <Table
+                title="Publications"
+                data={publications}
+                setLoader={setVisible}
+              />
               <Boxes title="Conferences" data={data} />
 
               {/* <div className={styles.footer}>Made by Qtanea</div> */}
