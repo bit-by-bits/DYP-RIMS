@@ -1,10 +1,55 @@
-.wrapper .file_wrapper {
+.wrapper .file_wrapper,
+.form_wrapper {
   min-height: 100vh;
   gap: 2rem;
   display: flex;
   position: relative;
   align-items: flex-start;
   padding: 6rem 10vw;
+}
+
+.form_wrapper {
+  gap: 1.4rem 2rem;
+  padding-top: 0;
+  display: grid;
+  min-height: 80vh;
+  grid-template-columns: 1fr 1fr;
+}
+
+.form_wrapper > label {
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  position: relative;
+  height: max-content;
+}
+
+.form_wrapper input {
+  text-overflow: ellipsis;
+  border: 1px solid #d4d4d4;
+  width: 30vw;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  color: black;
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+
+.label_text {
+  color: #9a2827;
+  font-weight: 700;
+  text-align: right;
+  margin-right: 1rem;
+  width: 8vw;
+}
+
+.error_text {
+  color: red;
+  font-weight: 500;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 1rem;
+  position: absolute;
 }
 
 .wrapper .file_wrapper .file_text {
@@ -115,22 +160,29 @@
   gap: 1rem;
 }
 
-.wrapper .file_wrapper .file_btns .file_btn1,
-.wrapper .file_wrapper .file_btns .file_btn2 {
-  color: #9a2827;
-  font-weight: 700;
-  font-size: 1rem;
-  width: 100%;
-  cursor: pointer;
-  text-align: center;
-  border: 2px solid #9a2827;
-  border-radius: 8px;
-  padding: 0.8rem 1.7rem;
+.file_btn1,
+.file_btn2 {
+  color: #9a2827 !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  width: 100% !important;
+  cursor: pointer !important;
+  text-align: center !important;
+  border: 2px solid #9a2827 !important;
+  border-radius: 8px !important;
+  padding: 0.8rem 1.7rem !important;
 }
 
-.wrapper .file_wrapper .file_btns .file_btn1 {
-  background-color: #9a2827;
-  color: white;
+.file_btn1 {
+  color: white !important;
+  background-color: #9a2827 !important;
+}
+
+.form_btn {
+  max-width: 15vw !important;
+  padding: 0.6rem !important;
+  margin-top: 1rem;
+  justify-self: center;
 }
 
 .file_btn1:hover {
@@ -138,7 +190,7 @@
 }
 
 .file_btn2:hover {
-  background-color: rgba(0, 0, 0, 0.05) !important;
+  background-color: rgba(0, 0, 0, 0.1) !important;
 }
 
 .wrapper .footer {
@@ -166,6 +218,10 @@
     box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.37);
   }
 
+  .form_btn {
+    max-width: 20vw !important;
+  }
+
   .abstract {
     margin: 2rem 0;
     padding: 1rem 2rem;
@@ -181,6 +237,15 @@
     border-radius: 14px;
     box-shadow: 0 8px 40px 0 rgba(0, 0, 0, 0.37);
     padding: 1.4rem 2rem;
+  }
+
+  .form_btn {
+    max-width: 15vw !important;
+    padding: 0.8rem !important;
+  }
+
+  .form_wrapper {
+    gap: 0 1rem;
   }
 }
 

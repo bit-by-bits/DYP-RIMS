@@ -1,6 +1,7 @@
 import Head from "next/head";
 import React, { useState } from "react";
 import Navbar from "../../src/Common/Navbar";
+import Loader from "../../src/Common/Loader";
 import Status from "../../src/Upload/Status";
 import Details from "../../src/Upload/Details";
 import styles from "../../styles/uploading.module.css";
@@ -10,6 +11,7 @@ import Link from "next/link";
 const Uploading = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true),
+    [visible, setVisible] = React.useState(true),
     [ID, setID] = useState(0);
 
   const { doi } = router.query;
@@ -23,9 +25,7 @@ const Uploading = () => {
   if (typeof window !== "undefined") {
     if (!localStorage.getItem("auth_token")) router.push("/");
     else {
-      const item = localStorage.getItem("auth_token"),
-        setI = (id) => setID(id),
-        setL = (load) => setLoading(load);
+      const item = localStorage.getItem("auth_token");
 
       return (
         <>
@@ -36,6 +36,8 @@ const Uploading = () => {
 
           <main className={styles.wrapper}>
             <Navbar />
+            <Loader visible={visible} />
+
             <div className={styles.uploading_wrapper}>
               <Status
                 img={
@@ -55,16 +57,30 @@ const Uploading = () => {
               {loading && (
                 <Details
                   alert="/../alert.png"
-                  check={setL}
-                  set={setI}
+                  setVisible={setVisible}
+                  setLoading={setLoading}
                   item={item}
+                  setID={setID}
                   doi={string}
                 />
               )}
               {!loading && (
-                <Link href={`/file/${ID}`}>
-                  <div className={styles.final_btn}>Continue</div>
-                </Link>
+                <div className={styles.uploading_btns}>
+                  <Link
+                    href={
+                      localStorage.getItem("user_role") == "management"
+                        ? "/management"
+                        : "/profile"
+                    }
+                  >
+                    <div className={styles.uploading_btn1}>Back to Profile</div>
+                  </Link>
+                  <Link href={`/file/${ID}/edit`}>
+                    <div className={styles.uploading_btn2}>
+                      Continue to Edit
+                    </div>
+                  </Link>
+                </div>
               )}
             </div>
           </main>

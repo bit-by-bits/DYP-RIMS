@@ -24,26 +24,26 @@ const FileInfo = (props) => {
       url: "https://rimsapi.journalchecker.com/api/v1/publication/" + props.id,
       headers: { Authorization: `Bearer ${props.item}` },
     }).then(function (response) {
-      const temp = response.data.publication;
-      setPubs(temp);
-      setDept(temp.department.name);
+      const temp_PUB = response.data.publication,
+        temp_AUTH = [];
 
-      console.log(temp);
-      let extra = [];
+      setPubs(temp_PUB);
+      setDept(temp_PUB.department.name);
 
-      for (let i = 0; i < temp.author_name.length; i++)
-        extra.push(
+      for (let i = 0; i < temp_PUB.author_name.length; i++)
+        temp_AUTH.push(
           <div key={i}>
             <FontAwesomeIcon
               icon={faBookOpenReader}
               style={{ color: "#9a2827" }}
             />{" "}
             &nbsp;
-            {temp.author_name[i].searchable_name}
+            {temp_PUB.author_name[i].searchable_name}
           </div>
         );
 
-      setAuthors(extra);
+      setAuthors(temp_AUTH);
+      setTimeout(() => props.setVisible(false), 1600);
     });
   }, []);
 

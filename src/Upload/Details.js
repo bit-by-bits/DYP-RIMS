@@ -92,6 +92,7 @@ export default function Details(props) {
         });
 
       setDisplayList(temp2);
+      props.setVisible(false);
     });
 
     axios({
@@ -144,8 +145,8 @@ export default function Details(props) {
         },
       })
         .then(function (response) {
-          props.set(response.data.pub_id);
-          props.check(false);
+          props.setID(response.data.pub_id);
+          props.setLoading(false);
 
           localStorage.removeItem("upload_id");
           localStorage.removeItem("upload_title");
@@ -229,7 +230,7 @@ export default function Details(props) {
           Cancel
         </div>
         <div onClick={submit} className={styles.uploading_btn2}>
-          Upload
+          Confirm
         </div>
       </div>
     </>
