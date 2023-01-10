@@ -85,7 +85,7 @@
   gap: 2rem;
 }
 
-.wrapper .uploading_wrapper .uploading_btns div {
+.uploading_btns div {
   color: #9a2827;
   font-weight: 700;
   font-size: 1.2rem;
@@ -95,28 +95,17 @@
   padding: 0.8rem 1.8rem;
 }
 
-.wrapper .uploading_wrapper .uploading_btns .uploading_btn2 {
+.uploading_btns .uploading_btn2 {
   background-color: #9a2827;
   color: white;
   display: inline;
 }
 
-.final_btn {
-  color: #9a2827;
-  font-weight: 700;
-  font-size: 1.2rem;
-  border: 2px solid #9a2827;
-  cursor: pointer;
-  border-radius: 8px;
-  padding: 0.8rem 1.8rem;
-}
-
-.wrapper .uploading_wrapper .uploading_btns .uploading_btn1:hover,
-.final_btn:hover {
+.uploading_btns .uploading_btn1:hover {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.wrapper .uploading_wrapper .uploading_btns .uploading_btn2:hover {
+.uploading_btns .uploading_btn2:hover {
   background-color: #7e1918;
 }
 

@@ -241,7 +241,7 @@
 
 .wrapper .profile_wrapper .profile_box .profile_table th:nth-child(5n + 5),
 .wrapper .profile_wrapper .profile_box .profile_table td:nth-child(5n + 5) {
-  padding-right: 1rem;
+  padding: 0.5rem 1rem;
 }
 
 .wrapper .profile_wrapper .profile_box .profile_table td:nth-child(5n + 1) {
@@ -318,7 +318,12 @@
   .profile_box
   .profile_table
   td:nth-child(5n + 1)
-  span:nth-child(4n + 2),
+  span:nth-child(4n + 2) {
+  color: black;
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
 .wrapper
   .profile_wrapper
   .profile_box
@@ -326,7 +331,8 @@
   td:nth-child(5n + 1)
   span:nth-child(4n + 3) {
   color: black;
-  font-weight: 400;
+  font-style: italic;
+  font-weight: 500;
   font-size: 0.8rem;
 }
 
@@ -379,22 +385,9 @@
   bottom: 0.8rem;
 }
 
-@media screen and (min-width: 1500px) {
-  .profile_img {
-    margin-right: 1rem !important;
-  }
-}
-
-.btn_td {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .btn_div {
   cursor: pointer;
   padding: 0.5rem 1rem;
-  transform: translateY(90%);
   border-radius: 8px;
   text-align: center;
   background-color: #9a2827;
@@ -404,4 +397,36 @@
 
 .btn_div:hover {
   background-color: #7e1918;
+}
+
+.disappear {
+  animation: disappear 0.4s ease-out;
+}
+
+.appear {
+  animation: appear 0.4s ease-in;
+}
+
+@media screen and (min-width: 1500px) {
+  .profile_img {
+    margin-right: 1rem !important;
+  }
+}
+
+@keyframes disappear {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import Loader from "../../src/Common/Loader";
 import Navbar from "../../src/Common/Navbar";
 import FileInfo from "../../src/Common/FileInfo";
+import Link from "next/link";
 
 const ID = () => {
   const router = useRouter();
@@ -16,12 +17,6 @@ const ID = () => {
     else {
       const item = localStorage.getItem("auth_token");
 
-      function loader() {
-        setTimeout(() => {
-          setVisible(false);
-        }, 1600);
-      }
-
       return (
         <>
           <Head>
@@ -29,16 +24,17 @@ const ID = () => {
             <link rel="icon" href="logos/dpu-2.png" />
           </Head>
 
-          <main onLoad={loader} className={styles.wrapper}>
+          <main className={styles.wrapper}>
             <Navbar />
             <Loader visible={visible} />
 
             <div className={styles.file_wrapper}>
-              <FileInfo item={item} id={id} />
+              <FileInfo setVisible={setVisible} item={item} id={id} />
               <div className={styles.file_btns}>
                 <div className={styles.file_btn1}>Download</div>
-
-                <div className={styles.file_btn2}>Edit</div>
+                <Link href={`/file/${id}/edit`}>
+                  <div className={styles.file_btn2}>Edit</div>
+                </Link>
               </div>
 
               <a

@@ -53,7 +53,6 @@ export default function Table(props) {
     }
 
     setTableData(temp_ROWS);
-    console.log("tableData : ", tableData);
   }
 
   function fixRows() {
@@ -132,7 +131,24 @@ export default function Table(props) {
           return 0;
         });
 
-    setTableData(sortedArr);
+    Array.from(document.getElementsByTagName("tr")).forEach((row) => {
+      if (row.classList.contains(`${styles.profile_thead}`)) return;
+
+      row.classList.add(`${styles.disappear}`);
+
+      setTimeout(() => {
+        row.style.opacity = 0;
+        setTableData(sortedArr);
+
+        row.classList.remove(`${styles.disappear}`);
+        row.classList.add(`${styles.appear}`);
+
+        setTimeout(() => {
+          row.style.opacity = 1;
+          row.classList.remove(`${styles.appear}`);
+        }, 399);
+      }, 399);
+    });
   }
 
   return (

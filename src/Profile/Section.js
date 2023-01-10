@@ -104,12 +104,12 @@ export default function Section(props) {
           </Link>
           <Link href="#Patents">
             <div className={styles.profile_feat}>
-              <span>3 Patents</span>
+              <span>0 Patents</span>
             </div>
           </Link>
           <Link href="#Conferences">
             <div className={styles.profile_feat}>
-              <span>17 Conferences</span>
+              <span>0 Conferences</span>
             </div>
           </Link>
           <Link href="#Awards & Achievements">
