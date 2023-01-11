@@ -234,17 +234,17 @@
   padding: 0.5rem 0;
 }
 
-.wrapper .profile_wrapper .profile_box .profile_table th:nth-child(5n + 1),
-.wrapper .profile_wrapper .profile_box .profile_table td:nth-child(5n + 1) {
-  width: 40vw;
+.wrapper .profile_wrapper .profile_box .profile_table th:nth-child(6n + 1),
+.wrapper .profile_wrapper .profile_box .profile_table td:nth-child(6n + 1) {
+  width: 35vw;
 }
 
-.wrapper .profile_wrapper .profile_box .profile_table th:nth-child(5n + 5),
-.wrapper .profile_wrapper .profile_box .profile_table td:nth-child(5n + 5) {
+.wrapper .profile_wrapper .profile_box .profile_table th:nth-child(6n + 6),
+.wrapper .profile_wrapper .profile_box .profile_table td:nth-child(6n + 6) {
   padding: 0.5rem 1rem;
 }
 
-.wrapper .profile_wrapper .profile_box .profile_table td:nth-child(5n + 1) {
+.wrapper .profile_wrapper .profile_box .profile_table td:nth-child(6n + 1) {
   padding-left: 1rem;
 }
 
@@ -277,7 +277,7 @@
   .profile_box
   .profile_table
   .profile_thead
-  th:nth-child(5) {
+  th:nth-child(6) {
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
 }
@@ -286,14 +286,14 @@
   .profile_wrapper
   .profile_box
   .profile_table
-  td:not(:nth-child(5n + 1)) {
+  td:not(:nth-child(6n + 1)) {
   text-align: center;
   color: black;
   font-weight: 500;
   font-size: 1rem;
 }
 
-.wrapper .profile_wrapper .profile_box .profile_table td:nth-child(5n + 1) {
+.wrapper .profile_wrapper .profile_box .profile_table td:nth-child(6n + 1) {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -306,7 +306,7 @@
   .profile_wrapper
   .profile_box
   .profile_table
-  td:nth-child(5n + 1)
+  td:nth-child(6n + 1)
   span:nth-child(4n + 1) {
   color: black;
   font-weight: 700;
@@ -317,7 +317,7 @@
   .profile_wrapper
   .profile_box
   .profile_table
-  td:nth-child(5n + 1)
+  td:nth-child(6n + 1)
   span:nth-child(4n + 2) {
   color: black;
   font-weight: 400;
@@ -328,7 +328,7 @@
   .profile_wrapper
   .profile_box
   .profile_table
-  td:nth-child(5n + 1)
+  td:nth-child(6n + 1)
   span:nth-child(4n + 3) {
   color: black;
   font-style: italic;
@@ -340,29 +340,91 @@
   .profile_wrapper
   .profile_box
   .profile_table
-  td:nth-child(5n + 1)
+  td:nth-child(6n + 1)
   span:nth-child(4n) {
   color: #9a2827;
+  font-style: italic;
   font-weight: 700;
   font-size: 0.8rem;
 }
 
-.wrapper
+/* .wrapper
   .profile_wrapper
   .profile_box
   .profile_table
-  td:nth-child(5n + 1)
-  span:nth-child(4n).true {
-  display: block;
+  td:nth-child(6n + 1)
+  span:nth-child(5n) {
+  color: #9a2827;
+  font-weight: 700;
+  font-size: 0.8rem;
+  margin-top: 0.6rem;
+} */
+
+.extra_span {
+  color: #9a2827 !important;
+  font-weight: 900 !important;
+  font-size: 0.9rem !important;
+  font-style: normal !important;
 }
 
 .wrapper
   .profile_wrapper
   .profile_box
   .profile_table
-  td:nth-child(5n + 1)
-  span:nth-child(4n).false {
+  td:nth-child(6n + 2)
+  span:nth-child(2n + 1),
+.wrapper
+  .profile_wrapper
+  .profile_box
+  .profile_table
+  td:nth-child(6n + 3)
+  span:nth-child(2n + 1) {
+  color: #9a2827;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 3rem;
+}
+
+.wrapper
+  .profile_wrapper
+  .profile_box
+  .profile_table
+  td:nth-child(6n + 2)
+  span:nth-child(2n) {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.more_info {
+  margin-left: 0.2rem;
+}
+
+.more_info:hover {
+  cursor: pointer;
+}
+
+.more_info:hover + .card,
+.card:hover {
+  display: block;
+}
+
+.card {
   display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 100%;
+  background-color: #fff;
+  z-index: 2;
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  width: max-content;
+  border: solid 2px #7e1918;
+}
+
+.wrapper .profile_wrapper .profile_box .profile_table td:nth-child(6n + 4),
+.wrapper .profile_wrapper .profile_box .profile_table td:nth-child(6n + 5) {
+  font-weight: 700;
+  font-size: 1.1rem;
 }
 
 .wrapper .profile_wrapper .footer {

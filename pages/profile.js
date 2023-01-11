@@ -79,7 +79,9 @@ const Profile = () => {
           pmc: pubs[a].in_pmc,
           scie: pubs[a].in_scie,
           scopus: pubs[a].in_scopus,
-          softcopy: false,
+          volume: pubs[a].volume,
+          issue: pubs[a].issue,
+          softcopy: true,
         };
 
       return (

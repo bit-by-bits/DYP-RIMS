@@ -1,6 +1,7 @@
 import {
   faArrowDownAZ,
   faArrowDownZA,
+  faCircleQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
@@ -14,14 +15,12 @@ export default function Table(props) {
     [head, setHead] = React.useState([]),
     [title, setTitle] = React.useState([
       ["Title", true],
+      ["Indices", true],
+      ["Indexed In", true],
+      ["Citations", true],
       ["Year", true],
-      ["H-Index", true],
-      ["Department", true],
       ["View More", true],
     ]);
-
-  let temp_STR = "",
-    temp_ARR = [];
 
   React.useEffect(() => {
     setPubs(props.data);
@@ -36,22 +35,70 @@ export default function Table(props) {
   function fixTableData() {
     const temp_ROWS = new Array(pubs.length);
     for (let a = 0; a < pubs.length; a++) {
-      const b = pubs[a].authors;
-      for (let c = 0; c < b.length; c++)
-        temp_STR += b[c].searchable_name + (c != b.length - 1 ? ", " : "");
+      temp_ROWS[a] = new Array(18);
+      const au = pubs[a].authors;
 
-      temp_ROWS[a] = new Array(7);
+      temp_ROWS[a][6] = "";
+      for (let c = 0; c < au.length; c++)
+        temp_ROWS[a][6] +=
+          au[c].searchable_name + (c != au.length - 1 ? ", " : "");
+
       temp_ROWS[a][0] = pubs[a].title;
-      temp_ROWS[a][4] = temp_STR;
-      temp_ROWS[a][5] = pubs[a].name;
-      temp_ROWS[a][1] = pubs[a].year;
-      temp_ROWS[a][2] = pubs[a].h_index;
-      temp_ROWS[a][3] = pubs[a].dept;
-      temp_ROWS[a][6] = pubs[a].id;
+      temp_ROWS[a][7] = pubs[a].name;
+      temp_ROWS[a][8] = pubs[a].volume;
+      temp_ROWS[a][9] = pubs[a].issue;
+      temp_ROWS[a][10] = "page number idk";
 
-      temp_STR = "";
+      temp_ROWS[a][1] = pubs[a].i_factor.toFixed(2);
+      temp_ROWS[a][11] = pubs[a].sjr;
+
+      temp_ROWS[a][2] = 0;
+      temp_ROWS[a][12] = pubs[a].doaj;
+      temp_ROWS[a][13] = pubs[a].embase;
+      temp_ROWS[a][14] = pubs[a].medline;
+      temp_ROWS[a][15] = pubs[a].pmc;
+      temp_ROWS[a][16] = pubs[a].scie;
+      temp_ROWS[a][17] = pubs[a].scopus;
+      temp_ROWS[a][18] = "";
+
+      temp_ROWS[a][3] = pubs[a].citations;
+      temp_ROWS[a][4] = pubs[a].year;
+      temp_ROWS[a][5] = pubs[a].id;
+
+      for (let i = 12; i <= 17; i++) {
+        if (temp_ROWS[a][i]) {
+          temp_ROWS[a][2]++;
+
+          switch (i) {
+            case 12:
+              temp_ROWS[a][18] += "DOAJ ";
+              break;
+
+            case 13:
+              temp_ROWS[a][18] += "Embase ";
+              break;
+
+            case 14:
+              temp_ROWS[a][18] += "Medline ";
+              break;
+
+            case 15:
+              temp_ROWS[a][18] += "PMC ";
+              break;
+
+            case 16:
+              temp_ROWS[a][18] += "SCIE ";
+              break;
+
+            case 17:
+              temp_ROWS[a][18] += "Scopus";
+              break;
+          }
+        }
+      }
     }
 
+    console.log(temp_ROWS);
     setTableData(temp_ROWS);
   }
 
@@ -62,18 +109,45 @@ export default function Table(props) {
         <tr key={a}>
           <td>
             <span>{tableData[a][0]}</span>
-            <span>{tableData[a][4]}</span>
-            <span>{tableData[a][5]}</span>
             <span>
+              <span className={styles.extra_span}>who: </span>
+              {tableData[a][6]}
+            </span>
+            <span>
+              <span className={styles.extra_span}>what: </span>
+              {tableData[a][7]}
+            </span>
+            <span>
+              Volume: {tableData[a][8] ? tableData[a][8] : "?"}
+              &nbsp;&middot;&nbsp; Issue:{" "}
+              {tableData[a][9] ? tableData[a][9] : "?"}
+              &nbsp;&middot;&nbsp; Issue: ?
+            </span>
+            {/* <span>
               No softcopy found for this publication. Kindly upload a softcopy.
+            </span> */}
+          </td>
+
+          <td>
+            <span>{tableData[a][1]}</span>
+            <span>{tableData[a][11]}</span>
+          </td>
+
+          <td>
+            <span>{tableData[a][2]}</span>
+            <span style={{ position: "relative" }}>
+              <FontAwesomeIcon
+                className={styles.more_info}
+                icon={faCircleQuestion}
+              />
+              <div className={styles.card}>{tableData[a][18]}</div>
             </span>
           </td>
 
-          <td>{tableData[a][1]}</td>
-          <td>{tableData[a][2]}</td>
           <td>{tableData[a][3]}</td>
+          <td>{tableData[a][4]}</td>
           <td className={styles.btn_td}>
-            <Link href={"/file/" + tableData[a][6]}>
+            <Link href={"/file/" + tableData[a][5]}>
               <div className={styles.btn_div}>Click</div>
             </Link>
           </td>
@@ -90,14 +164,14 @@ export default function Table(props) {
 
   function fixHead() {
     const temp_HEAD = [];
-    for (let a = 0; a < 5; a++) {
+    for (let a = 0; a < title.length; a++) {
       temp_HEAD.push(
         <th key={a}>
           <span>{title[a][0]}</span>
-          {a != 4 && (
+          {a != title.length - 1 && (
             <FontAwesomeIcon
               onClick={() => {
-                temp_ARR = [...title];
+                const temp_ARR = [...title];
                 temp_ARR[a][1] = !temp_ARR[a][1];
                 setTitle(temp_ARR);
                 sortTable(a, !title[a][1]);
