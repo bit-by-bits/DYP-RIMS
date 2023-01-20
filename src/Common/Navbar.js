@@ -19,7 +19,7 @@ const Navbar = () => {
 
       <div className={styles.nav_right}>
         <Link href="/upload">
-          <div>Add a file</div>
+          <div>Add Research</div>
         </Link>
         <Link href="/">
           <div className={styles.nav_btn}>Logout</div>

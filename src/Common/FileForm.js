@@ -4,14 +4,7 @@ import styles from "../../styles/file.module.css";
 import { useForm } from "react-hook-form";
 
 const FileForm = (props) => {
-  function onSubmit(data) {
-    console.log(data);
-    axios({
-      method: "GET",
-      url: "https://rimsapi.journalchecker.com/api/v1/publication/" + props.id,
-      headers: { Authorization: `Bearer ${props.item}` },
-    }).then(function (response) {});
-  }
+  function onSubmit(data) {}
 
   function handleReset() {
     reset({

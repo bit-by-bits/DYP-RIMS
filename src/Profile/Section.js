@@ -88,7 +88,7 @@ export default function Section(props) {
           </div>
 
           <Link href="/journal">
-            <div className={styles.profile_btn}>View Journals</div>
+            <div className={styles.profile_btn}>View Publications</div>
           </Link>
 
           <div onClick={download} className={styles.profile_btn}>

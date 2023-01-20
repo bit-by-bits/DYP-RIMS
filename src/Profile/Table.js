@@ -15,10 +15,11 @@ export default function Table(props) {
     [head, setHead] = React.useState([]),
     [title, setTitle] = React.useState([
       ["Title", true],
-      ["Indices", true],
-      ["Indexed In", true],
+      ["Impact Factor", true],
+      ["SJR Quartile", true],
+      ["Indexed In"],
       ["Citations", true],
-      ["Year", true],
+      ["Published", true],
       ["View More", true],
     ]);
 
@@ -50,55 +51,45 @@ export default function Table(props) {
       temp_ROWS[a][10] = "page number idk";
 
       temp_ROWS[a][1] = pubs[a].i_factor.toFixed(2);
-      temp_ROWS[a][11] = pubs[a].sjr;
+      temp_ROWS[a][2] = pubs[a].sjr;
 
-      temp_ROWS[a][2] = 0;
-      temp_ROWS[a][12] = pubs[a].doaj;
-      temp_ROWS[a][13] = pubs[a].embase;
-      temp_ROWS[a][14] = pubs[a].medline;
-      temp_ROWS[a][15] = pubs[a].pmc;
-      temp_ROWS[a][16] = pubs[a].scie;
-      temp_ROWS[a][17] = pubs[a].scopus;
-      temp_ROWS[a][18] = "";
+      temp_ROWS[a][11] = pubs[a].doaj;
+      temp_ROWS[a][12] = pubs[a].embase;
+      temp_ROWS[a][13] = pubs[a].medline;
+      temp_ROWS[a][14] = pubs[a].pmc;
+      temp_ROWS[a][15] = pubs[a].scie;
+      temp_ROWS[a][16] = pubs[a].scopus;
+
+      temp_ROWS[a][17] = [];
+      for (let i = 12; i <= 17; i++) {
+        if (temp_ROWS[a][i])
+          switch (i) {
+            case 11:
+              temp_ROWS[a][17].push(<div>DOAJ</div>);
+              break;
+            case 12:
+              temp_ROWS[a][17].push(<div>Embase</div>);
+              break;
+            case 13:
+              temp_ROWS[a][17].push(<div>Medline</div>);
+              break;
+            case 14:
+              temp_ROWS[a][17].push(<div>PMC</div>);
+              break;
+            case 15:
+              temp_ROWS[a][17].push(<div>SCIE</div>);
+              break;
+            case 16:
+              temp_ROWS[a][17].push(<div>Scopus</div>);
+              break;
+          }
+      }
 
       temp_ROWS[a][3] = pubs[a].citations;
       temp_ROWS[a][4] = pubs[a].year;
       temp_ROWS[a][5] = pubs[a].id;
-
-      for (let i = 12; i <= 17; i++) {
-        if (temp_ROWS[a][i]) {
-          temp_ROWS[a][2]++;
-
-          switch (i) {
-            case 12:
-              temp_ROWS[a][18] += "DOAJ ";
-              break;
-
-            case 13:
-              temp_ROWS[a][18] += "Embase ";
-              break;
-
-            case 14:
-              temp_ROWS[a][18] += "Medline ";
-              break;
-
-            case 15:
-              temp_ROWS[a][18] += "PMC ";
-              break;
-
-            case 16:
-              temp_ROWS[a][18] += "SCIE ";
-              break;
-
-            case 17:
-              temp_ROWS[a][18] += "Scopus";
-              break;
-          }
-        }
-      }
     }
 
-    console.log(temp_ROWS);
     setTableData(temp_ROWS);
   }
 
@@ -109,43 +100,29 @@ export default function Table(props) {
         <tr key={a}>
           <td>
             <span>{tableData[a][0]}</span>
-            <span>
-              <span className={styles.extra_span}>who: </span>
-              {tableData[a][6]}
-            </span>
-            <span>
-              <span className={styles.extra_span}>what: </span>
-              {tableData[a][7]}
-            </span>
+            <span>{tableData[a][6]}</span>
+            <span>{tableData[a][7]}</span>
             <span>
               Volume: {tableData[a][8] ? tableData[a][8] : "?"}
               &nbsp;&middot;&nbsp; Issue:{" "}
               {tableData[a][9] ? tableData[a][9] : "?"}
-              &nbsp;&middot;&nbsp; Issue: ?
+              &nbsp;&middot;&nbsp; Page No: ?
             </span>
-            {/* <span>
+            <span>
               No softcopy found for this publication. Kindly upload a softcopy.
-            </span> */}
-          </td>
-
-          <td>
-            <span>{tableData[a][1]}</span>
-            <span>{tableData[a][11]}</span>
-          </td>
-
-          <td>
-            <span>{tableData[a][2]}</span>
-            <span style={{ position: "relative" }}>
-              <FontAwesomeIcon
-                className={styles.more_info}
-                icon={faCircleQuestion}
-              />
-              <div className={styles.card}>{tableData[a][18]}</div>
             </span>
+          </td>
+
+          <td>{tableData[a][1]}</td>
+          <td>{tableData[a][2]}</td>
+
+          <td>
+            <span>{tableData[a][17]}</span>
           </td>
 
           <td>{tableData[a][3]}</td>
           <td>{tableData[a][4]}</td>
+
           <td className={styles.btn_td}>
             <Link href={"/file/" + tableData[a][5]}>
               <div className={styles.btn_div}>Click</div>
@@ -168,18 +145,31 @@ export default function Table(props) {
       temp_HEAD.push(
         <th key={a}>
           <span>{title[a][0]}</span>
-          {a != title.length - 1 && (
-            <FontAwesomeIcon
-              onClick={() => {
-                const temp_ARR = [...title];
-                temp_ARR[a][1] = !temp_ARR[a][1];
-                setTitle(temp_ARR);
-                sortTable(a, !title[a][1]);
-              }}
-              icon={title[a][1] ? faArrowDownAZ : faArrowDownZA}
-              style={{ cursor: "pointer", marginLeft: "0.4rem" }}
-              // title={title[a][1] ? "asc sort" : "desc sort"}
-            />
+          {a == 3 ? (
+            <></>
+          ) : (
+            // <FontAwesomeIcon
+            //   onClick={() => {
+            //     const temp_ARR = [...title];
+            //     temp_ARR[a][1] = !temp_ARR[a][1];
+            //     setTitle(temp_ARR);
+            //     sortTable(a, !title[a][1]);
+            //   }}
+            //   icon={title[a][1] ? faArrowDownAZ : faArrowDownZA}
+            //   style={{ cursor: "pointer", marginLeft: "0.4rem" }}
+            // />
+            a != title.length - 1 && (
+              <FontAwesomeIcon
+                onClick={() => {
+                  const temp_ARR = [...title];
+                  temp_ARR[a][1] = !temp_ARR[a][1];
+                  setTitle(temp_ARR);
+                  sortTable(a, !title[a][1]);
+                }}
+                icon={title[a][1] ? faArrowDownAZ : faArrowDownZA}
+                style={{ cursor: "pointer", marginLeft: "0.4rem" }}
+              />
+            )
           )}
         </th>
       );
@@ -193,6 +183,7 @@ export default function Table(props) {
   }, [title]);
 
   function sortTable(index, ascSort) {
+    index > 3 && index--;
     const sortedArr = ascSort
       ? [...tableData].sort(function (a, b) {
           if (a[index] < b[index]) return -1;

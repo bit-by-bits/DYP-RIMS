@@ -106,7 +106,6 @@ const Profile = () => {
               />
               <Boxes title="Conferences" data={data} />
 
-              {/* <div className={styles.footer}>Made by Qtanea</div> */}
               <a
                 href="https://www.qtanea.com/"
                 rel="noreferrer"
