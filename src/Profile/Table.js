@@ -88,6 +88,9 @@ export default function Table(props) {
       temp_ROWS[a][3] = pubs[a].citations;
       temp_ROWS[a][4] = pubs[a].year;
       temp_ROWS[a][5] = pubs[a].id;
+
+      for (let i = 0; i < 18; i++)
+        temp_ROWS[a][i] = temp_ROWS[a][i] ? temp_ROWS[a][i] : "NA";
     }
 
     setTableData(temp_ROWS);
@@ -106,7 +109,7 @@ export default function Table(props) {
               Volume: {tableData[a][8] ? tableData[a][8] : "?"}
               &nbsp;&middot;&nbsp; Issue:{" "}
               {tableData[a][9] ? tableData[a][9] : "?"}
-              &nbsp;&middot;&nbsp; Page No: ?
+              &nbsp;&middot;&nbsp; Page No: NA
             </span>
             <span>
               No softcopy found for this publication. Kindly upload a softcopy.
@@ -148,16 +151,6 @@ export default function Table(props) {
           {a == 3 ? (
             <></>
           ) : (
-            // <FontAwesomeIcon
-            //   onClick={() => {
-            //     const temp_ARR = [...title];
-            //     temp_ARR[a][1] = !temp_ARR[a][1];
-            //     setTitle(temp_ARR);
-            //     sortTable(a, !title[a][1]);
-            //   }}
-            //   icon={title[a][1] ? faArrowDownAZ : faArrowDownZA}
-            //   style={{ cursor: "pointer", marginLeft: "0.4rem" }}
-            // />
             a != title.length - 1 && (
               <FontAwesomeIcon
                 onClick={() => {
@@ -167,7 +160,7 @@ export default function Table(props) {
                   sortTable(a, !title[a][1]);
                 }}
                 icon={title[a][1] ? faArrowDownAZ : faArrowDownZA}
-                style={{ cursor: "pointer", marginLeft: "0.4rem" }}
+                style={{ cursor: "pointer", marginLeft: "0.3rem" }}
               />
             )
           )}
@@ -198,20 +191,14 @@ export default function Table(props) {
 
     Array.from(document.getElementsByTagName("tr")).forEach((row) => {
       if (row.classList.contains(`${styles.profile_thead}`)) return;
-
       row.classList.add(`${styles.disappear}`);
 
       setTimeout(() => {
-        row.style.opacity = 0;
         setTableData(sortedArr);
 
         row.classList.remove(`${styles.disappear}`);
         row.classList.add(`${styles.appear}`);
-
-        setTimeout(() => {
-          row.style.opacity = 1;
-          row.classList.remove(`${styles.appear}`);
-        }, 399);
+        setTimeout(() => row.classList.remove(`${styles.appear}`), 399);
       }, 399);
     });
   }
