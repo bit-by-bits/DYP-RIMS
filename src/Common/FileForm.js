@@ -3,7 +3,7 @@ import axios from "axios";
 import styles from "../../styles/file.module.css";
 import { useForm } from "react-hook-form";
 
-const FileForm = (props) => {
+const FileForm = props => {
   function onSubmit(data) {}
 
   function handleReset() {

@@ -32,17 +32,17 @@ export default function Details(props) {
     [visible, setVisible] = React.useState(false);
 
   const animatedComponents = makeAnimated(),
-    setHandle = (currentDisplay) => {
+    setHandle = currentDisplay => {
       setSelectedDisplay(
         Array.isArray(currentDisplay)
-          ? currentDisplay.map((eachDisplay) => eachDisplay.label)
+          ? currentDisplay.map(eachDisplay => eachDisplay.label)
           : []
       );
 
       setSelectedAuthors(
         Array.isArray(currentDisplay)
           ? currentDisplay.map(
-              (eachDisplay) => authorList[eachDisplay.value].label
+              eachDisplay => authorList[eachDisplay.value].label
             )
           : []
       );
@@ -141,7 +141,7 @@ export default function Details(props) {
         data: {
           doi: props.doi,
           authors: selectedAuthors,
-          initial_authors: authorList.map((author) => author.label),
+          initial_authors: authorList.map(author => author.label),
         },
       })
         .then(function (response) {

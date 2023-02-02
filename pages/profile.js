@@ -31,7 +31,7 @@ const Profile = () => {
           method: "GET",
           url: `https://rimsapi.journalchecker.com/api/v1/publication`,
           headers: { Authorization: `Bearer ${item}` },
-        }).then((response) => setPubs(response.data.publications));
+        }).then(response => setPubs(response.data.publications));
 
         axios({
           method: "GET",

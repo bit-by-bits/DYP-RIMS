@@ -9,7 +9,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 
-const FileInfo = (props) => {
+const FileInfo = props => {
   const [pubs, setPubs] = React.useState([]),
     [authors, setAuthors] = React.useState("- Not Available -"),
     [dept, setDept] = React.useState("- Not Available -");

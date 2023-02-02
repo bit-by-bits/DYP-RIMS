@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../../styles/common.module.css";
 
-const Loader = (props) => {
+const Loader = props => {
   return (
     <div
       className={styles.loader_bg}
