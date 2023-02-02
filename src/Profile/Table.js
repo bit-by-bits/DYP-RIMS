@@ -45,6 +45,18 @@ export default function Table(props) {
     pubs.length != 0 && setTimeout(() => props.setLoader(false), 1600);
   }, [props.data]);
 
+  React.useEffect(() => {
+    fixRows();
+  }, [tableData]);
+
+  React.useEffect(() => {
+    fixHead();
+  }, [title, filters]);
+
+  React.useEffect(() => {
+    filterTable();
+  }, [filters]);
+
   // FILL THE DATA STATE FROM PUBS STATE
   function fixTableData() {
     const temp_ROWS = new Array(pubs.length);
@@ -150,23 +162,27 @@ export default function Table(props) {
 
     !tableData.length &&
       temp_ROWS.push(
-        <tr
-          style={{
-            transform: "translateY(1rem)",
-            // color: "#9a2827",
-            fontWeight: 600,
-            textAlign: "center",
-          }}
-        >
-          No Publication Here
+        <tr>
+          <td />
+          <td />
+          <td
+            style={{
+              fontWeight: 600,
+              fontSize: "1rem",
+              color: "black",
+              transform: "translateY(1rem)",
+              textAlign: "center",
+            }}
+          >
+            No Publication Here
+          </td>
+          <td />
+          <td />
+          <td />
         </tr>
       );
     setRows(temp_ROWS);
   }
-
-  React.useEffect(() => {
-    fixRows();
-  }, [tableData]);
 
   // FILL HEAD DATA
   function fixHead() {
@@ -200,14 +216,36 @@ export default function Table(props) {
                 <label htmlFor={e[0]}>
                   <div>{e[0]}</div>
                   <input
-                    type="radio"
                     id={e[0]}
                     name={e[0]}
+                    type="checkbox"
                     checked={e[1]}
-                    onChange={() => filterTable(i)}
+                    onChange={() => {
+                      setFilters(
+                        filters.map((ele, ind) => [
+                          ele[0],
+                          ind == i ? !ele[1] : ele[1],
+                        ])
+                      );
+                    }}
                   />
                 </label>
               ))}
+
+              <div
+                className={styles.btn_div}
+                style={{ width: "max-content" }}
+                onClick={() => setFilters(filters.map(e => [e[0], false]))}
+              >
+                Reset All
+              </div>
+              <div
+                className={styles.btn_div}
+                style={{ width: "max-content" }}
+                onClick={() => setFilters(filters.map(e => [e[0], true]))}
+              >
+                Select All
+              </div>
             </form>
           )}
         </th>
@@ -216,11 +254,6 @@ export default function Table(props) {
 
     setHead(temp_HEAD);
   }
-
-  React.useEffect(() => {
-    fixHead();
-    console.log(title[3]);
-  }, [title]);
 
   // LOGIC TO SORT THE TABLE
   function sortTable(index, ascSort) {
@@ -259,20 +292,29 @@ export default function Table(props) {
   }
 
   // LOGIC TO FILTER THE TABLE
-  function filterTable(index) {
-    const TEMP_FILTERS = filters;
-    TEMP_FILTERS[index][1] = !TEMP_FILTERS[index][1];
-    setFilters(filters.map((e, i) => [e[0], i == index ? true : false]));
-
+  function filterTable() {
     const TEMP_ARR = [...title];
-    // filters.map(e => e[1]).every(e => e);
-    TEMP_ARR[3][1] = true;
+    TEMP_ARR[3][1] = !filters.map(e => e[1]).every(e => !e);
     setTitle(TEMP_ARR);
 
-    if (TEMP_FILTERS[index][1]) {
-      const TEMP_DATA = tempTableData.filter(e => e[11 + index]);
-      setTableData(TEMP_DATA);
-    }
+    Array.from(document.getElementsByTagName("tr")).forEach(row => {
+      if (row.classList.contains(`${styles.profile_thead}`)) return;
+      row.classList.add(`${styles.disappear}`);
+
+      setTimeout(() => {
+        setTableData(
+          tempTableData.filter(e => {
+            for (let i = 0; i <= 5; i++)
+              if (filters[i][1] && !e[11 + i]) return false;
+            return true;
+          })
+        );
+
+        row.classList.remove(`${styles.disappear}`);
+        row.classList.add(`${styles.appear}`);
+        setTimeout(() => row.classList.remove(`${styles.appear}`), 399);
+      }, 399);
+    });
   }
 
   return (
