@@ -1,7 +1,8 @@
 import {
   faArrowDownAZ,
   faArrowDownZA,
-  faCircleQuestion,
+  faCheckToSlot,
+  faSquareCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
@@ -10,17 +11,28 @@ import styles from "../../styles/profile.module.css";
 
 export default function Table(props) {
   const [pubs, setPubs] = React.useState([]),
-    [tableData, setTableData] = React.useState([]),
-    [rows, setRows] = React.useState([]),
-    [head, setHead] = React.useState([]),
-    [title, setTitle] = React.useState([
+    [tempTableData, setTempTableData] = React.useState([]),
+    [tableData, setTableData] = React.useState([]);
+
+  const [rows, setRows] = React.useState([]),
+    [head, setHead] = React.useState([]);
+
+  const [title, setTitle] = React.useState([
       ["Title", true],
       ["Impact Factor", true],
       ["SJR Quartile", true],
-      ["Indexed In"],
+      ["Indexed In", false],
       ["Citations", true],
       ["Published", true],
       ["View More", true],
+    ]),
+    [filters, setFilters] = React.useState([
+      ["DOAJ", false],
+      ["Embase", false],
+      ["Medline", false],
+      ["PMC", false],
+      ["SCIE", false],
+      ["Scopus", false],
     ]);
 
   React.useEffect(() => {
@@ -62,7 +74,7 @@ export default function Table(props) {
       temp_ROWS[a][16] = pubs[a].scopus;
 
       temp_ROWS[a][17] = [];
-      for (let i = 12; i <= 17; i++) {
+      for (let i = 11; i <= 16; i++)
         if (temp_ROWS[a][i])
           switch (i) {
             case 11:
@@ -84,7 +96,6 @@ export default function Table(props) {
               temp_ROWS[a][17].push(<div>Scopus</div>);
               break;
           }
-      }
 
       temp_ROWS[a][3] = pubs[a].citations;
       temp_ROWS[a][4] = pubs[a].year;
@@ -94,6 +105,7 @@ export default function Table(props) {
     }
 
     setTableData(temp_ROWS);
+    setTempTableData(temp_ROWS);
   }
 
   // FILL BODY DATA
@@ -134,9 +146,22 @@ export default function Table(props) {
           </td>
         </tr>
       );
-
-      setRows(temp_ROWS);
     }
+
+    !tableData.length &&
+      temp_ROWS.push(
+        <tr
+          style={{
+            transform: "translateY(1rem)",
+            // color: "#9a2827",
+            fontWeight: 600,
+            textAlign: "center",
+          }}
+        >
+          No Publication Here
+        </tr>
+      );
+    setRows(temp_ROWS);
   }
 
   React.useEffect(() => {
@@ -148,26 +173,20 @@ export default function Table(props) {
     const temp_HEAD = [];
     for (let a = 0; a < title.length; a++) {
       temp_HEAD.push(
-        <th key={a}>
+        <th key={a} className={a == 3 ? styles.check : undefined}>
           <span>{title[a][0]}</span>
           {a == 3 ? (
             <FontAwesomeIcon
-              onClick={() => {
-                const temp_ARR = [...title];
-                temp_ARR[a][1] = !temp_ARR[a][1];
-                setTitle(temp_ARR);
-                sortTable(a, !title[a][1]);
-              }}
-              icon={title[a][1] ? faArrowDownAZ : faArrowDownZA}
+              icon={!title[a][1] ? faSquareCheck : faCheckToSlot}
               style={{ cursor: "pointer", marginLeft: "0.3rem" }}
             />
           ) : (
             a != title.length - 1 && (
               <FontAwesomeIcon
                 onClick={() => {
-                  const temp_ARR = [...title];
-                  temp_ARR[a][1] = !temp_ARR[a][1];
-                  setTitle(temp_ARR);
+                  const TEMP_ARR = [...title];
+                  TEMP_ARR[a][1] = !TEMP_ARR[a][1];
+                  setTitle(TEMP_ARR);
                   sortTable(a, !title[a][1]);
                 }}
                 icon={title[a][1] ? faArrowDownAZ : faArrowDownZA}
@@ -175,15 +194,32 @@ export default function Table(props) {
               />
             )
           )}
+          {a == 3 && (
+            <form className={styles.checks}>
+              {filters.map((e, i) => (
+                <label htmlFor={e[0]}>
+                  <div>{e[0]}</div>
+                  <input
+                    type="radio"
+                    id={e[0]}
+                    name={e[0]}
+                    checked={e[1]}
+                    onChange={() => filterTable(i)}
+                  />
+                </label>
+              ))}
+            </form>
+          )}
         </th>
       );
-
-      setHead(temp_HEAD);
     }
+
+    setHead(temp_HEAD);
   }
 
   React.useEffect(() => {
     fixHead();
+    console.log(title[3]);
   }, [title]);
 
   // LOGIC TO SORT THE TABLE
@@ -208,7 +244,7 @@ export default function Table(props) {
           return 0;
         });
 
-    Array.from(document.getElementsByTagName("tr")).forEach((row) => {
+    Array.from(document.getElementsByTagName("tr")).forEach(row => {
       if (row.classList.contains(`${styles.profile_thead}`)) return;
       row.classList.add(`${styles.disappear}`);
 
@@ -220,6 +256,23 @@ export default function Table(props) {
         setTimeout(() => row.classList.remove(`${styles.appear}`), 399);
       }, 399);
     });
+  }
+
+  // LOGIC TO FILTER THE TABLE
+  function filterTable(index) {
+    const TEMP_FILTERS = filters;
+    TEMP_FILTERS[index][1] = !TEMP_FILTERS[index][1];
+    setFilters(filters.map((e, i) => [e[0], i == index ? true : false]));
+
+    const TEMP_ARR = [...title];
+    // filters.map(e => e[1]).every(e => e);
+    TEMP_ARR[3][1] = true;
+    setTitle(TEMP_ARR);
+
+    if (TEMP_FILTERS[index][1]) {
+      const TEMP_DATA = tempTableData.filter(e => e[11 + index]);
+      setTableData(TEMP_DATA);
+    }
   }
 
   return (
