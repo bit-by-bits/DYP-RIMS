@@ -33,6 +33,7 @@ export default function Table(props) {
     pubs.length != 0 && setTimeout(() => props.setLoader(false), 1600);
   }, [props.data]);
 
+  // FILL THE DATA STATE FROM PUBS STATE
   function fixTableData() {
     const temp_ROWS = new Array(pubs.length);
     for (let a = 0; a < pubs.length; a++) {
@@ -89,13 +90,13 @@ export default function Table(props) {
       temp_ROWS[a][4] = pubs[a].year;
       temp_ROWS[a][5] = pubs[a].id;
 
-      for (let i = 0; i < 18; i++)
-        temp_ROWS[a][i] = temp_ROWS[a][i] ? temp_ROWS[a][i] : "NA";
+      for (let i = 0; i < 18; i++) temp_ROWS[a][i] = temp_ROWS[a][i] ?? "NA";
     }
 
     setTableData(temp_ROWS);
   }
 
+  // FILL BODY DATA
   function fixRows() {
     const temp_ROWS = [];
     for (let a = 0; a < tableData.length; a++) {
@@ -142,6 +143,7 @@ export default function Table(props) {
     fixRows();
   }, [tableData]);
 
+  // FILL HEAD DATA
   function fixHead() {
     const temp_HEAD = [];
     for (let a = 0; a < title.length; a++) {
@@ -149,7 +151,16 @@ export default function Table(props) {
         <th key={a}>
           <span>{title[a][0]}</span>
           {a == 3 ? (
-            <></>
+            <FontAwesomeIcon
+              onClick={() => {
+                const temp_ARR = [...title];
+                temp_ARR[a][1] = !temp_ARR[a][1];
+                setTitle(temp_ARR);
+                sortTable(a, !title[a][1]);
+              }}
+              icon={title[a][1] ? faArrowDownAZ : faArrowDownZA}
+              style={{ cursor: "pointer", marginLeft: "0.3rem" }}
+            />
           ) : (
             a != title.length - 1 && (
               <FontAwesomeIcon
@@ -175,15 +186,23 @@ export default function Table(props) {
     fixHead();
   }, [title]);
 
+  // LOGIC TO SORT THE TABLE
   function sortTable(index, ascSort) {
     index > 3 && index--;
+
     const sortedArr = ascSort
       ? [...tableData].sort(function (a, b) {
+          if (a[index] == "NA") return 1;
+          if (b[index] == "NA") return -1;
+
           if (a[index] < b[index]) return -1;
           if (a[index] > b[index]) return 1;
           return 0;
         })
       : [...tableData].sort(function (a, b) {
+          if (a[index] == "NA") return 1;
+          if (b[index] == "NA") return -1;
+
           if (b[index] < a[index]) return -1;
           if (b[index] > a[index]) return 1;
           return 0;
