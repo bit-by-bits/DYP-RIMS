@@ -75,7 +75,7 @@ export default function Table(props) {
       temp_ROWS[a][9] = pubs[a].issue;
       temp_ROWS[a][10] = "page number idk";
 
-      temp_ROWS[a][1] = pubs[a].i_factor.toFixed(2);
+      temp_ROWS[a][1] = pubs[a].i_factor?.toFixed(2);
       temp_ROWS[a][2] = pubs[a].sjr;
 
       temp_ROWS[a][11] = pubs[a].doaj;
@@ -131,9 +131,8 @@ export default function Table(props) {
             <span>{tableData[a][6]}</span>
             <span>{tableData[a][7]}</span>
             <span>
-              Volume: {tableData[a][8] ? tableData[a][8] : "?"}
-              &nbsp;&middot;&nbsp; Issue:{" "}
-              {tableData[a][9] ? tableData[a][9] : "?"}
+              Volume: {tableData[a][8] ?? "?"}
+              &nbsp;&middot;&nbsp; Issue: {tableData[a][9] ?? "?"}
               &nbsp;&middot;&nbsp; Page No: NA
             </span>
             <span>

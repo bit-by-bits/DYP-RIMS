@@ -6,8 +6,8 @@ import { useRouter } from "next/router";
 import Loader from "../src/Common/Loader";
 
 export default function Home() {
-  const router = useRouter();
-  const [visible, setVisible] = React.useState(true);
+  const router = useRouter(),
+    [visible, setVisible] = React.useState(true);
 
   if (
     typeof window !== "undefined" &&
@@ -37,7 +37,7 @@ export default function Home() {
       method: "POST",
       url: `https://rimsapi.journalchecker.com/api/v1/login/`,
       data: { id_token: response.credential },
-    }).then(function (res) {
+    }).then(res => {
       localStorage.setItem("auth_token", res.data.token);
       localStorage.setItem("user_id", res.data.id);
       localStorage.setItem("user_role", res.data.role);
@@ -87,7 +87,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* <footer className={styles.footer}>Made by Qtanea</footer> */}
         <a href="https://www.qtanea.com/" rel="noreferrer" target="_blank">
           <img alt="Q" className={styles.foot} src="logos/qtanea-white.png" />
         </a>
