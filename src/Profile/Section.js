@@ -25,7 +25,6 @@ export default function Section(props) {
     props.data.forEach(e => {
       setIC(IC => IC + e.i_factor);
       setCit(cit => cit + e.citations);
-      setHI(HI => HI + e.h_index);
 
       switch (e.sjr) {
         case "Q1":
@@ -47,12 +46,14 @@ export default function Section(props) {
     });
 
     setIA(props.data.length == 0 ? 0 : IC / props.data.length);
+
+    const HIs = props.data.map(e => e.h_index ?? 0);
+    HIs.sort((a, b) => b - a).forEach((e, i) => e > i + 1 && setHI(i + 1));
   }, [props.data]);
 
   function clear() {
     setIC(0);
     setCit(0);
-    setHI(0);
     setQs([0, 0, 0, 0]);
   }
 
@@ -140,19 +141,23 @@ export default function Section(props) {
         <div className={styles.profile_feats}>
           <div className={styles.profile_feat}>
             <span>{props.extra[1] ?? 0} Publications</span>
+            <span>0 Conferences</span>
           </div>
 
           <div className={styles.profile_feat}>
-            <span>Net Impact {IC?.toFixed(2)}</span>
-            <span>Avg Impact {IA?.toFixed(2)}</span>
+            <span>Total Citations: {cit}</span>
           </div>
 
           <div className={styles.profile_feat}>
-            <span>Net Citations {cit}</span>
-            <span>Net H-Index {HI}</span>
+            <div className={styles.feat_top}>Impact Factors</div>
+
+            <span>Cumulative: {IC?.toFixed(2)}</span>
+            <span>Averaged: {IA?.toFixed(2)}</span>
           </div>
 
           <div className={styles.profile_feat}>
+            <div className={styles.feat_top}>SJR Quartiles</div>
+
             <span>
               Q1: {Qs[0]} &nbsp; Q2: {Qs[1]}
             </span>
@@ -162,7 +167,7 @@ export default function Section(props) {
           </div>
 
           <div className={styles.profile_feat}>
-            <span>0 Conferences</span>
+            <span>H-Index: {HI}</span>
           </div>
 
           <div className={styles.profile_feat}>

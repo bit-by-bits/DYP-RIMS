@@ -161,6 +161,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  font-size: 0.95rem;
   background: #ffffff;
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.2);
   border-radius: 16px;
@@ -173,6 +174,11 @@
 
 .wrapper .profile_wrapper .profile_section .profile_feats .profile_feat:hover {
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+.feat_top{
+  font-size: 0.8rem;
+  margin-bottom: 5px;
 }
 
 .wrapper .profile_wrapper .profile_box .profile_head {
