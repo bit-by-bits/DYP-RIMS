@@ -27,7 +27,7 @@ export default function Table(props) {
         </td>
 
         <td>{props.data[a].year}</td>
-        <td>{c == null ? "NA" : c}</td>
+        <td>{c == null ? "N/A" : c}</td>
         <td>{props.data[a].dept}</td>
         <td className={styles.btn_td}>
           <Link href={"/file/" + props.data[a].id}>

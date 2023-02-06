@@ -154,7 +154,7 @@
 .wrapper .profile_wrapper .profile_section .profile_feats {
   gap: 1rem;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .wrapper .profile_wrapper .profile_section .profile_feats .profile_feat {
@@ -170,6 +170,7 @@
   padding: 0 2rem;
   align-items: center;
   justify-content: center;
+  min-width: max-content;
 }
 
 .wrapper .profile_wrapper .profile_section .profile_feats .profile_feat:hover {
@@ -178,7 +179,8 @@
 
 .feat_top{
   font-size: 0.8rem;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  color: black;
 }
 
 .wrapper .profile_wrapper .profile_box .profile_head {

@@ -113,7 +113,7 @@ export default function Table(props) {
       temp_ROWS[a][4] = pubs[a].year;
       temp_ROWS[a][5] = pubs[a].id;
 
-      for (let i = 0; i < 18; i++) temp_ROWS[a][i] = temp_ROWS[a][i] ?? "NA";
+      for (let i = 0; i < 18; i++) temp_ROWS[a][i] = temp_ROWS[a][i] ?? "N/A";
     }
 
     setTableData(temp_ROWS);
@@ -260,16 +260,16 @@ export default function Table(props) {
 
     const sortedArr = ascSort
       ? [...tableData].sort(function (a, b) {
-          if (a[index] == "NA") return 1;
-          if (b[index] == "NA") return -1;
+          if (a[index] == "N/A") return 1;
+          if (b[index] == "N/A") return -1;
 
           if (a[index] < b[index]) return -1;
           if (a[index] > b[index]) return 1;
           return 0;
         })
       : [...tableData].sort(function (a, b) {
-          if (a[index] == "NA") return 1;
-          if (b[index] == "NA") return -1;
+          if (a[index] == "N/A") return 1;
+          if (b[index] == "N/A") return -1;
 
           if (b[index] < a[index]) return -1;
           if (b[index] > a[index]) return 1;

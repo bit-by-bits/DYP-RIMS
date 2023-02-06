@@ -12,7 +12,7 @@ export default function Section(props) {
     [IA, setIA] = React.useState(0),
     [HI, setHI] = React.useState(0),
     [cit, setCit] = React.useState(0),
-    [Qs, setQs] = React.useState([0, 0, 0, 0]);
+    [Qs, setQs] = React.useState([0, 0, 0, 0, 0]);
 
   const [modal, setModal] = React.useState({
     text: "",
@@ -28,33 +28,39 @@ export default function Section(props) {
 
       switch (e.sjr) {
         case "Q1":
-          setQs(Qs => [Qs[0] + 1, Qs[1], Qs[2], Qs[3]]);
+          setQs(Qs => [Qs[0] + 1, Qs[1], Qs[2], Qs[3], Qs[4]]);
           break;
 
         case "Q2":
-          setQs(Qs => [Qs[0], Qs[1] + 1, Qs[2], Qs[3]]);
+          setQs(Qs => [Qs[0], Qs[1] + 1, Qs[2], Qs[3], Qs[4]]);
           break;
 
         case "Q3":
-          setQs(Qs => [Qs[0], Qs[1], Qs[2] + 1, Qs[3]]);
+          setQs(Qs => [Qs[0], Qs[1], Qs[2] + 1, Qs[3], Qs[4]]);
           break;
 
         case "Q4":
-          setQs(Qs => [Qs[0], Qs[1], Qs[2], Qs[3] + 1]);
+          setQs(Qs => [Qs[0], Qs[1], Qs[2], Qs[3] + 1, Qs[4]]);
+          break;
+
+        case "N/A":
+          setQs(Qs => [Qs[0], Qs[1], Qs[2], Qs[3], Qs[4] + 1]);
           break;
       }
     });
 
     setIA(props.data.length == 0 ? 0 : IC / props.data.length);
 
-    const HIs = props.data.map(e => e.h_index ?? 0);
-    HIs.sort((a, b) => b - a).forEach((e, i) => e > i + 1 && setHI(i + 1));
+    props.data
+      .map(e => e.citations ?? 0)
+      .sort((a, b) => b - a)
+      .forEach((e, i) => e > i + 1 && setHI(i + 1));
   }, [props.data]);
 
   function clear() {
     setIC(0);
     setCit(0);
-    setQs([0, 0, 0, 0]);
+    setQs([0, 0, 0, 0, 0]);
   }
 
   function edit() {
@@ -140,30 +146,11 @@ export default function Section(props) {
 
         <div className={styles.profile_feats}>
           <div className={styles.profile_feat}>
-            <span>{props.extra[1] ?? 0} Publications</span>
-            <span>0 Conferences</span>
+            <span>Publications: {props.extra[1] ?? 0}</span>
           </div>
 
           <div className={styles.profile_feat}>
-            <span>Total Citations: {cit}</span>
-          </div>
-
-          <div className={styles.profile_feat}>
-            <div className={styles.feat_top}>Impact Factors</div>
-
-            <span>Cumulative: {IC?.toFixed(2)}</span>
-            <span>Averaged: {IA?.toFixed(2)}</span>
-          </div>
-
-          <div className={styles.profile_feat}>
-            <div className={styles.feat_top}>SJR Quartiles</div>
-
-            <span>
-              Q1: {Qs[0]} &nbsp; Q2: {Qs[1]}
-            </span>
-            <span>
-              Q3: {Qs[2]} &nbsp; Q4: {Qs[3]}
-            </span>
+            <span>Conferences: 0</span>
           </div>
 
           <div className={styles.profile_feat}>
@@ -171,8 +158,33 @@ export default function Section(props) {
           </div>
 
           <div className={styles.profile_feat}>
-            <span>{props.extra[0] ?? 0} Awards</span>
-            <span>0 Patents</span>
+            <span>Awards: {props.extra[0] ?? 0}</span>
+          </div>
+
+          <div className={styles.profile_feat}>
+            <span>Total Citations: {cit}</span>
+          </div>
+
+          <div className={styles.profile_feat}>
+            <span>Patents: 0</span>
+          </div>
+
+          <div className={styles.profile_feat}>
+            <div className={styles.feat_top}>Impact Factor</div>
+
+            <span>Cumulative: {IC?.toFixed(2)}</span>
+            <span>Average: {IA?.toFixed(2)}</span>
+          </div>
+
+          <div className={styles.profile_feat}>
+            <div className={styles.feat_top}>SJR Quartiles</div>
+
+            <span>
+              Q1: {Qs[0]} &nbsp; Q2: {Qs[1]} &nbsp; Q3: {Qs[2]}
+            </span>
+            <span>
+              Q4: {Qs[3]} &nbsp; N/A: {Qs[4]}
+            </span>
           </div>
         </div>
       </div>
