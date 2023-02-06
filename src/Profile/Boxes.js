@@ -14,7 +14,7 @@ export default function Boxes(props) {
 
   return (
     <>
-      <div id={props.title} className={styles.profile_box}>
+      <div className={styles.profile_box}>
         <div className={styles.profile_head}>{props.title}</div>
         <div className={styles.profile_bodygrid}>{box.length ? box : "NA"}</div>
       </div>

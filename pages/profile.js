@@ -10,14 +10,14 @@ import Loader from "../src/Common/Loader";
 import { useRouter } from "next/router";
 
 const Profile = () => {
-  const router = useRouter();
-  const publications = [];
+  const router = useRouter(),
+    [visible, setVisible] = React.useState(true);
 
   const [pubs, setPubs] = React.useState([]),
-    [data, setData] = React.useState([]),
-    [awards, setAwards] = React.useState(0),
-    [publs, setPubls] = React.useState(0),
-    [visible, setVisible] = React.useState(true);
+    [data, setData] = React.useState([]);
+
+  const [lawrd, setLawrd] = React.useState(0),
+    [lpubs, setLpubs] = React.useState(0);
 
   if (typeof window !== "undefined") {
     if (!localStorage.getItem("auth_token")) router.push("/");
@@ -31,7 +31,35 @@ const Profile = () => {
           method: "GET",
           url: `https://rimsapi.journalchecker.com/api/v1/publication`,
           headers: { Authorization: `Bearer ${item}` },
-        }).then(response => setPubs(response.data.publications));
+        }).then(response =>
+          setPubs(
+            response.data.publications.map(e => ({
+              id: e.id,
+              pubmed_id: e.pubmed_id,
+              doi_id: e.doi_id,
+              type: e.publication_type,
+              title: e.publication_title,
+              name: e.journal_name,
+              year: e.year,
+              i_factor: e.impact_factor,
+              h_index: e.h_index,
+              region: e.region,
+              citations: e.citations,
+              dept: e.department.name,
+              authors: e.author_name,
+              sjr: e.sjr,
+              doaj: e.in_doaj,
+              embase: e.in_embase,
+              medline: e.in_medline,
+              pmc: e.in_pmc,
+              scie: e.in_scie,
+              scopus: e.in_scopus,
+              volume: e.volume,
+              issue: e.issue,
+              softcopy: true,
+            }))
+          )
+        );
 
         axios({
           method: "GET",
@@ -52,37 +80,10 @@ const Profile = () => {
           url: `https://rimsapi.journalchecker.com/api/v1/user/stats`,
           headers: { Authorization: `Bearer ${item}` },
         }).then(function (response) {
-          setAwards(response.data.awards);
-          setPubls(response.data.publications);
+          setLawrd(response.data.awards);
+          setLpubs(response.data.publications);
         });
       }
-
-      for (let a = 0; a < pubs.length; a++)
-        publications[a] = {
-          id: pubs[a].id,
-          pubmed_id: pubs[a].pubmed_id,
-          doi_id: pubs[a].doi_id,
-          type: pubs[a].publication_type,
-          title: pubs[a].publication_title,
-          name: pubs[a].journal_name,
-          year: pubs[a].year,
-          i_factor: pubs[a].impact_factor,
-          h_index: pubs[a].h_index,
-          region: pubs[a].region,
-          citations: pubs[a].citations,
-          dept: pubs[a].department.name,
-          authors: pubs[a].author_name,
-          sjr: pubs[a].sjr,
-          doaj: pubs[a].in_doaj,
-          embase: pubs[a].in_embase,
-          medline: pubs[a].in_medline,
-          pmc: pubs[a].in_pmc,
-          scie: pubs[a].in_scie,
-          scopus: pubs[a].in_scopus,
-          volume: pubs[a].volume,
-          issue: pubs[a].issue,
-          softcopy: true,
-        };
 
       return (
         <>
@@ -96,14 +97,10 @@ const Profile = () => {
             <Navbar />
 
             <div className={styles.profile_wrapper}>
-              <Section awards={awards} publs={publs} />
+              <Section data={pubs} extra={[lawrd, lpubs]} />
               <Boxes title="Awards & Achievements" data={data} />
               <Boxes title="Patents" data={data} />
-              <Table
-                title="Publications"
-                data={publications}
-                setLoader={setVisible}
-              />
+              <Table data={pubs} title="Publications" setLoader={setVisible} />
               <Boxes title="Conferences" data={data} />
 
               <a

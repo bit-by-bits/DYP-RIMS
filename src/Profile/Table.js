@@ -90,22 +90,22 @@ export default function Table(props) {
         if (temp_ROWS[a][i])
           switch (i) {
             case 11:
-              temp_ROWS[a][17].push(<div>DOAJ</div>);
+              temp_ROWS[a][17].push(<div key={i}>DOAJ</div>);
               break;
             case 12:
-              temp_ROWS[a][17].push(<div>Embase</div>);
+              temp_ROWS[a][17].push(<div key={i}>Embase</div>);
               break;
             case 13:
-              temp_ROWS[a][17].push(<div>Medline</div>);
+              temp_ROWS[a][17].push(<div key={i}>Medline</div>);
               break;
             case 14:
-              temp_ROWS[a][17].push(<div>PMC</div>);
+              temp_ROWS[a][17].push(<div key={i}>PMC</div>);
               break;
             case 15:
-              temp_ROWS[a][17].push(<div>SCIE</div>);
+              temp_ROWS[a][17].push(<div key={i}>SCIE</div>);
               break;
             case 16:
-              temp_ROWS[a][17].push(<div>Scopus</div>);
+              temp_ROWS[a][17].push(<div key={i}>Scopus</div>);
               break;
           }
 
@@ -161,7 +161,7 @@ export default function Table(props) {
 
     !tableData.length &&
       temp_ROWS.push(
-        <tr>
+        <tr key={0}>
           <td />
           <td />
           <td
@@ -212,7 +212,7 @@ export default function Table(props) {
           {a == 3 && (
             <form className={styles.checks}>
               {filters.map((e, i) => (
-                <label htmlFor={e[0]}>
+                <label key={i} htmlFor={e[0]}>
                   <div>{e[0]}</div>
                   <input
                     id={e[0]}

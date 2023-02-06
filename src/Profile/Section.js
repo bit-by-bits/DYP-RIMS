@@ -2,18 +2,59 @@ import React from "react";
 import axios from "axios";
 import Link from "next/link";
 import styles from "../../styles/profile.module.css";
-import { useRouter } from "next/router";
 import Modal from "../Common/Modal";
 
 export default function Section(props) {
-  const router = useRouter();
-  const item = localStorage.getItem("auth_token");
+  const item = localStorage.getItem("auth_token"),
+    [visible, setVisible] = React.useState(false);
 
-  const [visible, setVisible] = React.useState(false);
+  const [IC, setIC] = React.useState(0),
+    [IA, setIA] = React.useState(0),
+    [HI, setHI] = React.useState(0),
+    [cit, setCit] = React.useState(0),
+    [Qs, setQs] = React.useState([0, 0, 0, 0]);
+
   const [modal, setModal] = React.useState({
     text: "",
     title: "",
   });
+
+  React.useEffect(() => {
+    clear();
+
+    props.data.forEach(e => {
+      setIC(IC => IC + e.i_factor);
+      setCit(cit => cit + e.citations);
+      setHI(HI => HI + e.h_index);
+
+      switch (e.sjr) {
+        case "Q1":
+          setQs(Qs => [Qs[0] + 1, Qs[1], Qs[2], Qs[3]]);
+          break;
+
+        case "Q2":
+          setQs(Qs => [Qs[0], Qs[1] + 1, Qs[2], Qs[3]]);
+          break;
+
+        case "Q3":
+          setQs(Qs => [Qs[0], Qs[1], Qs[2] + 1, Qs[3]]);
+          break;
+
+        case "Q4":
+          setQs(Qs => [Qs[0], Qs[1], Qs[2], Qs[3] + 1]);
+          break;
+      }
+    });
+
+    setIA(props.data.length == 0 ? 0 : IC / props.data.length);
+  }, [props.data]);
+
+  function clear() {
+    setIC(0);
+    setCit(0);
+    setHI(0);
+    setQs([0, 0, 0, 0]);
+  }
 
   function edit() {
     setVisible(true);
@@ -28,7 +69,7 @@ export default function Section(props) {
       method: "GET",
       url: `https://rimsapi.journalchecker.com/api/v1/user/download_cv`,
       headers: { Authorization: `Bearer ${item}` },
-    }).then(function (response) {
+    }).then(res => {
       setVisible(true);
       setModal({
         text: "Perhaps you haven't posted your CV yet.",
@@ -97,26 +138,37 @@ export default function Section(props) {
         </div>
 
         <div className={styles.profile_feats}>
-          <Link href="#Publications">
-            <div className={styles.profile_feat}>
-              <span>{props.publs} Publications</span>
-            </div>
-          </Link>
-          <Link href="#Patents">
-            <div className={styles.profile_feat}>
-              <span>0 Patents</span>
-            </div>
-          </Link>
-          <Link href="#Conferences">
-            <div className={styles.profile_feat}>
-              <span>0 Conferences</span>
-            </div>
-          </Link>
-          <Link href="#Awards & Achievements">
-            <div className={styles.profile_feat}>
-              <span>{props.awards} Awards</span>
-            </div>
-          </Link>
+          <div className={styles.profile_feat}>
+            <span>{props.extra[1] ?? 0} Publications</span>
+          </div>
+
+          <div className={styles.profile_feat}>
+            <span>Net Impact {IC?.toFixed(2)}</span>
+            <span>Avg Impact {IA?.toFixed(2)}</span>
+          </div>
+
+          <div className={styles.profile_feat}>
+            <span>Net Citations {cit}</span>
+            <span>Net H-Index {HI}</span>
+          </div>
+
+          <div className={styles.profile_feat}>
+            <span>
+              Q1: {Qs[0]} &nbsp; Q2: {Qs[1]}
+            </span>
+            <span>
+              Q3: {Qs[2]} &nbsp; Q4: {Qs[3]}
+            </span>
+          </div>
+
+          <div className={styles.profile_feat}>
+            <span>0 Conferences</span>
+          </div>
+
+          <div className={styles.profile_feat}>
+            <span>{props.extra[0] ?? 0} Awards</span>
+            <span>0 Patents</span>
+          </div>
         </div>
       </div>
     </>
