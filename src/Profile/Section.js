@@ -43,7 +43,7 @@ export default function Section(props) {
           setQs(Qs => [Qs[0], Qs[1], Qs[2], Qs[3] + 1, Qs[4]]);
           break;
 
-        case "N/A":
+        default:
           setQs(Qs => [Qs[0], Qs[1], Qs[2], Qs[3], Qs[4] + 1]);
           break;
       }
@@ -169,21 +169,18 @@ export default function Section(props) {
             <span>Patents: 0</span>
           </div>
 
-          <div className={styles.profile_feat}>
-            <div className={styles.feat_top}>Impact Factor</div>
-
-            <span>Cumulative: {IC?.toFixed(2)}</span>
-            <span>Average: {IA?.toFixed(2)}</span>
+          <div style={{ gridColumn: "span 3" }} className={styles.profile_feat}>
+            <span>
+              Cumulative/Average IF: {IC?.toFixed(2)}/ {IA?.toFixed(2)}
+            </span>
           </div>
 
-          <div className={styles.profile_feat}>
-            <div className={styles.feat_top}>SJR Quartiles</div>
-
+          <div
+            style={{ gridColumn: "span 3" }}
+            className={styles.profile_feat}
+          >
             <span>
-              Q1: {Qs[0]} &nbsp; Q2: {Qs[1]} &nbsp; Q3: {Qs[2]}
-            </span>
-            <span>
-              Q4: {Qs[3]} &nbsp; N/A: {Qs[4]}
+              Q1: {Qs[0]}&nbsp; Q2: {Qs[1]}&nbsp; Q3: {Qs[2]}&nbsp; Q4: {Qs[3]}&nbsp; N/A: {Qs[4]}
             </span>
           </div>
         </div>

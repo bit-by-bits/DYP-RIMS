@@ -40,6 +40,7 @@
 
 .img_wrapper {
   position: relative;
+  margin-right: 1rem;
   height: 8rem;
   width: 8rem;
 }
@@ -154,12 +155,12 @@
 .wrapper .profile_wrapper .profile_section .profile_feats {
   gap: 1rem;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 
 .wrapper .profile_wrapper .profile_section .profile_feats .profile_feat {
   display: flex;
-  flex-direction: column;
+  grid-column: span 2;
   justify-content: space-between;
   font-size: 0.95rem;
   background: #ffffff;
@@ -175,12 +176,6 @@
 
 .wrapper .profile_wrapper .profile_section .profile_feats .profile_feat:hover {
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.3);
-}
-
-.feat_top{
-  font-size: 0.8rem;
-  margin-bottom: 8px;
-  color: black;
 }
 
 .wrapper .profile_wrapper .profile_box .profile_head {
