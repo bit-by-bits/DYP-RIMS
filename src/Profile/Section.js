@@ -146,7 +146,7 @@ export default function Section(props) {
 
         <div className={styles.profile_feats}>
           <div className={styles.profile_feat}>
-            <span>Publications: {props.extra[1] ?? 0}</span>
+            <span>Awards: {props.extra[0] ?? 0}</span>
           </div>
 
           <div className={styles.profile_feat}>
@@ -154,11 +154,11 @@ export default function Section(props) {
           </div>
 
           <div className={styles.profile_feat}>
-            <span>H-Index: {HI}</span>
+            <span>Patents: 0</span>
           </div>
 
           <div className={styles.profile_feat}>
-            <span>Awards: {props.extra[0] ?? 0}</span>
+            <span>Publications: {props.extra[1] ?? 0}</span>
           </div>
 
           <div className={styles.profile_feat}>
@@ -166,7 +166,7 @@ export default function Section(props) {
           </div>
 
           <div className={styles.profile_feat}>
-            <span>Patents: 0</span>
+            <span>H-Index: {HI}</span>
           </div>
 
           <div style={{ gridColumn: "span 3" }} className={styles.profile_feat}>
@@ -175,12 +175,10 @@ export default function Section(props) {
             </span>
           </div>
 
-          <div
-            style={{ gridColumn: "span 3" }}
-            className={styles.profile_feat}
-          >
+          <div style={{ gridColumn: "span 3" }} className={styles.profile_feat}>
             <span>
-              Q1: {Qs[0]}&nbsp; Q2: {Qs[1]}&nbsp; Q3: {Qs[2]}&nbsp; Q4: {Qs[3]}&nbsp; N/A: {Qs[4]}
+              Q1: {Qs[0]}&nbsp; Q2: {Qs[1]}&nbsp; Q3: {Qs[2]}&nbsp; Q4: {Qs[3]}
+              &nbsp; N/A: {Qs[4]}
             </span>
           </div>
         </div>
