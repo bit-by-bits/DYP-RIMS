@@ -92,7 +92,7 @@ const Profile = () => {
             <link rel="icon" href="logos/dpu-2.png" />
           </Head>
 
-          <main onLoad={callback} className={styles.wrapper}>
+          <div onLoad={callback} className={styles.wrapper}>
             <Loader visible={visible} />
             <Navbar />
 
@@ -115,7 +115,7 @@ const Profile = () => {
                 />
               </a>
             </div>
-          </main>
+          </div>
         </>
       );
     }

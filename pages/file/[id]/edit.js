@@ -23,7 +23,7 @@ const ID = () => {
             <link rel="icon" href="logos/dpu-2.png" />
           </Head>
 
-          <main className={styles.wrapper}>
+          <div className={styles.wrapper}>
             <Navbar />
             <Loader visible={visible} />
             <h2 style={{ margin: "8vw 0 2vw 10vw", color: "#9a2827" }}>
@@ -31,7 +31,7 @@ const ID = () => {
               fields (if any).
             </h2>
             <FileForm setVisible={setVisible} item={item} id={id} />
-          </main>
+          </div>
         </>
       );
     }

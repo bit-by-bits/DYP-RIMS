@@ -29,7 +29,7 @@ const Dashboard = () => {
             <link rel="icon" href="logos/dpu-2.png" />
           </Head>
 
-          <main className={styles.wrapper}>
+          <div className={styles.wrapper}>
             <Navbar />
 
             <div className={styles.dashboard}>
@@ -49,7 +49,7 @@ const Dashboard = () => {
               <Datas />
               <Publishers data={publishers} />
             </div>
-          </main>
+          </div>
         </>
       );
     }

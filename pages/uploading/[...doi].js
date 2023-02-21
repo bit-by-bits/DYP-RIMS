@@ -34,7 +34,7 @@ const Uploading = () => {
             <link rel="icon" href="../logos/dpu-2.png" />
           </Head>
 
-          <main className={styles.wrapper}>
+          <div className={styles.wrapper}>
             <Navbar />
             <Loader visible={visible} />
 
@@ -83,7 +83,7 @@ const Uploading = () => {
                 </div>
               )}
             </div>
-          </main>
+          </div>
         </>
       );
     }

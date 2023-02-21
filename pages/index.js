@@ -59,7 +59,7 @@ export default function Home() {
         <link rel="icon" href="logos/dpu-2.png" />
       </Head>
 
-      <main className={styles.main}>
+      <div className={styles.main}>
         <Loader visible={visible} />
         <div className={styles.welcome}>
           <div className={styles.greeting}>
@@ -90,7 +90,7 @@ export default function Home() {
         <a href="https://www.qtanea.com/" rel="noreferrer" target="_blank">
           <img alt="Q" className={styles.foot} src="logos/qtanea-white.png" />
         </a>
-      </main>
+      </div>
     </>
   );
 }

@@ -65,7 +65,7 @@ const Journal = () => {
             <link rel="icon" href="logos/dpu-2.png" />
           </Head>
 
-          <main onLoad={callback} className={styles.wrapper}>
+          <div onLoad={callback} className={styles.wrapper}>
             <Navbar />
 
             <div className={styles.mgmt_wrapper}>
@@ -86,7 +86,7 @@ const Journal = () => {
                 />
               </a>
             </div>
-          </main>
+          </div>
         </>
       );
     }

@@ -38,11 +38,11 @@ export default function Table(props) {
   React.useEffect(() => {
     setPubs(props.data);
     fixTableData();
-
+    
     fixRows();
     fixHead();
 
-    pubs.length != 0 && setTimeout(() => props.setLoader(false), 1600);
+    setTimeout(() => props.setLoader(false), 1600);
   }, [props.data]);
 
   React.useEffect(() => {

@@ -39,7 +39,7 @@ const Mgmt = () => {
             <link rel="icon" href="logos/dpu-2.png" />
           </Head>
 
-          <main className={styles.wrapper}>
+          <div className={styles.wrapper}>
             <Navbar />
 
             <div className={styles.mgmt_wrapper}>
@@ -62,7 +62,7 @@ const Mgmt = () => {
                 />
               </a>
             </div>
-          </main>
+          </div>
         </>
       );
     }

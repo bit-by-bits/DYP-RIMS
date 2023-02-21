@@ -67,7 +67,7 @@ const Upload = () => {
             <link rel="icon" href="logos/dpu-2.png" />
           </Head>
 
-          <main className={styles.wrapper}>
+          <div className={styles.wrapper}>
             <Navbar />
             <Alert
               setVisible={setVisible2}
@@ -121,7 +121,7 @@ const Upload = () => {
                 </div>
               </div>
             </div>
-          </main>
+          </div>
         </>
       );
     }
