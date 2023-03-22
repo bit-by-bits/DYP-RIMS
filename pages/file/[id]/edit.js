@@ -27,8 +27,7 @@ const ID = () => {
         <Navbar />
         <Loader visible={visible} />
         <h2 style={{ margin: "8vw 0 2vw 10vw", color: "#9a2827" }}>
-          Hello {localStorage.getItem("user_name")}. Please fill the empty
-          fields (if any).
+          Hello {user.name}. Please fill the empty fields (if any).
         </h2>
         <FileForm setVisible={setVisible} id={id} />
       </div>
