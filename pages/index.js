@@ -1,13 +1,16 @@
 import Head from "next/head";
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
+
 import axios from "axios";
 import styles from "../styles/login.module.css";
 import { useRouter } from "next/router";
 import Loader from "../src/Common/Loader";
+import { UserContext } from "../src/userContext";
 
 export default function Home() {
-  const router = useRouter(),
-    [visible, setVisible] = React.useState(true);
+  const router = useRouter();
+  const [visible, setVisible] = useState(true);
+  const { user, setUser } = useContext(UserContext);
 
   if (
     typeof window !== "undefined" &&
@@ -15,7 +18,7 @@ export default function Home() {
   )
     localStorage.clear();
 
-  React.useEffect(() => {
+  useEffect(() => {
     /* global google */
 
     google.accounts.id.initialize({
@@ -38,16 +41,17 @@ export default function Home() {
       url: `https://rimsapi.journalchecker.com/api/v1/login/`,
       data: { id_token: response.credential },
     }).then(res => {
-      localStorage.setItem("auth_token", res.data.token);
-      localStorage.setItem("user_id", res.data.id);
-      localStorage.setItem("user_role", res.data.role);
-      localStorage.setItem("user_pic", res.data.picture);
+      setUser({
+        id: res.data.id,
+        picture: res.data.picture,
+        role: res.data.role,
+        token: res.data.token,
+        name: user.name,
+        email: user.email,
+        dept: user.dept,
+      });
 
-      router.push(
-        localStorage.getItem("user_role") == "management"
-          ? "/management"
-          : "/profile"
-      );
+      setTimeout(() => router.push("/profile"), 999);
     });
   }
 

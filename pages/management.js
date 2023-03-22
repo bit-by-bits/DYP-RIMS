@@ -1,6 +1,7 @@
 import Head from "next/head";
 import styles from "../styles/management.module.css";
-import React from "react";
+import React, { useState, useEffect } from "react";
+
 import Navbar from "../src/Common/Navbar";
 import Profile from "../src/Management/Profile";
 import Graphs from "../src/Management/Graphs";

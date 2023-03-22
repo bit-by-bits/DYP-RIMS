@@ -1,5 +1,6 @@
 import styles from "../../styles/file.module.css";
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
+
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,17 +9,21 @@ import {
   faFileMedical,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
+import { UserContext } from "../userContext";
 
 const FileInfo = props => {
-  const [pubs, setPubs] = React.useState([]),
-    [authors, setAuthors] = React.useState("- Not Available -"),
-    [dept, setDept] = React.useState("- Not Available -");
+  const { user, setUser } = useContext(UserContext);
+  if (typeof window !== "undefined" && user.token === "") router.push("/");
 
-  React.useEffect(() => {
+  const [pubs, setPubs] = useState([]),
+    [authors, setAuthors] = useState("- Not Available -"),
+    [dept, setDept] = useState("- Not Available -");
+
+  useEffect(() => {
     axios({
       method: "GET",
       url: "https://rimsapi.journalchecker.com/api/v1/publication/" + props.id,
-      headers: { Authorization: `Bearer ${props.item}` },
+      headers: { Authorization: `Bearer ${user.token}` },
     }).then(function (response) {
       const temp_PUB = response.data.publication,
         temp_AUTH = [];

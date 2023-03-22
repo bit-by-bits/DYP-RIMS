@@ -37,6 +37,10 @@
   gap: 3rem;
 }
 
+.logout a:hover {
+  color: white !important;
+}
+
 .navbar .nav_right .nav_btn {
   border: 1.6px solid white;
   border-radius: 8px;

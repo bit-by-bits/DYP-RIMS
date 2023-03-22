@@ -5,19 +5,20 @@ import {
   faSquareCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useState, useEffect } from "react";
+
 import Link from "next/link";
 import styles from "../../styles/profile.module.css";
 
 export default function Table(props) {
-  const [pubs, setPubs] = React.useState([]),
-    [tempTableData, setTempTableData] = React.useState([]),
-    [tableData, setTableData] = React.useState([]);
+  const [pubs, setPubs] = useState([]),
+    [tempTableData, setTempTableData] = useState([]),
+    [tableData, setTableData] = useState([]);
 
-  const [rows, setRows] = React.useState([]),
-    [head, setHead] = React.useState([]);
+  const [rows, setRows] = useState([]),
+    [head, setHead] = useState([]);
 
-  const [title, setTitle] = React.useState([
+  const [title, setTitle] = useState([
       ["Title", true],
       ["Impact Factor", true],
       ["SJR Quartile", true],
@@ -26,7 +27,7 @@ export default function Table(props) {
       ["Published", true],
       ["View More", true],
     ]),
-    [filters, setFilters] = React.useState([
+    [filters, setFilters] = useState([
       ["DOAJ", false],
       ["Embase", false],
       ["Medline", false],
@@ -35,25 +36,25 @@ export default function Table(props) {
       ["Scopus", false],
     ]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setPubs(props.data);
     fixTableData();
-    
+
     fixRows();
     fixHead();
 
     setTimeout(() => props.setLoader(false), 1600);
   }, [props.data]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     fixRows();
   }, [tableData]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     fixHead();
   }, [title, filters]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     filterTable();
   }, [filters]);
 

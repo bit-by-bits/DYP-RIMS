@@ -1,5 +1,5 @@
 .wrapper .upload_wrapper {
-  margin: 6rem 10vw 0 10vw;
+  margin: 6rem 10vw 2rem 10vw;
   display: flex;
   flex-direction: "row";
   justify-content: space-between;
@@ -10,18 +10,12 @@
   border: 1px dashed #9a2827;
   padding: 2.2rem 0;
   gap: 1rem;
-  /* width: 50vw; */
   width: 100vw;
   border-radius: 32px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-}
-
-.wrapper .upload_wrapper .upload_left .upload_img {
-  height: 4rem;
-  width: 4rem;
 }
 
 .wrapper .upload_wrapper .upload_left .upload_title {
@@ -63,6 +57,7 @@
   outline: none;
 
   width: 45vw;
+  height: 40px;
   margin-right: 1rem;
   font-size: 0.9rem;
   border-radius: 6px;
@@ -196,12 +191,26 @@
   font-size: 1.1rem;
   cursor: pointer;
   border-radius: 8px;
-  align-self: flex-start;
   background: #9a2827;
 }
 
 .upload_btn:hover {
   background-color: #7e1918;
+}
+
+.upload_btn2 {
+  color: #9a2827;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  border: 2px solid #9a2827;
+  border-radius: 8px;
+  padding: 0.8rem 1.6rem;
+}
+
+.upload_btn2:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .flex {
@@ -217,6 +226,7 @@
 }
 
 .dots {
+  z-index: 0;
   height: 6px;
   margin: 0.43rem;
   aspect-ratio: 4;
@@ -289,11 +299,6 @@
 @media screen and (max-width: 1200px) {
   .upload_left {
     gap: 1.4rem !important;
-  }
-
-  .upload_left .upload_img {
-    height: 3rem !important;
-    width: 3rem !important;
   }
 
   .upload_left .upload_title {

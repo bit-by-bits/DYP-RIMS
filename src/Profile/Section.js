@@ -1,25 +1,27 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
+
 import axios from "axios";
 import Link from "next/link";
 import styles from "../../styles/profile.module.css";
 import Modal from "../Common/Modal";
+import { UserContext } from "../userContext";
 
 export default function Section(props) {
-  const item = localStorage.getItem("auth_token"),
-    [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = useState(false);
+  const { user, setUser } = useContext(UserContext);
 
-  const [IC, setIC] = React.useState(0),
-    [IA, setIA] = React.useState(0),
-    [HI, setHI] = React.useState(0),
-    [cit, setCit] = React.useState(0),
-    [Qs, setQs] = React.useState([0, 0, 0, 0, 0]);
+  const [IC, setIC] = useState(0),
+    [IA, setIA] = useState(0),
+    [HI, setHI] = useState(0),
+    [cit, setCit] = useState(0),
+    [Qs, setQs] = useState([0, 0, 0, 0, 0]);
 
-  const [modal, setModal] = React.useState({
+  const [modal, setModal] = useState({
     text: "",
     title: "",
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     clear();
 
     props.data.forEach(e => {
@@ -75,7 +77,7 @@ export default function Section(props) {
     axios({
       method: "GET",
       url: `https://rimsapi.journalchecker.com/api/v1/user/download_cv`,
-      headers: { Authorization: `Bearer ${item}` },
+      headers: { Authorization: `Bearer ${user.token}` },
     }).then(res => {
       setVisible(true);
       setModal({
@@ -98,10 +100,7 @@ export default function Section(props) {
         <div className={styles.profile_grid}>
           <div className={styles.profile_personal}>
             <div className={styles.img_wrapper}>
-              <img
-                className={styles.profile_img}
-                src={localStorage.getItem("user_pic")}
-              />
+              <img className={styles.profile_img} src={user.picture} />
               <svg className={styles.img_border1} viewBox="0 0 100 100">
                 <path d="M95,50 A45,45 0 0,1 5,50 A45,45 0 0,1 50,5" />
               </svg>
@@ -111,18 +110,14 @@ export default function Section(props) {
             </div>
 
             <div className={styles.profile_text}>
-              <div className={styles.profile_name}>
-                {localStorage.getItem("user_name")}
-              </div>
+              <div className={styles.profile_name}>{user.name}</div>
 
               <div className={styles.profile_degree}>MBBS, M.D.</div>
 
-              <div className={styles.profile_post}>
-                {localStorage.getItem("user_role")}
-              </div>
+              <div className={styles.profile_post}>{user.role}</div>
 
               <div className={styles.profile_dept}>
-                Department of {localStorage.getItem("user_dept")}
+                Department of {user.dept}
               </div>
 
               <div className={styles.profile_clg}>
@@ -135,8 +130,8 @@ export default function Section(props) {
             </div>
           </div>
 
-          <Link href="/journal">
-            <div className={styles.profile_btn}>View Publications</div>
+          <Link href="/upload">
+            <div className={styles.profile_btn}>Add Publications</div>
           </Link>
 
           <div onClick={download} className={styles.profile_btn}>

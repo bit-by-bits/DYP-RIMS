@@ -1,5 +1,6 @@
 import Link from "next/link";
-import React from "react";
+import React, { useState, useEffect } from "react";
+
 import styles from "../../styles/journal.module.css";
 
 export default function Table(props) {

@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import axios from "axios";
 import styles from "../../styles/file.module.css";
 import { useForm } from "react-hook-form";
+import { UserContext } from "../userContext";
 
 const FileForm = props => {
+  const { user, setUser } = useContext(UserContext);
+  if (typeof window !== "undefined" && user.token === "") router.push("/");
+
   function onSubmit(data) {}
 
   function handleReset() {
@@ -34,7 +38,7 @@ const FileForm = props => {
     axios({
       method: "GET",
       url: "https://rimsapi.journalchecker.com/api/v1/publication/" + props.id,
-      headers: { Authorization: `Bearer ${props.item}` },
+      headers: { Authorization: `Bearer ${user.token}` },
     }).then(function (response) {
       const temp_PUB = response.data.publication,
         temp_AUTH = [];

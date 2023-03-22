@@ -3,14 +3,28 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 
 import "../styles/globals.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
-import Head from "next/head";
-import Script from "next/script";
+
+import { useState } from "react";
+import { UserContext } from "../src/userContext";
 
 const MyApp = ({ Component, pageProps }) => {
+  const [user, setUser] = useState({
+    id: "",
+    picture: "",
+    role: "",
+    token: "",
+    name: "",
+    email: "",
+    dept: "",
+  });
+
   return (
     <>
       <script src="https://accounts.google.com/gsi/client" />
-      <Component {...pageProps} />
+
+      <UserContext.Provider value={{ user, setUser }}>
+        <Component {...pageProps} />
+      </UserContext.Provider>
     </>
   );
 };

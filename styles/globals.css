@@ -7,9 +7,10 @@
   box-sizing: border-box;
 }
 
-a {
-  color: inherit;
+a,
+a:hover {
   cursor: pointer;
+  color: inherit;
   text-decoration: none;
 }
 
@@ -37,4 +38,20 @@ html {
   cursor: -webkit-grab;
   cursor: grab;
   background: #ce1c19;
+}
+
+.ant-menu-submenu:after,
+.ant-menu-submenu-active:after,
+.ant-menu-item::after,
+.ant-menu-item:hover::after {
+  border: none !important;
+}
+
+.ant-menu-item:hover,
+.ant-menu-submenu-title:hover {
+  color: rgb(227, 222, 222) !important;
+}
+
+.ant-menu-item a:hover {
+  color: black !important;
 }

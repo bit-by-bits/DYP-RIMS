@@ -1,6 +1,7 @@
 import Head from "next/head";
 import styles from "../styles/dashboard.module.css";
-import React from "react";
+import React, { useState, useEffect } from "react";
+
 import { useRouter } from "next/router";
 import Navbar from "../src/Common/Navbar";
 import Publishers from "../src/Dashboard/Publishers";

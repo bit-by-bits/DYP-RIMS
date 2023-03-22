@@ -1,11 +1,13 @@
 import axios from "axios";
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
+
 import styles from "../../styles/management.module.css";
+import { UserContext } from "../userContext";
 
 export default function Profile(props) {
-  const item = localStorage.getItem("auth_token"),
-    items = [];
+  const { user, setUser } = useContext(UserContext);
 
+  const items = [];
   for (let a = 0; a < 6; a++) {
     items.push(
       <div key={a} className={styles.profile_scrollitem}>
@@ -19,10 +21,8 @@ export default function Profile(props) {
     axios({
       method: "GET",
       url: `https://rimsapi.journalchecker.com/api/v1/user/download_cv`,
-      headers: { Authorization: `Bearer ${item}` },
-    }).then(function (response) {
-      console.log(response.data);
-    });
+      headers: { Authorization: `Bearer ${user.token}` },
+    }).then(res => console.log(res.data));
   }
 
   return (

@@ -101,6 +101,7 @@
   font-size: 0.9rem;
   box-shadow: 0 0 15px 5px #ccc;
   border-radius: 10px;
+  z-index: 1;
 }
 
 .alert h3 {
