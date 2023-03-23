@@ -49,9 +49,10 @@ const Uploading = () => {
                 : "Your file has been successfully uploaded to RIMS."
             }
             bottom={
-              loading ? "Kindly confirm and edit the follwing details." : ""
+              loading ? "Kindly confirm and edit the following details." : ""
             }
           />
+
           {loading && (
             <Details
               setVisible={setVisible}
@@ -59,22 +60,6 @@ const Uploading = () => {
               setID={setID}
               doi={DOI}
             />
-          )}
-          {!loading && (
-            <div className={styles.uploading_btns}>
-              <Link
-                href={
-                  localStorage.getItem("user_role") == "management"
-                    ? "/management"
-                    : "/profile"
-                }
-              >
-                <div className={styles.uploading_btn1}>Back to Profile</div>
-              </Link>
-              <Link href={`/file/${ID}/edit`}>
-                <div className={styles.uploading_btn2}>Continue to Edit</div>
-              </Link>
-            </div>
           )}
         </div>
       </div>

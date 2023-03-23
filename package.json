@@ -3,12 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "lint": "next lint",
     "dev": "next dev -p 3001",
-    "open": "explorer http://localhost:3001",
     "build": "next build",
-    "prt": "prettier --write .",
-    "start": "next start -p 3001",
-    "lint": "next lint"
+    "pretty": "prettier --write .",
+    "start": "next start -p 3001"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
@@ -19,9 +18,7 @@
     "next": "12.2.2",
     "react": "^18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.41.5",
-    "react-router-dom": "^6.3.0",
-    "react-select": "^5.5.0"
+    "react-router-dom": "^6.3.0"
   },
   "devDependencies": {
     "eslint": "8.20.0",

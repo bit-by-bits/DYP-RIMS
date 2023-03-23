@@ -1,0 +1,39 @@
+.uploading_msg {
+  color: #9a2827;
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: "row";
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.submit,
+.reset {
+  color: #9a2827;
+  background-color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-right: 1rem;
+  cursor: pointer;
+  text-align: center;
+  border: 2px solid #9a2827;
+  border-radius: 8px;
+  padding: 5px 10px;
+  height: max-content;
+}
+
+.submit {
+  color: white;
+  background-color: #9a2827;
+}
+
+.submit:hover {
+  background-color: #7e1918 !important;
+}
+
+.reset:hover {
+  color: #9a2827 !important;
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}

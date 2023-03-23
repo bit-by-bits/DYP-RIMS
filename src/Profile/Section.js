@@ -1,14 +1,25 @@
 import React, { useState, useEffect, useContext } from "react";
 
-import axios from "axios";
 import Link from "next/link";
 import styles from "../../styles/profile.module.css";
-import Modal from "../Common/Modal";
 import { UserContext } from "../userContext";
+import { notification } from "antd";
+import Image from "next/image";
 
 export default function Section(props) {
-  const [visible, setVisible] = useState(false);
   const { user, setUser } = useContext(UserContext);
+  const [modal, setModal] = useState({
+    title: "",
+    text: "",
+  });
+
+  const [api, contextHolder] = notification.useNotification();
+  const openNotificationWithIcon = type => {
+    api[type]({
+      message: modal.title,
+      description: modal.text,
+    });
+  };
 
   const [IC, setIC] = useState(0),
     [IA, setIA] = useState(0),
@@ -16,10 +27,9 @@ export default function Section(props) {
     [cit, setCit] = useState(0),
     [Qs, setQs] = useState([0, 0, 0, 0, 0]);
 
-  const [modal, setModal] = useState({
-    text: "",
-    title: "",
-  });
+  useEffect(() => {
+    if (modal.title != "") openNotificationWithIcon("error");
+  }, [modal]);
 
   useEffect(() => {
     clear();
@@ -65,42 +75,29 @@ export default function Section(props) {
     setQs([0, 0, 0, 0, 0]);
   }
 
-  function edit() {
-    setVisible(true);
+  const edit = () => {
     setModal({
       text: "It appears that this feature is still unavailable.",
       title: "OOPS!",
     });
-  }
+  };
 
-  function download() {
-    axios({
-      method: "GET",
-      url: `https://rimsapi.journalchecker.com/api/v1/user/download_cv`,
-      headers: { Authorization: `Bearer ${user.token}` },
-    }).then(res => {
-      setVisible(true);
-      setModal({
-        text: "Perhaps you haven't posted your CV yet.",
-        title: "THERE SEEMS TO be an error",
-      });
+  const download = () => {
+    setModal({
+      title: "There seems to be an error",
+      text: "Perhaps you haven't posted your CV yet.",
     });
-  }
+  };
 
   return (
     <>
-      <div className={styles.profile_section}>
-        <Modal
-          setVisible={setVisible}
-          visible={visible}
-          text={modal.text}
-          title={modal.title}
-        />
+      {contextHolder}
 
+      <div className={styles.profile_section}>
         <div className={styles.profile_grid}>
           <div className={styles.profile_personal}>
             <div className={styles.img_wrapper}>
-              <img className={styles.profile_img} src={user.picture} />
+              <Image alt="Me" width={100} height={100} src={user.picture} />
               <svg className={styles.img_border1} viewBox="0 0 100 100">
                 <path d="M95,50 A45,45 0 0,1 5,50 A45,45 0 0,1 50,5" />
               </svg>

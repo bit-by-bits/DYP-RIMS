@@ -35,8 +35,8 @@ html {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  cursor: -webkit-grab;
   cursor: grab;
+  cursor: -webkit-grab;
   background: #ce1c19;
 }
 
@@ -52,6 +52,7 @@ html {
   color: rgb(227, 222, 222) !important;
 }
 
-.ant-menu-item a:hover {
+.ant-menu-item a:hover,
+.ant-menu-item-selected {
   color: black !important;
 }

@@ -12,11 +12,23 @@ export default function Home() {
   const [visible, setVisible] = useState(true);
   const { user, setUser } = useContext(UserContext);
 
-  if (
-    typeof window !== "undefined" &&
-    localStorage.getItem("auth_token") != null
-  )
-    localStorage.clear();
+  useEffect(() => {
+    if (user.token) router.push("/profile");
+  }, [user]);
+
+  useEffect(
+    () =>
+      setUser({
+        id: "",
+        picture: "",
+        role: "",
+        token: "",
+        name: "",
+        email: "",
+        dept: "",
+      }),
+    []
+  );
 
   useEffect(() => {
     /* global google */
@@ -50,8 +62,6 @@ export default function Home() {
         email: user.email,
         dept: user.dept,
       });
-
-      setTimeout(() => router.push("/profile"), 999);
     });
   }
 
