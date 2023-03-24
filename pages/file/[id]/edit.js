@@ -29,7 +29,7 @@ const ID = () => {
         <h2 style={{ margin: "8vw 0 2vw 10vw", color: "#9a2827" }}>
           Hello {user.name}. Please fill the empty fields (if any).
         </h2>
-        <FileForm setVisible={setVisible} id={id} />
+        {/* <FileForm setVisible={setVisible} id={id} /> */}
       </div>
     </>
   );

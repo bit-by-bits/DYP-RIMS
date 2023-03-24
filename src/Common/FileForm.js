@@ -1,8 +1,9 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import styles from "../../styles/file.module.css";
 import { useForm } from "react-hook-form";
 import { UserContext } from "../userContext";
+import URLObj from "../baseURL";
 
 const FileForm = props => {
   const { user, setUser } = useContext(UserContext);
@@ -30,14 +31,14 @@ const FileForm = props => {
     });
   }
 
-  const [pub, setPub] = React.useState([]),
-    [authors, setAuthors] = React.useState(""),
-    [dept, setDept] = React.useState("");
+  const [pub, setPub] = useState([]),
+    [authors, setAuthors] = useState(""),
+    [dept, setDept] = useState("");
 
-  React.useEffect(() => {
+  useEffect(() => {
     axios({
       method: "GET",
-      url: "https://rimsapi.journalchecker.com/api/v1/publication/" + props.id,
+      url: `${URLObj.base}/publication/${props.id}`,
       headers: { Authorization: `Bearer ${user.token}` },
     }).then(function (response) {
       const temp_PUB = response.data.publication,

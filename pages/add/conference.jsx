@@ -3,15 +3,38 @@ import { UploadOutlined } from "@ant-design/icons";
 import styles from "../../styles/add.module.css";
 import Head from "next/head";
 import Navbar from "../../src/Common/Navbar";
+import axios from "axios";
+import URLObj from "../../src/baseURL";
+import { UserContext } from "../../src/userContext";
+import { useContext } from "react";
 
 const Conferences = () => {
+  const { user, setUser } = useContext(UserContext);
+
   const onFinish = values => {
-    console.log("Success:", values);
+    let data = new FormData();
+    data.append("name", values.attendee);
+    data.append("dept_id", values.department);
+    data.append("conference_name", values.conference);
+    data.append("date", values.date);
+    data.append("location", values.location);
+    data.append("certificate", values.certificate.file.originFileObj);
+
+    axios({
+      method: "POST",
+      maxBodyLength: Infinity,
+      url: `${URLObj.base}/conference/data/add/`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+        "Content-Type": "multipart/form-data",
+      },
+      data: data,
+    })
+      .then(res => message.success("Conference added successfully!"))
+      .catch(err => message.error("Something went wrong!"));
   };
 
-  const onFinishFailed = errorInfo => {
-    console.log("Failed:", errorInfo);
-  };
+  const onFinishFailed = errorInfo => message.error("Something went wrong!");
 
   return (
     <>
@@ -93,10 +116,6 @@ const Conferences = () => {
           >
             <Upload
               onChange={info => {
-                if (info.file.status !== "uploading") {
-                  console.log(info.file, info.fileList);
-                }
-
                 if (info.file.status === "done") {
                   message.success(
                     `${info.file.name} file uploaded successfully`

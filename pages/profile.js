@@ -11,6 +11,7 @@ import Loader from "../src/Common/Loader";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { UserContext } from "../src/userContext";
+import URLObj from "../src/baseURL";
 
 const Profile = () => {
   const router = useRouter(),
@@ -28,7 +29,7 @@ const Profile = () => {
   function callback() {
     axios({
       method: "GET",
-      url: `https://rimsapi.journalchecker.com/api/v1/publication`,
+      url: `${URLObj.base}/publication`,
       headers: { Authorization: `Bearer ${user.token}` },
     }).then(response =>
       setPubs(
@@ -62,7 +63,7 @@ const Profile = () => {
 
     axios({
       method: "GET",
-      url: `https://rimsapi.journalchecker.com/api/v1/user/profile/${user.id}`,
+      url: `${URLObj.base}/user/profile/${user.id}`,
       headers: { Authorization: `Bearer ${user.token}` },
     }).then(response => {
       setUser({
@@ -80,7 +81,7 @@ const Profile = () => {
 
     axios({
       method: "GET",
-      url: `https://rimsapi.journalchecker.com/api/v1/user/stats`,
+      url: `${URLObj.base}/user/stats`,
       headers: { Authorization: `Bearer ${user.token}` },
     }).then(function (response) {
       setLawrd(response.data.awards);

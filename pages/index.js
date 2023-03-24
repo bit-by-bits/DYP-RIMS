@@ -6,6 +6,7 @@ import styles from "../styles/login.module.css";
 import { useRouter } from "next/router";
 import Loader from "../src/Common/Loader";
 import { UserContext } from "../src/userContext";
+import URLObj from "../src/baseURL";
 
 export default function Home() {
   const router = useRouter();
@@ -50,7 +51,7 @@ export default function Home() {
   function handleCallbackResponse(response) {
     axios({
       method: "POST",
-      url: `https://rimsapi.journalchecker.com/api/v1/login/`,
+      url: `${URLObj.base}/login/`,
       data: { id_token: response.credential },
     }).then(res => {
       setUser({

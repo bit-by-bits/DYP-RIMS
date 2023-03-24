@@ -10,6 +10,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { UserContext } from "../userContext";
+import URLObj from "../baseURL";
 
 const FileInfo = props => {
   const { user, setUser } = useContext(UserContext);
@@ -22,7 +23,7 @@ const FileInfo = props => {
   useEffect(() => {
     axios({
       method: "GET",
-      url: "https://rimsapi.journalchecker.com/api/v1/publication/" + props.id,
+      url: `${URLObj.base}/publication/${props.id}`,
       headers: { Authorization: `Bearer ${user.token}` },
     }).then(function (response) {
       const temp_PUB = response.data.publication,

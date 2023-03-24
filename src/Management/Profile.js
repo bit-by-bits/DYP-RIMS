@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
 
 import styles from "../../styles/management.module.css";
+import URLObj from "../baseURL";
 import { UserContext } from "../userContext";
 
 export default function Profile(props) {
@@ -20,7 +21,7 @@ export default function Profile(props) {
   function download() {
     axios({
       method: "GET",
-      url: `https://rimsapi.journalchecker.com/api/v1/user/download_cv`,
+      url: `${URLObj.base}/user/download_cv`,
       headers: { Authorization: `Bearer ${user.token}` },
     }).then(res => console.log(res.data));
   }
