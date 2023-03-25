@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
-
+import React from "react";
 import styles from "../../styles/common.module.css";
 
-const Loader = props => {
+const Loader = ({ visible }) => {
   return (
     <div
       className={styles.loader_bg}
-      style={props.visible ? { display: "flex" } : { display: "none" }}
+      style={visible ? { display: "flex" } : { display: "none" }}
     >
       <div className={styles.loader} />
     </div>

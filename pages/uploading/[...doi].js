@@ -16,9 +16,7 @@ const Uploading = () => {
   const [loading, setLoading] = useState(true),
     [visible, setVisible] = useState(true);
 
-  const [ID, setID] = useState(0),
-    [DOI, setDOI] = useState("");
-
+  const [DOI, setDOI] = useState("");
   const { user, setUser } = useContext(UserContext);
   if (typeof window !== "undefined" && user.token === "") router.push("/");
 
@@ -57,7 +55,6 @@ const Uploading = () => {
             <Details
               setVisible={setVisible}
               setLoading={setLoading}
-              setID={setID}
               doi={DOI}
             />
           )}

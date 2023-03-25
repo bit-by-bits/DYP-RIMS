@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
-
 import styles from "../../styles/management.module.css";
 import URLObj from "../baseURL";
 import { UserContext } from "../userContext";

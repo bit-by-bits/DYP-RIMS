@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
-
+import React, { useState, useContext } from "react";
 import Head from "next/head";
 import styles from "../../../styles/file.module.css";
 import Loader from "../../../src/Common/Loader";
@@ -26,9 +25,9 @@ const ID = () => {
       <div className={styles.wrapper}>
         <Navbar />
         <Loader visible={visible} />
-        <h2 style={{ margin: "8vw 0 2vw 10vw", color: "#9a2827" }}>
-          Hello {user.name}. Please fill the empty fields (if any).
-        </h2>
+        <h2
+          style={{ margin: "8vw 0 2vw 10vw", color: "#9a2827" }}
+        >{`Hello ${user.name}. Please fill the empty fields (if any).`}</h2>
         {/* <FileForm setVisible={setVisible} id={id} /> */}
       </div>
     </>

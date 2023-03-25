@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-
 import Link from "next/link";
 import styles from "../../styles/profile.module.css";
 import { UserContext } from "../userContext";

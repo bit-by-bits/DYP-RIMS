@@ -25,7 +25,7 @@ const Paper = () => {
     axios({
       method: "POST",
       maxBodyLength: Infinity,
-      url: `${URLObj.base}/paper-presentation/data/add/`,
+      url: `${URLObj.base}/paper-presentation/data/add`,
       headers: {
         Authorization: `Bearer ${user.token}`,
         "Content-Type": "multipart/form-data",

@@ -7,10 +7,6 @@
   margin: 6rem 10vw 2rem 10vw;
 }
 
-.wrapper .uploading_wrapper .uploading_img {
-  height: 5rem !important;
-}
-
 .wrapper .uploading_wrapper .uploading_head {
   color: #9a2827;
   font-weight: 700;

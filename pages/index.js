@@ -1,6 +1,5 @@
 import Head from "next/head";
 import React, { useState, useEffect, useContext } from "react";
-
 import axios from "axios";
 import styles from "../styles/login.module.css";
 import { useRouter } from "next/router";
@@ -51,7 +50,7 @@ export default function Home() {
   function handleCallbackResponse(response) {
     axios({
       method: "POST",
-      url: `${URLObj.base}/login/`,
+      url: `${URLObj.base}/login`,
       data: { id_token: response.credential },
     }).then(res => {
       setUser({

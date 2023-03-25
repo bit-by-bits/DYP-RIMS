@@ -4,7 +4,7 @@ import styles from "../../styles/details.module.css";
 import URLObj from "../baseURL";
 import Image from "next/image";
 import { UserContext } from "../userContext";
-import { Button, Form, Input, Select } from "antd";
+import { Button, Form, Input, message, Select } from "antd";
 import { useRouter } from "next/router";
 
 export default function Details(props) {
@@ -17,7 +17,7 @@ export default function Details(props) {
   const { user, setUser } = useContext(UserContext);
   if (typeof window !== "undefined" && user.token === "") router.push("/");
 
-  const [disabled, setDisabled] = useState(true);
+  const [disabled, setDisabled] = useState(!true);
   const [citations, setCitations] = useState(0);
 
   const [authors, setAuthors] = useState({ options: [], selected: [] });
@@ -65,39 +65,80 @@ export default function Details(props) {
       })
       .catch(error => console.log("DTE: " + error));
 
-    // axios({
-    //   method: "GET",
-    //   url: `${URLObj.citation}/citation-count/${props.doi}`,
-    //   headers: {
-    //     "Access-Control-Allow-Origin": "*",
-    //   },
-    // })
-    //   .then(response => setCitations(response.data[0].count))
-    //   .catch(error => console.log("CTE: " + error));
+    axios({
+      method: "GET",
+      url: `${URLObj.citation}/citation-count/${props.doi}`,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+      .then(response => setCitations(response.data[0].count))
+      .catch(error => console.log("CTE: " + error));
   }, []);
 
   useEffect(() => {
     const index = ["doaj", "embase", "medline", "pmc", "scie", "scopus"];
     const indexed = index.filter(i => dataJournal["in_" + i]);
 
-    const LIST = indexed.map((e, i) => ({
-      value: i,
-      label: e[0].toUpperCase() + e.slice(1),
-    }));
-
     setIndexed({
-      options: LIST,
-      selected: LIST,
+      options: index.map((e, i) => ({
+        value: "in_" + e,
+        label: e[0].toUpperCase() + e.slice(1),
+      })),
+      selected: indexed.map((e, i) => ({
+        value: "in_" + e,
+        label: e[0].toUpperCase() + e.slice(1),
+      })),
     });
   }, [dataJournal]);
 
   const onFinish = values => {
-    console.log("Success:", values);
+    let data = new FormData();
+    data.append("doi", values.doi);
+    data.append("pubmed_id", values.pubmed);
+    data.append("publication_type", values.type);
+    data.append("publication_title", values.title);
+    data.append("journal_name", values.journal);
+    data.append("year", values.published);
+    data.append("abstract", values.abstract);
+    data.append("issue", values.issue);
+    data.append("volume", values.volume);
+    data.append("pages", values.pages);
+    data.append("citations", values.citations);
+    data.append("hindex", values.hindex);
+    data.append("sjr", values.sjr);
+    data.append("impact_factor", values.ifactor);
+
+    data.append(
+      "other_authors",
+      values.authors.map(e => e.label)
+    );
+
+    indexed.options.forEach((e, i) =>
+      data.append(
+        e.value,
+        values.indexed.map(e => e.value).includes(indexed.options[i].value)
+      )
+    );
+
+    axios({
+      method: "POST",
+      maxBodyLength: Infinity,
+      url: `${URLObj.base}/research/data/save`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+        "Content-Type": "multipart/form-data",
+      },
+      data: data,
+    })
+      .then(res => {
+        message.success("Research added successfully!");
+        props.setLoading(false);
+      })
+      .catch(err => message.error("Something went wrong!"));
   };
 
-  const onFinishFailed = errorInfo => {
-    console.log("Failed:", errorInfo);
-  };
+  const onFinishFailed = errorInfo => message.error("Something went wrong!");
 
   return (
     <>
@@ -115,12 +156,13 @@ export default function Details(props) {
           wrapperCol={{ span: 16 }}
           initialValues={{
             title: data.title ? data.title[0] : " ",
+            type: data.type ?? " ",
             journal: dataJournal.journal_title ?? " ",
             volume: parseInt(data.volume) ?? 0,
             issue: parseInt(data.issue) ?? 0,
             pages: data.page ?? " ",
             published: data.published
-              ? data.published["date-parts"][0].join("-")
+              ? data.published["date-parts"][0].reverse().join("-")
               : " ",
             hindex: parseInt(dataJournal.h_index) ?? 0,
             ifactor: dataJournal.impact_factor ?? " ",
@@ -137,7 +179,7 @@ export default function Details(props) {
           autoComplete="off"
         >
           <Form.Item
-            label="Title"
+            label="Publication Title"
             name="title"
             rules={[
               { required: true, message: "Please enter publication title" },
@@ -147,9 +189,19 @@ export default function Details(props) {
           </Form.Item>
 
           <Form.Item
-            label="Journal"
+            label="Journal Name"
             name="journal"
             rules={[{ required: true, message: "Please enter journal name" }]}
+          >
+            <Input disabled={disabled} />
+          </Form.Item>
+
+          <Form.Item
+            label="Publication Type"
+            name="type"
+            rules={[
+              { required: true, message: "Please enter publication type" },
+            ]}
           >
             <Input disabled={disabled} />
           </Form.Item>
@@ -198,7 +250,7 @@ export default function Details(props) {
           </Form.Item>
 
           <Form.Item
-            label="Published"
+            label="Published On"
             name="published"
             rules={[
               { required: true, message: "Please enter publication title" },
@@ -265,7 +317,7 @@ export default function Details(props) {
           </Form.Item>
 
           <Form.Item
-            label="Pub Med ID"
+            label="PubMed ID"
             name="pubmed"
             rules={[{ required: true, message: "Please enter the pubmed id" }]}
           >

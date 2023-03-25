@@ -2,7 +2,6 @@ import Head from "next/head";
 import styles from "../styles/profile.module.css";
 import axios from "axios";
 import React, { useState, useContext } from "react";
-
 import Navbar from "../src/Common/Navbar";
 import Boxes from "../src/Profile/Boxes";
 import Table from "../src/Profile/Table";

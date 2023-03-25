@@ -23,7 +23,7 @@ const Conferences = () => {
     axios({
       method: "POST",
       maxBodyLength: Infinity,
-      url: `${URLObj.base}/conference/data/add/`,
+      url: `${URLObj.base}/conference/data/add`,
       headers: {
         Authorization: `Bearer ${user.token}`,
         "Content-Type": "multipart/form-data",

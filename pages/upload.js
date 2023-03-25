@@ -1,14 +1,13 @@
 import axios from "axios";
 import React, { useState, useContext } from "react";
-
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Navbar from "../src/Common/Navbar";
 import styles from "../styles/upload.module.css";
-import Alert from "../src/Common/Alert";
 import Image from "next/image";
 import URLObj from "../src/baseURL";
 import { UserContext } from "../src/userContext";
+import { message } from "antd";
 
 const Upload = () => {
   const router = useRouter();
@@ -19,13 +18,7 @@ const Upload = () => {
   const [file, setFile] = useState();
   const [DOI, setDOI] = useState();
 
-  const [visible, setVisible] = useState(false);
   const [searching, setSearching] = useState({ file: false, doi: false });
-
-  const [alert, setAlert] = useState({
-    text: "",
-    type: 0,
-  });
 
   const search = () => {
     setSearching({ file: searching.file, doi: true });
@@ -35,7 +28,7 @@ const Upload = () => {
 
     axios({
       method: "POST",
-      url: `${URLObj.base}/doi/validate/manual/`,
+      url: `${URLObj.base}/doi/validate/manual`,
       headers: {
         Authorization: `Bearer ${user.token}`,
         "Content-Type": "multipart/form-data",
@@ -54,13 +47,9 @@ const Upload = () => {
 
         const doi = res.data.doiID;
         if (isValidHttpUrl(doi)) doi = doi.split("//").pop();
-        localStorage.setItem("udoi", doi);
 
-        setVisible(true);
-        setAlert({
-          text: "Success: Redirecting you now..",
-          type: 1,
-        });
+        localStorage.setItem("udoi", doi);
+        message.success("Wait while we redirect you");
 
         setTimeout(() => {
           setSearching({ file: searching.file, doi: false });
@@ -69,12 +58,7 @@ const Upload = () => {
       })
       .catch(err => {
         setSearching({ file: searching.file, doi: false });
-
-        setVisible(true);
-        setAlert({
-          text: "Failed: Enter a valid DOI.",
-          type: 2,
-        });
+        message.error("Enter a valid DOI");
       });
   };
 
@@ -83,13 +67,7 @@ const Upload = () => {
 
     if (!file) {
       setSearching({ file: false, doi: searching.doi });
-
-      setVisible(true);
-      setAlert({
-        text: "Failed: Select a file.",
-        type: 2,
-      });
-
+      message.error("Select a file first");
       return;
     }
 
@@ -98,7 +76,7 @@ const Upload = () => {
 
     axios({
       method: "POST",
-      url: `${URLObj.base}/doi/validate/`,
+      url: `${URLObj.base}/doi/validate`,
       headers: {
         Authorization: `Bearer ${user.token}`,
         "Content-Type": "multipart/form-data",
@@ -118,12 +96,7 @@ const Upload = () => {
         const doi = res.data.doiID;
         if (isValidHttpUrl(doi)) doi = doi.split("//").pop();
         localStorage.setItem("udoi", doi);
-
-        setVisible(true);
-        setAlert({
-          text: "Success: Redirecting you now..",
-          type: 1,
-        });
+        message.success("Wait while we redirect you");
 
         setTimeout(() => {
           setSearching({ file: false, doi: searching.doi });
@@ -132,12 +105,7 @@ const Upload = () => {
       })
       .catch(err => {
         setSearching({ file: false, doi: searching.doi });
-
-        setVisible(true);
-        setAlert({
-          text: "Failed: Enter a valid File.",
-          type: 2,
-        });
+        message.error("Enter a valid file");
       });
   };
 
@@ -150,12 +118,6 @@ const Upload = () => {
 
       <div className={styles.wrapper}>
         <Navbar />
-        <Alert
-          setVisible={setVisible}
-          visible={visible}
-          text={alert.text}
-          type={alert.type}
-        />
 
         <div className={styles.upload_wrapper}>
           <div className={styles.upload_left}>
