@@ -186,23 +186,23 @@ export default function Details(props) {
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
           initialValues={{
-            title: data.title ? data.title[0] : " ",
-            type: data.type ?? " ",
-            journal: dataJournal.journal_title ?? " ",
-            volume: parseInt(data.volume) ?? 0,
-            issue: parseInt(data.issue) ?? 0,
-            pages: data.page ?? " ",
-            published: data.published
-              ? data.published["date-parts"][0].reverse().join("-")
+            title: data?.title ? data?.title[0] : " ",
+            type: data?.type ?? " ",
+            journal: dataJournal?.journal_title ?? " ",
+            volume: parseInt(data?.volume) ?? 0,
+            issue: parseInt(data?.issue) ?? 0,
+            pages: data?.page ?? " ",
+            published: data?.published
+              ? data?.published["date-parts"][0].reverse().join("-")
               : " ",
-            hindex: parseInt(dataJournal.h_index) ?? 0,
-            ifactor: dataJournal.impact_factor ?? " ",
-            sjr: dataJournal.sjr ?? " ",
+            hindex: parseInt(dataJournal?.h_index) ?? 0,
+            ifactor: dataJournal?.impact_factor ?? " ",
+            sjr: dataJournal?.sjr ?? " ",
             citations: citations ?? " ",
             indexed: indexed.selected ?? [],
-            pubmed: data.pubmed_id ?? " ",
-            doi: data.DOI ?? " ",
-            abstract: data.abstract ?? " ",
+            pubmed: data?.pubmed_id ?? " ",
+            doi: data?.DOI ?? " ",
+            abstract: data?.abstract ?? " ",
             authors: authors.selected ?? [],
           }}
           onFinish={onFinish}
