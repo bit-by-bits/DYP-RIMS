@@ -31,9 +31,9 @@ const FileForm = props => {
     });
   }
 
-  const [pub, setPub] = useState([]),
-    [authors, setAuthors] = useState(""),
-    [dept, setDept] = useState("");
+  const [pub, setPub] = useState([]);
+  const [authors, setAuthors] = useState("");
+  const [dept, setDept] = useState("");
 
   useEffect(() => {
     axios({

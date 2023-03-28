@@ -10,30 +10,30 @@ import Link from "next/link";
 import styles from "../../styles/profile.module.css";
 
 export default function Table(props) {
-  const [pubs, setPubs] = useState([]),
-    [tempTableData, setTempTableData] = useState([]),
-    [tableData, setTableData] = useState([]);
+  const [pubs, setPubs] = useState([]);
+  const [tempTableData, setTempTableData] = useState([]);
+  const [tableData, setTableData] = useState([]);
 
-  const [rows, setRows] = useState([]),
-    [head, setHead] = useState([]);
+  const [rows, setRows] = useState([]);
+  const [head, setHead] = useState([]);
 
   const [title, setTitle] = useState([
-      ["Title", true],
-      ["Impact Factor", true],
-      ["SJR Quartile", true],
-      ["Indexed In", false],
-      ["Citations", true],
-      ["Published", true],
-      ["View More", true],
-    ]),
-    [filters, setFilters] = useState([
-      ["DOAJ", false],
-      ["Embase", false],
-      ["Medline", false],
-      ["PMC", false],
-      ["SCIE", false],
-      ["Scopus", false],
-    ]);
+    ["Title", true],
+    ["Impact Factor", true],
+    ["SJR Quartile", true],
+    ["Indexed In", false],
+    ["Citations", true],
+    ["Published", true],
+    ["View More", true],
+  ]);
+  const [filters, setFilters] = useState([
+    ["DOAJ", false],
+    ["Embase", false],
+    ["Medline", false],
+    ["PMC", false],
+    ["SCIE", false],
+    ["Scopus", false],
+  ]);
 
   useEffect(() => {
     setPubs(props.data);

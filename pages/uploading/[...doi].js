@@ -13,8 +13,8 @@ const Uploading = () => {
   const router = useRouter();
   const { doi } = router.query;
 
-  const [loading, setLoading] = useState(true),
-    [visible, setVisible] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [visible, setVisible] = useState(true);
 
   const [DOI, setDOI] = useState("");
   const { user, setUser } = useContext(UserContext);

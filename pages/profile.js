@@ -13,17 +13,17 @@ import { UserContext } from "../src/userContext";
 import URLObj from "../src/baseURL";
 
 const Profile = () => {
-  const router = useRouter(),
-    [visible, setVisible] = useState(true);
+  const router = useRouter();
+  const [visible, setVisible] = useState(true);
 
   const { user, setUser } = useContext(UserContext);
   if (typeof window !== "undefined" && user.token === "") router.push("/");
 
-  const [pubs, setPubs] = useState([]),
-    [data, setData] = useState([]);
+  const [pubs, setPubs] = useState([]);
+  const [data, setData] = useState([]);
 
-  const [lawrd, setLawrd] = useState(0),
-    [lpubs, setLpubs] = useState(0);
+  const [lawrd, setLawrd] = useState(0);
+  const [lpubs, setLpubs] = useState(0);
 
   function callback() {
     axios({

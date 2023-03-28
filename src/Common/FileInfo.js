@@ -15,9 +15,9 @@ const FileInfo = props => {
   const { user, setUser } = useContext(UserContext);
   if (typeof window !== "undefined" && user.token === "") router.push("/");
 
-  const [pubs, setPubs] = useState([]),
-    [authors, setAuthors] = useState("- Not Available -"),
-    [dept, setDept] = useState("- Not Available -");
+  const [pubs, setPubs] = useState([]);
+  const [authors, setAuthors] = useState("- Not Available -");
+  const [dept, setDept] = useState("- Not Available -");
 
   useEffect(() => {
     axios({

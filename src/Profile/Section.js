@@ -20,11 +20,11 @@ export default function Section(props) {
     });
   };
 
-  const [IC, setIC] = useState(0),
-    [IA, setIA] = useState(0),
-    [HI, setHI] = useState(0),
-    [cit, setCit] = useState(0),
-    [Qs, setQs] = useState([0, 0, 0, 0, 0]);
+  const [IC, setIC] = useState(0);
+  const [IA, setIA] = useState(0);
+  const [HI, setHI] = useState(0);
+  const [cit, setCit] = useState(0);
+  const [Qs, setQs] = useState([0, 0, 0, 0, 0]);
 
   useEffect(() => {
     if (modal.title != "") openNotificationWithIcon("error");

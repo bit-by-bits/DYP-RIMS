@@ -16,19 +16,17 @@ export default function Home() {
     if (user.token) router.push("/profile");
   }, [user]);
 
-  useEffect(
-    () =>
-      setUser({
-        id: "",
-        picture: "",
-        role: "",
-        token: "",
-        name: "",
-        email: "",
-        dept: "",
-      }),
-    []
-  );
+  useEffect(() => {
+    setUser({
+      id: "",
+      picture: "",
+      role: "",
+      token: "",
+      name: "",
+      email: "",
+      dept: "",
+    });
+  }, []);
 
   useEffect(() => {
     /* global google */
