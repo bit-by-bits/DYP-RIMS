@@ -191,13 +191,15 @@ export default function Details(props) {
             title: data?.title ? data?.title[0] : " ",
             type: data?.type ?? " ",
             journal: dataJournal?.journal_title ?? " ",
-            volume: parseInt(data?.volume) ?? 0,
-            issue: parseInt(data?.issue) ?? 0,
+            volume: !isNaN(parseInt(data?.volume)) ? parseInt(data?.volume) : 0,
+            issue: !isNaN(parseInt(data?.issue)) ? parseInt(data?.issue) : 0,
             pages: data?.page ?? " ",
             published: data?.published
               ? data?.published["date-parts"][0].reverse().join("-")
               : " ",
-            hindex: parseInt(dataJournal?.h_index) ?? 0,
+            hindex: !isNaN(parseInt(dataJournal?.h_index))
+              ? parseInt(dataJournal?.h_index)
+              : 0,
             ifactor: dataJournal?.impact_factor ?? " ",
             sjr: dataJournal?.sjr ?? " ",
             citations: citations ?? " ",
@@ -246,7 +248,6 @@ export default function Details(props) {
               {
                 required: true,
                 type: "number",
-                min: 1,
                 message: "Please enter volume number",
               },
             ]}
@@ -261,7 +262,6 @@ export default function Details(props) {
               {
                 required: true,
                 type: "number",
-                min: 1,
                 message: "Please enter issue number",
               },
             ]}
@@ -299,7 +299,6 @@ export default function Details(props) {
               {
                 required: true,
                 type: "number",
-                min: 1,
                 message: "Please enter the h-index",
               },
             ]}

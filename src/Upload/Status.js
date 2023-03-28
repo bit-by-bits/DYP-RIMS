@@ -8,7 +8,7 @@ export default function Status(props) {
       <Image
         alt=""
         width={70}
-        height={70}
+        height={75}
         src={props.img}
         className={styles.uploading_img}
       />
