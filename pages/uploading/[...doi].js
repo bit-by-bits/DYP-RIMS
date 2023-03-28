@@ -13,7 +13,7 @@ const Uploading = () => {
   const router = useRouter();
   const { doi } = router.query;
 
-  const [loading, setLoading] = useState(true);
+  const [finished, setFinished] = useState(false);
   const [visible, setVisible] = useState(true);
 
   const [DOI, setDOI] = useState("");
@@ -25,10 +25,14 @@ const Uploading = () => {
     setDOI(doi.join("/"));
   }, [router.isReady, doi]);
 
+  useEffect(() => {
+    if (finished) router.push("/profile");
+  }, [finished]);
+
   return (
     <>
       <Head>
-        <title>{loading ? "Confirm Upload" : "Uploaded"}</title>
+        <title>{!finished ? "Confirm Upload" : "Uploaded"}</title>
         <link rel="icon" href="../logos/dpu-2.png" />
       </Head>
 
@@ -38,23 +42,23 @@ const Uploading = () => {
 
         <div className={styles.uploading_wrapper}>
           <Status
-            img={
-              loading ? "/../upload/uploading.png" : "/../upload/uploaded.png"
-            }
+            img={!finished ? "/upload/uploading.png" : "/upload/uploaded.png"}
             top={
-              loading
+              !finished
                 ? "Your file is being uploaded to RIMS."
                 : "Your file has been successfully uploaded to RIMS."
             }
             bottom={
-              loading ? "Kindly confirm and edit the following details." : ""
+              !finished
+                ? "Kindly confirm and edit the following details."
+                : "Wait while we redirect you to the home page..."
             }
           />
 
-          {loading && (
+          {!finished && (
             <Details
               setVisible={setVisible}
-              setLoading={setLoading}
+              setFinished={setFinished}
               doi={DOI}
             />
           )}

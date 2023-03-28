@@ -17,15 +17,15 @@ export default function Details(props) {
   const { user, setUser } = useContext(UserContext);
   if (typeof window !== "undefined" && user.token === "") router.push("/");
 
-  const [disabled, setDisabled] = useState(!true);
+  const [disabled, setDisabled] = useState(true);
   const [citations, setCitations] = useState(0);
 
   const [authors, setAuthors] = useState({ options: [], selected: [] });
   const [indexed, setIndexed] = useState({ options: [], selected: [] });
 
   useEffect(() => {
-    console.log(data, dataJournal);
     form.resetFields();
+    console.log(data, dataJournal);
   }, [data, dataJournal]);
 
   useEffect(() => {
@@ -35,17 +35,44 @@ export default function Details(props) {
     })
       .then(response => {
         const msg = response.data.message;
-
         setData(msg);
 
         const authorList = msg?.author;
         if (authorList) {
-          const LIST = authorList.map((a, i) => ({
-            value: i,
-            label: `${a.given ?? ""} ${a.family ?? ""} ${
-              a?.affiliation?.length ? "( " + a.affiliation[0]?.name + " )" : ""
-            }`,
-          }));
+          const LIST = authorList.map((a, i) => {
+            const FULLNAME = `${a.given ?? ""} ${a.family ?? ""}`;
+            const MAIN_AUTHOR = a.sequence === "first" ? true : false;
+
+            let available = false;
+            let AUTHOR_DETAILS = {};
+            axios({
+              method: "GET",
+              url: `${URLObj.base}/author/details/?name=${FULLNAME}`,
+            })
+              .then(response => {
+                const AUTHOR = response?.data?.author[0];
+                if (AUTHOR) {
+                  available = true;
+
+                  AUTHOR_DETAILS = {
+                    AUTHOR_ID: AUTHOR.id,
+                    AUTHOR_GENDER: AUTHOR.gender,
+                    AUTHOR_NAME: AUTHOR.name,
+                    AUTHOR_DEPT: AUTHOR.department,
+                    AUTHOR_EMAIL: AUTHOR.email,
+                    AUTHOR_IMG: AUTHOR.profile_picture,
+                  };
+                }
+              })
+              .catch(error => {
+                AUTHOR_DETAILS = {};
+              });
+
+            return {
+              value: available ? AUTHOR_DETAILS.AUTHOR_ID : FULLNAME,
+              label: FULLNAME,
+            };
+          });
 
           setAuthors({
             options: LIST,
@@ -108,23 +135,24 @@ export default function Details(props) {
     data.append("hindex", values.hindex);
     data.append("sjr", values.sjr);
     data.append("impact_factor", values.ifactor);
-
     data.append(
       "other_authors",
-      values.authors.map(e => e.label)
+      "{ " + values.authors.map(e => e.value).join(", ") + " }"
     );
 
     indexed.options.forEach((e, i) =>
       data.append(
         e.value,
         values.indexed.map(e => e.value).includes(indexed.options[i].value)
+          ? 1
+          : 0
       )
     );
 
     axios({
       method: "POST",
       maxBodyLength: Infinity,
-      url: `${URLObj.base}/research/data/save`,
+      url: `${URLObj.base}/research/data/save/`,
       headers: {
         Authorization: `Bearer ${user.token}`,
         "Content-Type": "multipart/form-data",
@@ -133,7 +161,7 @@ export default function Details(props) {
     })
       .then(res => {
         message.success("Research added successfully!");
-        props.setLoading(false);
+        props.setFinished(true);
       })
       .catch(err => message.error("Something went wrong!"));
   };
@@ -151,7 +179,10 @@ export default function Details(props) {
         <Form
           name="basic"
           form={form}
-          style={{ width: "80vw", transform: "translateX(-10vw)" }}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+          }}
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
           initialValues={{
@@ -185,7 +216,7 @@ export default function Details(props) {
               { required: true, message: "Please enter publication title" },
             ]}
           >
-            <Input disabled={disabled} />
+            <Input style={{ width: "30vw" }} disabled={true} />
           </Form.Item>
 
           <Form.Item
@@ -193,7 +224,7 @@ export default function Details(props) {
             name="journal"
             rules={[{ required: true, message: "Please enter journal name" }]}
           >
-            <Input disabled={disabled} />
+            <Input style={{ width: "30vw" }} disabled={true} />
           </Form.Item>
 
           <Form.Item
@@ -203,7 +234,7 @@ export default function Details(props) {
               { required: true, message: "Please enter publication type" },
             ]}
           >
-            <Input disabled={disabled} />
+            <Input style={{ width: "30vw" }} disabled={true} />
           </Form.Item>
 
           <Form.Item
@@ -218,7 +249,7 @@ export default function Details(props) {
               },
             ]}
           >
-            <Input disabled={disabled} />
+            <Input style={{ width: "30vw" }} disabled={true} />
           </Form.Item>
 
           <Form.Item
@@ -233,7 +264,7 @@ export default function Details(props) {
               },
             ]}
           >
-            <Input disabled={disabled} />
+            <Input style={{ width: "30vw" }} disabled={true} />
           </Form.Item>
 
           <Form.Item
@@ -246,7 +277,7 @@ export default function Details(props) {
               },
             ]}
           >
-            <Input disabled={disabled} />
+            <Input style={{ width: "30vw" }} disabled={true} />
           </Form.Item>
 
           <Form.Item
@@ -256,7 +287,7 @@ export default function Details(props) {
               { required: true, message: "Please enter publication title" },
             ]}
           >
-            <Input disabled={disabled} />
+            <Input style={{ width: "30vw" }} disabled={true} />
           </Form.Item>
 
           <Form.Item
@@ -271,7 +302,7 @@ export default function Details(props) {
               },
             ]}
           >
-            <Input disabled={disabled} />
+            <Input style={{ width: "30vw" }} disabled={true} />
           </Form.Item>
 
           <Form.Item
@@ -281,7 +312,7 @@ export default function Details(props) {
               { required: true, message: "Please enter the impact factor" },
             ]}
           >
-            <Input disabled={disabled} />
+            <Input style={{ width: "30vw" }} disabled={true} />
           </Form.Item>
 
           <Form.Item
@@ -291,7 +322,7 @@ export default function Details(props) {
               { required: true, message: "Please enter the SJR quartile" },
             ]}
           >
-            <Input disabled={disabled} />
+            <Input style={{ width: "30vw" }} disabled={true} />
           </Form.Item>
 
           <Form.Item
@@ -305,12 +336,13 @@ export default function Details(props) {
               },
             ]}
           >
-            <Input disabled={disabled} />
+            <Input style={{ width: "30vw" }} disabled={true} />
           </Form.Item>
 
           <Form.Item label="Indexed In" name="indexed">
             <Select
-              disabled={disabled}
+              style={{ width: "30vw" }}
+              disabled={true}
               mode="multiple"
               options={indexed.options}
             />
@@ -321,7 +353,7 @@ export default function Details(props) {
             name="pubmed"
             rules={[{ required: true, message: "Please enter the pubmed id" }]}
           >
-            <Input disabled={disabled} />
+            <Input style={{ width: "30vw" }} disabled={true} />
           </Form.Item>
 
           <Form.Item
@@ -329,11 +361,11 @@ export default function Details(props) {
             name="doi"
             rules={[{ required: true, message: "Please enter the DOI" }]}
           >
-            <Input disabled={disabled} />
+            <Input style={{ width: "30vw" }} disabled={true} />
           </Form.Item>
 
           <Form.Item label="Abstract" name="abstract">
-            <Input disabled={disabled} />
+            <Input style={{ width: "30vw" }} disabled={true} />
           </Form.Item>
 
           <Form.Item
@@ -343,14 +375,26 @@ export default function Details(props) {
           >
             <Select
               mode="multiple"
+              style={{ width: "30vw" }}
               disabled={disabled}
               options={authors.options}
             />
           </Form.Item>
 
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+          <Form.Item style={{ gridColumn: "1 /span 2" }}>
             <Button className={styles.submit} type="primary" htmlType="submit">
               Save Changes
+            </Button>
+
+            <Button
+              className={styles.reset}
+              onClick={() => {
+                setDisabled(false);
+              }}
+              type="primary"
+              htmlType="reset"
+            >
+              Modify Authors
             </Button>
 
             <Button className={styles.reset} type="primary" htmlType="reset">

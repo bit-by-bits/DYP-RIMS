@@ -25,7 +25,7 @@ const Poster = () => {
     axios({
       method: "POST",
       maxBodyLength: Infinity,
-      url: `${URLObj.base}/poster-presentation/data/add`,
+      url: `${URLObj.base}/poster-presentation/data/add/`,
       headers: {
         Authorization: `Bearer ${user.token}`,
         "Content-Type": "multipart/form-data",

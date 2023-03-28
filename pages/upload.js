@@ -28,7 +28,7 @@ const Upload = () => {
 
     axios({
       method: "POST",
-      url: `${URLObj.base}/doi/validate/manual`,
+      url: `${URLObj.base}/doi/validate/manual/`,
       headers: {
         Authorization: `Bearer ${user.token}`,
         "Content-Type": "multipart/form-data",
@@ -76,7 +76,7 @@ const Upload = () => {
 
     axios({
       method: "POST",
-      url: `${URLObj.base}/doi/validate`,
+      url: `${URLObj.base}/doi/validate/`,
       headers: {
         Authorization: `Bearer ${user.token}`,
         "Content-Type": "multipart/form-data",

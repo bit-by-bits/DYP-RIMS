@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import Loader from "../src/Common/Loader";
 import { UserContext } from "../src/userContext";
 import URLObj from "../src/baseURL";
+import { message } from "antd";
 
 export default function Home() {
   const router = useRouter();
@@ -13,7 +14,7 @@ export default function Home() {
   const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
-    if (user.token) router.push("/profile");
+    user.token && router.push("/profile");
   }, [user]);
 
   useEffect(() => {
@@ -48,19 +49,22 @@ export default function Home() {
   function handleCallbackResponse(response) {
     axios({
       method: "POST",
-      url: `${URLObj.base}/login`,
+      url: `${URLObj.base}/login/`,
       data: { id_token: response.credential },
-    }).then(res => {
-      setUser({
-        id: res.data.id,
-        picture: res.data.picture,
-        role: res.data.role,
-        token: res.data.token,
-        name: user.name,
-        email: user.email,
-        dept: user.dept,
-      });
-    });
+    })
+      .then(res => {
+        message.success("Login Successful");
+        setUser({
+          id: res.data.id,
+          picture: res.data.picture,
+          role: res.data.role,
+          token: res.data.token,
+          name: user.name,
+          email: user.email,
+          dept: user.dept,
+        });
+      })
+      .catch(err => message.error("Login Failed"));
   }
 
   return (
