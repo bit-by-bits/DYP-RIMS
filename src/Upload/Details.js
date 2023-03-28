@@ -105,7 +105,9 @@ export default function Details(props) {
 
   useEffect(() => {
     const index = ["doaj", "embase", "medline", "pmc", "scie", "scopus"];
-    const indexed = index.filter(i => dataJournal["in_" + i]);
+    const indexed = index.filter(i =>
+      dataJournal ? dataJournal["in_" + i] : false
+    );
 
     setIndexed({
       options: index.map((e, i) => ({

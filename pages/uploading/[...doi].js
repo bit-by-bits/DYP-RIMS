@@ -26,7 +26,10 @@ const Uploading = () => {
   }, [router.isReady, doi]);
 
   useEffect(() => {
-    if (finished) router.push("/profile");
+    if (finished)
+      setTimeout(() => {
+        router.push("/profile");
+      }, 1999);
   }, [finished]);
 
   return (
