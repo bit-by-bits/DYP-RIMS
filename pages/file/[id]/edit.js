@@ -4,7 +4,6 @@ import styles from "../../../styles/file.module.css";
 import Loader from "../../../src/Common/Loader";
 import Navbar from "../../../src/Common/Navbar";
 import { useRouter } from "next/router";
-import FileForm from "../../../src/Common/FileForm";
 import { UserContext } from "../../../src/userContext";
 
 const ID = () => {

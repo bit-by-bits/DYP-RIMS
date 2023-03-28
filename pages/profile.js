@@ -1,7 +1,7 @@
 import Head from "next/head";
 import styles from "../styles/profile.module.css";
 import axios from "axios";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Navbar from "../src/Common/Navbar";
 import Boxes from "../src/Profile/Boxes";
 import Table from "../src/Profile/Table";
@@ -24,6 +24,10 @@ const Profile = () => {
 
   const [lawrd, setLawrd] = useState(0);
   const [lpubs, setLpubs] = useState(0);
+
+  useEffect(() => {
+    callback();
+  }, []);
 
   function callback() {
     axios({
@@ -95,7 +99,7 @@ const Profile = () => {
         <link rel="icon" href="logos/dpu-2.png" />
       </Head>
 
-      <div onLoad={callback} className={styles.wrapper}>
+      <div className={styles.wrapper}>
         <Loader visible={visible} />
         <Navbar />
 
