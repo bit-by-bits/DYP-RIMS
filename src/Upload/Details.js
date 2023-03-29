@@ -104,21 +104,23 @@ export default function Details(props) {
   }, []);
 
   useEffect(() => {
-    const index = ["doaj", "embase", "medline", "pmc", "scie", "scopus"];
-    const indexed = index.filter(i =>
-      dataJournal ? dataJournal["in_" + i] : false
-    );
+    if (dataJournal) {
+      const index = ["doaj", "embase", "medline", "pmc", "scie", "scopus"];
+      const indexed = index.filter(i =>
+        dataJournal ? dataJournal["in_" + i] : false
+      );
 
-    setIndexed({
-      options: index.map((e, i) => ({
-        value: "in_" + e,
-        label: e[0].toUpperCase() + e.slice(1),
-      })),
-      selected: indexed.map((e, i) => ({
-        value: "in_" + e,
-        label: e[0].toUpperCase() + e.slice(1),
-      })),
-    });
+      setIndexed({
+        options: index.map((e, i) => ({
+          value: "in_" + e,
+          label: e[0].toUpperCase() + e.slice(1),
+        })),
+        selected: indexed.map((e, i) => ({
+          value: "in_" + e,
+          label: e[0].toUpperCase() + e.slice(1),
+        })),
+      });
+    }
   }, [dataJournal]);
 
   const onFinish = values => {
@@ -139,7 +141,7 @@ export default function Details(props) {
     data.append("impact_factor", values.ifactor);
     data.append(
       "other_authors",
-      "{ " + values.authors.map(e => e.value).join(", ") + " }"
+      "{ " + authors.selected.map(e => e.value).join(", ") + " }"
     );
 
     indexed.options.forEach((e, i) =>
@@ -379,6 +381,12 @@ export default function Details(props) {
               style={{ width: "30vw" }}
               disabled={disabled}
               options={authors.options}
+              onChange={(labels, objects) => {
+                setAuthors({
+                  options: authors.options,
+                  selected: objects,
+                });
+              }}
             />
           </Form.Item>
 
