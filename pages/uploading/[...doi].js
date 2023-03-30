@@ -6,7 +6,6 @@ import Status from "../../src/Upload/Status";
 import Details from "../../src/Upload/Details";
 import styles from "../../styles/uploading.module.css";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { UserContext } from "../../src/userContext";
 
 const Uploading = () => {

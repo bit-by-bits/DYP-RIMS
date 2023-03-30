@@ -56,3 +56,10 @@ html {
 .ant-menu-item-selected {
   color: black !important;
 }
+
+.ant-table-thead .ant-table-cell {
+  background-color: #9a2827 !important;
+  color: white !important;
+  text-align: center !important;
+  
+}

@@ -4,8 +4,8 @@ import axios from "axios";
 import React, { useState, useContext, useEffect } from "react";
 import Navbar from "../src/Common/Navbar";
 import Boxes from "../src/Profile/Boxes";
-import Table from "../src/Profile/Table";
 import Section from "../src/Profile/Section";
+import PubTable from "../src/Profile/Table";
 import Loader from "../src/Common/Loader";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -26,61 +26,45 @@ const Profile = () => {
   const [lpubs, setLpubs] = useState(0);
 
   useEffect(() => {
-    callback();
-  }, []);
+    if (user.name != "" && user.token != "") {
+      axios({
+        method: "GET",
+        url: `${URLObj.base}/publication/view/${user.name}`,
+        headers: { Authorization: `Bearer ${user.token}` },
+      })
+        .then(response => {
+          const DATA = response.data.data;
+          setPubs(DATA);
+        })
+        .catch(err => {
+          setPubs([]);
+        });
+    }
+  }, [user]);
 
-  function callback() {
-    axios({
-      method: "GET",
-      url: `${URLObj.base}/publication`,
-      headers: { Authorization: `Bearer ${user.token}` },
-    }).then(response =>
-      setPubs(
-        response.data.publications.map(e => ({
-          id: e.id,
-          pubmed_id: e.pubmed_id,
-          doi_id: e.doi_id,
-          type: e.publication_type,
-          title: e.publication_title,
-          name: e.journal_name,
-          year: e.year,
-          i_factor: e.impact_factor,
-          h_index: e.h_index,
-          region: e.region,
-          citations: e.citations,
-          dept: e.department.name,
-          authors: e.author_name,
-          sjr: e.sjr,
-          doaj: e.in_doaj,
-          embase: e.in_embase,
-          medline: e.in_medline,
-          pmc: e.in_pmc,
-          scie: e.in_scie,
-          scopus: e.in_scopus,
-          volume: e.volume,
-          issue: e.issue,
-          softcopy: true,
-        }))
-      )
-    );
-
+  useEffect(() => {
     axios({
       method: "GET",
       url: `${URLObj.base}/user/profile/${user.id}`,
       headers: { Authorization: `Bearer ${user.token}` },
-    }).then(response => {
-      setUser({
-        id: user.id,
-        picture: user.picture,
-        role: user.role,
-        token: user.token,
-        name: response.data.name,
-        email: response.data.email,
-        dept: response.data.department,
-      });
+    })
+      .then(response => {
+        setUser({
+          id: user.id,
+          picture: user.picture,
+          role: user.role,
+          token: user.token,
+          name: response.data.name,
+          email: response.data.email,
+          dept: response.data.department,
+        });
 
-      setData(response.data.awards);
-    });
+        setData(response.data.awards);
+      })
+      .catch(err => {
+        setUser(user);
+        setData([]);
+      });
 
     axios({
       method: "GET",
@@ -90,7 +74,7 @@ const Profile = () => {
       setLawrd(response.data.awards);
       setLpubs(response.data.publications);
     });
-  }
+  }, []);
 
   return (
     <>
@@ -107,7 +91,7 @@ const Profile = () => {
           <Section data={pubs} extra={[lawrd, lpubs]} />
           <Boxes title="Awards & Achievements" data={data} />
           <Boxes title="Patents" data={data} />
-          <Table data={pubs} title="Publications" setLoader={setVisible} />
+          <PubTable pubData={pubs} setLoader={setVisible} />
           <Boxes title="Conferences" data={data} />
 
           <a href="https://www.qtanea.com/" rel="noreferrer" target="_blank">

@@ -8,325 +8,198 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "../../styles/profile.module.css";
+import { Table } from "antd";
 
-export default function Table(props) {
-  const [pubs, setPubs] = useState([]);
-  const [tempTableData, setTempTableData] = useState([]);
-  const [tableData, setTableData] = useState([]);
-
-  const [rows, setRows] = useState([]);
-  const [head, setHead] = useState([]);
-
-  const [title, setTitle] = useState([
-    ["Title", true],
-    ["Impact Factor", true],
-    ["SJR Quartile", true],
-    ["Indexed In", false],
-    ["Citations", true],
-    ["Published", true],
-    ["View More", true],
-  ]);
-  const [filters, setFilters] = useState([
-    ["DOAJ", false],
-    ["Embase", false],
-    ["Medline", false],
-    ["PMC", false],
-    ["SCIE", false],
-    ["Scopus", false],
-  ]);
+export default function PubTable({ pubData, setLoader }) {
+  const [columns, setColumns] = useState([]);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    setPubs(props.data);
-    fixTableData();
+    initiate();
+  }, [pubData]);
 
-    fixRows();
-    fixHead();
-
-    setTimeout(() => props.setLoader(false), 1600);
-  }, [props.data]);
-
-  useEffect(() => {
-    fixRows();
-  }, [tableData]);
-
-  useEffect(() => {
-    fixHead();
-  }, [title, filters]);
-
-  useEffect(() => {
-    filterTable();
-  }, [filters]);
-
-  // FILL THE DATA STATE FROM PUBS STATE
-  function fixTableData() {
-    const temp_ROWS = new Array(pubs.length);
-    for (let a = 0; a < pubs.length; a++) {
-      temp_ROWS[a] = new Array(18);
-      const au = pubs[a].authors;
-
-      temp_ROWS[a][6] = "";
-      for (let c = 0; c < au.length; c++)
-        temp_ROWS[a][6] +=
-          au[c].searchable_name + (c != au.length - 1 ? ", " : "");
-
-      temp_ROWS[a][0] = pubs[a].title;
-      temp_ROWS[a][7] = pubs[a].name;
-      temp_ROWS[a][8] = pubs[a].volume;
-      temp_ROWS[a][9] = pubs[a].issue;
-      temp_ROWS[a][10] = "page number idk";
-
-      temp_ROWS[a][1] = pubs[a].i_factor?.toFixed(2);
-      temp_ROWS[a][2] = pubs[a].sjr;
-
-      temp_ROWS[a][11] = pubs[a].doaj;
-      temp_ROWS[a][12] = pubs[a].embase;
-      temp_ROWS[a][13] = pubs[a].medline;
-      temp_ROWS[a][14] = pubs[a].pmc;
-      temp_ROWS[a][15] = pubs[a].scie;
-      temp_ROWS[a][16] = pubs[a].scopus;
-
-      temp_ROWS[a][17] = [];
-      for (let i = 11; i <= 16; i++)
-        if (temp_ROWS[a][i])
-          switch (i) {
-            case 11:
-              temp_ROWS[a][17].push(<div key={i}>DOAJ</div>);
-              break;
-            case 12:
-              temp_ROWS[a][17].push(<div key={i}>Embase</div>);
-              break;
-            case 13:
-              temp_ROWS[a][17].push(<div key={i}>Medline</div>);
-              break;
-            case 14:
-              temp_ROWS[a][17].push(<div key={i}>PMC</div>);
-              break;
-            case 15:
-              temp_ROWS[a][17].push(<div key={i}>SCIE</div>);
-              break;
-            case 16:
-              temp_ROWS[a][17].push(<div key={i}>Scopus</div>);
-              break;
-          }
-
-      temp_ROWS[a][3] = pubs[a].citations;
-      temp_ROWS[a][4] = pubs[a].year;
-      temp_ROWS[a][5] = pubs[a].id;
-
-      for (let i = 0; i < 18; i++) temp_ROWS[a][i] = temp_ROWS[a][i] ?? "N/A";
-    }
-
-    setTableData(temp_ROWS);
-    setTempTableData(temp_ROWS);
-  }
-
-  // FILL BODY DATA
-  function fixRows() {
-    const temp_ROWS = [];
-    for (let a = 0; a < tableData.length; a++) {
-      temp_ROWS.push(
-        <tr key={a}>
-          <td>
-            <span>{tableData[a][0]}</span>
-            <span>{tableData[a][6]}</span>
-            <span>{tableData[a][7]}</span>
-            <span>
-              Volume: {tableData[a][8] ?? "?"}
-              &nbsp;&middot;&nbsp; Issue: {tableData[a][9] ?? "?"}
-              &nbsp;&middot;&nbsp; Page No: NA
-            </span>
-            <span>
-              No softcopy found for this publication. Kindly upload a softcopy.
-            </span>
-          </td>
-
-          <td>{tableData[a][1]}</td>
-          <td>{tableData[a][2]}</td>
-
-          <td>
-            <span>{tableData[a][17]}</span>
-          </td>
-
-          <td>{tableData[a][3]}</td>
-          <td>{tableData[a][4]}</td>
-
-          <td className={styles.btn_td}>
-            <Link href={"/file/" + tableData[a][5]}>
-              <div className={styles.btn_div}>Click</div>
-            </Link>
-          </td>
-        </tr>
-      );
-    }
-
-    !tableData.length &&
-      temp_ROWS.push(
-        <tr key={0}>
-          <td />
-          <td />
-          <td
+  function initiate() {
+    const TEMP_COLUMNS = [
+      {
+        title: "Publication",
+        dataIndex: "title",
+        key: "title",
+        sorter: (a, b) => a.title.localeCompare(b.title),
+      },
+      {
+        title: "Impact Factor",
+        dataIndex: "impact",
+        key: "impact",
+        sorter: (a, b) => a.impact.localeCompare(b.impact),
+        render: text => (
+          <div
             style={{
-              fontWeight: 600,
-              fontSize: "1rem",
-              color: "black",
-              transform: "translateY(1rem)",
-              textAlign: "center",
+              color: "#9a2827",
+              fontWeight: 900,
+              fontSize: 20,
+              minWidth: 120,
             }}
           >
-            No Publication Here
-          </td>
-          <td />
-          <td />
-          <td />
-        </tr>
-      );
-    setRows(temp_ROWS);
-  }
+            {text}
+          </div>
+        ),
+      },
+      {
+        title: "SJR Quartile",
+        dataIndex: "sjr",
+        key: "sjr",
+        sorter: (a, b) => a.sjr.localeCompare(b.sjr),
+        render: text => (
+          <div
+            style={{
+              color: "#9a2827",
+              fontWeight: 900,
+              fontSize: 20,
+              minWidth: 120,
+            }}
+          >
+            {text}
+          </div>
+        ),
+      },
+      {
+        title: "Indexed In",
+        dataIndex: "indexed_in",
+        key: "indexed_in",
+        filters: [
+          {
+            text: "DOAJ",
+            value: "DOAJ",
+          },
+          {
+            text: "Embase",
+            value: "Embase",
+          },
+          {
+            text: "Medline",
+            value: "Medline",
+          },
+          {
+            text: "PMC",
+            value: "PMC",
+          },
+          {
+            text: "SCIE",
+            value: "SCIE",
+          },
+          {
+            text: "Scopus",
+            value: "Scopus",
+          },
+        ],
+        onFilter: (value, record) =>
+          record.indexed_in.props.children.includes(value),
+      },
+      {
+        title: "Citations",
+        dataIndex: "citations",
+        key: "citations",
+        sorter: (a, b) => a.citations.localeCompare(b.citations),
+        render: text => <div style={{ fontWeight: 700 }}>{text}</div>,
+      },
+      {
+        title: "Published",
+        dataIndex: "published",
+        key: "published",
+        sorter: (a, b) => a.published.localeCompare(b.published),
+        render: text => (
+          <div style={{ fontWeight: 700, minWidth: 120 }}>{text}</div>
+        ),
+      },
+      {
+        title: "File",
+        dataIndex: "more",
+        key: "more",
+        sorter: (a, b) => a.more.localeCompare(b.more),
+        render: (text, record) => (
+          <Link href={`/file/${record.key}`}>
+            <div className={styles.btn_div}>Click</div>
+          </Link>
+        ),
+      },
+    ];
 
-  // FILL HEAD DATA
-  function fixHead() {
-    const temp_HEAD = [];
-    for (let a = 0; a < title.length; a++) {
-      temp_HEAD.push(
-        <th key={a} className={a == 3 ? styles.check : undefined}>
-          <span>{title[a][0]}</span>
-          {a == 3 ? (
-            <FontAwesomeIcon
-              icon={!title[a][1] ? faSquareCheck : faCheckToSlot}
-              style={{ cursor: "pointer", marginLeft: "0.3rem" }}
-            />
+    const TEMP_DATA = pubData.map(e => ({
+      key: e.id,
+      title: (
+        <div
+          style={{
+            gap: 10,
+            maxWidth: "40vw",
+            display: "flex",
+            flexDirection: "column",
+            fontWeight: 500,
+            fontSize: "0.8rem",
+          }}
+        >
+          <span
+            style={{
+              color: "black",
+              fontWeight: 700,
+              fontSize: "1rem",
+              lineHeight: "1.3rem",
+            }}
+          >
+            {e.publication_title ?? "N/A"}
+          </span>
+          <span style={{ fontWeight: 400 }}>
+            {e.other_authors.join(", ") ?? "N/A"}
+          </span>
+          <span style={{ fontStyle: "italic" }}>{e.journal_name ?? "N/A"}</span>
+          <span style={{ color: "#9a2827" }}>
+            Volume: {e.volume ?? "?"}
+            &nbsp;&middot;&nbsp; Issue: {e.issue ?? "?"}
+            &nbsp;&middot;&nbsp; Pages: {e.pages ?? "?"}
+          </span>
+          {e.file ? (
+            <span style={{ color: "green" }}>
+              Softcopy found for this publication. View More to access.
+            </span>
           ) : (
-            a != title.length - 1 && (
-              <FontAwesomeIcon
-                onClick={() => {
-                  const TEMP_ARR = [...title];
-                  TEMP_ARR[a][1] = !TEMP_ARR[a][1];
-                  setTitle(TEMP_ARR);
-                  sortTable(a, !title[a][1]);
-                }}
-                icon={title[a][1] ? faArrowDownAZ : faArrowDownZA}
-                style={{ cursor: "pointer", marginLeft: "0.3rem" }}
-              />
-            )
+            <span style={{ color: "red" }}>
+              No softcopy found for this publication. Kindly upload a softcopy.
+            </span>
           )}
-          {a == 3 && (
-            <form className={styles.checks}>
-              {filters.map((e, i) => (
-                <label key={i} htmlFor={e[0]}>
-                  <div>{e[0]}</div>
-                  <input
-                    id={e[0]}
-                    name={e[0]}
-                    type="checkbox"
-                    checked={e[1]}
-                    onChange={() => {
-                      setFilters(
-                        filters.map((ele, ind) => [
-                          ele[0],
-                          ind == i ? !ele[1] : ele[1],
-                        ])
-                      );
-                    }}
-                  />
-                </label>
-              ))}
+        </div>
+      ),
+      impact: e.impact_factor ?? "N/A",
+      sjr: e.sjr ?? "N/A",
+      indexed_in: (
+        <span>
+          {["DOAJ", "Embase", "Medline", "PMC", "SCIE", "Scopus"]
+            .filter(index => e["in_" + index.toLowerCase()])
+            .join(", ") ?? "N/A"}
+        </span>
+      ),
+      citations: e.citations ?? "N/A",
+      published: e.year ?? "N/A",
+    }));
 
-              <div
-                className={styles.btn_div}
-                style={{ width: "max-content" }}
-                onClick={() => setFilters(filters.map(e => [e[0], false]))}
-              >
-                Reset All
-              </div>
-              <div
-                className={styles.btn_div}
-                style={{ width: "max-content" }}
-                onClick={() => setFilters(filters.map(e => [e[0], true]))}
-              >
-                Select All
-              </div>
-            </form>
-          )}
-        </th>
-      );
-    }
+    setColumns(TEMP_COLUMNS);
+    setData(TEMP_DATA);
 
-    setHead(temp_HEAD);
-  }
-
-  // LOGIC TO SORT THE TABLE
-  function sortTable(index, ascSort) {
-    index > 3 && index--;
-
-    const sortedArr = ascSort
-      ? [...tableData].sort(function (a, b) {
-          if (a[index] == "N/A") return 1;
-          if (b[index] == "N/A") return -1;
-
-          if (a[index] < b[index]) return -1;
-          if (a[index] > b[index]) return 1;
-          return 0;
-        })
-      : [...tableData].sort(function (a, b) {
-          if (a[index] == "N/A") return 1;
-          if (b[index] == "N/A") return -1;
-
-          if (b[index] < a[index]) return -1;
-          if (b[index] > a[index]) return 1;
-          return 0;
-        });
-
-    Array.from(document.getElementsByTagName("tr")).forEach(row => {
-      if (row.classList.contains(`${styles.profile_thead}`)) return;
-      row.classList.add(`${styles.disappear}`);
-
-      setTimeout(() => {
-        setTableData(sortedArr);
-
-        row.classList.remove(`${styles.disappear}`);
-        row.classList.add(`${styles.appear}`);
-        setTimeout(() => row.classList.remove(`${styles.appear}`), 399);
-      }, 399);
-    });
-  }
-
-  // LOGIC TO FILTER THE TABLE
-  function filterTable() {
-    const TEMP_ARR = [...title];
-    TEMP_ARR[3][1] = !filters.map(e => e[1]).every(e => !e);
-    setTitle(TEMP_ARR);
-
-    Array.from(document.getElementsByTagName("tr")).forEach(row => {
-      if (row.classList.contains(`${styles.profile_thead}`)) return;
-      row.classList.add(`${styles.disappear}`);
-
-      setTimeout(() => {
-        setTableData(
-          tempTableData.filter(e => {
-            for (let i = 0; i <= 5; i++)
-              if (filters[i][1] && !e[11 + i]) return false;
-            return true;
-          })
-        );
-
-        row.classList.remove(`${styles.disappear}`);
-        row.classList.add(`${styles.appear}`);
-        setTimeout(() => row.classList.remove(`${styles.appear}`), 399);
-      }, 399);
-    });
+    setTimeout(() => setLoader(false), 1600);
   }
 
   return (
     <>
-      <div id="Publications" className={styles.profile_box}>
-        <div className={styles.profile_head}>Publications</div>
-
-        <table className={styles.profile_table}>
-          <tbody>
-            <tr className={styles.profile_thead}>{head}</tr>
-            {rows}
-          </tbody>
-        </table>
+      <div id="publications" className={styles.profile_box}>
+        <div
+          className={styles.profile_head}
+          style={data.length ? { marginLeft: "5vw" } : {}}
+        >
+          Publications
+        </div>
+        <Table
+          style={data.length ? { width: "90vw" } : { width: "80vw" }}
+          columns={columns}
+          dataSource={data}
+        />
       </div>
     </>
   );
