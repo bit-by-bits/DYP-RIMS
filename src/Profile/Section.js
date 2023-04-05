@@ -96,7 +96,10 @@ export default function Section(props) {
         <div className={styles.profile_grid}>
           <div className={styles.profile_personal}>
             <div className={styles.img_wrapper}>
-              <Image alt="Me" width={100} height={100} src={user.picture} />
+              {
+                // eslint-disable-next-line @next/next/no-img-element
+                <img alt="Me" src={user.picture} />
+              }
               <svg className={styles.img_border1} viewBox="0 0 100 100">
                 <path d="M95,50 A45,45 0 0,1 5,50 A45,45 0 0,1 50,5" />
               </svg>

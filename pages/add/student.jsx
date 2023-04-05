@@ -3,8 +3,12 @@ import { UploadOutlined } from "@ant-design/icons";
 import styles from "../../styles/add.module.css";
 import Head from "next/head";
 import Navbar from "../../src/Common/Navbar";
+import { useContext } from "react";
+import { UserContext } from "../../src/userContext";
 
 const Students = () => {
+  const { user, setUser } = useContext(UserContext);
+
   const onFinish = values => {
     console.log("Success:", values);
   };
@@ -29,6 +33,7 @@ const Students = () => {
           style={{ width: "80vw", transform: "translateX(-10vw)" }}
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
+          initialValues={{ faculty: user.name, department: user.dept }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"

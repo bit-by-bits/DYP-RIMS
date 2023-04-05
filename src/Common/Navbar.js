@@ -16,10 +16,10 @@ const Navbar = () => {
       children: [
         {
           type: "group",
-          label: "Publications",
+          label: "Publication",
           children: [
             {
-              label: <Link href="/upload">Publications</Link>,
+              label: <Link href="/upload">Publication</Link>,
               key: "upload",
             },
           ],
@@ -29,23 +29,15 @@ const Navbar = () => {
           label: "Others",
           children: [
             {
-              label: <Link href="/add/conference">Conferences</Link>,
+              label: <Link href="/add/conference">Conference Attended</Link>,
               key: "conference",
             },
             {
-              label: <Link href="/add/poster">Poster Presentations</Link>,
-              key: "poster",
-            },
-            {
-              label: <Link href="/add/paper">Paper Presentations</Link>,
-              key: "paper",
-            },
-            {
-              label: <Link href="/add/project">Research Projects</Link>,
+              label: <Link href="/add/project">Research Project</Link>,
               key: "project",
             },
             {
-              label: <Link href="/add/award">Awards</Link>,
+              label: <Link href="/add/award">Award</Link>,
               key: "award",
             },
             {
@@ -53,11 +45,11 @@ const Navbar = () => {
               key: "ipr",
             },
             {
-              label: <Link href="/add/book">Books/Chapters</Link>,
+              label: <Link href="/add/book">Book/Chapter</Link>,
               key: "book",
             },
             {
-              label: <Link href="/add/student">Students Guided</Link>,
+              label: <Link href="/add/student">Student Guided</Link>,
               key: "student",
             },
           ],

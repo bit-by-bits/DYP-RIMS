@@ -1,5 +1,4 @@
-import { Button, DatePicker, Form, Input, message, Upload } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { Button, DatePicker, Form, Input } from "antd";
 import styles from "../../styles/add.module.css";
 import Head from "next/head";
 import Navbar from "../../src/Common/Navbar";
