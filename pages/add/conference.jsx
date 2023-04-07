@@ -29,9 +29,13 @@ const Conferences = () => {
     data.append("name", values.attendee);
     data.append("dept_id", values.department);
     data.append("conference_name", values.conference);
+    data.append("type", values.type);
     data.append("date", values.date);
     data.append("location", values.location);
     data.append("certificate", values.certificate.file.originFileObj);
+
+    data.append("is_poster", poster ? 1 : 0);
+    data.append("is_paper", paper ? 1 : 0);
 
     if (poster) {
       data.append("poster_title", values.poster_title);

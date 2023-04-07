@@ -1,34 +1,18 @@
-import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import styles from "../../styles/profile.module.css";
 import { UserContext } from "../userContext";
-import { notification } from "antd";
-import Image from "next/image";
+import { message } from "antd";
+import React, { useState, useEffect, useContext } from "react";
 
 export default function Section(props) {
   const { user, setUser } = useContext(UserContext);
-  const [modal, setModal] = useState({
-    title: "",
-    text: "",
-  });
-
-  const [api, contextHolder] = notification.useNotification();
-  const openNotificationWithIcon = type => {
-    api[type]({
-      message: modal.title,
-      description: modal.text,
-    });
-  };
 
   const [IC, setIC] = useState(0);
   const [IA, setIA] = useState(0);
   const [HI, setHI] = useState(0);
+
   const [cit, setCit] = useState(0);
   const [Qs, setQs] = useState([0, 0, 0, 0, 0]);
-
-  useEffect(() => {
-    if (modal.title != "") openNotificationWithIcon("error");
-  }, [modal]);
 
   useEffect(() => {
     clear();
@@ -74,31 +58,20 @@ export default function Section(props) {
     setQs([0, 0, 0, 0, 0]);
   }
 
-  const edit = () => {
-    setModal({
-      text: "It appears that this feature is still unavailable.",
-      title: "OOPS!",
-    });
-  };
+  const edit = () => message.info("This feature is still unavailable.");
 
-  const download = () => {
-    setModal({
-      title: "There seems to be an error",
-      text: "Perhaps you haven't posted your CV yet.",
-    });
-  };
+  const download = () =>
+    message.error("Perhaps you haven't posted your CV yet.");
 
   return (
     <>
-      {contextHolder}
-
       <div className={styles.profile_section}>
         <div className={styles.profile_grid}>
           <div className={styles.profile_personal}>
             <div className={styles.img_wrapper}>
               {
                 // eslint-disable-next-line @next/next/no-img-element
-                <img alt="Me" src={user.picture} />
+                <img alt="user" src={user.picture} />
               }
               <svg className={styles.img_border1} viewBox="0 0 100 100">
                 <path d="M95,50 A45,45 0 0,1 5,50 A45,45 0 0,1 50,5" />

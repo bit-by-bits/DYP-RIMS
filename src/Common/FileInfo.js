@@ -31,7 +31,6 @@ const FileInfo = props => {
       for (let i = 0; i < temp_PUB.author_name.length; i++)
         temp_AUTH.push(temp_PUB.author_name[i].searchable_name);
 
-      console.log(temp_PUB);
       setPubs(temp_PUB);
       setDept(temp_PUB.department.name);
       setAuthors(temp_AUTH.join(" · "));

@@ -64,7 +64,6 @@ export default function Home() {
           dept: user.dept,
         });
 
-        console.log(res.data);
       })
       .catch(err => message.error("Login Failed"));
   }
