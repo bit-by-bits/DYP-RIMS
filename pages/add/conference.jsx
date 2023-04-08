@@ -1,13 +1,3 @@
-import {
-  Button,
-  Checkbox,
-  DatePicker,
-  Form,
-  Input,
-  message,
-  Select,
-  Upload,
-} from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import styles from "../../styles/add.module.css";
 import Head from "next/head";
@@ -16,7 +6,9 @@ import axios from "axios";
 import URLObj from "../../src/baseURL";
 import { UserContext } from "../../src/userContext";
 import { useContext, useState } from "react";
-import { Option } from "antd/es/mentions";
+
+import { Button, Checkbox, DatePicker, Form } from "antd";
+import { Input, message, Select, Upload } from "antd";
 
 const Conferences = () => {
   const { user, setUser } = useContext(UserContext);
@@ -126,11 +118,12 @@ const Conferences = () => {
               showSearch
               placeholder="Choose type of conference"
               allowClear
-            >
-              <Option value="state">State</Option>
-              <Option value="national">National</Option>
-              <Option value="international">International</Option>
-            </Select>
+              options={[
+                { value: "state", label: "State" },
+                { value: "national", label: "National" },
+                { value: "international", label: "International" },
+              ]}
+            />
           </Form.Item>
 
           <Form.Item

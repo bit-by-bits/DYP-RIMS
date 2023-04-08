@@ -124,28 +124,10 @@
   text-decoration: none;
 }
 
-.main .footer {
-  position: absolute;
-  padding: 0.7rem;
-  width: 100vw;
-  bottom: 0;
-  text-align: center;
-  color: white;
-  font-weight: 700;
-  font-size: 1.2rem;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.5) 0%,
-      rgba(255, 255, 255, 0.25) 100%
-    );
-}
-
 .foot {
-  position: absolute;
-  width: 4rem;
-  left: 50vw;
-  bottom: 0.8rem;
+  position: absolute !important;
+  left: 50vw !important;
+  bottom: 0.8rem !important;
 }
 
 @media screen and (min-height: 1000px) {

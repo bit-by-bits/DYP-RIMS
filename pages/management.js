@@ -8,6 +8,7 @@ import Options from "../src/Management/Options";
 import Datas from "../src/Management/Datas";
 import { useRouter } from "next/router";
 import Publishers from "../src/Management/Publishers";
+import Image from "next/image";
 
 const Mgmt = () => {
   const router = useRouter();
@@ -49,16 +50,17 @@ const Mgmt = () => {
               <Datas />
               <Publishers data={publishers} />
 
-              {/* <div className={styles.footer}>Made by Qtanea</div> */}
               <a
                 href="https://www.qtanea.com/"
                 rel="noreferrer"
                 target="_blank"
               >
-                <img
+                <Image
                   alt="Q"
+                  width={60}
+                  height={60}
                   className={styles.foot}
-                  src="logos/qtanea-colour.png"
+                  src="/logos/qtanea-colour.png"
                 />
               </a>
             </div>

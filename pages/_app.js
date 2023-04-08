@@ -18,7 +18,10 @@ const MyApp = ({ Component, pageProps }) => {
 
   return (
     <>
-      <script src="https://accounts.google.com/gsi/client" />
+      {
+        // eslint-disable-next-line @next/next/no-sync-scripts
+        <script src="https://accounts.google.com/gsi/client" />
+      }
 
       <UserContext.Provider value={{ user, setUser }}>
         <Component {...pageProps} />

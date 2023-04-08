@@ -7,6 +7,7 @@ import Navbar from "../../src/Common/Navbar";
 import FileInfo from "../../src/Common/FileInfo";
 import Link from "next/link";
 import { UserContext } from "../../src/userContext";
+import Image from "next/image";
 
 const ID = () => {
   const { user, setUser } = useContext(UserContext);
@@ -37,10 +38,12 @@ const ID = () => {
           </div>
 
           <a href="https://www.qtanea.com/" rel="noreferrer" target="_blank">
-            <img
+            <Image
               alt="Q"
+              width={60}
+              height={60}
               className={styles.foot}
-              src="../logos/qtanea-colour.png"
+              src="/logos/qtanea-colour.png"
             />
           </a>
         </div>

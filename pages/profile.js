@@ -74,7 +74,7 @@ const Profile = () => {
       setLawrd(response.data.awards);
       setLpubs(response.data.publications);
     });
-  }, []);
+  }, [setUser, user]);
 
   return (
     <>

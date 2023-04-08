@@ -7,6 +7,7 @@ import Loader from "../src/Common/Loader";
 import { UserContext } from "../src/userContext";
 import URLObj from "../src/baseURL";
 import { message } from "antd";
+import Image from "next/image";
 
 export default function Home() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function Home() {
 
   useEffect(() => {
     user.token && router.push("/profile");
-  }, [user]);
+  }, [router, user]);
 
   useEffect(() => {
     setUser({
@@ -27,7 +28,7 @@ export default function Home() {
       email: "",
       dept: "",
     });
-  }, []);
+  }, [setUser]);
 
   useEffect(() => {
     /* global google */
@@ -35,7 +36,26 @@ export default function Home() {
     google.accounts.id.initialize({
       client_id:
         "827028625147-3sai220i70tsqd8rqr89i4gnrl2d6n2j.apps.googleusercontent.com",
-      callback: handleCallbackResponse,
+      callback: response => {
+        axios({
+          method: "POST",
+          url: `${URLObj.base}/login/`,
+          data: { id_token: response.credential },
+        })
+          .then(res => {
+            message.success("Login Successful");
+            setUser({
+              id: res.data.id,
+              picture: res.data.picture,
+              role: res.data.role,
+              token: res.data.token,
+              name: user.name,
+              email: user.email,
+              dept: user.dept,
+            });
+          })
+          .catch(err => message.error("Login Failed"));
+      },
     });
 
     google.accounts.id.renderButton(document.getElementById("signInDiv"), {
@@ -44,35 +64,18 @@ export default function Home() {
     });
 
     setTimeout(() => setVisible(false), 1600);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  function handleCallbackResponse(response) {
-    axios({
-      method: "POST",
-      url: `${URLObj.base}/login/`,
-      data: { id_token: response.credential },
-    })
-      .then(res => {
-        message.success("Login Successful");
-        setUser({
-          id: res.data.id,
-          picture: res.data.picture,
-          role: res.data.role,
-          token: res.data.token,
-          name: user.name,
-          email: user.email,
-          dept: user.dept,
-        });
-
-      })
-      .catch(err => message.error("Login Failed"));
-  }
 
   return (
     <>
       <Head>
         <title>DYPU / RIMS</title>
-        <script src="https://accounts.google.com/gsi/client" />
+        {
+          // eslint-disable-next-line @next/next/no-sync-scripts
+          <script src="https://accounts.google.com/gsi/client" />
+        }
         <link rel="icon" href="logos/dpu-2.png" />
       </Head>
 
@@ -89,7 +92,10 @@ export default function Home() {
           </div>
 
           <div className={styles.login}>
-            <img src="logos/dpu-1.png" alt="DPU" className={styles.logo} />
+            {
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src="logos/dpu-1.png" alt="DPU" className={styles.logo} />
+            }
             <div className={styles.login_top}>Login to RIMS</div>
             <div className={styles.login_middle}>
               Kindly login with your authorized Institute's credentials
@@ -105,7 +111,13 @@ export default function Home() {
         </div>
 
         <a href="https://www.qtanea.com/" rel="noreferrer" target="_blank">
-          <img alt="Q" className={styles.foot} src="logos/qtanea-white.png" />
+          <Image
+            alt="Q"
+            width={60}
+            height={60}
+            className={styles.foot}
+            src="/logos/qtanea-colour.png"
+          />
         </a>
       </div>
     </>
