@@ -46,7 +46,7 @@ const Books = () => {
           </Form.Item>
 
           <Form.Item
-            label="Department"
+            label="Department ID"
             name="department"
             rules={[
               { required: true, message: "Please input your department!" },
@@ -90,7 +90,7 @@ const Books = () => {
               { required: true, message: "Please enter publishing date!" },
             ]}
           >
-            <DatePicker style={{ width: "100%" }} />
+            <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

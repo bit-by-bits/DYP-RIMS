@@ -84,7 +84,7 @@ const Projects = () => {
             name="sdate"
             rules={[{ required: true, message: "Please enter starting date!" }]}
           >
-            <DatePicker style={{ width: "100%" }} />
+            <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
           </Form.Item>
 
           <Form.Item
@@ -92,7 +92,7 @@ const Projects = () => {
             name="edate"
             rules={[{ required: true, message: "Please enter ending date!" }]}
           >
-            <DatePicker style={{ width: "100%" }} />
+            <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
           </Form.Item>
 
           <Form.Item

@@ -47,7 +47,7 @@ const Awards = () => {
           </Form.Item>
 
           <Form.Item
-            label="Department"
+            label="Department ID"
             name="department"
             rules={[
               { required: true, message: "Please input your department!" },
@@ -71,7 +71,7 @@ const Awards = () => {
               { required: true, message: "Please enter recieving date!" },
             ]}
           >
-            <DatePicker style={{ width: "100%" }} />
+            <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
           </Form.Item>
 
           <Form.Item

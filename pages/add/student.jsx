@@ -47,7 +47,7 @@ const Students = () => {
           </Form.Item>
 
           <Form.Item
-            label="Department"
+            label="Department ID"
             name="department"
             rules={[
               { required: true, message: "Please input your department!" },

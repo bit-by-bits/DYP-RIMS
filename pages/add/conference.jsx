@@ -5,16 +5,31 @@ import Navbar from "../../src/Common/Navbar";
 import axios from "axios";
 import URLObj from "../../src/baseURL";
 import { UserContext } from "../../src/userContext";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { Button, Checkbox, DatePicker, Form } from "antd";
 import { Input, message, Select, Upload } from "antd";
+import { useRouter } from "next/router";
 
 const Conferences = () => {
+  const router = useRouter();
   const { user, setUser } = useContext(UserContext);
 
   const [poster, setPoster] = useState(false);
   const [paper, setPaper] = useState(false);
+  const [deptID, setDeptID] = useState(0);
+
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: `${URLObj.base}/author/details/?name=${user.name}`,
+    })
+      .then(response => {
+        const AUTHOR = response?.data?.author[0];
+        if (AUTHOR) setDeptID(AUTHOR.department.id);
+      })
+      .catch(error => console.log(error));
+  }, [user]);
 
   const onFinish = values => {
     let data = new FormData();
@@ -22,9 +37,16 @@ const Conferences = () => {
     data.append("dept_id", values.department);
     data.append("conference_name", values.conference);
     data.append("type", values.type);
-    data.append("date", values.date);
     data.append("location", values.location);
     data.append("certificate", values.certificate.file.originFileObj);
+
+    function convert(str) {
+      var date = new Date(str),
+        mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+        day = ("0" + date.getDate()).slice(-2);
+      return [date.getFullYear(), mnth, day].join("-");
+    }
+    data.append("date", convert(values.date));
 
     data.append("is_poster", poster ? 1 : 0);
     data.append("is_paper", paper ? 1 : 0);
@@ -49,7 +71,10 @@ const Conferences = () => {
       },
       data: data,
     })
-      .then(res => message.success("Conference added successfully!"))
+      .then(res => {
+        message.success("Conference added successfully!");
+        setTimeout(() => router.push(`/profile`), 1001);
+      })
       .catch(err => message.error("Something went wrong!"));
   };
 
@@ -71,7 +96,7 @@ const Conferences = () => {
           style={{ width: "80vw", transform: "translateX(-10vw)" }}
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
-          initialValues={{ attendee: user.name, department: user.dept }}
+          initialValues={{ attendee: user.name, department: deptID }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
@@ -85,7 +110,7 @@ const Conferences = () => {
           </Form.Item>
 
           <Form.Item
-            label="Department"
+            label="Department ID"
             name="department"
             rules={[
               { required: true, message: "Please input your department!" },
@@ -133,7 +158,7 @@ const Conferences = () => {
               { required: true, message: "Please enter conference date!" },
             ]}
           >
-            <DatePicker style={{ width: "100%" }} />
+            <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
           </Form.Item>
 
           <Form.Item
