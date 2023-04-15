@@ -11,24 +11,37 @@ import { Button, Checkbox, DatePicker, Form } from "antd";
 import { Input, message, Select, Upload } from "antd";
 import { useRouter } from "next/router";
 
+function convert(str) {
+  var date = new Date(str),
+    mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+    day = ("0" + date.getDate()).slice(-2);
+  return [date.getFullYear(), mnth, day].join("-");
+}
+
 const Conferences = () => {
   const router = useRouter();
   const { user, setUser } = useContext(UserContext);
 
   const [poster, setPoster] = useState(false);
   const [paper, setPaper] = useState(false);
-  const [deptID, setDeptID] = useState(0);
+  const [depts, setDepts] = useState([]);
 
   useEffect(() => {
+    console.log(user);
+
     axios({
       method: "GET",
-      url: `${URLObj.base}/author/details/?name=${user.name}`,
+      url: `${URLObj.base}/departments/all/`,
     })
-      .then(response => {
-        const AUTHOR = response?.data?.author[0];
-        if (AUTHOR) setDeptID(AUTHOR.department.id);
+      .then(res => {
+        setDepts(
+          res.data.departments.map(dept => ({
+            value: dept.id,
+            label: dept.name,
+          }))
+        );
       })
-      .catch(error => console.log(error));
+      .catch(err => console.log(err));
   }, [user]);
 
   const onFinish = values => {
@@ -36,17 +49,10 @@ const Conferences = () => {
     data.append("name", values.attendee);
     data.append("dept_id", values.department);
     data.append("conference_name", values.conference);
+    data.append("date", convert(values.date));
     data.append("type", values.type);
     data.append("location", values.location);
     data.append("certificate", values.certificate.file.originFileObj);
-
-    function convert(str) {
-      var date = new Date(str),
-        mnth = ("0" + (date.getMonth() + 1)).slice(-2),
-        day = ("0" + date.getDate()).slice(-2);
-      return [date.getFullYear(), mnth, day].join("-");
-    }
-    data.append("date", convert(values.date));
 
     data.append("is_poster", poster ? 1 : 0);
     data.append("is_paper", paper ? 1 : 0);
@@ -96,7 +102,7 @@ const Conferences = () => {
           style={{ width: "80vw", transform: "translateX(-10vw)" }}
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
-          initialValues={{ attendee: user.name, department: deptID }}
+          initialValues={{ attendee: user.name }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
@@ -116,7 +122,12 @@ const Conferences = () => {
               { required: true, message: "Please input your department!" },
             ]}
           >
-            <Input />
+            <Select
+              showSearch
+              placeholder="Choose your department"
+              allowClear
+              options={depts}
+            />
           </Form.Item>
 
           <Form.Item
