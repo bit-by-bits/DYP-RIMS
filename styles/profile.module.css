@@ -221,7 +221,7 @@
   .profile_box
   .profile_bodygrid
   .profile_body
-  .profile_topic {
+  .profile_one {
   color: black;
   font-weight: 700;
   font-size: 1rem;
@@ -232,7 +232,7 @@
   .profile_box
   .profile_bodygrid
   .profile_body
-  .profile_time {
+  .profile_two {
   color: #333333;
   font-weight: 400;
   font-size: 0.8rem;

@@ -20,27 +20,10 @@ const Profile = () => {
   if (typeof window !== "undefined" && user.token === "") router.push("/");
 
   const [pubs, setPubs] = useState([]);
-  const [data, setData] = useState([]);
+  const [conf, setConf] = useState([]);
 
   const [lawrd, setLawrd] = useState(0);
   const [lpubs, setLpubs] = useState(0);
-
-  useEffect(() => {
-    if (user.name != "" && user.token != "") {
-      axios({
-        method: "GET",
-        url: `${URLObj.base}/publication/view/${user.name}`,
-        headers: { Authorization: `Bearer ${user.token}` },
-      })
-        .then(response => {
-          const DATA = response.data.data;
-          setPubs(DATA);
-        })
-        .catch(err => {
-          setPubs([]);
-        });
-    }
-  }, [user]);
 
   useEffect(() => {
     axios({
@@ -48,33 +31,63 @@ const Profile = () => {
       url: `${URLObj.base}/user/profile/${user.id}`,
       headers: { Authorization: `Bearer ${user.token}` },
     })
-      .then(response => {
+      .then(res => {
         setUser({
           id: user.id,
           picture: user.picture,
           role: user.role,
           token: user.token,
-          name: response.data.name,
-          email: response.data.email,
-          dept: response.data.department,
+          name: res.data.name,
+          email: res.data.email,
+          dept: res.data.department,
         });
-
-        setData(response.data.awards);
       })
       .catch(err => {
         setUser(user);
-        setData([]);
       });
-
-    axios({
-      method: "GET",
-      url: `${URLObj.base}/user/stats`,
-      headers: { Authorization: `Bearer ${user.token}` },
-    }).then(function (response) {
-      setLawrd(response.data.awards);
-      setLpubs(response.data.publications);
-    });
   }, []);
+
+  useEffect(() => {
+    if (user.name != "" && user.token != "") {
+      axios({
+        method: "GET",
+        headers: { Authorization: `Bearer ${user.token}` },
+        url: `${URLObj.base}/publication/view/${user.name}`,
+      })
+        .then(res => setPubs(res.data.data))
+        .catch(err => setPubs([]));
+
+      axios({
+        method: "GET",
+        url: `${URLObj.base}/user/stats`,
+        headers: { Authorization: `Bearer ${user.token}` },
+      })
+        .then(res => {
+          setLawrd(res.data.awards);
+          setLpubs(res.data.publications);
+        })
+        .catch(err => {
+          setLawrd(0);
+          setLpubs(0);
+        });
+
+      axios({
+        method: "GET",
+        url: `${URLObj.base}/conference/${user.name}/view`,
+      })
+        .then(res => {
+          setConf(
+            res.data.data.map(d => ({
+              name: d.conference_name,
+              time: d.date,
+              venue: d.location,
+              pdf: d.certificate ?? "",
+            }))
+          );
+        })
+        .catch(err => setConf([]));
+    }
+  }, [user]);
 
   return (
     <>
@@ -89,10 +102,10 @@ const Profile = () => {
 
         <div className={styles.profile_wrapper}>
           <Section data={pubs} extra={[lawrd, lpubs]} />
-          <Boxes title="Awards & Achievements" data={data} />
-          <Boxes title="Patents" data={data} />
+          <Boxes title="Awards & Achievements" data={[]} />
+          <Boxes title="Patents" data={[]} />
           <PubTable pubData={pubs} setLoader={setVisible} />
-          <Boxes title="Conferences" data={data} />
+          <Boxes title="Conferences" data={conf} />
 
           <a href="https://www.qtanea.com/" rel="noreferrer" target="_blank">
             <Image

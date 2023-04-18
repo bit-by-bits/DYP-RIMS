@@ -3,6 +3,7 @@ const URLObj = {
   issn: "https://api.journalchecker.com/get_journal/issn",
   citation: "https://opencitations.net/index/coci/api/v1",
   cross: "https://api.crossref.org/works",
+  rims: "https://rimsapi.journalchecker.com",
 };
 
 export default URLObj;

@@ -3,6 +3,8 @@ import styles from "../../styles/profile.module.css";
 import { UserContext } from "../userContext";
 import { message } from "antd";
 import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import URLObj from "../baseURL";
 
 export default function Section(props) {
   const { user, setUser } = useContext(UserContext);
@@ -57,6 +59,19 @@ export default function Section(props) {
     setCit(0);
     setQs([0, 0, 0, 0, 0]);
   }
+
+  /////////////////////////////////////////////////
+
+  const [conf, setConf] = useState([]);
+
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: `${URLObj.base}/conference/${user.name}/count`,
+    })
+      .then(res => setConf(res.data.count))
+      .catch(err => setConf("N/A"));
+  }, [user]);
 
   const edit = () => message.info("This feature is still unavailable.");
 
@@ -117,7 +132,7 @@ export default function Section(props) {
           </div>
 
           <div className={styles.profile_feat}>
-            <span>Conferences: 0</span>
+            <span>Conferences: {conf}</span>
           </div>
 
           <div className={styles.profile_feat}>
