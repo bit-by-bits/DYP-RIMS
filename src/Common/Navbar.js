@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-import { AppstoreAddOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
 import Link from "next/link";
-import styles from "../../styles/navbar.module.css";
+import styles from "../../styles/common.module.css";
 import { UserContext } from "../userContext";
+import { AppstoreAddOutlined, LogoutOutlined } from "@ant-design/icons";
 
 const Navbar = () => {
   const { user, setUser } = useContext(UserContext);

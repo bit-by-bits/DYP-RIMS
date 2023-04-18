@@ -238,25 +238,6 @@
   font-size: 0.8rem;
 }
 
-.wrapper .profile_wrapper .footer {
-  width: 100vw;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  padding: 0.4rem 0;
-  text-align: center;
-  background: #9a2827;
-  color: white;
-  font-weight: 700;
-  font-size: 1rem;
-}
-
-.foot {
-  position: absolute;
-  left: 50vw;
-  bottom: 0.8rem;
-}
-
 .btn_div {
   cursor: pointer;
   padding: 5px 15px;

@@ -1,7 +1,4 @@
-config.autoAddCss = false;
-import { config } from "@fortawesome/fontawesome-svg-core";
 import "../styles/globals.css";
-import "@fortawesome/fontawesome-svg-core/styles.css";
 import { useState } from "react";
 import { UserContext } from "../src/userContext";
 

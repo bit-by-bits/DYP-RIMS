@@ -45,7 +45,7 @@ const Upload = () => {
           }
         };
 
-        const doi = res.data.doiID;
+        let doi = res.data.doiID;
         if (isValidHttpUrl(doi)) doi = doi.split("//").pop();
 
         localStorage.setItem("udoi", doi);
@@ -93,7 +93,7 @@ const Upload = () => {
           }
         };
 
-        const doi = res.data.doiID;
+        let doi = res.data.doiID;
         if (isValidHttpUrl(doi)) doi = doi.split("//").pop();
         localStorage.setItem("udoi", doi);
         message.success("Wait while we redirect you");

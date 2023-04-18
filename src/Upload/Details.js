@@ -226,7 +226,7 @@ export default function Details(props) {
           </Form.Item>
 
           <Form.Item
-            label="Journal Name"
+            label="Journal"
             name="journal"
             rules={[{ required: true, message: "Please enter journal name" }]}
           >

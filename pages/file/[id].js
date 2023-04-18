@@ -4,7 +4,7 @@ import React, { useState, useContext } from "react";
 import { useRouter } from "next/router";
 import Loader from "../../src/Common/Loader";
 import Navbar from "../../src/Common/Navbar";
-import FileInfo from "../../src/Common/FileInfo";
+// import FileInfo from "../../src/Common/FileInfo";
 import Link from "next/link";
 import { UserContext } from "../../src/userContext";
 import Image from "next/image";
@@ -29,7 +29,7 @@ const ID = () => {
         <Loader visible={visible} />
 
         <div className={styles.file_wrapper}>
-          <FileInfo setVisible={setVisible} id={id} />
+          {/* <FileInfo setVisible={setVisible} id={id} /> */}
           <div className={styles.file_btns}>
             <div className={styles.file_btn1}>Download</div>
             <Link href={`/file/${id}/edit`}>
