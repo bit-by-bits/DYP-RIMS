@@ -24,7 +24,7 @@ const Projects = () => {
         <h1 className={styles.heading}>Add Research Projects</h1>
 
         <Form
-          name="basic"
+          name="project"
           style={{ width: "80vw", transform: "translateX(-10vw)" }}
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}

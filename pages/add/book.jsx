@@ -28,7 +28,7 @@ const Books = () => {
         <h1 className={styles.heading}>Add Books/Chapters</h1>
 
         <Form
-          name="basic"
+          name="book"
           style={{ width: "80vw", transform: "translateX(-10vw)" }}
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}

@@ -29,7 +29,7 @@ const IPR = () => {
         <h1 className={styles.heading}>Add IPR</h1>
 
         <Form
-          name="basic"
+          name="ipr"
           style={{ width: "80vw", transform: "translateX(-10vw)" }}
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}

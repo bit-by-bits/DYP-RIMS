@@ -1,10 +1,3 @@
-import {
-  faArrowDownAZ,
-  faArrowDownZA,
-  faCheckToSlot,
-  faSquareCheck,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "../../styles/profile.module.css";
@@ -14,9 +7,7 @@ export default function PubTable({ pubData, setLoader }) {
   const [columns, setColumns] = useState([]);
   const [data, setData] = useState([]);
 
-  useEffect(() => {
-    initiate();
-  }, [pubData]);
+  useEffect(() => initiate(), []);
 
   function initiate() {
     const TEMP_COLUMNS = [

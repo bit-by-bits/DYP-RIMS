@@ -5,6 +5,7 @@ import Loader from "../../../src/Common/Loader";
 import Navbar from "../../../src/Common/Navbar";
 import { useRouter } from "next/router";
 import { UserContext } from "../../../src/userContext";
+import FileForm from "../../../src/Common/FileForm";
 
 const ID = () => {
   const { user, setUser } = useContext(UserContext);
@@ -27,7 +28,7 @@ const ID = () => {
         <h2
           style={{ margin: "8vw 0 2vw 10vw", color: "#9a2827" }}
         >{`Hello ${user.name}. Please fill the empty fields (if any).`}</h2>
-        {/* <FileForm setVisible={setVisible} id={id} /> */}
+        <FileForm setVisible={setVisible} ID={id} />
       </div>
     </>
   );

@@ -29,7 +29,7 @@ const Students = () => {
         <h1 className={styles.heading}>Add Students Guided</h1>
 
         <Form
-          name="basic"
+          name="students"
           style={{ width: "80vw", transform: "translateX(-10vw)" }}
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}

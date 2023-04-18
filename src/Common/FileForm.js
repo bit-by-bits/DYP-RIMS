@@ -1,291 +1,417 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import styles from "../../styles/file.module.css";
-import { useForm } from "react-hook-form";
-import { UserContext } from "../userContext";
+import styles from "../../styles/details.module.css";
 import URLObj from "../baseURL";
+import Image from "next/image";
+import { UserContext } from "../userContext";
+import { Button, Form, Input, message, Select } from "antd";
+import { useRouter } from "next/router";
 
-const FileForm = props => {
+export default function FileForm(props) {
+  const router = useRouter();
+  const [form] = Form.useForm();
+
+  const [data, setData] = useState({});
+  const [dataJournal, setDataJournal] = useState({});
+
   const { user, setUser } = useContext(UserContext);
   if (typeof window !== "undefined" && user.token === "") router.push("/");
 
-  function onSubmit(data) {}
+  const [disabled, setDisabled] = useState(true);
+  const [citations, setCitations] = useState(0);
 
-  function handleReset() {
-    reset({
-      abstract: pub.abstract,
-      authors: authors,
-      citations: pub.citations,
-      department: dept,
-      doiid: pub.doi_id,
-      hindex: pub.h_index,
-      ifactor: pub.impact_factor,
-      indexed: pub,
-      issue: pub.issue,
-      journal: pub.journal,
-      published: pub.year,
-      pubmedid: pub.pubmed_id,
-      sjrquart: pub.sjr,
-      title: pub.publication_title,
-      volume: pub.volume,
-    });
-  }
+  const [authors, setAuthors] = useState({ options: [], selected: [] });
+  const [indexed, setIndexed] = useState({ options: [], selected: [] });
 
-  const [pub, setPub] = useState([]);
-  const [authors, setAuthors] = useState("");
-  const [dept, setDept] = useState("");
+  useEffect(() => {
+    form.resetFields();
+    console.log(data, dataJournal);
+  }, [data, dataJournal]);
 
   useEffect(() => {
     axios({
       method: "GET",
-      url: `${URLObj.base}/publication/${props.id}`,
-      headers: { Authorization: `Bearer ${user.token}` },
-    }).then(function (response) {
-      const temp_PUB = response.data.publication,
-        temp_AUTH = [];
+      url: `${URLObj.cross}/${localStorage.getItem("udoi")}`,
+    })
+      .then(response => {
+        const msg = response.data.message;
+        setData(msg);
 
-      const an = temp_PUB.author_name;
-      for (let i = 0; i < an.length; i++)
-        temp_AUTH += an[i].searchable_name + (i != an.length - 1 ? ", " : "");
+        const authorList = msg?.author;
+        if (authorList) {
+          const LIST = authorList.map((a, i) => {
+            const FULLNAME = `${a.given ?? ""} ${a.family ?? ""}`;
+            const MAIN_AUTHOR = a.sequence === "first" ? true : false;
 
-      setPub(temp_PUB);
-      setAuthors(temp_AUTH);
-      setDept(temp_PUB.department.name);
+            let available = false;
+            let AUTHOR_DETAILS = {};
+            axios({
+              method: "GET",
+              url: `${URLObj.base}/author/details/?name=${FULLNAME}`,
+            })
+              .then(response => {
+                const AUTHOR = response?.data?.author[0];
+                if (AUTHOR) {
+                  available = true;
 
-      clearErrors();
-      handleReset();
+                  AUTHOR_DETAILS = {
+                    AUTHOR_ID: AUTHOR.id,
+                    AUTHOR_GENDER: AUTHOR.gender,
+                    AUTHOR_NAME: AUTHOR.name,
+                    AUTHOR_DEPT: AUTHOR.department,
+                    AUTHOR_EMAIL: AUTHOR.email,
+                    AUTHOR_IMG: AUTHOR.profile_picture,
+                  };
+                }
+              })
+              .catch(error => {
+                AUTHOR_DETAILS = {};
+              });
 
-      setTimeout(() => props.setVisible(false), 1600);
-    });
+            return {
+              value: available ? AUTHOR_DETAILS.AUTHOR_ID : FULLNAME,
+              label: FULLNAME,
+            };
+          });
+
+          setAuthors({
+            options: LIST,
+            selected: LIST,
+          });
+        }
+
+        if (msg?.ISSN?.length)
+          axios({
+            method: "GET",
+            url: `${URLObj.issn}/${msg.ISSN[0]}`,
+          })
+            .then(response => setDataJournal(response.data[0]))
+            .catch(error => console.log("DELE: " + error));
+
+        props.setVisible(false);
+      })
+      .catch(error => console.log("DTE: " + error));
+
+    axios({
+      method: "GET",
+      url: `${URLObj.citation}/citation-count/${props.doi}`,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+      .then(response => setCitations(response.data[0].count))
+      .catch(error => console.log("CTE: " + error));
   }, []);
 
-  const {
-    register,
-    handleSubmit,
-    clearErrors,
-    reset,
-    formState: { errors },
-  } = useForm();
+  useEffect(() => {
+    if (dataJournal) {
+      const index = ["doaj", "embase", "medline", "pmc", "scie", "scopus"];
+      const indexed = index.filter(i =>
+        dataJournal ? dataJournal["in_" + i] : false
+      );
+
+      setIndexed({
+        options: index.map((e, i) => ({
+          value: "in_" + e,
+          label: e[0].toUpperCase() + e.slice(1),
+        })),
+        selected: indexed.map((e, i) => ({
+          value: "in_" + e,
+          label: e[0].toUpperCase() + e.slice(1),
+        })),
+      });
+    }
+  }, [dataJournal]);
+
+  const onFinish = values => {
+    let data = new FormData();
+    data.append("doi", values.doi);
+    data.append("pubmed_id", values.pubmed);
+    data.append("publication_type", values.type);
+    data.append("publication_title", values.title);
+    data.append("journal_name", values.journal);
+    data.append("year", values.published);
+    data.append("abstract", values.abstract);
+    data.append("issue", values.issue);
+    data.append("volume", values.volume);
+    data.append("pages", values.pages);
+    data.append("citations", values.citations);
+    data.append("hindex", values.hindex);
+    data.append("sjr", values.sjr);
+    data.append("impact_factor", values.ifactor);
+    data.append(
+      "other_authors",
+      "{ " + authors.selected.map(e => e.value).join(", ") + " }"
+    );
+
+    indexed.options.forEach((e, i) =>
+      data.append(
+        e.value,
+        values.indexed.map(e => e.value).includes(indexed.options[i].value)
+          ? 1
+          : 0
+      )
+    );
+
+    axios({
+      method: "POST",
+      maxBodyLength: Infinity,
+      url: `${URLObj.base}/research/data/save/`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+        "Content-Type": "multipart/form-data",
+      },
+      data: data,
+    })
+      .then(res => {
+        message.success("Research added successfully!");
+        props.setFinished(true);
+      })
+      .catch(err => message.error("Something went wrong!"));
+  };
+
+  const onFinishFailed = errorInfo => message.error("Something went wrong!");
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.form_wrapper}>
-      <label htmlFor="title">
-        <div className={styles.label_text}>Title</div>
-        <input
-          defaultValue={pub.publication_title}
-          id="title"
-          name="title"
-          {...register("title", { minLength: 2, required: true })}
-        />
-        {errors.title && (
-          <span className={styles.error_text}>This field is required</span>
-        )}
-      </label>
+    <>
+      <div className={styles.uploading_msg}>
+        <Image src="/alert.png" width={16} height={16} alt="" />
+        <span>Please choose the authors carefully.</span>
+      </div>
 
-      <label htmlFor="journal">
-        <div className={styles.label_text}>Journal</div>
-        <input
-          defaultValue={pub.journal_name}
-          id="journal"
-          name="journal"
-          {...register("journal", { minLength: 2, required: true })}
-        />
-        {errors.journal && (
-          <span className={styles.error_text}>This field is required</span>
-        )}
-      </label>
+      {data && (
+        <Form
+          name="basic"
+          form={form}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+          }}
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          initialValues={{
+            title: data?.title ? data?.title[0] : " ",
+            type: data?.type ?? " ",
+            journal: dataJournal?.journal_title ?? " ",
+            volume: !isNaN(parseInt(data?.volume)) ? parseInt(data?.volume) : 0,
+            issue: !isNaN(parseInt(data?.issue)) ? parseInt(data?.issue) : 0,
+            pages: data?.page ?? " ",
+            published: data?.published
+              ? data?.published["date-parts"][0].reverse().join("-")
+              : " ",
+            hindex: !isNaN(parseInt(dataJournal?.h_index))
+              ? parseInt(dataJournal?.h_index)
+              : 0,
+            ifactor: dataJournal?.impact_factor ?? " ",
+            sjr: dataJournal?.sjr ?? " ",
+            citations: citations ?? " ",
+            indexed: indexed.selected ?? [],
+            pubmed: data?.pubmed_id ?? " ",
+            doi: data?.DOI ?? " ",
+            abstract: data?.abstract ?? " ",
+            authors: authors.selected ?? [],
+          }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+        >
+          <Form.Item
+            label="Publication Title"
+            name="title"
+            rules={[
+              { required: true, message: "Please enter publication title" },
+            ]}
+          >
+            <Input style={{ width: "30vw" }} disabled={true} />
+          </Form.Item>
 
-      <label htmlFor="volume">
-        <div className={styles.label_text}>Volume</div>
-        <input
-          type="number"
-          defaultValue={pub.volume}
-          id="volume"
-          name="volume"
-          {...register("volume", { min: 1, required: true })}
-        />
-        {errors.volume && (
-          <span className={styles.error_text}>This field is required</span>
-        )}
-      </label>
+          <Form.Item
+            label="Journal Name"
+            name="journal"
+            rules={[{ required: true, message: "Please enter journal name" }]}
+          >
+            <Input style={{ width: "30vw" }} disabled={true} />
+          </Form.Item>
 
-      <label htmlFor="issue">
-        <div className={styles.label_text}>Issue</div>
-        <input
-          type="number"
-          defaultValue={pub.issue}
-          id="issue"
-          name="issue"
-          {...register("issue", { min: 1, required: true })}
-        />
-        {errors.issue && (
-          <span className={styles.error_text}>This field is required</span>
-        )}
-      </label>
+          <Form.Item
+            label="Publication Type"
+            name="type"
+            rules={[
+              { required: true, message: "Please enter publication type" },
+            ]}
+          >
+            <Input style={{ width: "30vw" }} disabled={true} />
+          </Form.Item>
 
-      <label htmlFor="published">
-        <div className={styles.label_text}>Published</div>
-        <input
-          type="date"
-          defaultValue={pub.year}
-          id="published"
-          name="published"
-          {...register("published", {})}
-        />
-        {errors.published && (
-          <span className={styles.error_text}>This field is required</span>
-        )}
-      </label>
+          <Form.Item
+            label="Volume"
+            name="volume"
+            rules={[
+              {
+                required: true,
+                type: "number",
+                message: "Please enter volume number",
+              },
+            ]}
+          >
+            <Input style={{ width: "30vw" }} disabled={true} />
+          </Form.Item>
 
-      <label htmlFor="department">
-        <div className={styles.label_text}>Department</div>
-        <input
-          defaultValue={dept}
-          id="department"
-          name="department"
-          {...register("department", { minLength: 2, required: true })}
-        />
-        {errors.department && (
-          <span className={styles.error_text}>This field is required</span>
-        )}
-      </label>
+          <Form.Item
+            label="Issue"
+            name="issue"
+            rules={[
+              {
+                required: true,
+                type: "number",
+                message: "Please enter issue number",
+              },
+            ]}
+          >
+            <Input style={{ width: "30vw" }} disabled={true} />
+          </Form.Item>
 
-      <label htmlFor="hindex">
-        <div className={styles.label_text}>H-index</div>
-        <input
-          type="number"
-          defaultValue={pub.h_index}
-          id="hindex"
-          name="hindex"
-          {...register("hindex", { min: 1, required: true })}
-        />
-        {errors.hindex && (
-          <span className={styles.error_text}>This field is required</span>
-        )}
-      </label>
+          <Form.Item
+            label="Pages"
+            name="pages"
+            rules={[
+              {
+                required: true,
+                message: "Please enter number of pages",
+              },
+            ]}
+          >
+            <Input style={{ width: "30vw" }} disabled={true} />
+          </Form.Item>
 
-      <label htmlFor="ifactor">
-        <div className={styles.label_text}>I-factor</div>
-        <input
-          defaultValue={pub.impact_factor}
-          id="ifactor"
-          name="ifactor"
-          {...register("ifactor", {})}
-        />
-        {errors.ifactor && (
-          <span className={styles.error_text}>This field is required</span>
-        )}
-      </label>
+          <Form.Item
+            label="Published On"
+            name="published"
+            rules={[
+              { required: true, message: "Please enter publication title" },
+            ]}
+          >
+            <Input style={{ width: "30vw" }} disabled={true} />
+          </Form.Item>
 
-      <label htmlFor="sjrquart">
-        <div className={styles.label_text}>SJR Qrt</div>
-        <input
-          defaultValue={pub.sjr}
-          id="sjrquart"
-          name="sjrquart"
-          {...register("sjrquart", { minLength: 2, required: true })}
-        />
-        {errors.sjrquart && (
-          <span className={styles.error_text}>This field is required</span>
-        )}
-      </label>
+          <Form.Item
+            label="H-Index"
+            name="hindex"
+            rules={[
+              {
+                required: true,
+                type: "number",
+                message: "Please enter the h-index",
+              },
+            ]}
+          >
+            <Input style={{ width: "30vw" }} disabled={true} />
+          </Form.Item>
 
-      <label htmlFor="authors">
-        <div className={styles.label_text}>Authors</div>
-        <input
-          defaultValue={authors}
-          id="authors"
-          name="authors"
-          {...register("authors", { minLength: 2, required: true })}
-        />
-        {errors.authors && (
-          <span className={styles.error_text}>This field is required</span>
-        )}
-      </label>
+          <Form.Item
+            label="Impact Factor"
+            name="ifactor"
+            rules={[
+              { required: true, message: "Please enter the impact factor" },
+            ]}
+          >
+            <Input style={{ width: "30vw" }} disabled={true} />
+          </Form.Item>
 
-      <label htmlFor="citations">
-        <div className={styles.label_text}>Citations</div>
-        <input
-          type="number"
-          defaultValue={pub.citations}
-          id="citations"
-          name="citations"
-          {...register("citations", { min: 0, required: true })}
-        />
-        {errors.citations && (
-          <span className={styles.error_text}>This field is required</span>
-        )}
-      </label>
+          <Form.Item
+            label="SJR Qrt"
+            name="sjr"
+            rules={[
+              { required: true, message: "Please enter the SJR quartile" },
+            ]}
+          >
+            <Input style={{ width: "30vw" }} disabled={true} />
+          </Form.Item>
 
-      <label htmlFor="indexed">
-        <div className={styles.label_text}>Indexed in</div>
-        <input
-          defaultValue={pub}
-          id="indexed"
-          name="indexed"
-          {...register("indexed", { minLength: 2, required: true })}
-        />
-        {errors.indexed && (
-          <span className={styles.error_text}>This field is required</span>
-        )}
-      </label>
+          <Form.Item
+            label="Citations"
+            name="citations"
+            rules={[
+              {
+                required: true,
+                type: "number",
+                message: "Please enter the number of citations",
+              },
+            ]}
+          >
+            <Input style={{ width: "30vw" }} disabled={true} />
+          </Form.Item>
 
-      <label htmlFor="pubmedid">
-        <div className={styles.label_text}>Pub Med ID</div>
-        <input
-          defaultValue={pub.pubmed_id}
-          id="pubmedid"
-          name="pubmedid"
-          {...register("pubmedid", { minLength: 2, required: true })}
-        />
-        {errors.pubmedid && (
-          <span className={styles.error_text}>This field is required</span>
-        )}
-      </label>
+          <Form.Item label="Indexed In" name="indexed">
+            <Select
+              style={{ width: "30vw" }}
+              disabled={true}
+              mode="multiple"
+              options={indexed.options}
+            />
+          </Form.Item>
 
-      <label htmlFor="doiid">
-        <div className={styles.label_text}>DOI ID</div>
-        <input
-          defaultValue={pub.doi_id}
-          id="doiid"
-          name="doiid"
-          {...register("doiid", { minLength: 2, required: true })}
-        />
-        {errors.doiid && (
-          <span className={styles.error_text}>This field is required</span>
-        )}
-      </label>
+          <Form.Item
+            label="PubMed ID"
+            name="pubmed"
+            rules={[{ required: true, message: "Please enter the pubmed id" }]}
+          >
+            <Input style={{ width: "30vw" }} disabled={true} />
+          </Form.Item>
 
-      <label htmlFor="abstract" style={{ gridColumn: "1 / span 2" }}>
-        <div className={styles.label_text}>Abstract</div>
-        <input
-          defaultValue={pub.abstract}
-          id="abstract"
-          name="abstract"
-          style={{ width: "72vw" }}
-          {...register("abstract", { minLength: 2, required: true })}
-        />
-        {errors.abstract && (
-          <span className={styles.error_text}>This field is required</span>
-        )}
-      </label>
+          <Form.Item
+            label="DOI ID"
+            name="doi"
+            rules={[{ required: true, message: "Please enter the DOI" }]}
+          >
+            <Input style={{ width: "30vw" }} disabled={true} />
+          </Form.Item>
 
-      <button
-        type="reset"
-        onClick={handleReset}
-        className={`${styles.form_btn} ${styles.file_btn1}`}
-      >
-        Revert Back
-      </button>
+          <Form.Item label="Abstract" name="abstract">
+            <Input style={{ width: "30vw" }} disabled={true} />
+          </Form.Item>
 
-      <button
-        type="submit"
-        className={`${styles.form_btn} ${styles.file_btn2}`}
-      >
-        Apply Changes
-      </button>
-    </form>
+          <Form.Item
+            label="Authors"
+            name="authors"
+            rules={[{ required: true, message: "Please select the authors" }]}
+          >
+            <Select
+              mode="multiple"
+              style={{ width: "30vw" }}
+              disabled={disabled}
+              options={authors.options}
+              onChange={(labels, objects) => {
+                setAuthors({
+                  options: authors.options,
+                  selected: objects,
+                });
+              }}
+            />
+          </Form.Item>
+
+          <Form.Item style={{ gridColumn: "1 /span 2" }}>
+            <Button className={styles.submit} type="primary" htmlType="submit">
+              Save Changes
+            </Button>
+
+            <Button
+              className={styles.reset}
+              onClick={() => {
+                setDisabled(false);
+              }}
+              type="primary"
+              htmlType="reset"
+            >
+              Modify Authors
+            </Button>
+
+            <Button className={styles.reset} type="primary" htmlType="reset">
+              Revert Back
+            </Button>
+          </Form.Item>
+        </Form>
+      )}
+    </>
   );
-};
-
-export default FileForm;
+}

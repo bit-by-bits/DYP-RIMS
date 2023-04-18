@@ -20,15 +20,16 @@ function convert(str) {
 
 const Conferences = () => {
   const router = useRouter();
+  const [form] = Form.useForm();
   const { user, setUser } = useContext(UserContext);
 
   const [poster, setPoster] = useState(false);
   const [paper, setPaper] = useState(false);
+
+  const [dept, setDept] = useState({});
   const [depts, setDepts] = useState([]);
 
   useEffect(() => {
-    console.log(user);
-
     axios({
       method: "GET",
       url: `${URLObj.base}/departments/all/`,
@@ -43,6 +44,14 @@ const Conferences = () => {
       })
       .catch(err => console.log(err));
   }, [user]);
+
+  useEffect(() => {
+    depts.forEach(dept => {
+      if (dept.label === user.dept) setDept(dept.value);
+    });
+  }, [user, depts]);
+
+  useEffect(() => form.resetFields(), [form, dept]);
 
   const onFinish = values => {
     let data = new FormData();
@@ -98,11 +107,12 @@ const Conferences = () => {
         <h1 className={styles.heading}>Add Conferences</h1>
 
         <Form
-          name="basic"
+          form={form}
+          name="conference"
           style={{ width: "80vw", transform: "translateX(-10vw)" }}
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
-          initialValues={{ attendee: user.name }}
+          initialValues={{ attendee: user.name, department: dept }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
@@ -193,7 +203,7 @@ const Conferences = () => {
             ]}
           >
             <Upload
-              onChange={info => {
+              onValuesChange={info => {
                 if (info.file.status === "done") {
                   message.success(
                     `${info.file.name} file uploaded successfully`
@@ -238,7 +248,7 @@ const Conferences = () => {
           >
             <Upload
               disabled={!poster}
-              onChange={info => {
+              onValuesChange={info => {
                 if (info.file.status === "done") {
                   message.success(
                     `${info.file.name} file uploaded successfully`
@@ -272,7 +282,7 @@ const Conferences = () => {
           >
             <Upload
               disabled={!paper}
-              onChange={info => {
+              onValuesChange={info => {
                 if (info.file.status === "done") {
                   message.success(
                     `${info.file.name} file uploaded successfully`
