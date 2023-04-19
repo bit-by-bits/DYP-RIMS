@@ -7,7 +7,11 @@ import { useRouter } from "next/router";
 import FileForm from "../../../src/Common/FileForm";
 
 const ID = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
   const [user, setUser] = useState({});
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -17,10 +21,6 @@ const ID = () => {
   useEffect(() => {
     if (typeof window !== "undefined" && user.token === "") router.push("/");
   }, [router, user]);
-
-  const router = useRouter();
-  const { id } = router.query,
-    [visible, setVisible] = useState(true);
 
   return (
     <>

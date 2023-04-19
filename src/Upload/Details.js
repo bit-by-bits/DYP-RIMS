@@ -44,7 +44,6 @@ export default function Details(props) {
         if (authorList) {
           const LIST = authorList.map((a, i) => {
             const FULLNAME = `${a.given ?? ""} ${a.family ?? ""}`;
-            const MAIN_AUTHOR = a.sequence === "first" ? true : false;
 
             let available = false;
             let AUTHOR_DETAILS = {};
@@ -104,7 +103,7 @@ export default function Details(props) {
     })
       .then(response => setCitations(response.data[0].count))
       .catch(error => console.log("CTE: " + error));
-  }, []);
+  }, [props]);
 
   useEffect(() => {
     if (dataJournal) {

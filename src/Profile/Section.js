@@ -56,7 +56,7 @@ export default function Section(props) {
       .map(e => e.citations ?? 0)
       .sort((a, b) => b - a)
       .forEach((e, i) => e > i + 1 && setHI(i + 1));
-  }, [props.data]);
+  }, [IC, props.data]);
 
   function clear() {
     setIC(0);
