@@ -1,19 +1,25 @@
 import axios from "axios";
-import React, { useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Navbar from "../src/Common/Navbar";
 import styles from "../styles/upload.module.css";
 import Image from "next/image";
 import URLObj from "../src/baseURL";
-import { UserContext } from "../src/userContext";
 import { message } from "antd";
 
 const Upload = () => {
   const router = useRouter();
+  const [user, setUser] = useState({});
 
-  const { user, setUser } = useContext(UserContext);
-  if (typeof window !== "undefined" && user.token === "") router.push("/");
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && user.token === "") router.push("/");
+  }, [router, user]);
 
   const [file, setFile] = useState();
   const [DOI, setDOI] = useState();

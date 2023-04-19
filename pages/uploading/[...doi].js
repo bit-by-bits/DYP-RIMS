@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import Navbar from "../../src/Common/Navbar";
 import Loader from "../../src/Common/Loader";
@@ -6,7 +6,6 @@ import Status from "../../src/Upload/Status";
 import Details from "../../src/Upload/Details";
 import styles from "../../styles/uploading.module.css";
 import { useRouter } from "next/router";
-import { UserContext } from "../../src/userContext";
 
 const Uploading = () => {
   const router = useRouter();
@@ -16,8 +15,17 @@ const Uploading = () => {
   const [visible, setVisible] = useState(true);
 
   const [DOI, setDOI] = useState("");
-  const { user, setUser } = useContext(UserContext);
-  if (typeof window !== "undefined" && user.token === "") router.push("/");
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
+  }, []);
+  
+  useEffect(() => {
+    if (typeof window !== "undefined" && user.token === "") router.push("/");
+  }, [router, user]);
+
 
   useEffect(() => {
     if (!router.isReady) return;

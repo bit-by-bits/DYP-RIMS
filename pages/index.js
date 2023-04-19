@@ -1,10 +1,9 @@
 import Head from "next/head";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "../styles/login.module.css";
 import { useRouter } from "next/router";
 import Loader from "../src/Common/Loader";
-import { UserContext } from "../src/userContext";
 import URLObj from "../src/baseURL";
 import { message } from "antd";
 import Image from "next/image";
@@ -12,23 +11,7 @@ import Image from "next/image";
 export default function Home() {
   const router = useRouter();
   const [visible, setVisible] = useState(true);
-  const { user, setUser } = useContext(UserContext);
-
-  useEffect(() => {
-    user.token && router.push("/profile");
-  }, [router, user]);
-
-  useEffect(() => {
-    setUser({
-      id: "",
-      picture: "",
-      role: "",
-      token: "",
-      name: "",
-      email: "",
-      dept: "",
-    });
-  }, [setUser]);
+  useEffect(() => localStorage.clear(), []);
 
   useEffect(() => {
     /* global google */
@@ -36,7 +19,7 @@ export default function Home() {
     google.accounts.id.initialize({
       client_id:
         "827028625147-3sai220i70tsqd8rqr89i4gnrl2d6n2j.apps.googleusercontent.com",
-      callback: response => {
+      callback: response =>
         axios({
           method: "POST",
           url: `${URLObj.base}/login/`,
@@ -44,18 +27,23 @@ export default function Home() {
         })
           .then(res => {
             message.success("Login Successful");
-            setUser({
-              id: res.data.id,
-              picture: res.data.picture,
-              role: res.data.role,
-              token: res.data.token,
-              name: user.name,
-              email: user.email,
-              dept: user.dept,
-            });
+
+            localStorage.setItem(
+              "user",
+              JSON.stringify({
+                id: res.data.id,
+                picture: res.data.picture,
+                role: res.data.role,
+                token: res.data.token,
+                name: "",
+                email: "",
+                dept: "",
+              })
+            );
+
+            router.push("/profile");
           })
-          .catch(err => message.error("Login Failed"));
-      },
+          .catch(err => message.error("Login Failed")),
     });
 
     google.accounts.id.renderButton(document.getElementById("signInDiv"), {

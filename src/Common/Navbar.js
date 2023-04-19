@@ -1,12 +1,16 @@
-import React, { useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu } from "antd";
 import Link from "next/link";
 import styles from "../../styles/common.module.css";
-import { UserContext } from "../userContext";
 import { AppstoreAddOutlined, LogoutOutlined } from "@ant-design/icons";
 
 const Navbar = () => {
-  const { user, setUser } = useContext(UserContext);
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
+  }, []);
 
   const ITEMS = [
     {

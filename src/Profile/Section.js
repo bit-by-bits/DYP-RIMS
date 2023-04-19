@@ -1,13 +1,17 @@
 import Link from "next/link";
 import styles from "../../styles/profile.module.css";
-import { UserContext } from "../userContext";
 import { message } from "antd";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import URLObj from "../baseURL";
 
 export default function Section(props) {
-  const { user, setUser } = useContext(UserContext);
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
+  }, []);
 
   const [IC, setIC] = useState(0);
   const [IA, setIA] = useState(0);

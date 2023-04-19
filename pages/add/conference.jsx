@@ -4,12 +4,10 @@ import Head from "next/head";
 import Navbar from "../../src/Common/Navbar";
 import axios from "axios";
 import URLObj from "../../src/baseURL";
-import { UserContext } from "../../src/userContext";
-import { useContext, useEffect, useState } from "react";
-
 import { Button, Checkbox, DatePicker, Form } from "antd";
 import { Input, message, Select, Upload } from "antd";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 function convert(str) {
   var date = new Date(str),
@@ -21,7 +19,12 @@ function convert(str) {
 const Conferences = () => {
   const router = useRouter();
   const [form] = Form.useForm();
-  const { user, setUser } = useContext(UserContext);
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
+  }, []);
 
   const [poster, setPoster] = useState(false);
   const [paper, setPaper] = useState(false);

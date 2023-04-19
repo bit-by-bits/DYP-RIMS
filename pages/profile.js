@@ -1,7 +1,7 @@
 import Head from "next/head";
 import styles from "../styles/profile.module.css";
 import axios from "axios";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../src/Common/Navbar";
 import Boxes from "../src/Profile/Boxes";
 import Section from "../src/Profile/Section";
@@ -9,7 +9,6 @@ import PTable from "../src/Profile/PTable";
 import Loader from "../src/Common/Loader";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { UserContext } from "../src/userContext";
 import URLObj from "../src/baseURL";
 import Link from "next/link";
 import { FilePdfOutlined } from "@ant-design/icons";
@@ -18,9 +17,16 @@ import { Button, message } from "antd";
 const Profile = () => {
   const router = useRouter();
   const [visible, setVisible] = useState(true);
+  const [user, setUser] = useState({});
 
-  const { user, setUser } = useContext(UserContext);
-  if (typeof window !== "undefined" && user.token === "") router.push("/");
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && user.token === "") router.push("/");
+  }, [router, user]);
 
   const [lawrd, setLawrd] = useState(0);
   const [lpubs, setLpubs] = useState(0);
@@ -44,14 +50,23 @@ const Profile = () => {
           email: res.data.email,
           dept: res.data.department,
         });
-      })
-      .catch(err => {
-        setUser(user);
-      });
-  }, []);
 
-  useEffect(() => {
-    if (user.name != "" && user.token != "") {
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            id: user.id,
+            picture: user.picture,
+            role: user.role,
+            token: user.token,
+            name: res.data.name,
+            email: res.data.email,
+            dept: res.data.department,
+          })
+        );
+      })
+      .catch(err => setUser(user));
+
+    if (user.name && user.token)
       axios({
         method: "GET",
         headers: { Authorization: `Bearer ${user.token}` },
@@ -225,19 +240,18 @@ const Profile = () => {
           setPdata({
             head: HEAD,
             body: BODY,
+            check: true,
           });
-
-          setVisible(false);
         })
         .catch(err => {
-          setVisible(false);
-
           setPdata({
             head: [],
             body: [],
+            check: true,
           });
         });
 
+    if (user.token)
       axios({
         method: "GET",
         url: `${URLObj.base}/user/stats`,
@@ -252,6 +266,7 @@ const Profile = () => {
           setLpubs(0);
         });
 
+    if (user.name)
       axios({
         method: "GET",
         url: `${URLObj.base}/conference/${user.name}/view`,
@@ -259,7 +274,7 @@ const Profile = () => {
         .then(res => {
           const HEAD = [
             {
-              title: "Conference",
+              title: "Conference Name",
               dataIndex: "name",
               key: "name",
               sorter: (a, b) => a.name.localeCompare(b.name),
@@ -276,21 +291,21 @@ const Profile = () => {
               ),
             },
             {
-              title: "Location",
+              title: "Conference Location",
               dataIndex: "location",
               key: "location",
               sorter: (a, b) => a.location.localeCompare(b.location),
               render: text => <div style={{ fontWeight: 600 }}>{text}</div>,
             },
             {
-              title: "Date",
+              title: "Conference Date",
               dataIndex: "date",
               key: "date",
               sorter: (a, b) => a.date.localeCompare(b.date),
               render: text => <div style={{ fontWeight: 600 }}>{text}</div>,
             },
             {
-              title: "Certificate",
+              title: "Certificate Link",
               dataIndex: "certificate",
               key: "certificate",
               align: "center",
@@ -326,13 +341,21 @@ const Profile = () => {
           setCdata({
             head: HEAD,
             body: BODY,
+            check: true,
           });
-
-          setVisible(false);
         })
-        .catch(err => setCdata([]));
-    }
+        .catch(err =>
+          setCdata({
+            head: [],
+            body: [],
+            check: true,
+          })
+        );
   }, [user]);
+
+  useEffect(() => {
+    if (pdata.check && cdata.check) setVisible(false);
+  }, [pdata, cdata]);
 
   return (
     <>

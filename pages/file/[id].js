@@ -1,21 +1,28 @@
 import Head from "next/head";
 import styles from "../../styles/file.module.css";
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import Loader from "../../src/Common/Loader";
 import Navbar from "../../src/Common/Navbar";
 // import FileInfo from "../../src/Common/FileInfo";
 import Link from "next/link";
-import { UserContext } from "../../src/userContext";
 import Image from "next/image";
 
 const ID = () => {
   const router = useRouter();
   const { id } = router.query,
     [visible, setVisible] = useState(true);
+  const [user, setUser] = useState({});
 
-  const { user, setUser } = useContext(UserContext);
-  if (typeof window !== "undefined" && user.token === "") router.push("/");
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
+  }, []);
+  
+  useEffect(() => {
+    if (typeof window !== "undefined" && user.token === "") router.push("/");
+  }, [router, user]);
+
 
   return (
     <>

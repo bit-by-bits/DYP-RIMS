@@ -1,15 +1,23 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import styles from "../../../styles/file.module.css";
 import Loader from "../../../src/Common/Loader";
 import Navbar from "../../../src/Common/Navbar";
 import { useRouter } from "next/router";
-import { UserContext } from "../../../src/userContext";
 import FileForm from "../../../src/Common/FileForm";
 
 const ID = () => {
-  const { user, setUser } = useContext(UserContext);
-  if (typeof window !== "undefined" && user.token === "") router.push("/");
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
+  }, []);
+  
+  useEffect(() => {
+    if (typeof window !== "undefined" && user.token === "") router.push("/");
+  }, [router, user]);
+
 
   const router = useRouter();
   const { id } = router.query,

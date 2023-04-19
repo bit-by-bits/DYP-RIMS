@@ -3,11 +3,15 @@ import { UploadOutlined } from "@ant-design/icons";
 import styles from "../../styles/add.module.css";
 import Head from "next/head";
 import Navbar from "../../src/Common/Navbar";
-import { useContext } from "react";
-import { UserContext } from "../../src/userContext";
+import { useEffect, useState } from "react";
 
 const IPR = () => {
-  const { user, setUser } = useContext(UserContext);
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
+  }, []);
 
   const onFinish = values => {
     console.log("Success:", values);

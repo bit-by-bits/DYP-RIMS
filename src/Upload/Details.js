@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "../../styles/details.module.css";
 import URLObj from "../baseURL";
 import Image from "next/image";
-import { UserContext } from "../userContext";
 import { Button, Form, Input, message, Select } from "antd";
 import { useRouter } from "next/router";
 
@@ -13,9 +12,17 @@ export default function Details(props) {
 
   const [data, setData] = useState({});
   const [dataJournal, setDataJournal] = useState({});
+  const [user, setUser] = useState({});
 
-  const { user, setUser } = useContext(UserContext);
-  if (typeof window !== "undefined" && user.token === "") router.push("/");
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
+  }, []);
+  
+  useEffect(() => {
+    if (typeof window !== "undefined" && user.token === "") router.push("/");
+  }, [router, user]);
+
 
   const [disabled, setDisabled] = useState(true);
   const [citations, setCitations] = useState(0);

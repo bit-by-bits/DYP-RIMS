@@ -1,13 +1,16 @@
-import { Button, DatePicker, Form, Input, message, Upload } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { Button, Form, Input } from "antd";
 import styles from "../../styles/add.module.css";
 import Head from "next/head";
 import Navbar from "../../src/Common/Navbar";
-import { useContext } from "react";
-import { UserContext } from "../../src/userContext";
+import { useEffect, useState } from "react";
 
 const Students = () => {
-  const { user, setUser } = useContext(UserContext);
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
+  }, []);
 
   const onFinish = values => {
     console.log("Success:", values);
