@@ -126,6 +126,10 @@
   gap: 0.4rem;
 }
 
+.info {
+  align-items: flex-start;
+}
+
 .info_head {
   color: #9a2827;
   font-weight: 700;
@@ -202,7 +206,7 @@
   text-transform: capitalize;
   width: 100%;
   gap: 0.5rem 1rem;
-  grid-template-columns: auto auto auto auto;
+  grid-template-columns: auto auto;
 }
 
 .bi_grid {

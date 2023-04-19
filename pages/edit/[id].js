@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
-import styles from "../../../styles/file.module.css";
-import Loader from "../../../src/Common/Loader";
-import Navbar from "../../../src/Common/Navbar";
 import { useRouter } from "next/router";
-import FileForm from "../../../src/Common/FileForm";
+import styles from "../../styles/file.module.css";
 
-const ID = () => {
+import Loader from "../../src/Common/Loader";
+import Navbar from "../../src/Common/Navbar";
+import FileForm from "../../src/File/FileForm";
+
+const Edit = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const [user, setUser] = useState({});
   const [visible, setVisible] = useState(true);
+  const [user, setUser] = useState({});
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -35,10 +36,10 @@ const ID = () => {
         <h2
           style={{ margin: "8vw 0 2vw 10vw", color: "#9a2827" }}
         >{`Hello ${user.name}. Please fill the empty fields (if any).`}</h2>
-        <FileForm setVisible={setVisible} ID={id} />
+        <FileForm setVisible={setVisible} Edit={id} />
       </div>
     </>
   );
 };
 
-export default ID;
+export default Edit;

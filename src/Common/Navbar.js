@@ -62,7 +62,11 @@ const Navbar = () => {
     },
     {
       label: (
-        <Link className={styles.logout} href="/">
+        <Link
+          href="/"
+          onClick={() => localStorage.clear()}
+          className={styles.logout}
+        >
           Logout
         </Link>
       ),
@@ -75,7 +79,7 @@ const Navbar = () => {
   return (
     <div className={styles.navbar}>
       <div className={styles.nav_left}>
-        <Link href={user.role === "management" ? "/management" : "/profile"}>
+        <Link href="/profile">
           <div>Home</div>
         </Link>
       </div>

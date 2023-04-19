@@ -1,17 +1,19 @@
 import Head from "next/head";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import styles from "../../styles/file.module.css";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+
 import Loader from "../../src/Common/Loader";
 import Navbar from "../../src/Common/Navbar";
-// import FileInfo from "../../src/Common/FileInfo";
-import Link from "next/link";
-import Image from "next/image";
+import FileInfo from "../../src/File/FileInfo";
+import { message } from "antd";
 
-const ID = () => {
+const File = () => {
   const router = useRouter();
-  const { id } = router.query,
-    [visible, setVisible] = useState(true);
+  const { id } = router.query;
+
+  const [visible, setVisible] = useState(true);
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -21,7 +23,7 @@ const ID = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined" && user.token === "") router.push("/");
-  }, [router, user]);
+  }, [user, router]);
 
   return (
     <>
@@ -35,12 +37,20 @@ const ID = () => {
         <Loader visible={visible} />
 
         <div className={styles.file_wrapper}>
-          {/* <FileInfo setVisible={setVisible} id={id} /> */}
+          <FileInfo setVisible={setVisible} id={id} />
           <div className={styles.file_btns}>
-            <div className={styles.file_btn1}>Download</div>
-            <Link href={`/file/${id}/edit`}>
-              <div className={styles.file_btn2}>Edit</div>
-            </Link>
+            <div
+              onClick={() => message.error("File missing")}
+              className={styles.file_btn1}
+            >
+              Download
+            </div>
+            <div
+              onClick={() => router.push(`/edit/${doi}`)}
+              className={styles.file_btn2}
+            >
+              Edit
+            </div>
           </div>
 
           <a href="https://www.qtanea.com/" rel="noreferrer" target="_blank">
@@ -58,4 +68,4 @@ const ID = () => {
   );
 };
 
-export default ID;
+export default File;

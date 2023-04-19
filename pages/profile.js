@@ -10,8 +10,7 @@ import Loader from "../src/Common/Loader";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import URLObj from "../src/baseURL";
-import Link from "next/link";
-import { FilePdfOutlined } from "@ant-design/icons";
+import { FileImageOutlined, FilePdfOutlined } from "@ant-design/icons";
 import { Button, Image as Img, message } from "antd";
 
 const Profile = () => {
@@ -114,7 +113,7 @@ const Profile = () => {
                     color: "#9a2827",
                     fontWeight: 900,
                     fontSize: 20,
-                    minWidth: 120,
+                    minWidth: 100,
                   }}
                 >
                   {text}
@@ -159,7 +158,9 @@ const Profile = () => {
               dataIndex: "citations",
               key: "citations",
               sorter: (a, b) => a.citations.localeCompare(b.citations),
-              render: text => <div style={{ fontWeight: 700 }}>{text}</div>,
+              render: text => (
+                <div style={{ fontWeight: 700, minWidth: 100 }}>{text}</div>
+              ),
             },
             {
               title: "Published",
@@ -167,24 +168,48 @@ const Profile = () => {
               key: "published",
               sorter: (a, b) => a.published.localeCompare(b.published),
               render: text => (
-                <div style={{ fontWeight: 700, minWidth: 120 }}>{text}</div>
+                <div style={{ fontWeight: 700, minWidth: 100 }}>{text}</div>
               ),
             },
             {
               title: "File",
               dataIndex: "more",
               key: "more",
-              sorter: (a, b) => a.more.localeCompare(b.more),
-              render: (text, record) => (
-                <Link href={`/file/${record.key}`}>
-                  <div className={styles.btn_div}>Click</div>
-                </Link>
-              ),
+              render: (text, record) =>
+                record.id ? (
+                  <Button
+                    style={{
+                      color: "#52c41a",
+                      borderColor: "#52c41a",
+                      fontWeight: 700,
+                      fontSize: "0.8rem",
+                    }}
+                    icon={<FilePdfOutlined style={{ color: "#52c41a" }} />}
+                    href={`/file/${record.id}`}
+                  >
+                    Click
+                  </Button>
+                ) : (
+                  <Button
+                    danger
+                    icon={<FilePdfOutlined />}
+                    style={{
+                      fontWeight: 700,
+                      fontSize: "0.8rem",
+                    }}
+                    onClick={() => {
+                      message.error("File information not available");
+                    }}
+                  >
+                    No Info
+                  </Button>
+                ),
             },
           ];
 
           const BODY = res.data.data.map(e => ({
             key: e.id ?? Math.random() * 1000,
+            id: e.id ?? 0,
             title: (
               <div
                 style={{
@@ -314,27 +339,29 @@ const Profile = () => {
               dataIndex: "certificate",
               key: "certificate",
               align: "center",
-              render: (text, record) => (
-                <Button>
-                  {record.file ? (
-                    <FilePdfOutlined
-                      style={{ color: "#52c41a" }}
-                      onClick={() => {
-                        console.log(URLObj.rims + record.file);
-                        setImage({
-                          url: URLObj.rims + record.file,
-                          visible: true,
-                        });
-                      }}
-                    />
-                  ) : (
-                    <FilePdfOutlined
-                      style={{ color: "#eb2f96" }}
-                      onClick={() => message.error("No PDF exists")}
-                    />
-                  )}
-                </Button>
-              ),
+              render: (text, record) =>
+                record.file ? (
+                  <Button
+                    style={{ color: "#52c41a", borderColor: "#52c41a" }}
+                    icon={<FileImageOutlined style={{ color: "#52c41a" }} />}
+                    onClick={() =>
+                      setImage({
+                        url: URLObj.rims + record.file,
+                        visible: true,
+                      })
+                    }
+                  >
+                    Click
+                  </Button>
+                ) : (
+                  <Button
+                    danger
+                    icon={<FileImageOutlined />}
+                    onClick={() => message.error("No PDF exists")}
+                  >
+                    Click
+                  </Button>
+                ),
             },
           ];
 
@@ -377,7 +404,7 @@ const Profile = () => {
         <Navbar />
 
         <div className={styles.profile_wrapper}>
-          <Section data={[]} extra={[lawrd, lpubs]} />
+          <Section user={user} data={[]} extra={[lawrd, lpubs]} />
           <Boxes title="Awards & Achievements" data={[]} />
           <Boxes title="Patents" data={[]} />
           <PTable title="Publications" body={pdata} />

@@ -6,13 +6,6 @@ import axios from "axios";
 import URLObj from "../baseURL";
 
 export default function Section(props) {
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-  }, []);
-
   const [IC, setIC] = useState(0);
   const [IA, setIA] = useState(0);
   const [HI, setHI] = useState(0);
@@ -69,14 +62,14 @@ export default function Section(props) {
   const [conf, setConf] = useState([]);
 
   useEffect(() => {
-    if (user.name)
+    if (props?.user?.name)
       axios({
         method: "GET",
-        url: `${URLObj.base}/conference/${user.name}/count`,
+        url: `${URLObj.base}/conference/${props?.user?.name}/count`,
       })
         .then(res => setConf(res.data.count))
         .catch(err => setConf("N/A"));
-  }, [user]);
+  }, [props?.user]);
 
   const edit = () => message.info("This feature is still unavailable.");
 
@@ -91,7 +84,7 @@ export default function Section(props) {
             <div className={styles.img_wrapper}>
               {
                 // eslint-disable-next-line @next/next/no-img-element
-                <img alt="user" src={user.picture} />
+                <img alt="user" src={props?.user?.picture} />
               }
               <svg className={styles.img_border1} viewBox="0 0 100 100">
                 <path d="M95,50 A45,45 0 0,1 5,50 A45,45 0 0,1 50,5" />
@@ -102,14 +95,14 @@ export default function Section(props) {
             </div>
 
             <div className={styles.profile_text}>
-              <div className={styles.profile_name}>{user.name}</div>
+              <div className={styles.profile_name}>{props?.user?.name}</div>
 
               <div className={styles.profile_degree}>MBBS, M.D.</div>
 
-              <div className={styles.profile_post}>{user.role}</div>
+              <div className={styles.profile_post}>{props?.user?.role}</div>
 
               <div className={styles.profile_dept}>
-                Department of {user.dept}
+                Department of {props?.user?.dept}
               </div>
 
               <div className={styles.profile_clg}>
