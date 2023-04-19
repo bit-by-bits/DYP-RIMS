@@ -21,11 +21,10 @@ const Uploading = () => {
     const user = JSON.parse(localStorage.getItem("user"));
     setUser(user);
   }, []);
-  
+
   useEffect(() => {
     if (typeof window !== "undefined" && user.token === "") router.push("/");
   }, [router, user]);
-
 
   useEffect(() => {
     if (!router.isReady) return;

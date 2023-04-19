@@ -2,6 +2,7 @@
   "name": "dy-patil-portal",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "lint": "next lint",
     "dev": "next dev -p 3001",

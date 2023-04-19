@@ -18,11 +18,10 @@ export default function Details(props) {
     const user = JSON.parse(localStorage.getItem("user"));
     setUser(user);
   }, []);
-  
+
   useEffect(() => {
     if (typeof window !== "undefined" && user.token === "") router.push("/");
   }, [router, user]);
-
 
   const [disabled, setDisabled] = useState(true);
   const [citations, setCitations] = useState(0);
@@ -30,10 +29,7 @@ export default function Details(props) {
   const [authors, setAuthors] = useState({ options: [], selected: [] });
   const [indexed, setIndexed] = useState({ options: [], selected: [] });
 
-  useEffect(() => {
-    form.resetFields();
-    console.log(data, dataJournal);
-  }, [data, dataJournal]);
+  useEffect(() => form.resetFields(), [form, data, dataJournal]);
 
   useEffect(() => {
     axios({

@@ -69,12 +69,13 @@ export default function Section(props) {
   const [conf, setConf] = useState([]);
 
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `${URLObj.base}/conference/${user.name}/count`,
-    })
-      .then(res => setConf(res.data.count))
-      .catch(err => setConf("N/A"));
+    if (user.name)
+      axios({
+        method: "GET",
+        url: `${URLObj.base}/conference/${user.name}/count`,
+      })
+        .then(res => setConf(res.data.count))
+        .catch(err => setConf("N/A"));
   }, [user]);
 
   const edit = () => message.info("This feature is still unavailable.");

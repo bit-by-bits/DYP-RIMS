@@ -12,21 +12,11 @@ import { useRouter } from "next/router";
 import URLObj from "../src/baseURL";
 import Link from "next/link";
 import { FilePdfOutlined } from "@ant-design/icons";
-import { Button, message } from "antd";
+import { Button, Image as Img, message } from "antd";
 
 const Profile = () => {
   const router = useRouter();
   const [visible, setVisible] = useState(true);
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && user.token === "") router.push("/");
-  }, [router, user]);
 
   const [lawrd, setLawrd] = useState(0);
   const [lpubs, setLpubs] = useState(0);
@@ -34,7 +24,16 @@ const Profile = () => {
   const [pdata, setPdata] = useState({ head: [], body: [], check: false });
   const [cdata, setCdata] = useState({ head: [], body: [], check: false });
 
+  const [user, setUser] = useState({});
+  const [image, setImage] = useState({
+    src: "",
+    visible: false,
+  });
+
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
+
     axios({
       method: "GET",
       url: `${URLObj.base}/user/profile/${user.id}`,
@@ -65,7 +64,13 @@ const Profile = () => {
         );
       })
       .catch(err => setUser(user));
+  }, []);
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && user.token === "") router.push("/");
+  }, [router, user]);
+
+  useEffect(() => {
     if (user.name && user.token)
       axios({
         method: "GET",
@@ -312,13 +317,16 @@ const Profile = () => {
               render: (text, record) => (
                 <Button>
                   {record.file ? (
-                    <a
-                      target="_blank"
-                      rel="noreferrer"
-                      href={URLObj.rims + record.file}
-                    >
-                      <FilePdfOutlined style={{ color: "#52c41a" }} />
-                    </a>
+                    <FilePdfOutlined
+                      style={{ color: "#52c41a" }}
+                      onClick={() => {
+                        console.log(URLObj.rims + record.file);
+                        setImage({
+                          url: URLObj.rims + record.file,
+                          visible: true,
+                        });
+                      }}
+                    />
                   ) : (
                     <FilePdfOutlined
                       style={{ color: "#eb2f96" }}
@@ -385,6 +393,20 @@ const Profile = () => {
           </a>
         </div>
       </div>
+
+      <Img
+        width={200}
+        style={{ display: "none" }}
+        src=""
+        preview={{
+          visible: image.visible,
+          scaleStep: 0.5,
+          src: image.url,
+          onVisibleChange: value => {
+            setImage({ ...image, visible: value });
+          },
+        }}
+      />
     </>
   );
 };
