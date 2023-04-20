@@ -11,6 +11,7 @@ const Edit = () => {
   const router = useRouter();
   const { id } = router.query;
 
+  const [ID, setID] = useState(id);
   const [visible, setVisible] = useState(true);
   const [user, setUser] = useState({});
 
@@ -22,6 +23,10 @@ const Edit = () => {
   useEffect(() => {
     if (typeof window !== "undefined" && user.token === "") router.push("/");
   }, [router, user]);
+
+  useEffect(() => {
+    if (router.isReady) setID(id);
+  }, [router, id]);
 
   return (
     <>
@@ -36,7 +41,7 @@ const Edit = () => {
         <h2
           style={{ margin: "8vw 0 2vw 10vw", color: "#9a2827" }}
         >{`Hello ${user.name}. Please fill the empty fields (if any).`}</h2>
-        <FileForm setVisible={setVisible} Edit={id} />
+        <FileForm setVisible={setVisible} id={ID} />
       </div>
     </>
   );

@@ -4,24 +4,27 @@ import axios from "axios";
 import URLObj from "../baseURL";
 import { useRouter } from "next/router";
 import { CheckSquareOutlined, CloseSquareOutlined } from "@ant-design/icons";
+import { message } from "antd";
 
 const FileInfo = ({ setVisible, id }) => {
   const router = useRouter();
   const [data, setData] = useState({});
 
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `${URLObj.base}/publication/${id}`,
-    })
-      .then(res => {
-        setData(res?.data?.publication);
-        setVisible(false);
+    if (id)
+      axios({
+        method: "GET",
+        url: `${URLObj.base}/publication/${id}`,
       })
-      .catch(err => {
-        console.log(err);
-      });
-  }, []);
+        .then(res => {
+          setData(res?.data?.publication);
+          setVisible(false);
+        })
+        .catch(err => {
+          message.error("Could not fetch file data");
+          console.log(err);
+        });
+  }, [id]);
 
   return (
     <>
@@ -31,11 +34,11 @@ const FileInfo = ({ setVisible, id }) => {
             {data.publication_type ?? "Unknown Type"}
           </div>
 
-          <div className={styles.file_tag2}>
-            {data.region === "blank" ? "Unknown Region" : data.region}
-          </div>
+          <div className={styles.file_tag2}>PDF Not Available</div>
 
-          <div className={styles.file_tag1}>PDF Not Available</div>
+          {data.region && data.region !== "blank" && (
+            <div className={styles.file_tag1}>{data.region}</div>
+          )}
         </div>
 
         <div className={styles.file_title}>
@@ -86,11 +89,23 @@ const FileInfo = ({ setVisible, id }) => {
               <div className={styles.info}>
                 <span className={styles.info_head}>Authors</span>
                 <span className={styles.info_body}>
-                  {data.author_name?.length
-                    ? data.author_name?.map(e => e.searchable_name).join(", ")
-                    : "" + data.other_authors?.length
-                    ? data.other_authors?.join(", ")
-                    : "" ?? "- NA -"}
+                  <div style={{ fontWeight: "bold", display: "flex", gap: 10 }}>
+                    {data.author_name?.length
+                      ? data.author_name?.map(e => (
+                          <div
+                            key={e.id}
+                            title={e.department ?? e.searchable_name}
+                          >
+                            {e.searchable_name}
+                          </div>
+                        ))
+                      : "- No Main Author -"}
+                  </div>
+                  <div>
+                    {data.other_authors?.length
+                      ? data.other_authors?.join(", ")
+                      : "- No Other Author -"}
+                  </div>
                 </span>
               </div>
             </div>
@@ -99,7 +114,7 @@ const FileInfo = ({ setVisible, id }) => {
               <div className={styles.info}>
                 <span className={styles.info_head}>Dept.</span>
                 <span className={styles.info_body}>
-                  {data.department ?? "- Not Available -"}
+                  {data.department ?? "- Not from DY Patil -"}
                 </span>
               </div>
             </div>
@@ -127,7 +142,9 @@ const FileInfo = ({ setVisible, id }) => {
         <div className={`${styles.smooth} ${styles.abstract}`}>
           <div className={styles.file_head}>Abstract</div>
           <div className={styles.abs_body}>
-            {data.abstract ?? "- Not Available -"}
+            {data.abstract && data.abstract != ""
+              ? data.abstract
+              : "- Not Available -"}
           </div>
         </div>
 

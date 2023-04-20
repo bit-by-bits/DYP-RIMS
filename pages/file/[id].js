@@ -13,6 +13,7 @@ const File = () => {
   const router = useRouter();
   const { id } = router.query;
 
+  const [ID, setID] = useState(id);
   const [visible, setVisible] = useState(true);
   const [user, setUser] = useState({});
 
@@ -24,6 +25,11 @@ const File = () => {
   useEffect(() => {
     if (typeof window !== "undefined" && user.token === "") router.push("/");
   }, [user, router]);
+
+  useEffect(() => {
+    if (router.isReady) setID(id);
+    console.log(id);
+  }, [router, id]);
 
   return (
     <>
@@ -37,7 +43,7 @@ const File = () => {
         <Loader visible={visible} />
 
         <div className={styles.file_wrapper}>
-          <FileInfo setVisible={setVisible} id={id} />
+          <FileInfo setVisible={setVisible} id={ID} />
           <div className={styles.file_btns}>
             <div
               onClick={() => message.error("File missing")}
@@ -46,10 +52,10 @@ const File = () => {
               Download
             </div>
             <div
-              onClick={() => router.push(`/edit/${doi}`)}
+              onClick={() => router.push(`/edit/${ID}`)}
               className={styles.file_btn2}
             >
-              Edit
+              Edit File
             </div>
           </div>
 

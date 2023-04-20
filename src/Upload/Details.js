@@ -9,10 +9,16 @@ import { useRouter } from "next/router";
 export default function Details(props) {
   const router = useRouter();
   const [form] = Form.useForm();
+  const [user, setUser] = useState({});
 
   const [data, setData] = useState({});
   const [dataJournal, setDataJournal] = useState({});
-  const [user, setUser] = useState({});
+
+  const [disabled, setDisabled] = useState(true);
+  const [citations, setCitations] = useState(0);
+
+  const [authors, setAuthors] = useState({ options: [], selected: [] });
+  const [indexed, setIndexed] = useState({ options: [], selected: [] });
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -22,12 +28,6 @@ export default function Details(props) {
   useEffect(() => {
     if (typeof window !== "undefined" && user.token === "") router.push("/");
   }, [router, user]);
-
-  const [disabled, setDisabled] = useState(true);
-  const [citations, setCitations] = useState(0);
-
-  const [authors, setAuthors] = useState({ options: [], selected: [] });
-  const [indexed, setIndexed] = useState({ options: [], selected: [] });
 
   useEffect(() => form.resetFields(), [form, data, dataJournal]);
 
@@ -185,10 +185,7 @@ export default function Details(props) {
         <Form
           name="basic"
           form={form}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-          }}
+          style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
           initialValues={{
