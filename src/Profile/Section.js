@@ -125,42 +125,50 @@ export default function Section(props) {
         </div>
 
         <div className={styles.profile_feats}>
-          <div className={styles.profile_feat}>
+          <a href="#awards" className={styles.profile_feat}>
             <span>Awards: {props.extra[0] ?? 0}</span>
-          </div>
+          </a>
 
-          <div className={styles.profile_feat}>
+          <a href="#conferences" className={styles.profile_feat}>
             <span>Conferences: {conf}</span>
-          </div>
+          </a>
 
-          <div className={styles.profile_feat}>
+          <a href="#patents" className={styles.profile_feat}>
             <span>Patents: 0</span>
-          </div>
+          </a>
 
-          <div className={styles.profile_feat}>
+          <a href="#publications" className={styles.profile_feat}>
             <span>Publications: {props.extra[1] ?? 0}</span>
-          </div>
+          </a>
 
-          <div className={styles.profile_feat}>
+          <a href="#citations" className={styles.profile_feat}>
             <span>Total Citations: {cit}</span>
-          </div>
+          </a>
 
-          <div className={styles.profile_feat}>
+          <a href="#publications" className={styles.profile_feat}>
             <span>H-Index: {HI}</span>
-          </div>
+          </a>
 
-          <div style={{ gridColumn: "span 3" }} className={styles.profile_feat}>
+          <a
+            href="#publications"
+            style={{ gridColumn: "span 3" }}
+            className={styles.profile_feat}
+          >
             <span>
               Cumulative/Average IF: {IC?.toFixed(2)}/ {IA?.toFixed(2)}
             </span>
-          </div>
+          </a>
 
-          <div style={{ gridColumn: "span 3" }} className={styles.profile_feat}>
+          <a
+            href="#publications"
+            style={{ gridColumn: "span 3" }}
+            className={styles.profile_feat}
+          >
             <span>
               Q1: {Qs[0]}&nbsp; Q2: {Qs[1]}&nbsp; Q3: {Qs[2]}&nbsp; Q4: {Qs[3]}
               &nbsp; N/A: {Qs[4]}
             </span>
-          </div>
+          </a>
         </div>
       </div>
     </>

@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "../../styles/details.module.css";
 import URLObj from "../baseURL";
-import Image from "next/image";
 import { Button, Form, Input, message, Select } from "antd";
 import { useRouter } from "next/router";
 
-const FileForm = ({ setVisible, id }) => {
+const FileForm = ({ setVisible, id, token }) => {
   const router = useRouter();
   const [form] = Form.useForm();
 
@@ -111,7 +110,7 @@ const FileForm = ({ setVisible, id }) => {
       maxBodyLength: Infinity,
       url: `${URLObj.base}/research/data/save/`,
       headers: {
-        Authorization: `Bearer ${user.token}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
       },
       data: data,
@@ -134,24 +133,24 @@ const FileForm = ({ setVisible, id }) => {
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
           initialValues={{
-            pubmed: data.pubmed_id,
-            doi: data.doi_id,
-            type: data.publication_type,
-            title: data.publication_title,
-            journal: data.journal_name,
-            published: data.year,
-            abstract: data.abstract,
+            pubmed: data.pubmed_id ?? " ",
+            doi: data.doi_id ?? " ",
+            type: data.publication_type ?? " ",
+            title: data.publication_title ?? " ",
+            journal: data.journal_name ?? " ",
+            published: data.year ?? " ",
+            abstract: data.abstract ?? " ",
             volume: !isNaN(parseInt(data?.volume)) ? parseInt(data?.volume) : 0,
             issue: !isNaN(parseInt(data?.issue)) ? parseInt(data?.issue) : 0,
-            pages: data.pages,
-            citations: data.citations,
+            pages: data.pages ?? " ",
+            citations: data.citations ?? " ",
             hindex: !isNaN(parseInt(data?.h_index))
               ? parseInt(data?.h_index)
               : 0,
-            sjr: data.sjr,
-            ifactor: data.impact_factor,
-            indexed: indexed.selected,
-            authors: authors.selected,
+            sjr: data.sjr ?? " ",
+            ifactor: data.impact_factor ?? " ",
+            indexed: indexed.selected ?? " ",
+            authors: authors.selected ?? " ",
           }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
@@ -345,6 +344,14 @@ const FileForm = ({ setVisible, id }) => {
 
             <Button className={styles.reset} type="primary" htmlType="reset">
               Revert Back
+            </Button>
+
+            <Button
+              className={styles.reset}
+              type="primary"
+              href={`/file/${id}`}
+            >
+              Back To File
             </Button>
           </Form.Item>
         </Form>

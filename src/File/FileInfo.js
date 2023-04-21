@@ -87,31 +87,6 @@ const FileInfo = ({ setVisible, id }) => {
           <div className={styles.file_info_box}>
             <div>
               <div className={styles.info}>
-                <span className={styles.info_head}>Authors</span>
-                <span className={styles.info_body}>
-                  <div style={{ fontWeight: "bold", display: "flex", gap: 10 }}>
-                    {data.author_name?.length
-                      ? data.author_name?.map(e => (
-                          <div
-                            key={e.id}
-                            title={e.department ?? e.searchable_name}
-                          >
-                            {e.searchable_name}
-                          </div>
-                        ))
-                      : "- No Main Author -"}
-                  </div>
-                  <div>
-                    {data.other_authors?.length
-                      ? data.other_authors?.join(", ")
-                      : "- No Other Author -"}
-                  </div>
-                </span>
-              </div>
-            </div>
-
-            <div>
-              <div className={styles.info}>
                 <span className={styles.info_head}>Dept.</span>
                 <span className={styles.info_body}>
                   {data.department ?? "- Not from DY Patil -"}
@@ -133,6 +108,31 @@ const FileInfo = ({ setVisible, id }) => {
                 <span className={styles.info_head}>Citations</span>
                 <span className={styles.info_body}>
                   {data.citations ?? "- NA -"}
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <div className={styles.info}>
+                <span className={styles.info_head}>Authors</span>
+                <span className={styles.info_body}>
+                  <div style={{ fontWeight: "bold", display: "flex", gap: 5 }}>
+                    {data.author_name?.length
+                      ? data.author_name?.map(e => (
+                          <div
+                            key={e.id}
+                            title={e.department ?? e.searchable_name}
+                          >
+                            {e.searchable_name},
+                          </div>
+                        ))
+                      : "- No Main Author -"}
+                  </div>
+                  <div>
+                    {data.other_authors?.length
+                      ? data.other_authors?.join(", ")
+                      : "- No Other Author -"}
+                  </div>
                 </span>
               </div>
             </div>

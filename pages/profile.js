@@ -10,8 +10,12 @@ import Loader from "../src/Common/Loader";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import URLObj from "../src/baseURL";
-import { FileImageOutlined, FilePdfOutlined } from "@ant-design/icons";
-import { Button, Image as Img, message } from "antd";
+import {
+  DeleteOutlined,
+  FileImageOutlined,
+  FilePdfOutlined,
+} from "@ant-design/icons";
+import { Button, Image as Img, Space, message } from "antd";
 
 const Profile = () => {
   const router = useRouter();
@@ -103,7 +107,7 @@ const Profile = () => {
               ),
             },
             {
-              title: "SJR Quartile",
+              title: "SJR",
               dataIndex: "sjr",
               key: "sjr",
               sorter: (a, b) => a.sjr.localeCompare(b.sjr),
@@ -113,7 +117,25 @@ const Profile = () => {
                     color: "#9a2827",
                     fontWeight: 900,
                     fontSize: 20,
-                    minWidth: 100,
+                    minWidth: 60,
+                  }}
+                >
+                  {text}
+                </div>
+              ),
+            },
+            {
+              title: "H-Index",
+              dataIndex: "hindex",
+              key: "hindex",
+              sorter: (a, b) => a.hindex.localeCompare(b.hindex),
+              render: text => (
+                <div
+                  style={{
+                    color: "#9a2827",
+                    fontWeight: 900,
+                    fontSize: 20,
+                    minWidth: 80,
                   }}
                 >
                   {text}
@@ -159,7 +181,7 @@ const Profile = () => {
               key: "citations",
               sorter: (a, b) => a.citations.localeCompare(b.citations),
               render: text => (
-                <div style={{ fontWeight: 700, minWidth: 100 }}>{text}</div>
+                <div style={{ fontWeight: 700, minWidth: 80 }}>{text}</div>
               ),
             },
             {
@@ -172,9 +194,9 @@ const Profile = () => {
               ),
             },
             {
-              title: "File",
-              dataIndex: "more",
-              key: "more",
+              title: "View",
+              dataIndex: "view",
+              key: "view",
               render: (text, record) =>
                 record.id ? (
                   <Button
@@ -187,7 +209,7 @@ const Profile = () => {
                     icon={<FilePdfOutlined style={{ color: "#52c41a" }} />}
                     href={`/file/${record.id}`}
                   >
-                    Click
+                    File
                   </Button>
                 ) : (
                   <Button
@@ -201,7 +223,7 @@ const Profile = () => {
                       message.error("File information not available");
                     }}
                   >
-                    No Info
+                    No File
                   </Button>
                 ),
             },
@@ -232,7 +254,23 @@ const Profile = () => {
                   {e.publication_title ?? "N/A"}
                 </span>
                 <span style={{ fontWeight: 400 }}>
-                  {e.other_authors.join(", ") ?? "N/A"}
+                  <div style={{ fontWeight: "bold", display: "flex", gap: 5 }}>
+                    {e.author_name?.length
+                      ? e.author_name?.map(a => (
+                          <div
+                            key={a.id}
+                            title={a.department ?? a.searchable_name}
+                          >
+                            {a.searchable_name},
+                          </div>
+                        ))
+                      : "- No Main Author -"}
+                  </div>
+                  <div>
+                    {e.other_authors?.length
+                      ? e.other_authors?.join(", ")
+                      : "- No Other Author -"}
+                  </div>
                 </span>
                 <span style={{ fontStyle: "italic" }}>
                   {e.journal_name ?? "N/A"}
@@ -242,20 +280,20 @@ const Profile = () => {
                   &nbsp;&middot;&nbsp; Issue: {e.issue ?? "?"}
                   &nbsp;&middot;&nbsp; Pages: {e.pages ?? "?"}
                 </span>
-                {e.file ? (
+                {e.id ? (
                   <span style={{ color: "green" }}>
-                    Softcopy found for this publication. View More to access.
+                    Softcopy found for this publication.
                   </span>
                 ) : (
                   <span style={{ color: "red" }}>
-                    No softcopy found for this publication. Kindly upload a
-                    softcopy.
+                    Softcopy not found for this publication.
                   </span>
                 )}
               </div>
             ),
             impact: e.impact_factor ?? "N/A",
             sjr: e.sjr ?? "N/A",
+            hindex: e.h_index ?? "N/A",
             indexed_in: (
               <span>
                 {["DOAJ", "Embase", "Medline", "PMC", "SCIE", "Scopus"]
@@ -304,7 +342,7 @@ const Profile = () => {
         .then(res => {
           const HEAD = [
             {
-              title: "Conference Name",
+              title: "Name",
               dataIndex: "name",
               key: "name",
               sorter: (a, b) => a.name.localeCompare(b.name),
@@ -321,23 +359,23 @@ const Profile = () => {
               ),
             },
             {
-              title: "Conference Location",
-              dataIndex: "location",
-              key: "location",
-              sorter: (a, b) => a.location.localeCompare(b.location),
+              title: "Conference Type",
+              dataIndex: "type",
+              key: "type",
+              sorter: (a, b) => a.type.localeCompare(b.type),
               render: text => <div style={{ fontWeight: 600 }}>{text}</div>,
             },
             {
-              title: "Conference Date",
+              title: "Date",
               dataIndex: "date",
               key: "date",
               sorter: (a, b) => a.date.localeCompare(b.date),
               render: text => <div style={{ fontWeight: 600 }}>{text}</div>,
             },
             {
-              title: "Certificate Link",
-              dataIndex: "certificate",
-              key: "certificate",
+              title: "View More",
+              dataIndex: "preview",
+              key: "preview",
               align: "center",
               render: (text, record) =>
                 record.file ? (
@@ -351,7 +389,7 @@ const Profile = () => {
                       })
                     }
                   >
-                    Click
+                    Preview
                   </Button>
                 ) : (
                   <Button
@@ -359,7 +397,7 @@ const Profile = () => {
                     icon={<FileImageOutlined />}
                     onClick={() => message.error("No PDF exists")}
                   >
-                    Click
+                    No Preview
                   </Button>
                 ),
             },
@@ -368,7 +406,7 @@ const Profile = () => {
           const BODY = res.data.data.map(e => ({
             key: e.id ?? Math.random() * 1000,
             name: e.conference_name ?? "N/A",
-            location: e.location ?? "N/A",
+            type: e.location ?? "N/A",
             date: e.date ?? "N/A",
             file: e.certificate ?? null,
           }));

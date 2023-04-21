@@ -57,6 +57,12 @@ const File = () => {
             >
               Edit File
             </div>
+            <div
+              onClick={() => message.error("Delete functionality missing")}
+              className={styles.file_btn2}
+            >
+              Delete
+            </div>
           </div>
 
           <a href="https://www.qtanea.com/" rel="noreferrer" target="_blank">
