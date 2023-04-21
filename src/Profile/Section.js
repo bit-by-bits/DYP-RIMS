@@ -71,10 +71,9 @@ export default function Section(props) {
         .catch(err => setConf("N/A"));
   }, [props?.user]);
 
-  const edit = () => message.info("This feature is still unavailable.");
+  const edit = () => message.error("Edit functionality is still unavailable");
 
-  const download = () =>
-    message.error("Perhaps you haven't posted your CV yet.");
+  const download = () => message.error("CV functionality is still unavailable");
 
   return (
     <>

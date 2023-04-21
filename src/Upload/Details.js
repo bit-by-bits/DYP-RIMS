@@ -169,7 +169,12 @@ export default function Details(props) {
         message.success("Research added successfully!");
         props.setFinished(true);
       })
-      .catch(err => message.error("Something went wrong!"));
+      .catch(err => {
+        if (err?.response?.status === 400) {
+          message.error("Research already exists!");
+          router.push(`/file/${err?.response?.data?.id}`);
+        } else message.error("Something went wrong!");
+      });
   };
 
   const onFinishFailed = errorInfo => message.error("Something went wrong!");

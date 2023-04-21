@@ -41,14 +41,12 @@ const Boxes = props => {
   }, [props]);
 
   return (
-    <>
-      <div className={styles.profile_box}>
-        <div className={styles.profile_head}>{props.title}</div>
-        <div className={styles.profile_bodygrid}>
-          {data.length ? data : "N/A"}
-        </div>
+    <div id={props.title.toLowerCase()} className={styles.profile_box}>
+      <div className={styles.profile_head}>{props.title}</div>
+      <div className={styles.profile_bodygrid}>
+        {data.length ? data : "N/A"}
       </div>
-    </>
+    </div>
   );
 };
 
