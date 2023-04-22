@@ -108,7 +108,7 @@ const FileForm = ({ setVisible, id, token }) => {
     axios({
       method: "POST",
       maxBodyLength: Infinity,
-      url: `${URLObj.base}/research/data/save/`,
+      url: `${URLObj.base}/publication/${id}/edit/`,
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
@@ -116,7 +116,8 @@ const FileForm = ({ setVisible, id, token }) => {
       data: data,
     })
       .then(res => {
-        message.success("Research added successfully!");
+        message.success("Research edited successfully!");
+        router.push(`/file/${id}`);
       })
       .catch(err => message.error("Something went wrong!"));
   };

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import styles from "../../styles/file.module.css";
-
 import Loader from "../../src/Common/Loader";
 import Navbar from "../../src/Common/Navbar";
 import FileForm from "../../src/File/FileForm";

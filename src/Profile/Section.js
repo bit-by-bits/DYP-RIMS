@@ -8,7 +8,6 @@ import URLObj from "../baseURL";
 export default function Section(props) {
   const [IC, setIC] = useState(0);
   const [IA, setIA] = useState(0);
-  const [HI, setHI] = useState(0);
 
   const [cit, setCit] = useState(0);
   const [Qs, setQs] = useState([0, 0, 0, 0, 0]);
@@ -44,11 +43,6 @@ export default function Section(props) {
     });
 
     setIA(props.data.length == 0 ? 0 : IC / props.data.length);
-
-    props.data
-      .map(e => e.citations ?? 0)
-      .sort((a, b) => b - a)
-      .forEach((e, i) => e > i + 1 && setHI(i + 1));
   }, [IC, props.data]);
 
   function clear() {
@@ -60,6 +54,7 @@ export default function Section(props) {
   /////////////////////////////////////////////////
 
   const [conf, setConf] = useState([]);
+  const [hindex, setHindex] = useState("N/A");
 
   useEffect(() => {
     if (props?.user?.name)
@@ -69,6 +64,19 @@ export default function Section(props) {
       })
         .then(res => setConf(res.data.count))
         .catch(err => setConf("N/A"));
+
+    if (props?.user?.id) {
+      let data = new FormData();
+      data.append("id", props?.user?.id);
+
+      axios({
+        method: "POST",
+        url: `${URLObj.base}/citation-count/author/`,
+        data: data,
+      })
+        .then(res => setHindex(res.data.h_index))
+        .catch(err => setHindex("N/A"));
+    }
   }, [props?.user]);
 
   const edit = () => message.error("Edit functionality is still unavailable");
@@ -145,7 +153,7 @@ export default function Section(props) {
           </a>
 
           <a href="#publications" className={styles.profile_feat}>
-            <span>H-Index: {HI}</span>
+            <span>H-Index: {hindex}</span>
           </a>
 
           <a

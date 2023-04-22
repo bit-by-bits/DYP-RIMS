@@ -3,7 +3,6 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import styles from "../../styles/file.module.css";
 import React, { useState, useEffect } from "react";
-
 import Loader from "../../src/Common/Loader";
 import Navbar from "../../src/Common/Navbar";
 import FileInfo from "../../src/File/FileInfo";
