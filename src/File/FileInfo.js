@@ -2,13 +2,13 @@ import styles from "../../styles/file.module.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import URLObj from "../baseURL";
-import { useRouter } from "next/router";
 import { CheckSquareOutlined, CloseSquareOutlined } from "@ant-design/icons";
-import { message } from "antd";
+import { Avatar, Badge, Card, List, message } from "antd";
 
-const FileInfo = ({ setVisible, id }) => {
-  const router = useRouter();
+const FileInfo = ({ setv, id, setd }) => {
+  const { Meta } = Card;
   const [data, setData] = useState({});
+  const [cards, setCards] = useState([]);
 
   useEffect(() => {
     if (id)
@@ -18,13 +18,89 @@ const FileInfo = ({ setVisible, id }) => {
       })
         .then(res => {
           setData(res?.data?.publication);
-          setVisible(false);
+
+          setv(false);
+          if (res?.data?.publication?.file) setd(true);
         })
         .catch(err => {
-          message.error("Could not fetch file data");
           console.log(err);
+          message.error("Could not fetch file data");
         });
-  }, [id]);
+  }, [id, setd, setv]);
+
+  useEffect(() => {
+    if (data) {
+      const main = data.author_name?.map((e, i) => (
+        <Badge.Ribbon key={i} text="DPU" color="#9a2827">
+          <Card
+            hoverable
+            bodyStyle={{ padding: 15 }}
+            style={{ border: "1px solid #d9d9d9" }}
+          >
+            <Meta
+              title={
+                <div
+                  style={{
+                    fontSize: "0.9rem",
+                    marginBottom: -4,
+                  }}
+                >
+                  {e.searchable_name}
+                </div>
+              }
+              description={
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    fontSize: "0.8rem",
+                    gap: 5,
+                  }}
+                >
+                  <span>{e.department?.name ?? "N/A"}</span>
+                  <span className={styles.middot}>&middot;</span>
+                  <span>Dr D. Y Patil Medical College</span>
+                </div>
+              }
+              avatar={
+                <Avatar
+                  src={
+                    e.picture ??
+                    "https://cdn.landesa.org/wp-content/uploads/default-user-image.png"
+                  }
+                />
+              }
+            />
+          </Card>
+        </Badge.Ribbon>
+      ));
+
+      const others = data.other_authors?.map((e, i) => (
+        <Card
+          key={data.author_name?.length + i}
+          hoverable
+          bodyStyle={{ padding: 15 }}
+          style={{ border: "1px solid #d9d9d9" }}
+        >
+          <Meta
+            title={
+              <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>{e}</div>
+            }
+            description={"Other University"}
+            avatar={
+              <Avatar
+                src={
+                  "https://cdn.landesa.org/wp-content/uploads/default-user-image.png"
+                }
+              />
+            }
+          />
+        </Card>
+      ));
+
+      setCards([...(main ?? []), ...(others ?? [])]);
+    }
+  }, [data]);
 
   return (
     <>
@@ -34,7 +110,9 @@ const FileInfo = ({ setVisible, id }) => {
             {data.publication_type ?? "Unknown Type"}
           </div>
 
-          <div className={styles.file_tag2}>PDF Not Available</div>
+          <div className={styles.file_tag2}>
+            {data.file ? "PDF Available" : "PDF Not Available"}
+          </div>
 
           {data.region && data.region !== "blank" && (
             <div className={styles.file_tag1}>{data.region}</div>
@@ -87,15 +165,6 @@ const FileInfo = ({ setVisible, id }) => {
           <div className={styles.file_info_box}>
             <div>
               <div className={styles.info}>
-                <span className={styles.info_head}>Dept.</span>
-                <span className={styles.info_body}>
-                  {data.department ?? "- Not from DY Patil -"}
-                </span>
-              </div>
-            </div>
-
-            <div>
-              <div className={styles.info}>
                 <span className={styles.info_head}>Published</span>
                 <span className={styles.info_body}>
                   {data.year ?? "- NA -"}
@@ -111,31 +180,22 @@ const FileInfo = ({ setVisible, id }) => {
                 </span>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div>
-              <div className={styles.info}>
-                <span className={styles.info_head}>Authors</span>
-                <span className={styles.info_body}>
-                  <div style={{ fontWeight: "bold", display: "flex", gap: 5 }}>
-                    {data.author_name?.length
-                      ? data.author_name?.map(e => (
-                          <div
-                            key={e.id}
-                            title={e.department ?? e.searchable_name}
-                          >
-                            {e.searchable_name},
-                          </div>
-                        ))
-                      : "- No Main Author -"}
-                  </div>
-                  <div>
-                    {data.other_authors?.length
-                      ? data.other_authors?.join(", ")
-                      : "- No Other Author -"}
-                  </div>
-                </span>
-              </div>
-            </div>
+        <div style={{ width: "100%" }} className={styles.authors}>
+          <div className={styles.info_head}>Authors</div>
+          <div className={styles.auth_body}>
+            <List
+              grid={{ gutter: 16 }}
+              pagination={{
+                position: "bottom",
+                align: "center",
+                pageSize: 10,
+              }}
+              dataSource={cards}
+              renderItem={item => <List.Item>{item}</List.Item>}
+            />
           </div>
         </div>
 
@@ -213,7 +273,6 @@ const FileInfo = ({ setVisible, id }) => {
                       style={{
                         gap: 10,
                         display: "flex",
-                        alignItems: "center",
                         justifyContent: "flex-end",
                       }}
                       key={i}

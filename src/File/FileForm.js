@@ -73,7 +73,7 @@ const FileForm = ({ setVisible, id, token }) => {
           message.error("Could not fetch file data");
           console.log(err);
         });
-  }, [id]);
+  }, [id, setVisible]);
 
   const onFinish = values => {
     let data = new FormData();

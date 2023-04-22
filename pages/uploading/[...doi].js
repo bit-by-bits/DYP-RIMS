@@ -28,7 +28,7 @@ const Uploading = () => {
 
   useEffect(() => {
     if (!router.isReady) return;
-    setDOI(doi.join("/"));
+    setDOI(doi.join("/").replace("dx.doi.org/", ""));
   }, [doi, router]);
 
   useEffect(() => {

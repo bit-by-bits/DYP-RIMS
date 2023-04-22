@@ -94,15 +94,20 @@ export default function Details(props) {
       })
       .catch(error => console.log("DTE: " + error));
 
-    axios({
-      method: "GET",
-      url: `${URLObj.citation}/citation-count/${props.doi}`,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-      },
-    })
-      .then(response => setCitations(response.data[0].count))
-      .catch(error => console.log("CTE: " + error));
+    if (props.doi)
+      axios({
+        method: "GET",
+        url: `${URLObj.base}/citation-count/?doi=${props.doi}`,
+        headers: { Authorization: `Bearer ${user.token}` },
+      })
+        .then(response =>
+          setCitations(
+            !isNaN(parseInt(response.data[0].count))
+              ? parseInt(response.data[0].count)
+              : 0
+          )
+        )
+        .catch(error => console.log("CTE: " + error));
   }, [props]);
 
   useEffect(() => {

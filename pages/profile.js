@@ -10,11 +10,7 @@ import Loader from "../src/Common/Loader";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import URLObj from "../src/baseURL";
-import {
-  DeleteOutlined,
-  FileImageOutlined,
-  FilePdfOutlined,
-} from "@ant-design/icons";
+import { FileImageOutlined, FilePdfOutlined } from "@ant-design/icons";
 import { Button, Image as Img, Space, message } from "antd";
 
 const Profile = () => {
@@ -280,7 +276,7 @@ const Profile = () => {
                   &nbsp;&middot;&nbsp; Issue: {e.issue ?? "?"}
                   &nbsp;&middot;&nbsp; Pages: {e.pages ?? "?"}
                 </span>
-                {e.id ? (
+                {e.file ? (
                   <span style={{ color: "green" }}>
                     Softcopy found for this publication.
                   </span>

@@ -62,3 +62,11 @@ html {
   color: white !important;
   text-align: center !important;
 }
+
+.ant-pagination-item-active {
+  border-color: #9a2827 !important;
+}
+
+.ant-pagination-item-active a {
+  color: #9a2827 !important;
+}

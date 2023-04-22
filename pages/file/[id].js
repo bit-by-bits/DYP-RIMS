@@ -8,6 +8,7 @@ import Loader from "../../src/Common/Loader";
 import Navbar from "../../src/Common/Navbar";
 import FileInfo from "../../src/File/FileInfo";
 import { message } from "antd";
+import axios from "axios";
 
 const File = () => {
   const router = useRouter();
@@ -15,6 +16,8 @@ const File = () => {
 
   const [ID, setID] = useState(id);
   const [visible, setVisible] = useState(true);
+
+  const [file, setFile] = useState(false);
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -31,6 +34,28 @@ const File = () => {
     console.log(id);
   }, [router, id]);
 
+  const download = () => {
+    message.error("Download functionality unavailable!");
+  };
+
+  const remove = () => {
+    let data = new FormData();
+    data.append("id", ID);
+
+    axios({
+      method: "post",
+      url: "https://dpu-file-server.herokuapp.com/delete",
+      data: data,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(res => {
+        message.success("Publication deleted successfully!");
+
+        router.push("/");
+      })
+      .catch(err => message.error("Publication not deleted!"));
+  };
+
   return (
     <>
       <Head>
@@ -43,24 +68,22 @@ const File = () => {
         <Loader visible={visible} />
 
         <div className={styles.file_wrapper}>
-          <FileInfo setVisible={setVisible} id={ID} />
+          <FileInfo setv={setVisible} setd={setFile} id={ID} />
           <div className={styles.file_btns}>
             <div
-              onClick={() => message.error("File missing")}
+              onClick={() => router.push(`/edit/${ID}`)}
               className={styles.file_btn1}
             >
-              Download
+              Edit
             </div>
-            <div
-              onClick={() => router.push(`/edit/${ID}`)}
-              className={styles.file_btn2}
-            >
-              Edit File
-            </div>
-            <div
-              onClick={() => message.error("Delete functionality missing")}
-              className={styles.file_btn2}
-            >
+
+            {file && (
+              <div onClick={download} className={styles.file_btn2}>
+                Download
+              </div>
+            )}
+
+            <div onClick={remove} className={styles.file_btn2}>
               Delete
             </div>
           </div>
