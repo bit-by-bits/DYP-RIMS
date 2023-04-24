@@ -4,7 +4,7 @@ import Head from "next/head";
 import Navbar from "../../src/Common/Navbar";
 import axios from "axios";
 import URLObj from "../../src/baseURL";
-import { Button, Checkbox, DatePicker, Form } from "antd";
+import { Button, DatePicker, Form } from "antd";
 import { Input, message, Select, Upload } from "antd";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -26,11 +26,13 @@ const Conferences = () => {
     setUser(user);
   }, []);
 
-  const [poster, setPoster] = useState(false);
-  const [paper, setPaper] = useState(false);
+  const [poster, setPoster] = useState(0);
+  const [paper, setPaper] = useState(0);
 
   const [dept, setDept] = useState({});
   const [depts, setDepts] = useState([]);
+
+  useEffect(() => form.resetFields(), [form, dept]);
 
   useEffect(() => {
     axios({
@@ -54,9 +56,9 @@ const Conferences = () => {
     });
   }, [user, depts]);
 
-  useEffect(() => form.resetFields(), [form, dept]);
-
   const onFinish = values => {
+    console.log(values);
+
     let data = new FormData();
     data.append("name", values.attendee);
     data.append("dept_id", values.department);
@@ -70,13 +72,29 @@ const Conferences = () => {
     data.append("is_paper", paper ? 1 : 0);
 
     if (poster) {
-      data.append("poster_title", values.poster_title);
-      data.append("poster", values.poster.file.originFileObj);
+      const posterTitles = new Array(poster);
+      const posters = new Array(poster);
+
+      for (let i = 0; i < poster; i++) {
+        posterTitles[i] = values[`tposter${i}`];
+        posters[i] = values[`poster${i}`].file.originFileObj;
+      }
+
+      data.append("poster_title", posterTitles);
+      data.append("poster", posters);
     }
 
     if (paper) {
-      data.append("paper_title", values.paper_title);
-      data.append("paper", values.paper.file.originFileObj);
+      const paperTitles = new Array(paper);
+      const papers = new Array(paper);
+
+      for (let i = 0; i < paper; i++) {
+        paperTitles[i] = values[`tpaper${i}`];
+        papers[i] = values[`paper${i}`].file.originFileObj;
+      }
+
+      data.append("paper_title", paperTitles);
+      data.append("paper", papers);
     }
 
     axios({
@@ -221,83 +239,70 @@ const Conferences = () => {
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Checkbox onChange={e => setPaper(e.target.checked)}>
-              Paper Presentation
-            </Checkbox>
-            <Checkbox onChange={e => setPoster(e.target.checked)}>
-              Poster Presentation
-            </Checkbox>
-          </Form.Item>
-
-          <Form.Item
-            label="Poster Title"
-            name="poster_title"
-            rules={[
-              { required: poster, message: "Please input poster title!" },
-            ]}
-          >
-            <Input disabled={!poster} />
-          </Form.Item>
-
-          <Form.Item
-            label="Upload Poster"
-            name="poster"
-            rules={[
-              {
-                required: poster,
-                message: "Please input poster presentation!",
-              },
-            ]}
-          >
-            <Upload
-              disabled={!poster}
-              onValuesChange={info => {
-                if (info.file.status === "done") {
-                  message.success(
-                    `${info.file.name} file uploaded successfully`
-                  );
-                } else if (info.file.status === "error") {
-                  message.error(`${info.file.name} file upload failed.`);
-                }
-              }}
+            <Button
+              onClick={() => setPaper(paper + 1)}
+              type="primary"
+              className={styles.primary}
             >
-              <Button icon={<UploadOutlined />}>Click to Upload</Button>
-            </Upload>
-          </Form.Item>
+              Add Paper Presentation
+            </Button>
 
-          <Form.Item
-            label="Paper Title"
-            name="paper_title"
-            rules={[{ required: paper, message: "Please input paper title!" }]}
-          >
-            <Input disabled={!paper} />
-          </Form.Item>
-
-          <Form.Item
-            label="Upload Paper"
-            name="paper"
-            rules={[
-              {
-                required: paper,
-                message: "Please input paper presentation!",
-              },
-            ]}
-          >
-            <Upload
-              disabled={!paper}
-              onValuesChange={info => {
-                if (info.file.status === "done") {
-                  message.success(
-                    `${info.file.name} file uploaded successfully`
-                  );
-                } else if (info.file.status === "error") {
-                  message.error(`${info.file.name} file upload failed.`);
-                }
-              }}
+            <Button
+              onClick={() => setPoster(poster + 1)}
+              type="primary"
+              className={styles.secondary}
             >
-              <Button icon={<UploadOutlined />}>Click to Upload</Button>
-            </Upload>
+              Add Poster Presentation
+            </Button>
           </Form.Item>
+
+          {new Array(poster).fill(0).map((e, i) => (
+            <div key={i}>
+              <Form.Item label="Poster Title" name={`tposter${i}`}>
+                <Input />
+              </Form.Item>
+
+              <Form.Item label="Upload Poster" name={`poster${i}`}>
+                <Upload
+                  onValuesChange={info => {
+                    if (info.file.status === "done") {
+                      message.success(
+                        `${info.file.name} file uploaded successfully`
+                      );
+                    } else if (info.file.status === "error") {
+                      message.error(`${info.file.name} file upload failed.`);
+                    }
+                  }}
+                >
+                  <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                </Upload>
+              </Form.Item>
+            </div>
+          ))}
+
+          {new Array(paper).fill(0).map((e, i) => (
+            <div key={i}>
+              <Form.Item label="Paper Title" name={`tpaper${i}`}>
+                <Input />
+              </Form.Item>
+
+              <Form.Item label="Upload Paper" name={`paper${i}`}>
+                <Upload
+                  onValuesChange={info => {
+                    if (info.file.status === "done") {
+                      message.success(
+                        `${info.file.name} file uploaded successfully`
+                      );
+                    } else if (info.file.status === "error") {
+                      message.error(`${info.file.name} file upload failed.`);
+                    }
+                  }}
+                >
+                  <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                </Upload>
+              </Form.Item>
+            </div>
+          ))}
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
             <Button className={styles.primary} type="primary" htmlType="submit">

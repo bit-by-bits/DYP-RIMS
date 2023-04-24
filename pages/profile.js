@@ -3,7 +3,6 @@ import styles from "../styles/profile.module.css";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import Navbar from "../src/Common/Navbar";
-import Boxes from "../src/Profile/Boxes";
 import Section from "../src/Profile/Section";
 import PTable from "../src/Profile/PTable";
 import Loader from "../src/Common/Loader";
@@ -11,17 +10,16 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import URLObj from "../src/baseURL";
 import { FileImageOutlined, FilePdfOutlined } from "@ant-design/icons";
-import { Button, Image as Img, Space, message } from "antd";
+import { Button, Image as Img, message } from "antd";
 
 const Profile = () => {
   const router = useRouter();
   const [visible, setVisible] = useState(true);
 
-  const [lawrd, setLawrd] = useState(0);
-  const [lpubs, setLpubs] = useState(0);
-
-  const [pdata, setPdata] = useState({ head: [], body: [], check: false });
+  const [adata, setAdata] = useState({ head: [], body: [], check: false });
+  const [ptdata, setPtdata] = useState({ head: [], body: [], check: false });
   const [cdata, setCdata] = useState({ head: [], body: [], check: false });
+  const [pdata, setPdata] = useState({ head: [], body: [], check: false });
 
   const [user, setUser] = useState({});
   const [image, setImage] = useState({
@@ -246,14 +244,23 @@ const Profile = () => {
                     fontSize: "1rem",
                     lineHeight: "1.3rem",
                   }}
-                >
-                  {e.publication_title ?? "N/A"}
-                </span>
+                  dangerouslySetInnerHTML={{
+                    __html: e.publication_title ?? "N/A",
+                  }}
+                />
                 <span style={{ fontWeight: 400 }}>
-                  <div style={{ fontWeight: "bold", display: "flex", gap: 5 }}>
+                  <div
+                    style={{
+                      fontWeight: "bold",
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 5,
+                    }}
+                  >
                     {e.author_name?.length
                       ? e.author_name?.map(a => (
                           <div
+                            style={{ width: "max-content" }}
                             key={a.id}
                             title={a.department ?? a.searchable_name}
                           >
@@ -313,21 +320,6 @@ const Profile = () => {
             body: [],
             check: true,
           });
-        });
-
-    if (user.token)
-      axios({
-        method: "GET",
-        url: `${URLObj.base}/user/stats`,
-        headers: { Authorization: `Bearer ${user.token}` },
-      })
-        .then(res => {
-          setLawrd(res.data.awards);
-          setLpubs(res.data.publications);
-        })
-        .catch(err => {
-          setLawrd(0);
-          setLpubs(0);
         });
 
     if (user.name)
@@ -438,11 +430,19 @@ const Profile = () => {
         <Navbar />
 
         <div className={styles.profile_wrapper}>
-          <Section user={user} data={[]} extra={[lawrd, lpubs]} />
-          <Boxes title="Awards & Achievements" data={[]} />
-          <Boxes title="Patents" data={[]} />
-          <PTable title="Publications" body={pdata} />
+          <Section
+            user={user}
+            lengths={[
+              adata?.body?.length,
+              ptdata?.body?.length,
+              cdata?.body?.length,
+              pdata?.body?.length,
+            ]}
+          />
+          <PTable title="Awards" body={adata} />
+          <PTable title="Patents" body={ptdata} />
           <PTable title="Conferences" body={cdata} />
+          <PTable title="Publications" body={pdata} />
 
           <a href="https://www.qtanea.com/" rel="noreferrer" target="_blank">
             <Image

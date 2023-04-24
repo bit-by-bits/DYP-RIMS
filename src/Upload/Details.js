@@ -3,10 +3,11 @@ import axios from "axios";
 import styles from "../../styles/details.module.css";
 import URLObj from "../baseURL";
 import Image from "next/image";
-import { Button, Form, Input, message, Select } from "antd";
+import { Button, Form, Input, message, Select, Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 
-export default function Details(props) {
+const Details = ({ setv, setf, doi }) => {
   const router = useRouter();
   const [form] = Form.useForm();
   const [user, setUser] = useState({});
@@ -16,6 +17,7 @@ export default function Details(props) {
 
   const [disabled, setDisabled] = useState(true);
   const [citations, setCitations] = useState(0);
+  const [pubmed, setPubmed] = useState("");
 
   const [authors, setAuthors] = useState({ options: [], selected: [] });
   const [indexed, setIndexed] = useState({ options: [], selected: [] });
@@ -29,7 +31,10 @@ export default function Details(props) {
     if (typeof window !== "undefined" && user.token === "") router.push("/");
   }, [router, user]);
 
-  useEffect(() => form.resetFields(), [form, data, dataJournal]);
+  useEffect(() => {
+    console.log(data, dataJournal);
+    form.resetFields();
+  }, [form, data, dataJournal]);
 
   useEffect(() => {
     axios({
@@ -90,14 +95,14 @@ export default function Details(props) {
             .then(response => setDataJournal(response.data[0]))
             .catch(error => console.log("DELE: " + error));
 
-        props.setVisible(false);
+        setv(false);
       })
       .catch(error => console.log("DTE: " + error));
 
-    if (props.doi)
+    if (doi) {
       axios({
         method: "GET",
-        url: `${URLObj.base}/citation-count/?doi=${props.doi}`,
+        url: `${URLObj.base}/citation-count/?doi=${doi}`,
         headers: { Authorization: `Bearer ${user.token}` },
       })
         .then(response =>
@@ -108,7 +113,15 @@ export default function Details(props) {
           )
         )
         .catch(error => console.log("CTE: " + error));
-  }, [props]);
+
+      axios({
+        method: "GET",
+        url: `${URLObj.pubmed}/?tool=journalchecker.com&email=hello@qtanea.com&ids=${doi}&format=json`,
+      })
+        .then(response => setPubmed(response.data.records[0].pmid ?? 0))
+        .catch(error => console.log("PTE: " + error));
+    }
+  }, [doi, setv, user]);
 
   useEffect(() => {
     if (dataJournal) {
@@ -142,15 +155,10 @@ export default function Details(props) {
     data.append("issue", values.issue);
     data.append("volume", values.volume);
     data.append("pages", values.pages);
-    data.append("citations", values.citations);
-    data.append("hindex", values.hindex);
-    data.append("sjr", values.sjr);
-    data.append("impact_factor", values.ifactor);
     data.append(
       "other_authors",
       "{ " + authors.selected.map(e => e.value).join(", ") + " }"
     );
-
     indexed.options.forEach((e, i) =>
       data.append(
         e.value,
@@ -159,6 +167,11 @@ export default function Details(props) {
           : 0
       )
     );
+    data.append("citations", values.citations);
+    data.append("hindex", values.hindex);
+    data.append("sjr", values.sjr);
+    data.append("impact_factor", values.ifactor);
+    data.append("file", values.file.file.originFileObj);
 
     axios({
       method: "POST",
@@ -172,7 +185,7 @@ export default function Details(props) {
     })
       .then(res => {
         message.success("Research added successfully!");
-        props.setFinished(true);
+        setf(true);
       })
       .catch(err => {
         if (err?.response?.status === 400) {
@@ -215,7 +228,7 @@ export default function Details(props) {
             sjr: dataJournal?.sjr ?? " ",
             citations: citations ?? " ",
             indexed: indexed.selected ?? [],
-            pubmed: data?.pubmed_id ?? " ",
+            pubmed: pubmed ?? " ",
             doi: data?.DOI ?? " ",
             abstract: data?.abstract ?? " ",
             authors: authors.selected ?? [],
@@ -380,6 +393,22 @@ export default function Details(props) {
             <Input style={{ width: "30vw" }} disabled={true} />
           </Form.Item>
 
+          <Form.Item label="Add File" name="file">
+            <Upload
+              onChange={info => {
+                if (info.file.status === "done") {
+                  message.success(
+                    `${info.file.name} file uploaded successfully`
+                  );
+                } else if (info.file.status === "error") {
+                  message.error(`${info.file.name} file upload failed.`);
+                }
+              }}
+            >
+              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            </Upload>
+          </Form.Item>
+
           <Form.Item
             label="Authors"
             name="authors"
@@ -399,16 +428,22 @@ export default function Details(props) {
             />
           </Form.Item>
 
-          <Form.Item style={{ gridColumn: "1 /span 2" }}>
+          <Form.Item
+            wrapperCol={{
+              offset: 8,
+              span: 16,
+            }}
+            style={{
+              gridColumn: "1 / 3",
+            }}
+          >
             <Button className={styles.submit} type="primary" htmlType="submit">
               Save Changes
             </Button>
 
             <Button
               className={styles.reset}
-              onClick={() => {
-                setDisabled(false);
-              }}
+              onClick={() => setDisabled(false)}
               type="primary"
               htmlType="reset"
             >
@@ -423,4 +458,6 @@ export default function Details(props) {
       )}
     </>
   );
-}
+};
+
+export default Details;

@@ -5,6 +5,7 @@ import styles from "../../styles/file.module.css";
 import Loader from "../../src/Common/Loader";
 import Navbar from "../../src/Common/Navbar";
 import FileForm from "../../src/File/FileForm";
+import Image from "next/image";
 
 const Edit = () => {
   const router = useRouter();
@@ -39,8 +40,16 @@ const Edit = () => {
         <Loader visible={visible} />
         <h2
           style={{ margin: "8vw 0 2vw 10vw", color: "#9a2827" }}
-        >{`Hello ${user.name}. Please fill the empty fields (if any).`}</h2>
-        <FileForm setVisible={setVisible} id={ID} token={user?.token} />
+        >{`Hey ${user.name}. Please fill the empty fields (if any).`}</h2>
+        <FileForm setVisible={setVisible} id={ID} user={user} />
+        <a href="https://www.qtanea.com/" rel="noreferrer" target="_blank">
+          <Image
+            alt="Q"
+            width={60}
+            height={60}
+            src="/logos/qtanea-colour.png"
+          />
+        </a>
       </div>
     </>
   );

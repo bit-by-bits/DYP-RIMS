@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "../../styles/details.module.css";
 import URLObj from "../baseURL";
-import { Button, Form, Input, message, Select } from "antd";
+import { Button, Form, Input, message, Select, Upload } from "antd";
 import { useRouter } from "next/router";
+import { UploadOutlined } from "@ant-design/icons";
 
-const FileForm = ({ setVisible, id, token }) => {
+const FileForm = ({ setVisible, id, user }) => {
   const router = useRouter();
   const [form] = Form.useForm();
 
@@ -87,15 +88,10 @@ const FileForm = ({ setVisible, id, token }) => {
     data.append("issue", values.issue);
     data.append("volume", values.volume);
     data.append("pages", values.pages);
-    data.append("citations", values.citations);
-    data.append("hindex", values.hindex);
-    data.append("sjr", values.sjr);
-    data.append("impact_factor", values.ifactor);
     data.append(
       "other_authors",
       "{ " + authors.selected.map(e => e.value).join(", ") + " }"
     );
-
     indexed.options.forEach((e, i) =>
       data.append(
         e.value,
@@ -104,13 +100,18 @@ const FileForm = ({ setVisible, id, token }) => {
           : 0
       )
     );
+    data.append("citations", values.citations);
+    data.append("hindex", values.hindex);
+    data.append("sjr", values.sjr);
+    data.append("impact_factor", values.ifactor);
+    data.append("file", values.file.file.originFileObj);
 
     axios({
       method: "POST",
       maxBodyLength: Infinity,
       url: `${URLObj.base}/publication/${id}/edit/`,
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${user.token}`,
         "Content-Type": "multipart/form-data",
       },
       data: data,
@@ -130,7 +131,11 @@ const FileForm = ({ setVisible, id, token }) => {
         <Form
           name="basic"
           form={form}
-          style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            transform: "translateX(-20px)",
+          }}
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
           initialValues={{
@@ -319,6 +324,22 @@ const FileForm = ({ setVisible, id, token }) => {
             <Input style={{ width: "30vw" }} />
           </Form.Item>
 
+          <Form.Item label="Add File" name="file">
+            <Upload
+              onChange={info => {
+                if (info.file.status === "done") {
+                  message.success(
+                    `${info.file.name} file uploaded successfully`
+                  );
+                } else if (info.file.status === "error") {
+                  message.error(`${info.file.name} file upload failed.`);
+                }
+              }}
+            >
+              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            </Upload>
+          </Form.Item>
+
           <Form.Item
             label="Authors"
             name="authors"
@@ -338,7 +359,13 @@ const FileForm = ({ setVisible, id, token }) => {
             />
           </Form.Item>
 
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+          <Form.Item
+            wrapperCol={{ offset: 8, span: 16 }}
+            style={{
+              gridColumn: "1 / 3",
+              marginBottom: 20,
+            }}
+          >
             <Button className={styles.submit} type="primary" htmlType="submit">
               Save Changes
             </Button>

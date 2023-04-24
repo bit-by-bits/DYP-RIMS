@@ -1,5 +1,12 @@
 /* FORM CSS */
 
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .wrapper .file_wrapper,
 .form_wrapper {
   min-height: 100vh;
@@ -264,26 +271,6 @@
 
 .file_btn2:hover {
   background-color: rgba(0, 0, 0, 0.1) !important;
-}
-
-.wrapper .footer {
-  width: 100vw;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  padding: 0.4rem 0;
-  text-align: center;
-  background: #9a2827;
-  color: white;
-  font-weight: 700;
-  font-size: 1rem;
-}
-
-.foot {
-  position: absolute;
-  width: 4rem;
-  left: 50vw;
-  bottom: 0.8rem;
 }
 
 @media screen and (min-width: 1400px) {

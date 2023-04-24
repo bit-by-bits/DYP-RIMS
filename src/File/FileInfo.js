@@ -119,9 +119,12 @@ const FileInfo = ({ setv, id, setd }) => {
           )}
         </div>
 
-        <div className={styles.file_title}>
-          {data?.publication_title ?? "- Not Available -"}
-        </div>
+        <div
+          className={styles.file_title}
+          dangerouslySetInnerHTML={{
+            __html: data?.publication_title ?? "- Not Available -",
+          }}
+        />
 
         <div className={styles.file_info}>
           <div className={styles.file_info_box}>

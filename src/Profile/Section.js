@@ -5,69 +5,28 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import URLObj from "../baseURL";
 
-export default function Section(props) {
-  const [IC, setIC] = useState(0);
-  const [IA, setIA] = useState(0);
-
-  const [cit, setCit] = useState(0);
-  const [Qs, setQs] = useState([0, 0, 0, 0, 0]);
-
-  useEffect(() => {
-    clear();
-
-    props.data.forEach(e => {
-      setIC(IC => IC + e.i_factor);
-      setCit(cit => cit + e.citations);
-
-      switch (e.sjr) {
-        case "Q1":
-          setQs(Qs => [Qs[0] + 1, Qs[1], Qs[2], Qs[3], Qs[4]]);
-          break;
-
-        case "Q2":
-          setQs(Qs => [Qs[0], Qs[1] + 1, Qs[2], Qs[3], Qs[4]]);
-          break;
-
-        case "Q3":
-          setQs(Qs => [Qs[0], Qs[1], Qs[2] + 1, Qs[3], Qs[4]]);
-          break;
-
-        case "Q4":
-          setQs(Qs => [Qs[0], Qs[1], Qs[2], Qs[3] + 1, Qs[4]]);
-          break;
-
-        default:
-          setQs(Qs => [Qs[0], Qs[1], Qs[2], Qs[3], Qs[4] + 1]);
-          break;
-      }
-    });
-
-    setIA(props.data.length == 0 ? 0 : IC / props.data.length);
-  }, [IC, props.data]);
-
-  function clear() {
-    setIC(0);
-    setCit(0);
-    setQs([0, 0, 0, 0, 0]);
-  }
-
-  /////////////////////////////////////////////////
-
-  const [conf, setConf] = useState([]);
+const Section = ({ user, lengths }) => {
   const [hindex, setHindex] = useState("N/A");
+  const [SJR, setSJR] = useState({
+    Q1: "N/A",
+    Q2: "N/A",
+    Q3: "N/A",
+    Q4: "N/A",
+  });
 
   useEffect(() => {
-    if (props?.user?.name)
+    if (user.name) {
       axios({
         method: "GET",
-        url: `${URLObj.base}/conference/${props?.user?.name}/count`,
+        url: `${URLObj.base}/publication/${user.name}/quartiles`,
       })
-        .then(res => setConf(res.data.count))
-        .catch(err => setConf("N/A"));
+        .then(res => setSJR(res.data))
+        .catch(err => setSJR({ Q1: "N/A", Q2: "N/A", Q3: "N/A", Q4: "N/A" }));
+    }
 
-    if (props?.user?.id) {
+    if (user.id) {
       let data = new FormData();
-      data.append("id", props?.user?.id);
+      data.append("id", user.id);
 
       axios({
         method: "POST",
@@ -77,7 +36,7 @@ export default function Section(props) {
         .then(res => setHindex(res.data.h_index))
         .catch(err => setHindex("N/A"));
     }
-  }, [props?.user]);
+  }, [user]);
 
   const edit = () => message.error("Edit functionality is still unavailable");
 
@@ -91,7 +50,7 @@ export default function Section(props) {
             <div className={styles.img_wrapper}>
               {
                 // eslint-disable-next-line @next/next/no-img-element
-                <img alt="user" src={props?.user?.picture} />
+                <img alt="user" src={user.picture} />
               }
               <svg className={styles.img_border1} viewBox="0 0 100 100">
                 <path d="M95,50 A45,45 0 0,1 5,50 A45,45 0 0,1 50,5" />
@@ -102,14 +61,14 @@ export default function Section(props) {
             </div>
 
             <div className={styles.profile_text}>
-              <div className={styles.profile_name}>{props?.user?.name}</div>
+              <div className={styles.profile_name}>{user.name}</div>
 
               <div className={styles.profile_degree}>MBBS, M.D.</div>
 
-              <div className={styles.profile_post}>{props?.user?.role}</div>
+              <div className={styles.profile_post}>{user.role}</div>
 
               <div className={styles.profile_dept}>
-                Department of {props?.user?.dept}
+                Department of {user.dept}
               </div>
 
               <div className={styles.profile_clg}>
@@ -133,23 +92,23 @@ export default function Section(props) {
 
         <div className={styles.profile_feats}>
           <a href="#awards" className={styles.profile_feat}>
-            <span>Awards: {props.extra[0] ?? 0}</span>
-          </a>
-
-          <a href="#conferences" className={styles.profile_feat}>
-            <span>Conferences: {conf}</span>
+            <span>Awards: {lengths[0] ?? 0}</span>
           </a>
 
           <a href="#patents" className={styles.profile_feat}>
-            <span>Patents: 0</span>
+            <span>Patents: {lengths[1] ?? 0}</span>
+          </a>
+
+          <a href="#conferences" className={styles.profile_feat}>
+            <span>Conferences: {lengths[2] ?? 0}</span>
           </a>
 
           <a href="#publications" className={styles.profile_feat}>
-            <span>Publications: {props.extra[1] ?? 0}</span>
+            <span>Publications: {lengths[3] ?? 0}</span>
           </a>
 
           <a href="#citations" className={styles.profile_feat}>
-            <span>Total Citations: {cit}</span>
+            <span>Total Citations: 0</span>
           </a>
 
           <a href="#publications" className={styles.profile_feat}>
@@ -161,9 +120,7 @@ export default function Section(props) {
             style={{ gridColumn: "span 3" }}
             className={styles.profile_feat}
           >
-            <span>
-              Cumulative/Average IF: {IC?.toFixed(2)}/ {IA?.toFixed(2)}
-            </span>
+            <span>Cumulative IF: 0 | Average IF: 0</span>
           </a>
 
           <a
@@ -172,12 +129,13 @@ export default function Section(props) {
             className={styles.profile_feat}
           >
             <span>
-              Q1: {Qs[0]}&nbsp; Q2: {Qs[1]}&nbsp; Q3: {Qs[2]}&nbsp; Q4: {Qs[3]}
-              &nbsp; N/A: {Qs[4]}
+              Q1: {SJR.Q1} | Q2: {SJR.Q2} | Q3: {SJR.Q3} | Q4: {SJR.Q4}
             </span>
           </a>
         </div>
       </div>
     </>
   );
-}
+};
+
+export default Section;

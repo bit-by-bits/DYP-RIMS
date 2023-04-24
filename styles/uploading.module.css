@@ -1,8 +1,15 @@
-.wrapper .uploading_wrapper {
+.wrapper,
+.wrapper .uploading_wrapper,
+.wrapper .uploading_wrapper .uploading_head,
+.wrapper .uploading_wrapper .uploading_flex,
+.wrapper .uploading_wrapper .uploading_flex .uploading_info {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+}
+
+.wrapper .uploading_wrapper {
   gap: 1.5rem;
   margin: 6rem 10vw 2rem 10vw;
 }
@@ -11,26 +18,14 @@
   color: #9a2827;
   font-weight: 700;
   font-size: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
   text-align: center;
 }
 
 .wrapper .uploading_wrapper .uploading_flex {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
   gap: 1rem;
 }
 
 .wrapper .uploading_wrapper .uploading_flex .uploading_info {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
   gap: 0.5rem;
   align-items: flex-start;
 }

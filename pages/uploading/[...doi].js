@@ -6,6 +6,7 @@ import Status from "../../src/Upload/Status";
 import Details from "../../src/Upload/Details";
 import styles from "../../styles/uploading.module.css";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 const Uploading = () => {
   const router = useRouter();
@@ -62,13 +63,19 @@ const Uploading = () => {
           />
 
           {!finished && (
-            <Details
-              setVisible={setVisible}
-              setFinished={setFinished}
-              doi={DOI}
-            />
+            <Details setv={setVisible} setf={setFinished} doi={DOI} />
           )}
         </div>
+
+        <a href="https://www.qtanea.com/" rel="noreferrer" target="_blank">
+          <Image
+            alt="Q"
+            width={60}
+            height={60}
+            className={styles.foot}
+            src="/logos/qtanea-colour.png"
+          />
+        </a>
       </div>
     </>
   );

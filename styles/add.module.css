@@ -14,14 +14,26 @@
   margin: 2rem 0;
 }
 
-.primary {
-  color: white;
+.primary,
+.secondary {
   font-weight: 700;
   cursor: pointer;
   border-radius: 8px;
+  margin-left: 10px;
+  color: white;
   background: #9a2827 !important;
+}
+
+.secondary {
+  background-color: white !important;
+  color: #9a2827 !important;
+  border: 2px solid #9a2827 !important;
 }
 
 .primary:hover {
   background-color: #7e1918 !important;
+}
+
+.secondary:hover {
+  background-color: rgba(0, 0, 0, 0.1) !important;
 }
