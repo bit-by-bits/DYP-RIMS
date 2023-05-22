@@ -10,7 +10,8 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import URLObj from "../src/baseURL";
 import { FileImageOutlined, FilePdfOutlined } from "@ant-design/icons";
-import { Button, Image as Img, message } from "antd";
+import { BackTop, Button, Image as Img, message } from "antd";
+import Side from "../src/Common/Side";
 
 const Profile = () => {
   const router = useRouter();
@@ -428,6 +429,15 @@ const Profile = () => {
       <div className={styles.wrapper}>
         <Loader visible={visible} />
         <Navbar />
+        <Side />
+        <BackTop
+          style={{
+            right: 30,
+            bottom: 30,
+            borderRadius: "50%",
+            backgroundColor: "#9a2827",
+          }}
+        />
 
         <div className={styles.profile_wrapper}>
           <Section

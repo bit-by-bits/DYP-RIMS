@@ -8,6 +8,7 @@ import { Button, DatePicker, Form } from "antd";
 import { Input, message, Select, Upload } from "antd";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Side from "../../src/Common/Side";
 
 function convert(str) {
   var date = new Date(str),
@@ -125,6 +126,8 @@ const Conferences = () => {
 
       <div className={styles.wrapper}>
         <Navbar />
+        <Side />
+
         <h1 className={styles.heading}>Add Conferences</h1>
 
         <Form

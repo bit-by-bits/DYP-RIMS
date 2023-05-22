@@ -3,6 +3,7 @@ import styles from "../../styles/add.module.css";
 import Head from "next/head";
 import Navbar from "../../src/Common/Navbar";
 import { useEffect, useState } from "react";
+import Side from "../../src/Common/Side";
 
 const Books = () => {
   const [user, setUser] = useState({});
@@ -29,6 +30,8 @@ const Books = () => {
 
       <div className={styles.wrapper}>
         <Navbar />
+        <Side />
+
         <h1 className={styles.heading}>Add Books/Chapters</h1>
 
         <Form

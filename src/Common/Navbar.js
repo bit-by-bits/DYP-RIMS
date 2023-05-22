@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Menu } from "antd";
+import { Menu, message } from "antd";
 import Link from "next/link";
 import styles from "../../styles/common.module.css";
-import { AppstoreAddOutlined, LogoutOutlined } from "@ant-design/icons";
+import {
+  AppstoreAddOutlined,
+  DownloadOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons";
 
 const Navbar = () => {
   const [user, setUser] = useState({});
@@ -11,6 +15,8 @@ const Navbar = () => {
     const user = JSON.parse(localStorage.getItem("user"));
     setUser(user);
   }, []);
+
+  const download = () => message.error("CV functionality is still unavailable");
 
   const ITEMS = [
     {
@@ -57,6 +63,45 @@ const Navbar = () => {
               key: "student",
             },
           ],
+        },
+      ],
+    },
+    {
+      label: (
+        <span onClick={download} className={styles.logout}>
+          Download
+        </span>
+      ),
+      key: "download",
+      icon: <DownloadOutlined />,
+      children: [
+        {
+          label: <Link href="/upload">Add Publication</Link>,
+          key: "upload",
+        },
+        {
+          label: <Link href="/add/award">Add Award</Link>,
+          key: "award",
+        },
+        {
+          label: <Link href="/add/ipr">Add IPR</Link>,
+          key: "ipr",
+        },
+        {
+          label: <Link href="/add/conference">Conference Attended</Link>,
+          key: "conference",
+        },
+        {
+          label: <Link href="/add/project">Add Research Project</Link>,
+          key: "project",
+        },
+        {
+          label: <Link href="/add/book">Add Book/Chapter</Link>,
+          key: "book",
+        },
+        {
+          label: <Link href="/add/student">Student Guided</Link>,
+          key: "student",
         },
       ],
     },

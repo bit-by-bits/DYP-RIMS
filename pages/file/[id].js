@@ -8,6 +8,7 @@ import Navbar from "../../src/Common/Navbar";
 import FileInfo from "../../src/File/FileInfo";
 import { message } from "antd";
 import axios from "axios";
+import Side from "../../src/Common/Side";
 
 const File = () => {
   const router = useRouter();
@@ -64,6 +65,8 @@ const File = () => {
 
       <div className={styles.wrapper}>
         <Navbar />
+        <Side />
+
         <Loader visible={visible} />
 
         <div className={styles.file_wrapper}>

@@ -6,6 +6,7 @@ import Loader from "../../src/Common/Loader";
 import Navbar from "../../src/Common/Navbar";
 import FileForm from "../../src/File/FileForm";
 import Image from "next/image";
+import Side from "../../src/Common/Side";
 
 const Edit = () => {
   const router = useRouter();
@@ -37,6 +38,8 @@ const Edit = () => {
 
       <div className={styles.wrapper}>
         <Navbar />
+        <Side />
+
         <Loader visible={visible} />
         <h2
           style={{ margin: "8vw 0 2vw 10vw", color: "#9a2827" }}

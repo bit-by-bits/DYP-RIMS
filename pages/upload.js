@@ -7,6 +7,7 @@ import styles from "../styles/upload.module.css";
 import Image from "next/image";
 import URLObj from "../src/baseURL";
 import { message } from "antd";
+import Side from "../src/Common/Side";
 
 const Upload = () => {
   const router = useRouter();
@@ -124,6 +125,7 @@ const Upload = () => {
 
       <div className={styles.wrapper}>
         <Navbar />
+        <Side />
 
         <div className={styles.upload_wrapper}>
           <div className={styles.upload_left}>

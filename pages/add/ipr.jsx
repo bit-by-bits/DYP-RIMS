@@ -4,6 +4,7 @@ import styles from "../../styles/add.module.css";
 import Head from "next/head";
 import Navbar from "../../src/Common/Navbar";
 import { useEffect, useState } from "react";
+import Side from "../../src/Common/Side";
 
 const IPR = () => {
   const [user, setUser] = useState({});
@@ -30,6 +31,8 @@ const IPR = () => {
 
       <div className={styles.wrapper}>
         <Navbar />
+        <Side />
+
         <h1 className={styles.heading}>Add IPR</h1>
 
         <Form

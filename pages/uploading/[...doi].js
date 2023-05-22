@@ -7,6 +7,7 @@ import Details from "../../src/Upload/Details";
 import styles from "../../styles/uploading.module.css";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import Side from "../../src/Common/Side";
 
 const Uploading = () => {
   const router = useRouter();
@@ -45,6 +46,8 @@ const Uploading = () => {
 
       <div className={styles.wrapper}>
         <Navbar />
+        <Side />
+
         <Loader visible={visible} />
 
         <div className={styles.uploading_wrapper}>

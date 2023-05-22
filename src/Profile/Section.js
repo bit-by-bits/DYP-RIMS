@@ -40,8 +40,6 @@ const Section = ({ user, lengths }) => {
 
   const edit = () => message.error("Edit functionality is still unavailable");
 
-  const download = () => message.error("CV functionality is still unavailable");
-
   return (
     <>
       <div className={styles.profile_section}>
@@ -84,10 +82,6 @@ const Section = ({ user, lengths }) => {
           <Link href="/upload">
             <div className={styles.profile_btn}>Add Publications</div>
           </Link>
-
-          <div onClick={download} className={styles.profile_btn}>
-            Download CV
-          </div>
         </div>
 
         <div className={styles.profile_feats}>

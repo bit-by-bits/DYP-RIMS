@@ -70,3 +70,15 @@ html {
 .ant-pagination-item-active a {
   color: #9a2827 !important;
 }
+
+.ant-menu-submenu-active > div {
+  background-color: #9a2827 !important;
+}
+
+.ant-menu-submenu-inline .ant-menu-item-active {
+  background-color: #9a2827 !important;
+}
+
+.ant-menu-submenu-inline .ant-menu-item-active a {
+  color: white !important;
+}
