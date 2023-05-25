@@ -10,7 +10,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import URLObj from "../src/baseURL";
 import { FileImageOutlined, FilePdfOutlined } from "@ant-design/icons";
-import { BackTop, Button, Image as Img, message } from "antd";
+import { FloatButton, Button, Image as Img, message } from "antd";
 import Side from "../src/Common/Side";
 
 import pmc from "../public/logos/pmc.png";
@@ -540,7 +540,7 @@ const Profile = () => {
         <Loader visible={visible} />
         <Navbar />
         <Side />
-        <BackTop
+        <FloatButton.BackTop
           style={{
             right: 30,
             bottom: 30,
