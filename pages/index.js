@@ -73,6 +73,7 @@ export default function Home() {
 
       <div className={styles.main}>
         <Loader visible={visible} />
+
         <div className={styles.welcome}>
           <div className={styles.greeting}>
             <div className={styles.title}>Welcome to RIMS</div>

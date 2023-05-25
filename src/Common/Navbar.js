@@ -76,32 +76,32 @@ const Navbar = () => {
       icon: <DownloadOutlined />,
       children: [
         {
-          label: <Link href="/upload">Add Publication</Link>,
-          key: "upload",
+          label: <Link href="/download">Publications</Link>,
+          key: "upload-d",
         },
         {
-          label: <Link href="/add/award">Add Award</Link>,
-          key: "award",
+          label: <Link href="/download">Awards</Link>,
+          key: "award-d",
         },
         {
-          label: <Link href="/add/ipr">Add IPR</Link>,
-          key: "ipr",
+          label: <Link href="/download">IPRs</Link>,
+          key: "ipr-d",
         },
         {
-          label: <Link href="/add/conference">Conference Attended</Link>,
-          key: "conference",
+          label: <Link href="/download">Conferences</Link>,
+          key: "conference-d",
         },
         {
-          label: <Link href="/add/project">Add Research Project</Link>,
-          key: "project",
+          label: <Link href="/download">Research Projects</Link>,
+          key: "project-d",
         },
         {
-          label: <Link href="/add/book">Add Book/Chapter</Link>,
-          key: "book",
+          label: <Link href="/download">Books/Chapters</Link>,
+          key: "book-d",
         },
         {
-          label: <Link href="/add/student">Student Guided</Link>,
-          key: "student",
+          label: <Link href="/download">Students</Link>,
+          key: "student-d",
         },
       ],
     },
@@ -117,7 +117,6 @@ const Navbar = () => {
       ),
       key: "logout",
       icon: <LogoutOutlined />,
-      children: [],
     },
   ];
 
@@ -133,10 +132,7 @@ const Navbar = () => {
         <Menu
           items={ITEMS}
           mode="horizontal"
-          style={{
-            backgroundColor: "transparent",
-            color: "white",
-          }}
+          style={{ backgroundColor: "transparent", color: "white" }}
         />
       </div>
     </div>

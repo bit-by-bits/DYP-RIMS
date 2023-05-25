@@ -288,14 +288,14 @@ const Awards = () => {
               <div className={styles2.upload_title}>Add a file</div>
 
               <div className={styles2.upload_msg}>
-                Kindly upload a .pdf file.
+                Kindly upload a pdf or an image file
               </div>
 
               <label htmlFor="file" className={styles2.label}>
                 <input
                   className={styles2.upload_input1}
                   onChange={e => setFile(e.target.files[0])}
-                  accept="application/pdf"
+                  accept="image/jpeg,image/png,application/pdf"
                   type="file"
                   id="file"
                 />

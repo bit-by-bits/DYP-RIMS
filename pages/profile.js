@@ -12,6 +12,8 @@ import URLObj from "../src/baseURL";
 import { FileImageOutlined, FilePdfOutlined } from "@ant-design/icons";
 import { FloatButton, Button, Image as Img, message } from "antd";
 import Side from "../src/Common/Side";
+import Scite from "../src/Profile/Scite";
+import Altmetric from "../src/Profile/Altmetric";
 
 import pmc from "../public/logos/pmc.png";
 import embase from "../public/logos/embase.png";
@@ -257,6 +259,18 @@ const Profile = () => {
                   &nbsp;&middot;&nbsp; Issue: {e.issue ?? "?"}
                   &nbsp;&middot;&nbsp; Pages: {e.pages ?? "?"}
                 </span>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 5,
+                  }}
+                >
+                  <Scite DOI={e.doi_id} />
+                  &nbsp;&middot;&nbsp;
+                  <Altmetric DOI={e.doi_id} />
+                </div>
+
                 {e.file ? (
                   <span style={{ color: "green" }}>
                     Softcopy found for this publication.
@@ -318,6 +332,7 @@ const Profile = () => {
                     check: "doaj",
                     jsx: (
                       <div
+                        key={0}
                         style={{
                           gap: 5,
                           display: "flex",
@@ -334,6 +349,7 @@ const Profile = () => {
                     check: "embase",
                     jsx: (
                       <div
+                        key={1}
                         style={{
                           gap: 5,
                           display: "flex",
@@ -350,6 +366,7 @@ const Profile = () => {
                     check: "medline",
                     jsx: (
                       <div
+                        key={2}
                         style={{
                           gap: 5,
                           display: "flex",
@@ -366,6 +383,7 @@ const Profile = () => {
                     check: "pmc",
                     jsx: (
                       <div
+                        key={3}
                         style={{
                           gap: 5,
                           display: "flex",
@@ -382,6 +400,7 @@ const Profile = () => {
                     check: "scie",
                     jsx: (
                       <div
+                        key={4}
                         style={{
                           gap: 5,
                           display: "flex",
@@ -398,6 +417,7 @@ const Profile = () => {
                     check: "scopus",
                     jsx: (
                       <div
+                        key={5}
                         style={{
                           gap: 5,
                           display: "flex",
@@ -541,12 +561,7 @@ const Profile = () => {
         <Navbar />
         <Side />
         <FloatButton.BackTop
-          style={{
-            right: 30,
-            bottom: 30,
-            borderRadius: "50%",
-            backgroundColor: "#9a2827",
-          }}
+          style={{ right: 30, bottom: 30, borderRadius: "50%" }}
         />
 
         <div className={styles.profile_wrapper}>

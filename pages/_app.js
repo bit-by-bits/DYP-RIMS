@@ -1,12 +1,13 @@
+/* eslint-disable @next/next/no-sync-scripts */
+import Script from "next/script";
 import "../styles/globals.css";
 
 const MyApp = ({ Component, pageProps }) => {
   return (
     <>
-      {
-        // eslint-disable-next-line @next/next/no-sync-scripts
-        <script src="https://accounts.google.com/gsi/client" />
-      }
+      <Script src="https://accounts.google.com/gsi/client" />
+      <Script src="https://cdn.scite.ai/badge/scite-badge-latest.min.js" />
+      <Script src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js" />
       <Component {...pageProps} />
     </>
   );
