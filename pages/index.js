@@ -13,6 +13,11 @@ export default function Home() {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
+    if (JSON.parse(localStorage.getItem("user"))?.token)
+      router.push("/profile");
+  }, [router]);
+
+  useEffect(() => {
     /* global google */
 
     google.accounts.id.initialize({

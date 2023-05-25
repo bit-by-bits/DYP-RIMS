@@ -78,10 +78,6 @@ const Section = ({ user, lengths }) => {
               </div>
             </div>
           </div>
-
-          <Link href="/upload">
-            <div className={styles.profile_btn}>Add Publications</div>
-          </Link>
         </div>
 
         <div className={styles.profile_feats}>

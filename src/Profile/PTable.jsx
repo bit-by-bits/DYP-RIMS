@@ -10,7 +10,7 @@ const PTable = ({ title, body }) => {
           className={styles.profile_head}
           style={
             body?.body.length && title === "Publications"
-              ? { marginLeft: "5vw" }
+              ? { marginLeft: "7.5vw" }
               : {}
           }
         >
@@ -19,7 +19,7 @@ const PTable = ({ title, body }) => {
         <Table
           style={
             body?.body.length && title === "Publications"
-              ? { width: "90vw" }
+              ? { width: "95vw" }
               : { width: "80vw" }
           }
           columns={body?.head}

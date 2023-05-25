@@ -5,6 +5,7 @@ const URLObj = {
   pubmed: "https://www.ncbi.nlm.nih.gov/pmc/utils/idconv/v1.0",
   cross: "https://api.crossref.org/works",
   rims: "https://rimsapi.journalchecker.com",
+  ai: "https://verify.journalchecker.com/pdf/",
 };
 
 export default URLObj;

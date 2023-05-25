@@ -6,13 +6,12 @@ import {
   ProfileOutlined,
   ProjectOutlined,
   SafetyCertificateOutlined,
-  SettingOutlined,
   TrophyOutlined,
   UploadOutlined,
   UserAddOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Menu, Upload } from "antd";
+import { Menu } from "antd";
 import Link from "next/link";
 import { useState } from "react";
 

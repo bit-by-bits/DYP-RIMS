@@ -13,6 +13,13 @@ import { FileImageOutlined, FilePdfOutlined } from "@ant-design/icons";
 import { BackTop, Button, Image as Img, message } from "antd";
 import Side from "../src/Common/Side";
 
+import pmc from "../public/logos/pmc.png";
+import embase from "../public/logos/embase.png";
+import scopus from "../public/logos/scopus.png";
+import medline from "../public/logos/medline.jpg";
+import doaj from "../public/logos/doaj.png";
+import scie from "../public/logos/scie.png";
+
 const Profile = () => {
   const router = useRouter();
   const [visible, setVisible] = useState(true);
@@ -78,64 +85,21 @@ const Profile = () => {
         .then(res => {
           const HEAD = [
             {
+              title: "No.",
+              dataIndex: "sno",
+              key: "sno",
+              render: text => text + ".",
+            },
+            {
               title: "Publication",
               dataIndex: "title",
               key: "title",
               sorter: (a, b) => a.title.localeCompare(b.title),
             },
             {
-              title: "Impact Factor",
-              dataIndex: "impact",
-              key: "impact",
-              sorter: (a, b) => a.impact.localeCompare(b.impact),
-              render: text => (
-                <div
-                  style={{
-                    color: "#9a2827",
-                    fontWeight: 900,
-                    fontSize: 20,
-                    minWidth: 120,
-                  }}
-                >
-                  {text}
-                </div>
-              ),
-            },
-            {
-              title: "SJR",
-              dataIndex: "sjr",
-              key: "sjr",
-              sorter: (a, b) => a.sjr.localeCompare(b.sjr),
-              render: text => (
-                <div
-                  style={{
-                    color: "#9a2827",
-                    fontWeight: 900,
-                    fontSize: 20,
-                    minWidth: 60,
-                  }}
-                >
-                  {text}
-                </div>
-              ),
-            },
-            {
-              title: "H-Index",
-              dataIndex: "hindex",
-              key: "hindex",
-              sorter: (a, b) => a.hindex.localeCompare(b.hindex),
-              render: text => (
-                <div
-                  style={{
-                    color: "#9a2827",
-                    fontWeight: 900,
-                    fontSize: 20,
-                    minWidth: 80,
-                  }}
-                >
-                  {text}
-                </div>
-              ),
+              title: "Scores",
+              dataIndex: "scores",
+              key: "scores",
             },
             {
               title: "Indexed In",
@@ -167,8 +131,16 @@ const Profile = () => {
                   value: "Scopus",
                 },
               ],
-              onFilter: (value, record) =>
-                record.indexed_in.props.children.includes(value),
+              filterSearch: true,
+              onFilter: (value, record) => {
+                let found = false;
+                record?.indexed_in?.props?.children?.forEach(c => {
+                  if (c?.props?.children[2]?.props?.children?.includes(value))
+                    found = true;
+                });
+
+                return found;
+              },
             },
             {
               title: "Citations",
@@ -204,7 +176,7 @@ const Profile = () => {
                     icon={<FilePdfOutlined style={{ color: "#52c41a" }} />}
                     href={`/file/${record.id}`}
                   >
-                    File
+                    View More
                   </Button>
                 ) : (
                   <Button
@@ -224,7 +196,8 @@ const Profile = () => {
             },
           ];
 
-          const BODY = res.data.data.map(e => ({
+          const BODY = res.data.data.map((e, i) => ({
+            sno: i + 1,
             key: e.id ?? Math.random() * 1000,
             id: e.id ?? 0,
             title: (
@@ -295,18 +268,155 @@ const Profile = () => {
                 )}
               </div>
             ),
-            impact: e.impact_factor ?? "N/A",
-            sjr: e.sjr ?? "N/A",
-            hindex: e.h_index ?? "N/A",
+            scores:
+              (
+                <>
+                  <div
+                    style={{
+                      color: "#9a2827",
+                      fontWeight: 900,
+                      minWidth: "max-content",
+                    }}
+                  >
+                    SJR Quartile: {e.sjr ?? "N/A"}
+                  </div>
+
+                  <div
+                    style={{
+                      color: "#9a2827",
+                      fontWeight: 900,
+                      minWidth: "max-content",
+                    }}
+                  >
+                    Impact Factor: {e.impact_factor ?? "N/A"}
+                  </div>
+
+                  <div
+                    style={{
+                      color: "#9a2827",
+                      fontWeight: 900,
+                      minWidth: "max-content",
+                    }}
+                  >
+                    H-Index: {e.h_index ?? "N/A"}
+                  </div>
+                </>
+              ) ?? "N/A",
             indexed_in: (
-              <span>
-                {["DOAJ", "Embase", "Medline", "PMC", "SCIE", "Scopus"]
-                  .filter(index => e["in_" + index.toLowerCase()])
-                  .join(", ") ?? "N/A"}
+              <span
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                  fontWeight: "bold",
+                  gap: 5,
+                }}
+              >
+                {[
+                  {
+                    check: "doaj",
+                    jsx: (
+                      <div
+                        style={{
+                          gap: 5,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Image width={30} height={30} alt="" src={doaj} />{" "}
+                        <span>DOAJ</span>
+                      </div>
+                    ),
+                  },
+                  {
+                    check: "embase",
+                    jsx: (
+                      <div
+                        style={{
+                          gap: 5,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Image width={30} height={30} alt="" src={embase} />{" "}
+                        <span>Embase</span>
+                      </div>
+                    ),
+                  },
+                  {
+                    check: "medline",
+                    jsx: (
+                      <div
+                        style={{
+                          gap: 5,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Image width={30} height={30} alt="" src={medline} />{" "}
+                        <span>Medline</span>
+                      </div>
+                    ),
+                  },
+                  {
+                    check: "pmc",
+                    jsx: (
+                      <div
+                        style={{
+                          gap: 5,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Image width={30} height={30} alt="" src={pmc} />{" "}
+                        <span>PMC</span>
+                      </div>
+                    ),
+                  },
+                  {
+                    check: "scie",
+                    jsx: (
+                      <div
+                        style={{
+                          gap: 5,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Image width={30} height={30} alt="" src={scie} />{" "}
+                        <span>SCIE</span>
+                      </div>
+                    ),
+                  },
+                  {
+                    check: "scopus",
+                    jsx: (
+                      <div
+                        style={{
+                          gap: 5,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Image width={30} height={30} alt="" src={scopus} />{" "}
+                        <span>Scopus</span>
+                      </div>
+                    ),
+                  },
+                ]
+                  .filter(index => e["in_" + index.check])
+                  .map(index => index.jsx) ?? "N/A"}
               </span>
             ),
             citations: e.citations ?? "N/A",
-            published: e.year ?? "N/A",
+            published: e.year.split("-")[0] ?? "N/A",
           }));
 
           setPdata({

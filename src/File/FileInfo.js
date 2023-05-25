@@ -34,7 +34,7 @@ const FileInfo = ({ setv, id, setd }) => {
         <Badge.Ribbon key={i} text="DPU" color="#9a2827">
           <Card
             hoverable
-            bodyStyle={{ padding: 15 }}
+            bodyStyle={{ padding: 15, minWidth: 250 }}
             style={{ border: "1px solid #d9d9d9" }}
           >
             <Meta
@@ -57,9 +57,8 @@ const FileInfo = ({ setv, id, setd }) => {
                     gap: 5,
                   }}
                 >
+                  <span>Department:</span>
                   <span>{e.department?.name ?? "N/A"}</span>
-                  <span className={styles.middot}>&middot;</span>
-                  <span>Dr D. Y Patil Medical College</span>
                 </div>
               }
               avatar={
@@ -86,7 +85,7 @@ const FileInfo = ({ setv, id, setd }) => {
             title={
               <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>{e}</div>
             }
-            description={"Other University"}
+            description={""}
             avatar={
               <Avatar
                 src={
