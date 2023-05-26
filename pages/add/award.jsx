@@ -171,6 +171,8 @@ const Awards = () => {
             faculty: data.name,
             department: dept,
             award: data.award_name,
+            start_date: new Date(data.start_date),
+            end_date: new Date(data.end_date),
             location: data.location,
           }}
           onFinish={onFinish}
@@ -231,10 +233,20 @@ const Awards = () => {
           </Form.Item>
 
           <Form.Item
-            label="Date Awarded"
-            name="date"
+            label="Start Date"
+            name="start_date"
             rules={[
-              { required: true, message: "Please enter recieving date!" },
+              { required: true, message: "Please enter recieving start date!" },
+            ]}
+          >
+            <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
+          </Form.Item>
+
+          <Form.Item
+            label="End Date"
+            name="end_date"
+            rules={[
+              { required: true, message: "Please enter recieving end date!" },
             ]}
           >
             <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />

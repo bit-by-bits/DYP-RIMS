@@ -202,6 +202,8 @@ const Conferences = () => {
             attendee: data.name,
             department: dept,
             conference: data.conference_name,
+            start_date: new Date(data.start_date),
+            end_date: new Date(data.end_date),
             location: data.location,
           }}
           onFinish={onFinish}
@@ -264,10 +266,23 @@ const Conferences = () => {
           </Form.Item>
 
           <Form.Item
-            label="Conference Date"
-            name="date"
+            label="Conference Start"
+            name="start_date"
             rules={[
-              { required: true, message: "Please enter conference date!" },
+              {
+                required: true,
+                message: "Please enter conference starting date!",
+              },
+            ]}
+          >
+            <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
+          </Form.Item>
+
+          <Form.Item
+            label="Conference End"
+            name="end_date"
+            rules={[
+              { required: true, message: "Please enter conference end date!" },
             ]}
           >
             <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
