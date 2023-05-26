@@ -7,6 +7,8 @@ import {
   DownloadOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
+import axios from "axios";
+import URLObj from "../baseURL";
 
 const Navbar = () => {
   const [user, setUser] = useState({});
@@ -16,7 +18,16 @@ const Navbar = () => {
     setUser(user);
   }, []);
 
-  const download = () => message.error("CV functionality is still unavailable");
+  const download = item => () => {
+    const data = new FormData();
+    data.append("userID", user.id);
+
+    axios({
+      url: `${URLObj.base}/export/schedule/${item}/`,
+      method: "POST",
+      data: data,
+    }).then(res => {});
+  };
 
   const ITEMS = [
     {
@@ -76,31 +87,31 @@ const Navbar = () => {
       icon: <DownloadOutlined />,
       children: [
         {
-          label: <Link href="/download">Publications</Link>,
+          label: <div onClick={download("publication")}>Publications</div>,
           key: "upload-d",
         },
         {
-          label: <Link href="/download">Awards</Link>,
+          label: <div onClick={download("award")}>Awards</div>,
           key: "award-d",
         },
         {
-          label: <Link href="/download">IPRs</Link>,
+          label: <div onClick={download("ipr")}>IPRs</div>,
           key: "ipr-d",
         },
         {
-          label: <Link href="/download">Conferences</Link>,
+          label: <div onClick={download("conference")}>Conferences</div>,
           key: "conference-d",
         },
         {
-          label: <Link href="/download">Research Projects</Link>,
+          label: <div onClick={download("project")}>Research Projects</div>,
           key: "project-d",
         },
         {
-          label: <Link href="/download">Books/Chapters</Link>,
+          label: <div onClick={download("book")}>Books/Chapters</div>,
           key: "book-d",
         },
         {
-          label: <Link href="/download">Students</Link>,
+          label: <div onClick={download("student")}>Students</div>,
           key: "student-d",
         },
       ],
