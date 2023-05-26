@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Helmet } from "react-helmet";
 
-const Scite = ({ DOI }) => {
+const Scite = ({ DOI, type }) => {
   useEffect(() => {
     const script = document.createElement("script");
     script.async = true;
@@ -9,32 +9,49 @@ const Scite = ({ DOI }) => {
     document.body.appendChild(script);
 
     return () => document.body.removeChild(script);
-  }, []);
+  }, [DOI, type]);
 
   return (
     <>
       <Helmet />
-      {/* <link
-          rel="stylesheet"
-          type="text/css"
-          href="https://cdn.scite.ai/badge/scite-badge-latest.min.css"
+
+      {type ? (
+        <div
+          data-doi={DOI}
+          className="scite-badge"
+          data-layout="horizontal"
+          data-show-zero="true"
+          data-small="false"
+          data-show-labels="false"
+          data-tally-show="true"
         />
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            gap: "3rem",
+            alignItems: "center",
+          }}
+        >
+          <div
+            className="scite-badge"
+            data-doi={DOI}
+            data-tally-show="true"
+            data-show-labels="true"
+            data-section-tally-show="false"
+          />
 
-        <script
-          async
-          type="application/javascript"
-          src="https://cdn.scite.ai/badge/scite-badge-latest.min.js"
-        /> */}
-
-      <div
-        data-doi={DOI}
-        className="scite-badge"
-        data-layout="horizontal"
-        data-show-zero="true"
-        data-small="false"
-        data-show-labels="false"
-        data-tally-show="true"
-      />
+          <div
+            className="scite-badge"
+            data-doi={DOI}
+            data-tally-show="false"
+            data-section-tally-show="true"
+            data-show-labels="true"
+            data-section-tally-layout="vertical"
+            data-chart-type="donut"
+          />
+        </div>
+      )}
     </>
   );
 };

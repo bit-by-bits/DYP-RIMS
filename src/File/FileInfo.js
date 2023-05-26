@@ -4,6 +4,8 @@ import axios from "axios";
 import URLObj from "../baseURL";
 import { CheckSquareOutlined, CloseSquareOutlined } from "@ant-design/icons";
 import { Avatar, Badge, Card, List, message } from "antd";
+import Scite from "../Profile/Scite";
+import Altmetric from "../Profile/Altmetric";
 
 const FileInfo = ({ setv, id, setd }) => {
   const { Meta } = Card;
@@ -198,6 +200,20 @@ const FileInfo = ({ setv, id, setd }) => {
               dataSource={cards}
               renderItem={item => <List.Item>{item}</List.Item>}
             />
+          </div>
+        </div>
+
+        <div className={styles.file_grid}>
+          <div className={styles.file_head}>Keywords</div>
+          <div
+            style={{
+              gap: "2rem",
+              paddingTop: "2rem",
+            }}
+            className={styles.file_body}
+          >
+            <Scite DOI={data.doi_id} type={0} />
+            <Altmetric DOI={data.doi_id} type={0} />
           </div>
         </div>
 

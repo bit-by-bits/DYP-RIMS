@@ -263,12 +263,12 @@ const Profile = () => {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: 5,
+                    gap: "1rem",
                   }}
                 >
-                  <Scite DOI={e.doi_id} />
+                  <Scite DOI={e.doi_id} type={1} />
                   &nbsp;&middot;&nbsp;
-                  <Altmetric DOI={e.doi_id} />
+                  <Altmetric DOI={e.doi_id} type={1} />
                 </div>
 
                 {e.file ? (

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Helmet } from "react-helmet";
 
-const Altmetric = ({ DOI }) => {
+const Altmetric = ({ DOI, type }) => {
   useEffect(() => {
     const script = document.createElement("script");
     script.async = true;
@@ -9,19 +9,28 @@ const Altmetric = ({ DOI }) => {
     document.body.appendChild(script);
 
     return () => document.body.removeChild(script);
-  }, []);
+  }, [DOI, type]);
 
   return (
     <>
       <Helmet />
 
-      <div
-        data-doi={DOI}
-        data-badge-popover="right"
-        data-badge-type="donut"
-        data-hide-no-mentions="true"
-        className="altmetric-embed"
-      />
+      {type ? (
+        <div
+          data-doi={DOI}
+          className="altmetric-embed"
+          data-badge-type="donut"
+          data-badge-popover="right"
+          data-hide-no-mentions="true"
+        />
+      ) : (
+        <div
+          data-doi={DOI}
+          className="altmetric-embed"
+          data-badge-type="medium-donut"
+          data-badge-details="right"
+        />
+      )}
     </>
   );
 };

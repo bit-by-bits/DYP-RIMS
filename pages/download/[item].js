@@ -4,8 +4,35 @@ import Image from "next/image";
 import styles from "../../styles/download.module.css";
 import Navbar from "../../src/Common/Navbar";
 import Side from "../../src/Common/Side";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import axios from "axios";
+import URLObj from "../../src/baseURL";
 
 const Download = () => {
+  const router = useRouter();
+  const { item } = router.query;
+
+  const [ITEM, setITEM] = useState([]);
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
+  }, []);
+
+  useEffect(() => {
+    if (router.isReady) setITEM(item);
+  }, [router, item]);
+
+  useEffect(() => {
+    if (ITEM)
+      axios({
+        url: `${URLObj.base}/export/get/schedule/${ITEM}/?userID=${user.id}`,
+        method: "GET",
+      }).then(res => {});
+  }, [ITEM, user]);
+
   return (
     <>
       <Head>

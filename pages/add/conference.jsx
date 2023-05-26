@@ -276,7 +276,7 @@ const Conferences = () => {
               },
             ]}
           >
-            <Input />
+            <Input placeholder="YYYY-MM-DD HH:MM:SS" />
           </Form.Item>
 
           <Form.Item
@@ -286,7 +286,7 @@ const Conferences = () => {
               { required: true, message: "Please enter conference end date!" },
             ]}
           >
-            <Input />
+            <Input placeholder="YYYY-MM-DD HH:MM:SS" />
           </Form.Item>
 
           <Form.Item

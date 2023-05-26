@@ -240,7 +240,7 @@ const Awards = () => {
               { required: true, message: "Please enter recieving start date!" },
             ]}
           >
-            <Input />
+            <Input placeholder="YYYY-MM-DD HH:MM:SS" />
           </Form.Item>
 
           <Form.Item
@@ -250,7 +250,7 @@ const Awards = () => {
               { required: true, message: "Please enter recieving end date!" },
             ]}
           >
-            <Input />
+            <Input placeholder="YYYY-MM-DD HH:MM:SS" />
           </Form.Item>
 
           <Form.Item
