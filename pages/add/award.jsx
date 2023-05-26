@@ -11,7 +11,7 @@ import { Input, message, Select } from "antd";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Side from "../../src/Common/Side";
-import moment from "moment";
+import dayjs from "dayjs";
 
 // CONVERT STRING TO DATE
 function convert(str) {
@@ -173,8 +173,8 @@ const Awards = () => {
             faculty: data.name,
             department: dept,
             award: data.award_name,
-            start_date: moment(data.start_date, "YYYY-MM-DD HH:mm:ss").toDate(),
-            end_date: moment(data.end_date, "YYYY-MM-DD HH:mm:ss").toDate(),
+            start_date: dayjs(data.start_date).format("YYYY-MM-DD HH:mm:ss"),
+            end_date: dayjs(data.end_date).format("YYYY-MM-DD HH:mm:ss"),
             location: data.location,
           }}
           onFinish={onFinish}
