@@ -1,11 +1,10 @@
 import Head from "next/head";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import styles from "../../styles/download.module.css";
 import Navbar from "../../src/Common/Navbar";
 import Side from "../../src/Common/Side";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import axios from "axios";
 import URLObj from "../../src/baseURL";
 
