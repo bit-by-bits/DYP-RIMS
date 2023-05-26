@@ -1,7 +1,7 @@
 import Head from "next/head";
 import React from "react";
-import Navbar from "../src/Common/Navbar";
-import Side from "../src/Common/Side";
+import Navbar from "../../src/Common/Navbar";
+import Side from "../../src/Common/Side";
 import Image from "next/image";
 import styles from "../styles/download.module.css";
 

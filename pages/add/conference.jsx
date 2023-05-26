@@ -82,7 +82,8 @@ const Conferences = () => {
     data.append("name", values.attendee);
     data.append("dept_id", values.department);
     data.append("conference_name", values.conference);
-    data.append("date", convert(values.date));
+    data.append("start_date", convert(values.start_date));
+    data.append("end_date", convert(values.end_date));
     data.append("type", values.type);
     data.append("location", values.location);
     data.append("certificate", file);
@@ -202,8 +203,8 @@ const Conferences = () => {
             attendee: data.name,
             department: dept,
             conference: data.conference_name,
-            start_date: new Date(data.start_date),
-            end_date: new Date(data.end_date),
+            start_date: new Date(data.start_date ?? new Date()),
+            end_date: new Date(data.end_date ?? new Date()),
             location: data.location,
           }}
           onFinish={onFinish}

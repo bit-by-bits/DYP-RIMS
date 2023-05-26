@@ -81,7 +81,8 @@ const Awards = () => {
     data.append("name", values.faculty);
     data.append("dept_id", values.department);
     data.append("agency", values.agency);
-    data.append("date", convert(values.date));
+    data.append("start_date", convert(values.start_date));
+    data.append("end_date", convert(values.end_date));
     data.append("certificate", file);
     data.append("type", "award");
 
@@ -171,8 +172,8 @@ const Awards = () => {
             faculty: data.name,
             department: dept,
             award: data.award_name,
-            start_date: new Date(data.start_date),
-            end_date: new Date(data.end_date),
+            start_date: new Date(data.start_date ?? new Date()),
+            end_date: new Date(data.end_date ?? new Date()),
             location: data.location,
           }}
           onFinish={onFinish}
