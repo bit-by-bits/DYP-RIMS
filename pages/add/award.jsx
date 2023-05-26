@@ -173,8 +173,8 @@ const Awards = () => {
             faculty: data.name,
             department: dept,
             award: data.award_name,
-            start_date: dayjs(data.start_date).format("YYYY-MM-DD HH:mm:ss"),
-            end_date: dayjs(data.end_date).format("YYYY-MM-DD HH:mm:ss"),
+            // start_date: dayjs(data.start_date).format("YYYY-MM-DD HH:mm:ss"),
+            // end_date: dayjs(data.end_date).format("YYYY-MM-DD HH:mm:ss"),
             location: data.location,
           }}
           onFinish={onFinish}
@@ -274,12 +274,12 @@ const Awards = () => {
 
             <Button
               type="primary"
+              className={styles.secondary}
               onClick={() => {
                 setStep(0);
                 setPaper(0);
                 setPoster(0);
               }}
-              className={styles.secondary}
             >
               Upload
             </Button>
