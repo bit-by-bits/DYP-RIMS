@@ -241,7 +241,7 @@ const Awards = () => {
               { required: true, message: "Please enter recieving start date!" },
             ]}
           >
-            <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
+            <DatePicker style={{ width: "100%" }} />
           </Form.Item>
 
           <Form.Item
@@ -251,7 +251,7 @@ const Awards = () => {
               { required: true, message: "Please enter recieving end date!" },
             ]}
           >
-            <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
+            <DatePicker style={{ width: "100%" }} />
           </Form.Item>
 
           <Form.Item
