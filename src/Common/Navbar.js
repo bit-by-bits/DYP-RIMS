@@ -9,8 +9,10 @@ import {
 } from "@ant-design/icons";
 import axios from "axios";
 import URLObj from "../baseURL";
+import { useRouter } from "next/router";
 
 const Navbar = () => {
+  const router = useRouter();
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -26,7 +28,15 @@ const Navbar = () => {
       url: `${URLObj.base}/export/schedule/${item}/`,
       method: "POST",
       data: data,
-    }).then(res => {});
+    }).then(res => {
+      message.success(
+        `Download in progress. Check after ${res.eta_min} minutes.`
+      );
+
+      setTimeout(() => {
+        router.push(`/download/${item}`);
+      }, 1000);
+    });
   };
 
   const ITEMS = [

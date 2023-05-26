@@ -12,7 +12,6 @@ import { Input, message, Select, Upload } from "antd";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Side from "../../src/Common/Side";
-import dayjs from "dayjs";
 
 // CONVERT STRING TO DATE
 function convert(str) {
@@ -204,8 +203,8 @@ const Conferences = () => {
             attendee: data.name,
             department: dept,
             conference: data.conference_name,
-            // start_date: dayjs(data.start_date).format("YYYY-MM-DD HH:mm:ss"),
-            // end_date: dayjs(data.end_date).format("YYYY-MM-DD HH:mm:ss"),
+            start_date: data.start_date,
+            end_date: data.end_date,
             location: data.location,
           }}
           onFinish={onFinish}
@@ -277,7 +276,7 @@ const Conferences = () => {
               },
             ]}
           >
-            <DatePicker style={{ width: "100%" }} />
+            <Input />
           </Form.Item>
 
           <Form.Item
@@ -287,7 +286,7 @@ const Conferences = () => {
               { required: true, message: "Please enter conference end date!" },
             ]}
           >
-            <DatePicker style={{ width: "100%" }} />
+            <Input />
           </Form.Item>
 
           <Form.Item
