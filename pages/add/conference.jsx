@@ -12,6 +12,7 @@ import { Input, message, Select, Upload } from "antd";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Side from "../../src/Common/Side";
+import moment from "moment/moment";
 
 // CONVERT STRING TO DATE
 function convert(str) {
@@ -203,8 +204,8 @@ const Conferences = () => {
             attendee: data.name,
             department: dept,
             conference: data.conference_name,
-            start_date: new Date(data.start_date ?? new Date()),
-            end_date: new Date(data.end_date ?? new Date()),
+            start_date: moment(data.start_date, "YYYY-MM-DD HH:mm:ss").toDate(),
+            end_date: moment(data.end_date, "YYYY-MM-DD HH:mm:ss").toDate(),
             location: data.location,
           }}
           onFinish={onFinish}

@@ -172,8 +172,8 @@ const Awards = () => {
             faculty: data.name,
             department: dept,
             award: data.award_name,
-            start_date: new Date(data.start_date ?? new Date()),
-            end_date: new Date(data.end_date ?? new Date()),
+            start_date: moment(data.start_date, "YYYY-MM-DD HH:mm:ss").toDate(),
+            end_date: moment(data.end_date, "YYYY-MM-DD HH:mm:ss").toDate(),
             location: data.location,
           }}
           onFinish={onFinish}
