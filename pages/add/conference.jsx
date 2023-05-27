@@ -183,7 +183,7 @@ const Conferences = () => {
 
       <div className={styles.wrapper}>
         <Navbar />
-        <Side />
+        {/* <Side /> */}
 
         <h1 style={step ? {} : { display: "none" }} className={styles.heading}>
           Add Conferences

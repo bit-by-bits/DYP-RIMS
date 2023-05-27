@@ -23,7 +23,7 @@ const Projects = () => {
 
       <div className={styles.wrapper}>
         <Navbar />
-        <Side />
+        {/* <Side /> */}
 
         <h1 className={styles.heading}>Add Research Projects</h1>
 

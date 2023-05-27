@@ -31,7 +31,7 @@ const IPR = () => {
 
       <div className={styles.wrapper}>
         <Navbar />
-        <Side />
+        {/* <Side /> */}
 
         <h1 className={styles.heading}>Add IPR</h1>
 

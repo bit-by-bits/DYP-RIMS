@@ -46,7 +46,7 @@ const Uploading = () => {
 
       <div className={styles.wrapper}>
         <Navbar />
-        <Side />
+        {/* <Side /> */}
 
         <Loader visible={visible} />
 

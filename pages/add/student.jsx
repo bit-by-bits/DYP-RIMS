@@ -30,7 +30,7 @@ const Students = () => {
 
       <div className={styles.wrapper}>
         <Navbar />
-        <Side />
+        {/* <Side /> */}
 
         <h1 className={styles.heading}>Add Students Guided</h1>
 

@@ -38,7 +38,7 @@ const Edit = () => {
 
       <div className={styles.wrapper}>
         <Navbar />
-        <Side />
+        {/* <Side /> */}
 
         <Loader visible={visible} />
         <h2

@@ -41,7 +41,7 @@ const Download = () => {
 
       <div className={styles.wrapper}>
         <Navbar />
-        <Side />
+        {/* <Side /> */}
 
         <a href="https://www.qtanea.com/" rel="noreferrer" target="_blank">
           <Image

@@ -30,7 +30,7 @@ const Books = () => {
 
       <div className={styles.wrapper}>
         <Navbar />
-        <Side />
+        {/* <Side /> */}
 
         <h1 className={styles.heading}>Add Books/Chapters</h1>
 

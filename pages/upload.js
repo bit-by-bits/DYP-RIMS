@@ -125,8 +125,7 @@ const Upload = () => {
 
       <div className={styles.wrapper}>
         <Navbar />
-        <Side />
-
+        {/* <Side /> */}
         <div className={styles.upload_wrapper}>
           <div className={styles.upload_left}>
             <Image
