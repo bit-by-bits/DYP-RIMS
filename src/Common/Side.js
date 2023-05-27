@@ -41,7 +41,10 @@ const Side = ({ user }) => {
           {user?.first_name + " " + user?.last_name}
         </div>
         <div style={{ color: "white" }}>{user?.email}</div>
-        <div></div>
+        <div>
+          <div>{user?.designation ?? "N/A"}</div>
+          <div>{user?.access_level[0]?.display_text ?? "N/A"}</div>
+        </div>
       </div>
 
       <Menu

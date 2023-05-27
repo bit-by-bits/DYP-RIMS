@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createElement } from "react";
 import styles from "../styles/profile.module.css";
 import { Button, FloatButton, Input, Spin } from "antd";
 import Side from "../src/Common/Side";
@@ -101,10 +101,10 @@ const Profile = () => {
                   Add Publications
                 </Button>
                 <Button type="primary" onClick={() => localStorage.clear()}>
-                  {LogoutOutlined}
+                  {createElement(LogoutOutlined)}
                 </Button>
                 <Button type="primary" onClick={() => router.push("/download")}>
-                  {DownloadOutlined}
+                  {createElement(DownloadOutlined)}
                 </Button>
               </div>
             </div>
