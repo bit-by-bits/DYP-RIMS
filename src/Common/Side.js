@@ -1,9 +1,10 @@
-import { Menu } from "antd";
-import React, { useState, useEffect } from "react";
+import { Button, Menu } from "antd";
+import React from "react";
 import {
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
+  HomeOutlined,
+  ProjectOutlined,
+  DownloadOutlined,
+  ProfileOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
 import Image from "next/image";
@@ -43,8 +44,15 @@ const Side = ({ user }) => {
         <div style={{ color: "white" }}>{user?.email}</div>
         <div>
           <div>{user?.designation ?? "N/A"}</div>
-          <div>{user?.access_level[0]?.display_text ?? "N/A"}</div>
+          <div>
+            {user?.access_level
+              ? user?.access_level[0]?.display_text ?? "N/A"
+              : "N/A"}
+          </div>
         </div>
+        <Button type="primary" style={{ marginTop: 10 }}>
+          Edit Profile
+        </Button>
       </div>
 
       <Menu
@@ -57,10 +65,10 @@ const Side = ({ user }) => {
         }}
         defaultSelectedKeys={["1"]}
         items={[
-          { link: "profile", icon: UserOutlined, label: "Home" },
-          { link: "profile", icon: VideoCameraOutlined, label: "Add Research" },
-          { link: "profile", icon: UploadOutlined, label: "Downloads" },
-          { link: "profile", icon: UserOutlined, label: "Profile" },
+          { link: "/profile", icon: HomeOutlined, label: "Home" },
+          { link: "/upload", icon: ProjectOutlined, label: "Add Research" },
+          { link: "/downloads", icon: DownloadOutlined, label: "Downloads" },
+          { link: "/profile", icon: ProfileOutlined, label: "Profile" },
         ].map((item, index) => ({
           key: String(index + 1),
           icon: React.createElement(item.icon),

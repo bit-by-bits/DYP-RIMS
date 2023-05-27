@@ -103,7 +103,10 @@ const Profile = () => {
                 <Button type="primary" onClick={() => localStorage.clear()}>
                   {createElement(LogoutOutlined)}
                 </Button>
-                <Button type="primary" onClick={() => router.push("/download")}>
+                <Button
+                  type="primary"
+                  onClick={() => router.push("/downloads")}
+                >
                   {createElement(DownloadOutlined)}
                 </Button>
               </div>
