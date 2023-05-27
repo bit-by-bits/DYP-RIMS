@@ -29,18 +29,18 @@ const Side = ({ user }) => {
       >
         <Image
           className={styles.profile_image}
-          alt={user.user.username ?? "user"}
+          alt={user?.user?.username ?? "user"}
           src={
-            user.profile_picture ??
+            user?.profile_picture ??
             "https://dreamvilla.life/wp-content/uploads/2017/07/dummy-profile-pic.png"
           }
           width={100}
           height={100}
         />
         <div style={{ color: "white" }}>
-          {user.first_name + " " + user.last_name}
+          {user?.first_name + " " + user?.last_name}
         </div>
-        <div style={{ color: "white" }}>{user.email}</div>
+        <div style={{ color: "white" }}>{user?.email}</div>
         <div></div>
       </div>
 

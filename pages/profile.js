@@ -6,6 +6,7 @@ import Side from "../src/Common/Side";
 import { useRouter } from "next/router";
 import axios from "axios";
 import URLObj from "../src/baseURL";
+import { DownloadOutlined, LogoutOutlined } from "@ant-design/icons";
 
 const Profile = () => {
   // BOILERPLATE
@@ -87,17 +88,23 @@ const Profile = () => {
             <Side user={person} />
 
             <div className={styles.container}>
-              <div style={{ display: "flex" }}>
+              <div className={styles.top}>
                 <Input.Search
                   placeholder="Search"
                   onSearch={value => console.log(value)}
                 />
                 <Button
                   type="primary"
-                  style={{ width: "100%", marginTop: 10 }}
-                  onClick={() => router.push("/profile/edit")}
+                  style={{ marginLeft: 10 }}
+                  onClick={() => router.push("/upload")}
                 >
-                  Edit Profile
+                  Add Publications
+                </Button>
+                <Button type="primary" onClick={() => localStorage.clear()}>
+                  {LogoutOutlined}
+                </Button>
+                <Button type="primary" onClick={() => router.push("/download")}>
+                  {DownloadOutlined}
                 </Button>
               </div>
             </div>
