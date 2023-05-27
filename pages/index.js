@@ -27,22 +27,17 @@ export default function Home() {
         axios({
           method: "POST",
           url: `${URLObj.base}/login/`,
-          data: { id_token: response.credential },
+          headers: {
+            "X-ACCESS-KEY": URLObj.key,
+            "X-GOOGLE-ID-TOKEN": response.credential,
+          },
         })
           .then(res => {
             message.success("Login Successful");
 
             localStorage.setItem(
               "user",
-              JSON.stringify({
-                id: res.data.id,
-                picture: res.data.picture,
-                role: res.data.role,
-                token: res.data.token,
-                name: "",
-                email: "",
-                dept: "",
-              })
+              JSON.stringify({ token: res.data.token })
             );
 
             router.push("/profile");
@@ -109,7 +104,7 @@ export default function Home() {
             width={60}
             height={60}
             className={styles.foot}
-            src="/logos/qtanea-colour.png"
+            src="/logos/qtanea-white.png"
           />
         </a>
       </div>

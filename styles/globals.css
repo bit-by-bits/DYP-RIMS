@@ -82,3 +82,15 @@ html {
 .ant-menu-submenu-inline .ant-menu-item-active a {
   color: white !important;
 }
+
+/* NEW BEGINNING */
+
+.ant-spin-dot-item {
+  background-color: #9a2827 !important;
+}
+
+.ant-spin-text {
+  color: #9a2827 !important;
+  margin-top: 1rem;
+  font-weight: bold;
+}
