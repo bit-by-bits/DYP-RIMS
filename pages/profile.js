@@ -1,7 +1,7 @@
 import Head from "next/head";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../styles/profile.module.css";
-import { FloatButton, Spin } from "antd";
+import { Button, FloatButton, Input, Spin } from "antd";
 import Side from "../src/Common/Side";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -77,10 +77,32 @@ const Profile = () => {
           <FloatButton.BackTop
             style={{ right: 30, bottom: 30, borderRadius: "50%" }}
           />
-          <Side user={person} />
-        </Spin>
 
-        <div className={styles.profile_wrapper}></div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 4fr",
+            }}
+          >
+            <Side user={person} />
+
+            <div className={styles.container}>
+              <div style={{ display: "flex" }}>
+                <Input.Search
+                  placeholder="Search"
+                  onSearch={value => console.log(value)}
+                />
+                <Button
+                  type="primary"
+                  style={{ width: "100%", marginTop: 10 }}
+                  onClick={() => router.push("/profile/edit")}
+                >
+                  Edit Profile
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Spin>
       </div>
     </>
   );
