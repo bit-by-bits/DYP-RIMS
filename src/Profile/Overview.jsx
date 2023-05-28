@@ -55,7 +55,7 @@ const Overview = ({ data, extra }) => {
             color: "lightgrey",
           },
         ].map((e, i) => (
-          <div key={i} style={{ boxShadow: `0 0 10px ${e.color}` }}>
+          <div key={i} style={{ boxShadow: `0 0 4px ${e.color}` }}>
             <span>{e.label1}</span>
             <span>{e.label2}</span>
           </div>
@@ -161,6 +161,11 @@ const Overview = ({ data, extra }) => {
           },
           {
             label1: "Papers",
+            label2: data?.publication?.length ?? "N/A",
+            logo: PaperClipOutlined,
+          },
+          {
+            label1: "Posters",
             label2: data?.publication?.length ?? "N/A",
             logo: PaperClipOutlined,
           },

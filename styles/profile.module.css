@@ -29,7 +29,7 @@
 
 .heading {
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .section {
@@ -70,7 +70,7 @@
 
 .topInput,
 .topButton {
-  border-radius: 15px;
+  border-radius: 10px;
 }
 
 .topButton {
@@ -95,43 +95,42 @@
 .overviewTop,
 .overviewMiddle,
 .overviewBottom {
-  gap: 1rem;
+  gap: 10px;
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr 1.1fr 1.1fr;
+  font-size: 15px;
+  font-weight: 500;
+  grid-template-columns: 1fr 1fr 1.3fr 1.3fr;
   justify-content: space-between;
 }
 
 .overviewTop > div,
 .overviewMiddle > div,
 .overviewBottom > div {
-  padding: 10px;
+  gap: 12px;
+  padding: 15px;
   border-radius: 15px;
   flex-direction: column;
   justify-content: flex-start;
 }
 
 .overviewTop > div {
-  gap: 5px;
   justify-content: center;
 }
 
 .overviewMiddle > div {
-  gap: 5px;
-  background-color: #e4e5e7;
-}
-
-.overviewMiddle > div > div:first-child {
-  font-weight: 500;
+  background-color: #f1f1f1;
 }
 
 .overviewBottom {
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 
 .overviewBottom > div {
+  flex-direction: row;
+  justify-content: center;
   background: #f7f7f7;
-  border: 1px solid #615252;
+  box-shadow: 0px 0px 4px #615252;
   border-radius: 12px;
 }
 
@@ -163,7 +162,6 @@
   left: 0;
   width: 18vw;
   background-color: var(--primary);
-  border-radius: 15px;
 }
 
 .sideProfile {
@@ -177,6 +175,10 @@
 .sideImage {
   border-radius: 50%;
   margin: 2rem 0 1rem 0;
+}
+
+.sideName {
+  font-weight: 500;
 }
 
 .sideContent,
@@ -208,4 +210,37 @@
 
 .sideButton:hover {
   background-color: var(--primary-dark) !important;
+}
+
+/* MEDIA QUERIES */
+
+@media screen and (min-width: 1800px) {
+  .overviewTop,
+  .overviewMiddle,
+  .overviewBottom {
+    gap: 20px;
+    font-size: 20px;
+  }
+
+  .overviewTop > div,
+  .overviewMiddle > div,
+  .overviewBottom > div {
+    gap: 16px;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .overviewTop,
+  .overviewMiddle,
+  .overviewBottom {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .overviewBottom {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }

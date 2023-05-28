@@ -35,7 +35,7 @@ const Side = ({ user }) => {
           width={100}
           height={100}
         />
-        <div>
+        <div className={styles.sideName}>
           {user?.user
             ? user?.user?.first_name + " " + user?.user?.last_name
             : "N/A"}
@@ -72,14 +72,7 @@ const Side = ({ user }) => {
         ].map((item, index) => ({
           key: String(index + 1),
           icon: createElement(item.icon),
-          label: (
-            <Link
-              href={item.link}
-              style={{ fontWeight: "bold", textDecoration: "none" }}
-            >
-              {item.label}
-            </Link>
-          ),
+          label: <Link href={item.link}>{item.label}</Link>,
         }))}
       />
     </div>
