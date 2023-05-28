@@ -7,7 +7,7 @@ import styles from "../styles/upload.module.css";
 import Image from "next/image";
 import URLObj from "../src/baseURL";
 import { message } from "antd";
-import Side from "../src/Common/Side";
+import Side from "../src/Profile/Side";
 
 const Upload = () => {
   const router = useRouter();

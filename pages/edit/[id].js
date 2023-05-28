@@ -6,7 +6,7 @@ import Loader from "../../src/Common/Loader";
 import Navbar from "../../src/Common/Navbar";
 import FileForm from "../../src/File/FileForm";
 import Image from "next/image";
-import Side from "../../src/Common/Side";
+import Side from "../../src/Profile/Side";
 
 const Edit = () => {
   const router = useRouter();

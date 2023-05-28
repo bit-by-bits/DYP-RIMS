@@ -8,7 +8,7 @@ import Navbar from "../../src/Common/Navbar";
 import FileInfo from "../../src/File/FileInfo";
 import { message } from "antd";
 import axios from "axios";
-import Side from "../../src/Common/Side";
+import Side from "../../src/Profile/Side";
 
 const File = () => {
   const router = useRouter();

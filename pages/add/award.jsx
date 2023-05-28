@@ -10,7 +10,7 @@ import { Button, DatePicker, Form } from "antd";
 import { Input, message, Select } from "antd";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Side from "../../src/Common/Side";
+import Side from "../../src/Profile/Side";
 
 // CONVERT STRING TO DATE
 function convert(str) {
