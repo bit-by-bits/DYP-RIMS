@@ -2,11 +2,18 @@ import Head from "next/head";
 import React, { useState, useEffect, createElement } from "react";
 import styles from "../styles/profile.module.css";
 import { Button, FloatButton, Input, Spin } from "antd";
-import Side from "../src/Common/Side";
+import Side from "../src/Profile/Side";
 import { useRouter } from "next/router";
 import axios from "axios";
 import URLObj from "../src/baseURL";
-import { DownloadOutlined, LogoutOutlined } from "@ant-design/icons";
+import {
+  BellOutlined,
+  LogoutOutlined,
+  SearchOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
+import Overview from "../src/Profile/Overview";
+import PTable from "../src/Profile/PTable";
 
 const Profile = () => {
   // BOILERPLATE
@@ -29,6 +36,12 @@ const Profile = () => {
   const [data, setData] = useState({});
   const [statistics, setStatistics] = useState({});
   const [visible, setVisible] = useState(false);
+  const [extra, setExtra] = useState({
+    citations: {},
+    hIndex: {},
+    impact: {},
+    access: {},
+  });
 
   // EFFECTS
 
@@ -42,9 +55,70 @@ const Profile = () => {
       },
     })
       .then(res => {
-        setPerson(res.data.user);
-        setData(res.data.data);
-        setStatistics(res.data.statistics);
+        setPerson(res.data?.user);
+        setData(res.data?.data);
+        setStatistics(res.data?.statistics);
+
+        // EXTRA CALCULATIONS
+
+        const TEMP = {
+          total: 0,
+          crossref: 0,
+          scopus: 0,
+          wos: 0,
+        };
+
+        let CITATIONS = { ...TEMP };
+        let H_INDEX = { ...TEMP };
+
+        let IMPACT = {
+          total: 0,
+          average: 0,
+        };
+
+        let ACCESS = {
+          gold: 0,
+          green: 0,
+          bronze: 0,
+          closed: 0,
+        };
+
+        res.data?.data?.publication?.forEach(e => {
+          CITATIONS.total += e.citations_total;
+          CITATIONS.crossref += e.citations_crossref;
+          CITATIONS.scopus += e.citations_scopus;
+          CITATIONS.wos += e.citations_wos;
+
+          H_INDEX.total += e.h_index_total;
+          H_INDEX.crossref += e.h_index_crossref;
+          H_INDEX.scopus += e.h_index_scopus;
+          H_INDEX.wos += e.h_index_wos;
+
+          IMPACT.total += e.impact_factor;
+
+          if (e.open_access)
+            switch (e.open_access_status) {
+              case "gold":
+                ACCESS.gold++;
+                break;
+
+              case "green":
+                ACCESS.green++;
+
+              case "bronze":
+                ACCESS.bronze++;
+            }
+          else ACCESS.closed++;
+        });
+
+        IMPACT.average = IMPACT.total / res.data?.data?.publication?.length;
+
+        setExtra({
+          citations: CITATIONS,
+          hIndex: H_INDEX,
+          impact: IMPACT,
+          access: ACCESS,
+        });
 
         setVisible(false);
       })
@@ -79,36 +153,71 @@ const Profile = () => {
             style={{ right: 30, bottom: 30, borderRadius: "50%" }}
           />
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 4fr",
-            }}
-          >
+          <div style={{ paddingLeft: "18vw" }}>
             <Side user={person} />
 
             <div className={styles.container}>
               <div className={styles.top}>
-                <Input.Search
-                  placeholder="Search"
-                  onSearch={value => console.log(value)}
+                <Input
+                  className={styles.topInput}
+                  placeholder="Search for publications"
+                  prefix={<SearchOutlined style={{ marginRight: 5 }} />}
+                  allowClear
                 />
                 <Button
                   type="primary"
-                  style={{ marginLeft: 10 }}
+                  className={styles.topButton}
                   onClick={() => router.push("/upload")}
                 >
                   Add Publications
                 </Button>
-                <Button type="primary" onClick={() => localStorage.clear()}>
+                <Button
+                  type="primary"
+                  className={[`${styles.topButtonCircle} ${styles.topButton}`]}
+                  onClick={() => {
+                    localStorage.clear();
+                    router.push("/");
+                  }}
+                >
                   {createElement(LogoutOutlined)}
                 </Button>
                 <Button
                   type="primary"
-                  onClick={() => router.push("/downloads")}
+                  className={[`${styles.topButtonCircle} ${styles.topButton}`]}
+                  onClick={() => router.push("/notifications")}
                 >
-                  {createElement(DownloadOutlined)}
+                  {createElement(BellOutlined)}
                 </Button>
+                <Button
+                  type="primary"
+                  className={[`${styles.topButtonCircle} ${styles.topButton}`]}
+                  onClick={() => router.push("/settings")}
+                >
+                  {createElement(SettingOutlined)}
+                </Button>
+              </div>
+
+              <div className={styles.section}>
+                <div className={styles.sectionTop}>
+                  <div className={styles.heading}>Overview</div>
+                </div>
+                <Overview data={data} extra={extra} />
+              </div>
+
+              <div className={styles.section}>
+                <div className={styles.sectionTop}>
+                  <div className={styles.heading}>Publications</div>
+                  <Button
+                    type="primary"
+                    className={styles.sectionButton}
+                    onClick={() => {}}
+                  >
+                    View All
+                  </Button>
+                </div>
+                <div className={styles.sectionBottom}>
+                  <PTable data={data} />
+                </div>
               </div>
             </div>
           </div>

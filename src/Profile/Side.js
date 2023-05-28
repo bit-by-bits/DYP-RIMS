@@ -1,5 +1,5 @@
-import { Button, Menu } from "antd";
-import React from "react";
+import { Button, Menu, message } from "antd";
+import React, { createElement } from "react";
 import {
   HomeOutlined,
   ProjectOutlined,
@@ -11,25 +11,22 @@ import Image from "next/image";
 import styles from "../../styles/profile.module.css";
 
 const Side = ({ user }) => {
+  // STATES
+
+  // EFFECTS
+
+  // FUNCTIONS
+
+  const edit = () => {
+    message.error("This feature is not available yet");
+  };
+
   return (
-    <div
-      style={{
-        width: "20vw",
-        height: "100vh",
-        backgroundColor: "#9A2827",
-        borderRadius: 15,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+    <div className={styles.sideWrapper}>
+      <div className={styles.sideProfile}>
         <Image
-          className={styles.profile_image}
+          priority={true}
+          className={styles.sideImage}
           alt={user?.user?.username ?? "user"}
           src={
             user?.profile_picture ??
@@ -38,31 +35,34 @@ const Side = ({ user }) => {
           width={100}
           height={100}
         />
-        <div style={{ color: "white" }}>
-          {user?.first_name + " " + user?.last_name}
-        </div>
-        <div style={{ color: "white" }}>{user?.email}</div>
         <div>
-          <div>{user?.designation ?? "N/A"}</div>
+          {user?.user
+            ? user?.user?.first_name + " " + user?.user?.last_name
+            : "N/A"}
+        </div>
+        <div>{user?.email}</div>
+        <div className={styles.sideContent}>
           <div>
-            {user?.access_level
-              ? user?.access_level[0]?.display_text ?? "N/A"
-              : "N/A"}
+            <span className={styles.sideCircle} />
+            <span>{user?.designation ?? "N/A"}</span>
+          </div>
+          <div>
+            <span className={styles.sideCircle} />
+            <span>
+              {user?.access_level
+                ? user?.access_level[0]?.display_text ?? "N/A"
+                : "N/A"}
+            </span>
           </div>
         </div>
-        <Button type="primary" style={{ marginTop: 10 }}>
+        <Button className={styles.sideButton} onClick={edit} type="primary">
           Edit Profile
         </Button>
       </div>
 
       <Menu
         mode="inline"
-        style={{
-          backgroundColor: "#9A2827",
-          color: "white",
-          border: "none",
-          padding: 10,
-        }}
+        className="sideMenu"
         defaultSelectedKeys={["1"]}
         items={[
           { link: "/profile", icon: HomeOutlined, label: "Home" },
@@ -71,7 +71,7 @@ const Side = ({ user }) => {
           { link: "/profile", icon: ProfileOutlined, label: "Profile" },
         ].map((item, index) => ({
           key: String(index + 1),
-          icon: React.createElement(item.icon),
+          icon: createElement(item.icon),
           label: (
             <Link
               href={item.link}
