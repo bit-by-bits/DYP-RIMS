@@ -219,6 +219,38 @@ const Profile = () => {
                   <PTable data={data} />
                 </div>
               </div>
+
+              <div className={styles.section}>
+                <div className={styles.sectionTop}>
+                  <div className={styles.heading}>Publications</div>
+                  <Button
+                    type="primary"
+                    className={styles.sectionButton}
+                    onClick={() => {}}
+                  >
+                    View All
+                  </Button>
+                </div>
+                <div className={styles.sectionBottom}>
+                  <PTable data={data} />
+                </div>
+              </div>
+
+              <div className={styles.section}>
+                <div className={styles.sectionTop}>
+                  <div className={styles.heading}>Publications</div>
+                  <Button
+                    type="primary"
+                    className={styles.sectionButton}
+                    onClick={() => {}}
+                  >
+                    View All
+                  </Button>
+                </div>
+                <div className={styles.sectionBottom}>
+                  <PTable data={data} />
+                </div>
+              </div>
             </div>
           </div>
         </Spin>

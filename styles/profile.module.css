@@ -14,7 +14,8 @@
 .sectionTop,
 .overviewTop > div,
 .overviewMiddle > div,
-.overviewBottom > div {
+.overviewBottom > div,
+.overviewBottom > div > div {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,7 +24,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding: 1rem 2rem;
   gap: 2rem;
 }
 
@@ -70,6 +71,7 @@
 
 .topInput,
 .topButton {
+  height: 35px;
   border-radius: 10px;
 }
 
@@ -78,8 +80,8 @@
 }
 
 .topButtonCircle {
-  height: 30px;
-  width: 30px;
+  height: 35px;
+  width: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -94,7 +96,7 @@
 
 .overviewTop,
 .overviewMiddle,
-.overviewBottom {
+.overviewBottom > div {
   gap: 10px;
   width: 100%;
   display: grid;
@@ -105,8 +107,7 @@
 }
 
 .overviewTop > div,
-.overviewMiddle > div,
-.overviewBottom > div {
+.overviewMiddle > div {
   gap: 12px;
   padding: 15px;
   border-radius: 15px;
@@ -123,18 +124,29 @@
 }
 
 .overviewBottom {
+  width: 100%;
+  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.overviewBottom > div:nth-child(1) {
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 
-.overviewBottom > div {
-  flex-direction: row;
-  justify-content: center;
+.overviewBottom > div:nth-child(2) {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.overviewBottom > div > div {
+  gap: 10px;
+  padding: 10px;
   background: #f7f7f7;
   box-shadow: 0px 0px 4px #615252;
   border-radius: 12px;
 }
 
-.overviewBottom > div > div:first-child {
+.overviewBottom > div > div > div:first-child {
   width: 30px;
   height: 30px;
   display: flex;
@@ -144,7 +156,8 @@
   background-color: rgba(250, 189, 129, 0.36);
 }
 
-.overviewBottom > div > div > span:last-child {
+.overviewBottom > div > div > div > span:first-child {
+  font-size: 16px;
   font-weight: 700;
 }
 

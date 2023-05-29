@@ -4,11 +4,13 @@ import Image from "next/image";
 import {
   BookOutlined,
   BulbOutlined,
+  DollarCircleOutlined,
   GroupOutlined,
   MoneyCollectOutlined,
   PaperClipOutlined,
   ProjectOutlined,
   TrophyOutlined,
+  UsergroupAddOutlined,
 } from "@ant-design/icons";
 
 import scopus from "../../public/logos/scopus.png";
@@ -32,17 +34,62 @@ const Overview = ({ data, extra }) => {
         {[
           {
             label1: "Total Publications",
-            label2: data?.publication?.length ?? "N/A",
+            label2: (
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  display: "flex",
+                  color: "white",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "#FABD81",
+                  borderRadius: "50%",
+                }}
+              >
+                {data?.publication?.length ?? "N/A"}
+              </div>
+            ),
             color: "#FABD81",
           },
           {
             label1: "Indexed Publications",
-            label2: data?.publication?.length ?? "N/A",
+            label2: (
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  display: "flex",
+                  color: "white",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "#7891C6",
+                  borderRadius: "50%",
+                }}
+              >
+                {data?.publication?.length ?? "N/A"}
+              </div>
+            ),
             color: "#7891C6",
           },
           {
-            label1: `First Author In ${data?.publication?.length}`,
-            label2: `Corresponding Author In ${data?.publication?.length}`,
+            label1: "First/Corresponding Author In",
+            label2: (
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  display: "flex",
+                  color: "white",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "#F7D1C4",
+                  borderRadius: "50%",
+                }}
+              >
+                {data?.publication?.length ?? "N/A"}
+              </div>
+            ),
             color: "#F7D1C4",
           },
           {
@@ -153,61 +200,75 @@ const Overview = ({ data, extra }) => {
         </div>
       </div>
       <div className={styles.overviewBottom}>
-        {[
-          {
-            label1: "Conferences",
-            label2: data?.conference?.length ?? "N/A",
-            logo: GroupOutlined,
-          },
-          {
-            label1: "Papers",
-            label2: data?.publication?.length ?? "N/A",
-            logo: PaperClipOutlined,
-          },
-          {
-            label1: "Posters",
-            label2: data?.publication?.length ?? "N/A",
-            logo: PaperClipOutlined,
-          },
-          {
-            label1: "Books",
-            label2: data?.book?.length ?? "N/A",
-            logo: BookOutlined,
-          },
-          {
-            label1: "Projects",
-            label2: data?.project?.length ?? "N/A",
-            logo: ProjectOutlined,
-          },
-          {
-            label1: "Funds",
-            label2: data?.fund?.length ?? "N/A",
-            logo: MoneyCollectOutlined,
-          },
-          {
-            label1: "Awards",
-            label2: data?.award?.length ?? "N/A",
-            logo: TrophyOutlined,
-          },
-          {
-            label1: "IPR",
-            label2: data?.ipr?.length ?? "N/A",
-            logo: BulbOutlined,
-          },
-          {
-            label1: "Students",
-            label2: data?.student?.length ?? "N/A",
-            logo: GroupOutlined,
-          },
-        ].map((e, i) => (
-          <div key={i}>
-            <div>{createElement(e.logo)}</div>
-            <div style={{ display: "flex", gap: 5 }}>
-              <span>{e.label1}</span>
-              <span>{e.label2}</span>
+        <div>
+          {[
+            {
+              label1: "Conferences",
+              label2: data?.conference?.length ?? "N/A",
+              logo: UsergroupAddOutlined,
+            },
+            {
+              label1: "Papers",
+              label2: data?.publication?.length ?? "N/A",
+              logo: PaperClipOutlined,
+            },
+            {
+              label1: "Posters",
+              label2: data?.publication?.length ?? "N/A",
+              logo: PaperClipOutlined,
+            },
+            {
+              label1: "Books",
+              label2: data?.book?.length ?? "N/A",
+              logo: BookOutlined,
+            },
+            {
+              label1: "IPR",
+              label2: data?.ipr?.length ?? "N/A",
+              logo: BulbOutlined,
+            },
+          ].map((e, i) => (
+            <div key={i}>
+              <div>{createElement(e.logo)}</div>
+              <div style={{ display: "flex", gap: 5 }}>
+                <span>{e.label2}</span>
+                <span>{e.label1}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+        <div>
+          {[
+            {
+              label1: "Projects",
+              label2: data?.project?.length ?? "N/A",
+              logo: ProjectOutlined,
+            },
+            {
+              label1: "Funds",
+              label2: data?.fund?.length ?? "N/A",
+              logo: DollarCircleOutlined,
+            },
+            {
+              label1: "Awards",
+              label2: data?.award?.length ?? "N/A",
+              logo: TrophyOutlined,
+            },
+            {
+              label1: "Students",
+              label2: data?.student?.length ?? "N/A",
+              logo: GroupOutlined,
+            },
+          ].map((e, i) => (
+            <div key={i}>
+              <div>{createElement(e.logo)}</div>
+              <div style={{ display: "flex", gap: 5 }}>
+                <span>{e.label2}</span>
+                <span>{e.label1}</span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );
