@@ -1,4 +1,4 @@
-import React, { createElement } from "react";
+import React, { createElement, use } from "react";
 import styles from "../../styles/profile.module.css";
 import Image from "next/image";
 import {
@@ -6,7 +6,6 @@ import {
   BulbOutlined,
   DollarCircleOutlined,
   GroupOutlined,
-  MoneyCollectOutlined,
   PaperClipOutlined,
   ProjectOutlined,
   TrophyOutlined,
@@ -28,6 +27,14 @@ import bronze from "../../public/logos/bronze-oa.png";
 import closed from "../../public/logos/closed-oa.png";
 
 const Overview = ({ data, extra }) => {
+  // STATES
+
+  // EFFECTS
+
+  // FUNCTIONS
+
+  const number = num => (num ? (isNaN(num) ? 0 : num) : 0);
+
   return (
     <>
       <div className={styles.overviewTop}>
@@ -111,23 +118,26 @@ const Overview = ({ data, extra }) => {
       <div className={styles.overviewMiddle}>
         <div>
           <div>Citations</div>
-          <div style={{ display: "flex", gap: 10 }}>
+          <div style={{ display: "flex", gap: 16 }}>
             {[
               {
-                value: extra?.citations?.crossref ?? "N/A",
+                value: number(extra?.citations?.crossref),
                 image: crossref,
               },
               {
-                value: extra?.citations?.scopus ?? "N/A",
+                value: number(extra?.citations?.scopus),
                 image: scopus,
               },
               {
-                value: extra?.citations?.wos ?? "N/A",
+                value: number(extra?.citations?.wos),
                 image: wos,
               },
             ].map((e, i) => (
-              <div key={i} style={{ display: "flex", gap: 5 }}>
-                <Image src={e.image} alt="-" width={20} height={20} />
+              <div
+                key={i}
+                style={{ display: "flex", alignItems: "center", gap: 8 }}
+              >
+                <Image src={e.image} alt="-" width={25} height={25} />
                 <span>{e.value}</span>
               </div>
             ))}
@@ -135,23 +145,26 @@ const Overview = ({ data, extra }) => {
         </div>
         <div>
           <div>H-Index</div>
-          <div style={{ display: "flex", gap: 10 }}>
+          <div style={{ display: "flex", gap: 16 }}>
             {[
               {
-                value: extra?.hIndex?.crossref ?? "N/A",
+                value: number(extra?.hIndex?.crossref),
                 image: crossref,
               },
               {
-                value: extra?.hIndex?.scopus ?? "N/A",
+                value: number(extra?.hIndex?.scopus),
                 image: scopus,
               },
               {
-                value: extra?.hIndex?.wos ?? "N/A",
+                value: number(extra?.hIndex?.wos),
                 image: wos,
               },
             ].map((e, i) => (
-              <div key={i} style={{ display: "flex", gap: 5 }}>
-                <Image src={e.image} alt="-" width={20} height={20} />
+              <div
+                key={i}
+                style={{ display: "flex", alignItems: "center", gap: 8 }}
+              >
+                <Image src={e.image} alt="-" width={25} height={25} />
                 <span>{e.value}</span>
               </div>
             ))}
@@ -159,7 +172,8 @@ const Overview = ({ data, extra }) => {
         </div>
         <div>
           <div>
-            Total Impact Factor: {extra?.impact?.total?.toFixed(2) ?? "N/A"}
+            Cumulative Impact Factor:{" "}
+            {extra?.impact?.total?.toFixed(2) ?? "N/A"}
           </div>
           <div>
             Average Impact Factor: {extra?.impact?.average?.toFixed(2) ?? "N/A"}
@@ -167,31 +181,31 @@ const Overview = ({ data, extra }) => {
         </div>
         <div>
           <div>
-            Total Open Access:{" "}
-            {extra?.access?.gold +
-              extra?.access?.green +
-              extra?.access?.bronze ?? "N/A"}
+            Open Access:{" "}
+            {number(
+              extra?.access?.gold + extra?.access?.green + extra?.access?.bronze
+            )}
           </div>
-          <div style={{ display: "flex", gap: 10 }}>
+          <div style={{ display: "flex", gap: 15 }}>
             {[
               {
-                value: extra?.access?.gold ?? "N/A",
+                value: number(extra?.access?.gold),
                 image: gold,
               },
               {
-                value: extra?.access?.green ?? "N/A",
+                value: number(extra?.access?.green),
                 image: green,
               },
               {
-                value: extra?.access?.bronze ?? "N/A",
+                value: number(extra?.access?.bronze),
                 image: bronze,
               },
               {
-                value: extra?.access?.closed ?? "N/A",
+                value: number(extra?.access?.closed),
                 image: closed,
               },
             ].map((e, i) => (
-              <div key={i} style={{ display: "flex", gap: 5 }}>
+              <div key={i} style={{ display: "flex", gap: 8 }}>
                 <Image src={e.image} alt="-" width={15} height={25} />
                 <span>{e.value}</span>
               </div>
@@ -204,28 +218,23 @@ const Overview = ({ data, extra }) => {
           {[
             {
               label1: "Conferences",
-              label2: data?.conference?.length ?? "N/A",
-              logo: UsergroupAddOutlined,
+              label2: number(data?.conference?.length),
+              logo: GroupOutlined,
             },
             {
-              label1: "Papers",
-              label2: data?.publication?.length ?? "N/A",
+              label1: "Papers Presented",
+              label2: number(data?.paper?.length),
               logo: PaperClipOutlined,
             },
             {
-              label1: "Posters",
-              label2: data?.publication?.length ?? "N/A",
+              label1: "Posters Presented",
+              label2: number(data?.poster?.length),
               logo: PaperClipOutlined,
             },
             {
-              label1: "Books",
-              label2: data?.book?.length ?? "N/A",
+              label1: "Books/Chapters",
+              label2: number(data?.book?.length),
               logo: BookOutlined,
-            },
-            {
-              label1: "IPR",
-              label2: data?.ipr?.length ?? "N/A",
-              logo: BulbOutlined,
             },
           ].map((e, i) => (
             <div key={i}>
@@ -240,24 +249,29 @@ const Overview = ({ data, extra }) => {
         <div>
           {[
             {
+              label1: "IPR",
+              label2: number(data?.ipr?.length),
+              logo: BulbOutlined,
+            },
+            {
               label1: "Projects",
-              label2: data?.project?.length ?? "N/A",
+              label2: number(data?.project?.length),
               logo: ProjectOutlined,
             },
             {
               label1: "Funds",
-              label2: data?.fund?.length ?? "N/A",
+              label2: number(data?.fund?.length),
               logo: DollarCircleOutlined,
             },
             {
               label1: "Awards",
-              label2: data?.award?.length ?? "N/A",
+              label2: number(data?.award?.length),
               logo: TrophyOutlined,
             },
             {
               label1: "Students",
-              label2: data?.student?.length ?? "N/A",
-              logo: GroupOutlined,
+              label2: number(data?.student?.length),
+              logo: UsergroupAddOutlined,
             },
           ].map((e, i) => (
             <div key={i}>

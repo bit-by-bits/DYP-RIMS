@@ -140,11 +140,11 @@
 }
 
 .overviewBottom > div:nth-child(1) {
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 .overviewBottom > div:nth-child(2) {
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 
 .overviewBottom > div > div {
