@@ -57,7 +57,7 @@ const Profile = () => {
   const [conferences, setConferences] = useState([]);
   const [ipr, setIpr] = useState([]);
 
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
   const [extra, setExtra] = useState({
     citations: {},
     hIndex: {},
@@ -162,19 +162,25 @@ const Profile = () => {
                 {e.publication_title}
               </div>
               <div className={styles.publicationAuthors}>
-                {[
-                  ...e.author_name?.map(e =>
-                    e?.user
-                      ? e?.user?.first_name + " " + e?.user?.last_name
-                      : null
-                  ),
-                  ...e.corresponding_authors?.map(e =>
-                    e?.user
-                      ? e?.user?.first_name + " " + e?.user?.last_name
-                      : null
-                  ),
-                  ...e.other_authors?.map(e => e),
-                ].join(", ")}
+                {e.author_name?.map((e, i) =>
+                  e?.user ? (
+                    <span key={i}>
+                      {e?.user?.first_name + " " + e?.user?.last_name}
+                      <sup>1</sup>
+                      <span>, </span>
+                    </span>
+                  ) : null
+                )}
+                {e.corresponding_authors?.map(e =>
+                  e?.user ? (
+                    <span key={i}>
+                      {e?.user?.first_name + " " + e?.user?.last_name}
+                      <sup>*</sup>
+                      <span>, </span>
+                    </span>
+                  ) : null
+                )}
+                {e.other_authors?.map(e => e).join(", ")}
               </div>
             </div>
           ),
@@ -259,10 +265,12 @@ const Profile = () => {
       <div className={styles.wrapper}>
         <Spin
           style={{
-            top: "50%",
-            left: "50%",
-            position: "absolute",
-            transform: "translate(-50%, -50%)",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            maxHeight: "100vh",
+            position: "fixed",
             backgroundColor: "rgba(256, 256, 256, 0.8)",
           }}
           spinning={visible}
