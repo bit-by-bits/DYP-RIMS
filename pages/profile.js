@@ -8,12 +8,28 @@ import axios from "axios";
 import URLObj from "../src/baseURL";
 import {
   BellOutlined,
+  FileTextOutlined,
   LogoutOutlined,
   SearchOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
 import Overview from "../src/Profile/Overview";
 import PTable from "../src/Profile/PTable";
+
+import crossref from "../public/logos/crossref.jpg";
+import medline from "../public/logos/medline.jpg";
+import doaj from "../public/logos/doaj.png";
+import pmc from "../public/logos/pmc.png";
+import embase from "../public/logos/embase.svg";
+import scopus from "../public/logos/scopus.svg";
+import scie from "../public/logos/scie.svg";
+import wos from "../public/logos/wos.svg";
+
+import green from "../public/logos/green-oa.png";
+import gold from "../public/logos/gold-oa.png";
+import bronze from "../public/logos/bronze-oa.png";
+import closed from "../public/logos/closed-oa.png";
+import Image from "next/image";
 
 const Profile = () => {
   // BOILERPLATE
@@ -35,6 +51,12 @@ const Profile = () => {
   const [person, setPerson] = useState({});
   const [data, setData] = useState({});
   const [statistics, setStatistics] = useState({});
+
+  const [publications, setPublications] = useState([]);
+  const [awards, setAwards] = useState([]);
+  const [conferences, setConferences] = useState([]);
+  const [ipr, setIpr] = useState([]);
+
   const [visible, setVisible] = useState(false);
   const [extra, setExtra] = useState({
     citations: {},
@@ -127,7 +149,105 @@ const Profile = () => {
       });
   }, [user]);
 
+  useEffect(() => {
+    if (data?.publication) {
+      console.log(data?.publication);
+
+      setPublications(
+        data?.publication?.map((e, i) => ({
+          key: i,
+          publication: (
+            <div>
+              <div className={styles.publicationTitle}>
+                {e.publication_title}
+              </div>
+              <div className={styles.publicationAuthors}>
+                {[
+                  ...e.author_name?.map(e =>
+                    e?.user
+                      ? e?.user?.first_name + " " + e?.user?.last_name
+                      : null
+                  ),
+                  ...e.corresponding_authors?.map(e =>
+                    e?.user
+                      ? e?.user?.first_name + " " + e?.user?.last_name
+                      : null
+                  ),
+                  ...e.other_authors?.map(e => e),
+                ].join(", ")}
+              </div>
+            </div>
+          ),
+          impact_factor: e.impact_factor,
+          sjr: e.sjr_quartile,
+          h_index: e.h_index,
+          indexed_in: (
+            <div className={styles.publicationGrid}>
+              {[
+                {
+                  name: "PubMed",
+                  logo: pmc,
+                  bool: e.in_pmc,
+                },
+                {
+                  name: "Scopus",
+                  logo: scopus,
+                  bool: e.in_scopus,
+                },
+                {
+                  name: "DOAJ",
+                  logo: doaj,
+                  bool: e.in_doaj,
+                },
+                {
+                  name: "SCIE",
+                  logo: scie,
+                  bool: e.in_scie,
+                },
+                {
+                  name: "Medline",
+                  logo: medline,
+                  bool: e.in_medline,
+                },
+              ]
+                .filter(e => e.bool)
+                .map(e => (
+                  <>
+                    <Image src={e.logo} alt={e.name} height={30} width={30} />
+                    {e.name}
+                  </>
+                ))}
+            </div>
+          ),
+          citations: (
+            <div className={styles.publicationGrid}>
+              <Image src={wos} alt="WOS" height={30} width={30} />
+              {`WOS: ${number(e.citations_wos)}`}
+              <Image src={crossref} alt="Crossref" height={30} width={30} />
+              {`Crossref: ${number(e.citations_crossref)}`}
+              <Image src={scopus} alt="Scopus" height={30} width={30} />
+              {`Scopus: ${number(e.citations_scopus)}`}
+            </div>
+          ),
+          published: e.year,
+          action: (
+            <Button
+              type="primary"
+              icon={<FileTextOutlined />}
+              className={styles.publicationButton}
+              onClick={() => router.push(`/file/${e.doi_id}`)}
+            >
+              Preview
+            </Button>
+          ),
+        }))
+      );
+    }
+  }, [data]);
+
   // FUNCTIONS
+
+  const number = num => (num ? (isNaN(num) ? 0 : num) : 0);
 
   return (
     <>
@@ -216,7 +336,52 @@ const Profile = () => {
                   </Button>
                 </div>
                 <div className={styles.sectionBottom}>
-                  <PTable data={data} />
+                  <PTable
+                    title={[
+                      {
+                        title: "Publication",
+                        dataIndex: "publication",
+                        key: "publication",
+                      },
+                      {
+                        title: "Impact Factor",
+                        dataIndex: "impact_factor",
+                        key: "impact_factor",
+                      },
+                      {
+                        title: "SJR",
+                        dataIndex: "sjr",
+                        key: "sjr",
+                      },
+                      {
+                        title: "H-Index",
+                        dataIndex: "h_index",
+                        key: "h_index",
+                        render: e => <div style={{ minWidth: 50 }}>{e}</div>,
+                      },
+                      {
+                        title: "Indexed In",
+                        dataIndex: "indexed_in",
+                        key: "indexed_in",
+                      },
+                      {
+                        title: "Citations",
+                        dataIndex: "citations",
+                        key: "citations",
+                      },
+                      {
+                        title: "Published",
+                        dataIndex: "published",
+                        key: "published",
+                      },
+                      {
+                        title: "",
+                        dataIndex: "action",
+                        key: "action",
+                      },
+                    ]}
+                    body={publications}
+                  />
                 </div>
               </div>
 

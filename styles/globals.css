@@ -66,9 +66,24 @@ html {
 }
 
 .ant-table-thead .ant-table-cell {
-  background-color: #9a2827 !important;
-  color: white !important;
+  background-color: transparent !important;
   text-align: center !important;
+}
+
+.ant-table-wrapper .ant-table-thead > tr > th {
+  color: rgba(125, 125, 125, 1) !important;
+  font-weight: 500 !important;
+}
+
+.ant-table-tbody > tr > td:not(:first-child) {
+  text-align: center !important;
+  font-weight: 500 !important;
+  color: var(--primary) !important;
+}
+
+.ant-table-wrapper .ant-table-tbody > tr {
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25) !important;
+  border-radius: 15px !important;
 }
 
 .ant-pagination-item-active {
@@ -102,7 +117,6 @@ html {
   margin-top: 1rem;
   font-weight: bold;
 }
-
 
 /* SIDE MENU */
 

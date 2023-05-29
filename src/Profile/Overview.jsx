@@ -12,14 +12,9 @@ import {
   UsergroupAddOutlined,
 } from "@ant-design/icons";
 
-import scopus from "../../public/logos/scopus.png";
 import crossref from "../../public/logos/crossref.jpg";
-import medline from "../../public/logos/medline.jpg";
-import doaj from "../../public/logos/doaj.png";
-import embase from "../../public/logos/embase.png";
-import pmc from "../../public/logos/pmc.png";
-import scie from "../../public/logos/scie.png";
-import wos from "../../public/logos/wos.jpg";
+import scopus from "../../public/logos/scopus.svg";
+import wos from "../../public/logos/wos.svg";
 
 import green from "../../public/logos/green-oa.png";
 import gold from "../../public/logos/gold-oa.png";
@@ -43,16 +38,8 @@ const Overview = ({ data, extra }) => {
             label1: "Total Publications",
             label2: (
               <div
-                style={{
-                  width: 40,
-                  height: 40,
-                  display: "flex",
-                  color: "white",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "#FABD81",
-                  borderRadius: "50%",
-                }}
+                className={styles.overviewTopCircle}
+                style={{ backgroundColor: "#FABD81" }}
               >
                 {data?.publication?.length ?? "N/A"}
               </div>
@@ -63,16 +50,8 @@ const Overview = ({ data, extra }) => {
             label1: "Indexed Publications",
             label2: (
               <div
-                style={{
-                  width: 40,
-                  height: 40,
-                  display: "flex",
-                  color: "white",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "#7891C6",
-                  borderRadius: "50%",
-                }}
+                className={styles.overviewTopCircle}
+                style={{ backgroundColor: "#7891C6" }}
               >
                 {data?.publication?.length ?? "N/A"}
               </div>
@@ -83,16 +62,8 @@ const Overview = ({ data, extra }) => {
             label1: "1st/Corresponding Author Publications",
             label2: (
               <div
-                style={{
-                  width: 40,
-                  height: 40,
-                  display: "flex",
-                  color: "white",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "#ffc9b7",
-                  borderRadius: "50%",
-                }}
+                className={styles.overviewTopCircle}
+                style={{ backgroundColor: "#ffc9b7" }}
               >
                 {data?.publication?.length ?? "N/A"}
               </div>
@@ -249,27 +220,27 @@ const Overview = ({ data, extra }) => {
         <div>
           {[
             {
-              label1: "IPR",
-              label2: number(data?.ipr?.length),
-              logo: BulbOutlined,
-            },
-            {
               label1: "Projects",
               label2: number(data?.project?.length),
               logo: ProjectOutlined,
             },
             {
-              label1: "Funds",
+              label1: "Funds Recieved",
               label2: number(data?.fund?.length),
               logo: DollarCircleOutlined,
             },
             {
-              label1: "Awards",
+              label1: "IPR",
+              label2: number(data?.ipr?.length),
+              logo: BulbOutlined,
+            },
+            {
+              label1: "Awards Won",
               label2: number(data?.award?.length),
               logo: TrophyOutlined,
             },
             {
-              label1: "Students",
+              label1: "Students Guided",
               label2: number(data?.student?.length),
               logo: UsergroupAddOutlined,
             },
