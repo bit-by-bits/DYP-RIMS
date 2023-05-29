@@ -102,7 +102,7 @@
   display: grid;
   font-size: 15px;
   font-weight: 500;
-  grid-template-columns: 1fr 1fr 1.3fr 1.3fr;
+  grid-template-columns: 1fr 1fr 1.4fr 1.2fr;
   justify-content: space-between;
 }
 
@@ -116,11 +116,20 @@
 }
 
 .overviewTop > div {
+  min-width: max-content;
   justify-content: center;
+}
+
+.overviewTop > div:last-child {
+  font-size: 14px;
 }
 
 .overviewMiddle > div {
   background-color: #f1f1f1;
+}
+
+.overviewMiddle > div > div:first-child {
+  font-weight: 600;
 }
 
 .overviewBottom {

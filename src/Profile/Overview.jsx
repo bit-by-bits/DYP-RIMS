@@ -73,7 +73,7 @@ const Overview = ({ data, extra }) => {
             color: "#7891C6",
           },
           {
-            label1: "First/Corresponding Author In",
+            label1: "1st/Corresponding Author Publications",
             label2: (
               <div
                 style={{
@@ -83,34 +83,34 @@ const Overview = ({ data, extra }) => {
                   color: "white",
                   alignItems: "center",
                   justifyContent: "center",
-                  backgroundColor: "#F7D1C4",
+                  backgroundColor: "#ffc9b7",
                   borderRadius: "50%",
                 }}
               >
                 {data?.publication?.length ?? "N/A"}
               </div>
             ),
-            color: "#F7D1C4",
+            color: "#ffc9b7",
           },
           {
-            label1: `Q1: ${data?.quartiles?.Q1 ?? "N/A"} | Q2: ${
-              data?.quartiles?.Q2 ?? "N/A"
-            } | Q3: ${data?.quartiles?.Q3 ?? "N/A"}`,
-            label2: `Q4: ${data?.quartiles?.Q4 ?? "N/A"} | None: ${
+            label1: `Q4: ${data?.quartiles?.Q4 ?? "N/A"} | None: ${
               data?.quartiles?.null ?? "N/A"
             }`,
-            color: "lightgrey",
+            label2: `Q1: ${data?.quartiles?.Q1 ?? "N/A"} | Q2: ${
+              data?.quartiles?.Q2 ?? "N/A"
+            } | Q3: ${data?.quartiles?.Q3 ?? "N/A"}`,
+            color: "grey",
           },
         ].map((e, i) => (
           <div key={i} style={{ boxShadow: `0 0 4px ${e.color}` }}>
-            <span>{e.label1}</span>
             <span>{e.label2}</span>
+            <span>{e.label1}</span>
           </div>
         ))}
       </div>
       <div className={styles.overviewMiddle}>
         <div>
-          <div>Total Citations: {extra?.citations?.total ?? "N/A"}</div>
+          <div>Citations</div>
           <div style={{ display: "flex", gap: 10 }}>
             {[
               {
@@ -134,7 +134,7 @@ const Overview = ({ data, extra }) => {
           </div>
         </div>
         <div>
-          <div>Total H-Index: {extra?.hIndex?.total ?? "N/A"}</div>
+          <div>H-Index</div>
           <div style={{ display: "flex", gap: 10 }}>
             {[
               {
