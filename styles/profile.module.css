@@ -15,7 +15,8 @@
 .overviewTop > div,
 .overviewMiddle > div,
 .overviewBottom > div,
-.overviewBottom > div > div {
+.overviewBottom > div > div,
+.publication {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,10 +74,12 @@
 .topButton {
   height: 35px;
   border-radius: 10px;
+  background: var(--primary);
 }
 
-.topButton {
-  background: var(--primary);
+.topInput,
+.topInput input {
+  background-color: #f7f7f7;
 }
 
 .topButtonCircle {
@@ -118,6 +121,7 @@
 .overviewTop > div {
   min-width: max-content;
   justify-content: center;
+  background: #f7f7f7;
 }
 
 .overviewTop > div:last-child {
@@ -139,8 +143,13 @@
   background-color: #f1f1f1;
 }
 
-.overviewMiddle > div > div:first-child {
-  font-weight: 600;
+.overviewMiddle > div:not(:nth-child(3)) > div:first-child {
+  font-weight: 700;
+}
+
+.overviewMiddleTop {
+  margin-bottom: -10px;
+  font-size: 12px;
 }
 
 .overviewBottom {
@@ -177,20 +186,34 @@
 }
 
 .overviewBottom > div > div > div > span:first-child {
-  font-size: 16px;
   font-weight: 700;
 }
 
 /* PUBLICATIONS */
 
+.publication {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
 .publicationTitle {
   font-weight: 600;
-  margin-bottom: 10px;
   font-size: 16px;
 }
 
-.publicationAuthors {
+.publicationAuthors,
+.publicationStats {
   color: var(--primary);
+}
+
+.publicationJournal,
+.publicationStats {
+  font-weight: 500;
+}
+
+.publicationJournal {
+  font-style: italic;
 }
 
 .publicationGrid {
@@ -286,6 +309,48 @@
   .overviewMiddle > div,
   .overviewBottom > div {
     gap: 16px;
+  }
+
+  .sideWrapper * {
+    font-size: 16px;
+  }
+
+  .overviewTop > div:last-child,
+  .overviewBottom > div {
+    font-size: 18px;
+  }
+
+  .overviewMiddleTop {
+    font-size: 14px;
+  }
+
+  .overviewMiddle > div:not(:last-child) img {
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+
+@media screen and (min-width: 2100px) {
+  .overviewTop,
+  .overviewMiddle,
+  .overviewBottom {
+    gap: 20px;
+    font-size: 22px;
+  }
+
+  .overviewTop > div,
+  .overviewMiddle > div,
+  .overviewBottom > div {
+    gap: 20px;
+  }
+
+  .overviewTop > div:last-child,
+  .overviewBottom > div {
+    font-size: 20px;
+  }
+
+  .overviewMiddleTop {
+    font-size: 16px;
   }
 }
 

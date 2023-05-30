@@ -71,12 +71,12 @@ const Overview = ({ data, extra }) => {
             color: "#ffc9b7",
           },
           {
-            label1: `Q4: ${data?.quartiles?.Q4 ?? "N/A"} | None: ${
-              data?.quartiles?.null ?? "N/A"
-            }`,
-            label2: `Q1: ${data?.quartiles?.Q1 ?? "N/A"} | Q2: ${
-              data?.quartiles?.Q2 ?? "N/A"
-            } | Q3: ${data?.quartiles?.Q3 ?? "N/A"}`,
+            label1: `Q4: ${number(data?.quartiles?.Q4)} | None: ${number(
+              data?.quartiles?.null
+            )}`,
+            label2: `Q1: ${number(data?.quartiles?.Q1)} | Q2: ${number(
+              data?.quartiles?.Q2
+            )} | Q3: ${number(data?.quartiles?.Q3)}`,
             color: "grey",
           },
         ].map((e, i) => (
@@ -88,8 +88,8 @@ const Overview = ({ data, extra }) => {
       </div>
       <div className={styles.overviewMiddle}>
         <div>
-          <div>Citations</div>
-          <div style={{ display: "flex", gap: 16 }}>
+          <div className={styles.overviewMiddleTop}>Citations</div>
+          <div style={{ display: "flex", gap: 15 }}>
             {[
               {
                 value: number(extra?.citations?.crossref),
@@ -106,17 +106,17 @@ const Overview = ({ data, extra }) => {
             ].map((e, i) => (
               <div
                 key={i}
-                style={{ display: "flex", alignItems: "center", gap: 8 }}
+                style={{ display: "flex", alignItems: "center", gap: 5 }}
               >
-                <Image src={e.image} alt="-" width={25} height={25} />
+                <Image src={e.image} alt="-" width={35} height={35} />
                 <span>{e.value}</span>
               </div>
             ))}
           </div>
         </div>
         <div>
-          <div>H-Index</div>
-          <div style={{ display: "flex", gap: 16 }}>
+          <div className={styles.overviewMiddleTop}>H-Index</div>
+          <div style={{ display: "flex", gap: 15 }}>
             {[
               {
                 value: number(extra?.hIndex?.crossref),
@@ -133,9 +133,9 @@ const Overview = ({ data, extra }) => {
             ].map((e, i) => (
               <div
                 key={i}
-                style={{ display: "flex", alignItems: "center", gap: 8 }}
+                style={{ display: "flex", alignItems: "center", gap: 5 }}
               >
-                <Image src={e.image} alt="-" width={25} height={25} />
+                <Image src={e.image} alt="-" width={35} height={35} />
                 <span>{e.value}</span>
               </div>
             ))}
@@ -188,11 +188,6 @@ const Overview = ({ data, extra }) => {
         <div>
           {[
             {
-              label1: "Conferences",
-              label2: number(data?.conference?.length),
-              logo: GroupOutlined,
-            },
-            {
               label1: "Papers Presented",
               label2: number(data?.paper?.length),
               logo: PaperClipOutlined,
@@ -207,6 +202,11 @@ const Overview = ({ data, extra }) => {
               label2: number(data?.book?.length),
               logo: BookOutlined,
             },
+            {
+              label1: "Research Projects",
+              label2: number(data?.project?.length),
+              logo: ProjectOutlined,
+            },
           ].map((e, i) => (
             <div key={i}>
               <div>{createElement(e.logo)}</div>
@@ -220,9 +220,9 @@ const Overview = ({ data, extra }) => {
         <div>
           {[
             {
-              label1: "Projects",
-              label2: number(data?.project?.length),
-              logo: ProjectOutlined,
+              label1: "Conferences",
+              label2: number(data?.conference?.length),
+              logo: GroupOutlined,
             },
             {
               label1: "Funds Recieved",
@@ -230,12 +230,7 @@ const Overview = ({ data, extra }) => {
               logo: DollarCircleOutlined,
             },
             {
-              label1: "IPR",
-              label2: number(data?.ipr?.length),
-              logo: BulbOutlined,
-            },
-            {
-              label1: "Awards Won",
+              label1: "Awards",
               label2: number(data?.award?.length),
               logo: TrophyOutlined,
             },
@@ -244,10 +239,15 @@ const Overview = ({ data, extra }) => {
               label2: number(data?.student?.length),
               logo: UsergroupAddOutlined,
             },
+            {
+              label1: "IPR",
+              label2: number(data?.ipr?.length),
+              logo: BulbOutlined,
+            },
           ].map((e, i) => (
             <div key={i}>
               <div>{createElement(e.logo)}</div>
-              <div style={{ display: "flex", gap: 5 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
                 <span>{e.label2}</span>
                 <span>{e.label1}</span>
               </div>

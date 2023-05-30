@@ -48,6 +48,8 @@ html {
   background: #ce1c19;
 }
 
+/* MENU */
+
 .ant-menu-submenu:after,
 .ant-menu-submenu-active:after,
 .ant-menu-item::after,
@@ -64,6 +66,20 @@ html {
 .ant-menu-item-selected {
   color: black !important;
 }
+
+.ant-menu-submenu-active > div {
+  background-color: #9a2827 !important;
+}
+
+.ant-menu-submenu-inline .ant-menu-item-active {
+  background-color: #9a2827 !important;
+}
+
+.ant-menu-submenu-inline .ant-menu-item-active a {
+  color: white !important;
+}
+
+/* TABLE */
 
 .ant-table-thead .ant-table-cell {
   background-color: transparent !important;
@@ -94,6 +110,20 @@ html {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25) !important;
 }
 
+@media screen and (min-width: 1800px) {
+  .ant-table-wrapper * {
+    font-size: 16px !important;
+  }
+}
+
+@media screen and (min-width: 2100px) {
+  .ant-table-wrapper * {
+    font-size: 18px !important;
+  }
+}
+
+/* PAGINATION */
+
 .ant-pagination-item-active {
   border-color: #9a2827 !important;
 }
@@ -102,16 +132,10 @@ html {
   color: #9a2827 !important;
 }
 
-.ant-menu-submenu-active > div {
-  background-color: #9a2827 !important;
-}
+/* TYPOGRAPHY */
 
-.ant-menu-submenu-inline .ant-menu-item-active {
-  background-color: #9a2827 !important;
-}
-
-.ant-menu-submenu-inline .ant-menu-item-active a {
-  color: white !important;
+a.ant-typography-expand {
+  color: red !important;
 }
 
 /* SPINNER */

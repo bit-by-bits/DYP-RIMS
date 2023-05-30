@@ -1,7 +1,7 @@
 import Head from "next/head";
 import React, { useState, useEffect, createElement } from "react";
 import styles from "../styles/profile.module.css";
-import { Button, FloatButton, Input, Spin } from "antd";
+import { Button, Typography, FloatButton, Input, Spin } from "antd";
 import Side from "../src/Profile/Side";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -13,6 +13,7 @@ import {
   SearchOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
+import Image from "next/image";
 import Overview from "../src/Profile/Overview";
 import PTable from "../src/Profile/PTable";
 
@@ -29,7 +30,9 @@ import green from "../public/logos/green-oa.png";
 import gold from "../public/logos/gold-oa.png";
 import bronze from "../public/logos/bronze-oa.png";
 import closed from "../public/logos/closed-oa.png";
-import Image from "next/image";
+import Scite from "../src/Profile/Scite";
+import Altmetric from "../src/Profile/Altmetric";
+import { useWindowSize } from "rooks";
 
 const Profile = () => {
   // BOILERPLATE
@@ -47,6 +50,9 @@ const Profile = () => {
   }, [router, user]);
 
   // STATES
+
+  const { Paragraph } = Typography;
+  const { innerWidth } = useWindowSize();
 
   const [person, setPerson] = useState({});
   const [data, setData] = useState({});
@@ -157,11 +163,18 @@ const Profile = () => {
         data?.publication?.map((e, i) => ({
           key: i,
           publication: (
-            <div>
+            <div className={styles.publication}>
               <div className={styles.publicationTitle}>
                 {e.publication_title}
               </div>
-              <div className={styles.publicationAuthors}>
+              <Paragraph
+                className={styles.publicationAuthors}
+                ellipsis={{
+                  rows: 3,
+                  expandable: true,
+                  symbol: "more",
+                }}
+              >
                 {e.author_name?.map((e, i) =>
                   e?.user ? (
                     <span key={i}>
@@ -181,7 +194,17 @@ const Profile = () => {
                   ) : null
                 )}
                 {e.other_authors?.map(e => e).join(", ")}
+              </Paragraph>
+              <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+                <div className={styles.publicationJournal}>
+                  {e.journal_name}
+                </div>
+                <Altmetric DOI={e.doi_id} type={1} />
               </div>
+              <div
+                className={styles.publicationStats}
+              >{`Volume: ${e.volume} • Issue: ${e.issue} • Pages: ${e.pages}`}</div>
+              <Scite DOI={e.doi_id} type={1} />
             </div>
           ),
           impact_factor: e.impact_factor,
@@ -227,12 +250,12 @@ const Profile = () => {
           ),
           citations: (
             <div className={styles.publicationGrid}>
-              <Image src={wos} alt="WOS" height={30} width={30} />
-              {`WOS: ${number(e.citations_wos)}`}
               <Image src={crossref} alt="Crossref" height={30} width={30} />
               {`Crossref: ${number(e.citations_crossref)}`}
               <Image src={scopus} alt="Scopus" height={30} width={30} />
               {`Scopus: ${number(e.citations_scopus)}`}
+              <Image src={wos} alt="WOS" height={30} width={30} />
+              {`WOS: ${number(e.citations_wos)}`}
             </div>
           ),
           published: e.year,
@@ -240,10 +263,11 @@ const Profile = () => {
             <Button
               type="primary"
               icon={<FileTextOutlined />}
+              style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
               className={styles.publicationButton}
               onClick={() => router.push(`/file/${e.doi_id}`)}
             >
-              Preview
+              {innerWidth > 1400 ? "View Publication" : null}
             </Button>
           ),
         }))
@@ -288,7 +312,7 @@ const Profile = () => {
               <div className={styles.top}>
                 <Input
                   className={styles.topInput}
-                  placeholder="Search for publications"
+                  placeholder="Search for research within RIMS using keywords"
                   prefix={<SearchOutlined style={{ marginRight: 5 }} />}
                   allowClear
                 />
@@ -355,17 +379,19 @@ const Profile = () => {
                         title: "Impact Factor",
                         dataIndex: "impact_factor",
                         key: "impact_factor",
+                        sorter: (a, b) => a.impact_factor - b.impact_factor,
                       },
                       {
                         title: "SJR",
                         dataIndex: "sjr",
                         key: "sjr",
+                        sorter: (a, b) => a.sjr - b.sjr,
                       },
                       {
-                        title: "H-Index",
+                        title: "H_Index",
                         dataIndex: "h_index",
                         key: "h_index",
-                        render: e => <div style={{ minWidth: 50 }}>{e}</div>,
+                        sorter: (a, b) => a.h_index - b.h_index,
                       },
                       {
                         title: "Indexed In",
@@ -381,6 +407,7 @@ const Profile = () => {
                         title: "Published",
                         dataIndex: "published",
                         key: "published",
+                        sorter: (a, b) => a.published - b.published,
                       },
                       {
                         title: "",
