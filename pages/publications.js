@@ -2,7 +2,6 @@ import Head from "next/head";
 import React, { useState, useEffect, Fragment, createElement } from "react";
 import styles from "../styles/profile.module.css";
 import { Button, Typography, FloatButton, Input, Spin, Table } from "antd";
-import Side from "../src/Profile/Side";
 import { useRouter } from "next/router";
 import axios from "axios";
 import URLObj from "../src/baseURL";
@@ -16,7 +15,6 @@ import {
   SortDescendingOutlined,
 } from "@ant-design/icons";
 import Image from "next/image";
-import Overview from "../src/Profile/Overview";
 
 import crossref from "../public/logos/crossref.jpg";
 import medline from "../public/logos/medline.jpg";
@@ -29,9 +27,10 @@ import wos from "../public/logos/wos.svg";
 
 import Scite from "../src/Profile/Scite";
 import Altmetric from "../src/Profile/Altmetric";
+import Side from "../src/Profile/Side";
 import { useWindowSize } from "rooks";
 
-const Profile = () => {
+const Publications = () => {
   // BOILERPLATE
 
   const router = useRouter();
@@ -300,12 +299,11 @@ const Profile = () => {
             </Paragraph>
             <div className={styles.publicationJournal}>{e.journal_name}</div>
             <div
+              style={{ marginBottom: 10 }}
               className={styles.publicationStats}
             >{`Volume: ${e.volume} • Issue: ${e.issue} • Pages: ${e.pages}`}</div>
-            <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-              <Scite DOI={e.doi_id} type={1} />
-              <Altmetric DOI={e.doi_id} type={1} />
-            </div>
+            <Altmetric DOI={e.doi_id} type={0} />
+            <Scite DOI={e.doi_id} type={0} />
           </div>
         ),
         impact_factor: e.impact_factor,
@@ -498,7 +496,7 @@ const Profile = () => {
   return (
     <>
       <Head>
-        <title>Profile</title>
+        <title>Publications</title>
         <link rel="icon" href="logos/dpu-2.png" />
       </Head>
 
@@ -567,20 +565,6 @@ const Profile = () => {
 
               <div className={styles.section}>
                 <div className={styles.sectionTop}>
-                  <div id="overview" className={styles.heading}>
-                    Overview
-                  </div>
-                </div>
-                <Overview
-                  data={data}
-                  stats={statistics}
-                  extra={extra}
-                  size={innerWidth}
-                />
-              </div>
-
-              <div className={styles.section}>
-                <div className={styles.sectionTop}>
                   <div id="publications" className={styles.heading}>
                     Publications
                   </div>
@@ -596,13 +580,6 @@ const Profile = () => {
                     >
                       Sort Citations By: {sortBy.toUpperCase()}
                     </Button>
-                    <Button
-                      type="primary"
-                      className={styles.sectionButton}
-                      onClick={() => router.push("/publications")}
-                    >
-                      View All
-                    </Button>
                   </div>
                 </div>
                 <div className={styles.sectionBottom}>
@@ -610,114 +587,6 @@ const Profile = () => {
                     columns={publications?.title}
                     dataSource={publications?.body}
                   />
-                </div>
-              </div>
-
-              <div className={styles.section}>
-                <div className={styles.sectionTop}>
-                  <div id="conferences" className={styles.heading}>
-                    Conferences
-                  </div>
-                  <Button
-                    type="primary"
-                    className={styles.sectionButton}
-                    onClick={() => {}}
-                  >
-                    View All
-                  </Button>
-                </div>
-                <div className={styles.sectionBottom}>
-                  <Table columns={[]} dataSource={[]} />
-                </div>
-              </div>
-
-              <div className={styles.section}>
-                <div className={styles.sectionTop}>
-                  <div id="books" className={styles.heading}>
-                    Books/Chapters
-                  </div>
-                  <Button
-                    type="primary"
-                    className={styles.sectionButton}
-                    onClick={() => {}}
-                  >
-                    View All
-                  </Button>
-                </div>
-                <div className={styles.sectionBottom}>
-                  <Table columns={[]} dataSource={[]} />
-                </div>
-              </div>
-
-              <div className={styles.section}>
-                <div className={styles.sectionTop}>
-                  <div id="projects" className={styles.heading}>
-                    Research Projects
-                  </div>
-                  <Button
-                    type="primary"
-                    className={styles.sectionButton}
-                    onClick={() => {}}
-                  >
-                    View All
-                  </Button>
-                </div>
-                <div className={styles.sectionBottom}>
-                  <Table columns={[]} dataSource={[]} />
-                </div>
-              </div>
-
-              <div className={styles.section}>
-                <div className={styles.sectionTop}>
-                  <div id="awards" className={styles.heading}>
-                    Awards
-                  </div>
-                  <Button
-                    type="primary"
-                    className={styles.sectionButton}
-                    onClick={() => {}}
-                  >
-                    View All
-                  </Button>
-                </div>
-                <div className={styles.sectionBottom}>
-                  <Table columns={awards?.title} dataSource={awards?.body} />
-                </div>
-              </div>
-
-              <div className={styles.section}>
-                <div className={styles.sectionTop}>
-                  <div id="ipr" className={styles.heading}>
-                    IPR
-                  </div>
-                  <Button
-                    type="primary"
-                    className={styles.sectionButton}
-                    onClick={() => {}}
-                  >
-                    View All
-                  </Button>
-                </div>
-                <div className={styles.sectionBottom}>
-                  <Table columns={[]} dataSource={[]} />
-                </div>
-              </div>
-
-              <div className={styles.section}>
-                <div className={styles.sectionTop}>
-                  <div id="students" className={styles.heading}>
-                    Students Guided
-                  </div>
-                  <Button
-                    type="primary"
-                    className={styles.sectionButton}
-                    onClick={() => {}}
-                  >
-                    View All
-                  </Button>
-                </div>
-                <div className={styles.sectionBottom}>
-                  <Table columns={[]} dataSource={[]} />
                 </div>
               </div>
             </div>
@@ -728,4 +597,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Publications;
