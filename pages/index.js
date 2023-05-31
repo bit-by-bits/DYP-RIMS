@@ -13,8 +13,14 @@ export default function Home() {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    if (JSON.parse(localStorage.getItem("user"))?.token)
-      router.push("/profile");
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user) {
+      const time = Date.now() - user.setUpTime;
+
+      if (time < 3600000) router.push("/profile");
+      else localStorage.removeItem("user");
+    }
   }, [router]);
 
   useEffect(() => {
@@ -37,7 +43,7 @@ export default function Home() {
 
             localStorage.setItem(
               "user",
-              JSON.stringify({ token: res.data.token })
+              JSON.stringify({ token: res.data.token, setUpTime: Date.now() })
             );
 
             router.push("/profile");

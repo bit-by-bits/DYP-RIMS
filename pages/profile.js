@@ -33,6 +33,7 @@ import closed from "../public/logos/closed-oa.png";
 import Scite from "../src/Profile/Scite";
 import Altmetric from "../src/Profile/Altmetric";
 import { useWindowSize } from "rooks";
+import { Fragment } from "react";
 
 const Profile = () => {
   // BOILERPLATE
@@ -53,6 +54,7 @@ const Profile = () => {
 
   const { Paragraph } = Typography;
   const { innerWidth } = useWindowSize();
+  const [visible, setVisible] = useState(true);
 
   const [person, setPerson] = useState({});
   const [data, setData] = useState({});
@@ -63,7 +65,7 @@ const Profile = () => {
   const [conferences, setConferences] = useState([]);
   const [ipr, setIpr] = useState([]);
 
-  const [visible, setVisible] = useState(true);
+  const [sortBy, setSortBy] = useState("scopus");
   const [extra, setExtra] = useState({
     citations: {},
     hIndex: {},
@@ -74,85 +76,88 @@ const Profile = () => {
   // EFFECTS
 
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `${URLObj.base}/home`,
-      headers: {
-        "X-ACCESS-KEY": URLObj.key,
-        "X-AUTH-TOKEN": user.token,
-      },
-    })
-      .then(res => {
-        setPerson(res.data?.user);
-        setData(res.data?.data);
-        setStatistics(res.data?.statistics);
-
-        // EXTRA CALCULATIONS
-
-        const TEMP = {
-          total: 0,
-          crossref: 0,
-          scopus: 0,
-          wos: 0,
-        };
-
-        let CITATIONS = { ...TEMP };
-        let H_INDEX = { ...TEMP };
-
-        let IMPACT = {
-          total: 0,
-          average: 0,
-        };
-
-        let ACCESS = {
-          gold: 0,
-          green: 0,
-          bronze: 0,
-          closed: 0,
-        };
-
-        res.data?.data?.publication?.forEach(e => {
-          CITATIONS.total += e.citations_total;
-          CITATIONS.crossref += e.citations_crossref;
-          CITATIONS.scopus += e.citations_scopus;
-          CITATIONS.wos += e.citations_wos;
-
-          H_INDEX.total += e.h_index_total;
-          H_INDEX.crossref += e.h_index_crossref;
-          H_INDEX.scopus += e.h_index_scopus;
-          H_INDEX.wos += e.h_index_wos;
-
-          IMPACT.total += e.impact_factor;
-
-          if (e.open_access)
-            switch (e.open_access_status) {
-              case "gold":
-                ACCESS.gold++;
-                break;
-
-              case "green":
-                ACCESS.green++;
-
-              case "bronze":
-                ACCESS.bronze++;
-            }
-          else ACCESS.closed++;
-        });
-
-        IMPACT.average = IMPACT.total / res.data?.data?.publication?.length;
-
-        setExtra({
-          citations: CITATIONS,
-          hIndex: H_INDEX,
-          impact: IMPACT,
-          access: ACCESS,
-        });
-
-        setVisible(false);
+    if (user?.token) {
+      axios({
+        method: "GET",
+        url: `${URLObj.base}/home`,
+        headers: {
+          "X-ACCESS-KEY": URLObj.key,
+          "X-AUTH-TOKEN": user.token,
+        },
       })
-      .catch(err => {
-        console.log(err);
-      });
+        .then(res => {
+          setPerson(res.data?.user);
+          setData(res.data?.data);
+          setStatistics(res.data?.statistics);
+
+          // EXTRA CALCULATIONS
+
+          const TEMP = {
+            total: 0,
+            crossref: 0,
+            scopus: 0,
+            wos: 0,
+          };
+
+          let CITATIONS = { ...TEMP };
+          let H_INDEX = { ...TEMP };
+
+          let IMPACT = {
+            total: 0,
+            average: 0,
+          };
+
+          let ACCESS = {
+            gold: 0,
+            green: 0,
+            bronze: 0,
+            closed: 0,
+          };
+
+          res.data?.data?.publication?.forEach(e => {
+            CITATIONS.total += e.citations_total;
+            CITATIONS.crossref += e.citations_crossref;
+            CITATIONS.scopus += e.citations_scopus;
+            CITATIONS.wos += e.citations_wos;
+
+            H_INDEX.total += e.h_index_total;
+            H_INDEX.crossref += e.h_index_crossref;
+            H_INDEX.scopus += e.h_index_scopus;
+            H_INDEX.wos += e.h_index_wos;
+
+            IMPACT.total += e.impact_factor;
+
+            if (e.open_access)
+              switch (e.open_access_status) {
+                case "gold":
+                  ACCESS.gold++;
+                  break;
+
+                case "green":
+                  ACCESS.green++;
+
+                case "bronze":
+                  ACCESS.bronze++;
+              }
+            else ACCESS.closed++;
+          });
+
+          IMPACT.average = IMPACT.total / res.data?.data?.publication?.length;
+
+          setExtra({
+            citations: CITATIONS,
+            hIndex: H_INDEX,
+            impact: IMPACT,
+            access: ACCESS,
+          });
+
+          // LOAD WEBSITE
+          setVisible(false);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }, [user]);
 
   useEffect(() => {
@@ -177,7 +182,7 @@ const Profile = () => {
               >
                 {e.author_name?.map((e, i) =>
                   e?.user ? (
-                    <span key={i}>
+                    <span key={`first-${i}`}>
                       {e?.user?.first_name + " " + e?.user?.last_name}
                       <sup>1</sup>
                       <span>, </span>
@@ -186,7 +191,7 @@ const Profile = () => {
                 )}
                 {e.corresponding_authors?.map(e =>
                   e?.user ? (
-                    <span key={i}>
+                    <span key={`corresponding-${e.id}`}>
                       {e?.user?.first_name + " " + e?.user?.last_name}
                       <sup>*</sup>
                       <span>, </span>
@@ -195,21 +200,43 @@ const Profile = () => {
                 )}
                 {e.other_authors?.map(e => e).join(", ")}
               </Paragraph>
-              <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-                <div className={styles.publicationJournal}>
-                  {e.journal_name}
-                </div>
-                <Altmetric DOI={e.doi_id} type={1} />
-              </div>
+              <div className={styles.publicationJournal}>{e.journal_name}</div>
               <div
                 className={styles.publicationStats}
               >{`Volume: ${e.volume} • Issue: ${e.issue} • Pages: ${e.pages}`}</div>
-              <Scite DOI={e.doi_id} type={1} />
+              <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+                <Scite DOI={e.doi_id} type={1} />
+                <Altmetric DOI={e.doi_id} type={1} />
+              </div>
             </div>
           ),
           impact_factor: e.impact_factor,
           sjr: e.sjr_quartile,
           h_index: e.h_index,
+          index: [
+            {
+              name: "PubMed",
+              bool: e.in_pmc,
+            },
+            {
+              name: "Scopus",
+              bool: e.in_scopus,
+            },
+            {
+              name: "DOAJ",
+              bool: e.in_doaj,
+            },
+            {
+              name: "SCIE",
+              bool: e.in_scie,
+            },
+            {
+              name: "Medline",
+              bool: e.in_medline,
+            },
+          ]
+            .filter(e => e.bool)
+            .map(e => e.name),
           indexed_in: (
             <div className={styles.publicationGrid}>
               {[
@@ -241,23 +268,19 @@ const Profile = () => {
               ]
                 .filter(e => e.bool)
                 .map(e => (
-                  <>
+                  <Fragment key={e.name}>
                     <Image src={e.logo} alt={e.name} height={30} width={30} />
                     {e.name}
-                  </>
+                  </Fragment>
                 ))}
             </div>
           ),
-          citations: (
-            <div className={styles.publicationGrid}>
-              <Image src={crossref} alt="Crossref" height={30} width={30} />
-              {`Crossref: ${number(e.citations_crossref)}`}
-              <Image src={scopus} alt="Scopus" height={30} width={30} />
-              {`Scopus: ${number(e.citations_scopus)}`}
-              <Image src={wos} alt="WOS" height={30} width={30} />
-              {`WOS: ${number(e.citations_wos)}`}
-            </div>
-          ),
+          citations: {
+            total: e.citations_total,
+            crossref: e.citations_crossref,
+            scopus: e.citations_scopus,
+            wos: e.citations_wos,
+          },
           published: e.year,
           action: (
             <Button
@@ -327,7 +350,7 @@ const Profile = () => {
                   type="primary"
                   className={[`${styles.topButtonCircle} ${styles.topButton}`]}
                   onClick={() => {
-                    localStorage.clear();
+                    localStorage.removeItem("user");
                     router.push("/");
                   }}
                 >
@@ -359,13 +382,26 @@ const Profile = () => {
               <div className={styles.section}>
                 <div className={styles.sectionTop}>
                   <div className={styles.heading}>Publications</div>
-                  <Button
-                    type="primary"
-                    className={styles.sectionButton}
-                    onClick={() => {}}
-                  >
-                    View All
-                  </Button>
+                  <div style={{ display: "flex", gap: 15 }}>
+                    <Button
+                      type="primary"
+                      className={styles.sectionButton}
+                      onClick={() => {
+                        if (sortBy === "scopus") setSortBy("wos");
+                        else if (sortBy === "wos") setSortBy("crossref");
+                        else if (sortBy === "crossref") setSortBy("scopus");
+                      }}
+                    >
+                      Sort Citations By: {sortBy.toUpperCase()}
+                    </Button>
+                    <Button
+                      type="primary"
+                      className={styles.sectionButton}
+                      onClick={() => {}}
+                    >
+                      View All
+                    </Button>
+                  </div>
                 </div>
                 <div className={styles.sectionBottom}>
                   <PTable
@@ -385,23 +421,76 @@ const Profile = () => {
                         title: "SJR",
                         dataIndex: "sjr",
                         key: "sjr",
-                        sorter: (a, b) => a.sjr - b.sjr,
+                        sorter: (a, b) => a.sjr.localeCompare(b.sjr),
                       },
                       {
                         title: "H_Index",
                         dataIndex: "h_index",
                         key: "h_index",
                         sorter: (a, b) => a.h_index - b.h_index,
+                        onSort: (sorter, record) => {
+                          console.log(sorter, record);
+                        },
                       },
                       {
                         title: "Indexed In",
                         dataIndex: "indexed_in",
                         key: "indexed_in",
+                        filters: [
+                          {
+                            text: "PubMed",
+                            value: "PubMed",
+                          },
+                          {
+                            text: "Scopus",
+                            value: "Scopus",
+                          },
+                          {
+                            text: "DOAJ",
+                            value: "DOAJ",
+                          },
+                          {
+                            text: "SCIE",
+                            value: "SCIE",
+                          },
+                          {
+                            text: "Medline",
+                            value: "Medline",
+                          },
+                        ],
+                        filterSearch: true,
+                        onFilter: (value, record) =>
+                          record.index.includes(value),
                       },
                       {
                         title: "Citations",
                         dataIndex: "citations",
                         key: "citations",
+                        sorter: (a, b) =>
+                          a.citations[sortBy] - b.citations[sortBy],
+                        onchange: (sorter, record) => {
+                          console.log(sorter, record);
+                        },
+                        render: e => (
+                          <div className={styles.publicationGrid}>
+                            <Image
+                              src={crossref}
+                              alt="Crossref"
+                              height={30}
+                              width={30}
+                            />
+                            {`Crossref: ${number(e.crossref)}`}
+                            <Image
+                              src={scopus}
+                              alt="Scopus"
+                              height={30}
+                              width={30}
+                            />
+                            {`Scopus: ${number(e.scopus)}`}
+                            <Image src={wos} alt="WOS" height={30} width={30} />
+                            {`WOS: ${number(e.wos)}`}
+                          </div>
+                        ),
                       },
                       {
                         title: "Published",
