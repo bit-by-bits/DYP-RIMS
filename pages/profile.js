@@ -12,6 +12,8 @@ import {
   LogoutOutlined,
   SearchOutlined,
   SettingOutlined,
+  SortAscendingOutlined,
+  SortDescendingOutlined,
 } from "@ant-design/icons";
 import Image from "next/image";
 import Overview from "../src/Profile/Overview";
@@ -26,10 +28,6 @@ import scopus from "../public/logos/scopus.svg";
 import scie from "../public/logos/scie.svg";
 import wos from "../public/logos/wos.svg";
 
-import green from "../public/logos/green-oa.png";
-import gold from "../public/logos/gold-oa.png";
-import bronze from "../public/logos/bronze-oa.png";
-import closed from "../public/logos/closed-oa.png";
 import Scite from "../src/Profile/Scite";
 import Altmetric from "../src/Profile/Altmetric";
 import { useWindowSize } from "rooks";
@@ -71,6 +69,7 @@ const Profile = () => {
     hIndex: {},
     impact: {},
     access: {},
+    index: {},
   });
 
   // EFFECTS
@@ -114,6 +113,14 @@ const Profile = () => {
             closed: 0,
           };
 
+          let INDEX = {
+            pubmed: 0,
+            scopus: 0,
+            doaj: 0,
+            scie: 0,
+            medline: 0,
+          };
+
           res.data?.data?.publication?.forEach(e => {
             CITATIONS.total += e.citations_total;
             CITATIONS.crossref += e.citations_crossref;
@@ -127,7 +134,7 @@ const Profile = () => {
 
             IMPACT.total += e.impact_factor;
 
-            if (e.open_access)
+            if (e.open_access) {
               switch (e.open_access_status) {
                 case "gold":
                   ACCESS.gold++;
@@ -139,7 +146,13 @@ const Profile = () => {
                 case "bronze":
                   ACCESS.bronze++;
               }
-            else ACCESS.closed++;
+            } else ACCESS.closed++;
+
+            if (e.in_pmc) INDEX.pubmed++;
+            if (e.in_scopus) INDEX.scopus++;
+            if (e.in_doaj) INDEX.doaj++;
+            if (e.in_scie) INDEX.scie++;
+            if (e.in_medline) INDEX.medline++;
           });
 
           IMPACT.average = IMPACT.total / res.data?.data?.publication?.length;
@@ -149,6 +162,7 @@ const Profile = () => {
             hIndex: H_INDEX,
             impact: IMPACT,
             access: ACCESS,
+            index: INDEX,
           });
 
           // LOAD WEBSITE
@@ -176,26 +190,26 @@ const Profile = () => {
           width: innerWidth > 1400 ? "30%" : "30%",
         },
         {
-          title: innerWidth > 1400 ? "Impact Factor" : "Impact",
+          title: t => titleMaker(t, "impact_factor", "Impact Factor", "Impact"),
           dataIndex: "impact_factor",
           key: "impact_factor",
           sorter: (a, b) => a.impact_factor - b.impact_factor,
         },
         {
-          title: "SJR",
+          title: t => titleMaker(t, "sjr", "SJR", "SJR"),
           dataIndex: "sjr",
           key: "sjr",
           sorter: (a, b) => a.sjr.localeCompare(b.sjr),
           width: innerWidth > 1400 ? "5%" : "8%",
         },
         {
-          title: "HIndex",
+          title: t => titleMaker(t, "h_index", "H-Index", "HIndex"),
           dataIndex: "h_index",
           key: "h_index",
           sorter: (a, b) => a.h_index - b.h_index,
         },
         {
-          title: innerWidth > 1400 ? "Indexed In" : "Indexed",
+          title: t => titleMaker(t, "index", "Indexed In", "Indexed"),
           dataIndex: "indexed_in",
           key: "indexed_in",
           filters: [
@@ -224,7 +238,7 @@ const Profile = () => {
           onFilter: (value, record) => record.index.includes(value),
         },
         {
-          title: "Citations",
+          title: t => titleMaker(t, "citations", "Citations", "Citations"),
           dataIndex: "citations",
           key: "citations",
           sorter: (a, b) => a.citations[sortBy] - b.citations[sortBy],
@@ -240,7 +254,7 @@ const Profile = () => {
           ),
         },
         {
-          title: "Published",
+          title: t => titleMaker(t, "published", "Published", "Year"),
           dataIndex: "published",
           key: "published",
           sorter: (a, b) => a.published - b.published,
@@ -419,12 +433,22 @@ const Profile = () => {
         },
       ];
 
-      console.log(data?.awards);
+      console.log(
+        "2023-05-31".toLocaleString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      );
 
       const BODY = data?.awards?.map((e, i) => ({
         key: `${i + 1}.`,
         awarding_agency: e.awarding_agency,
-        date: e.date_awarded,
+        date: new Date(e.date_awarded).toLocaleString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
         name: e.name?.user?.first_name + " " + e.name?.user?.last_name,
         department: e.department?.name,
         action: (
@@ -447,6 +471,31 @@ const Profile = () => {
   // FUNCTIONS
 
   const number = num => (num ? (isNaN(num) ? 0 : num) : 0);
+
+  const titleMaker = (titleProps, name, title1, title2) => {
+    const sortedColumn = titleProps.sortColumns?.find(
+      ({ column }) => column.key === name
+    );
+
+    return (
+      <div
+        style={{
+          gap: { innerWidth } > 1400 ? 10 : 5,
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <span>{innerWidth > 1400 ? title1 : title2}</span>
+        {sortedColumn?.order === "ascend" ? (
+          <SortAscendingOutlined />
+        ) : sortedColumn?.order === "descend" ? (
+          <SortDescendingOutlined />
+        ) : null}
+      </div>
+    );
+  };
 
   return (
     <>
@@ -471,7 +520,7 @@ const Profile = () => {
           tip="Please wait as page loads"
         >
           <FloatButton.BackTop
-            style={{ right: 30, bottom: 30, borderRadius: "50%" }}
+            style={{ left: 30, bottom: 30, borderRadius: "50%" }}
           />
 
           <div style={{ paddingLeft: "18vw" }}>
@@ -586,24 +635,6 @@ const Profile = () => {
 
               <div className={styles.section}>
                 <div className={styles.sectionTop}>
-                  <div id="awards" className={styles.heading}>
-                    Awards
-                  </div>
-                  <Button
-                    type="primary"
-                    className={styles.sectionButton}
-                    onClick={() => {}}
-                  >
-                    View All
-                  </Button>
-                </div>
-                <div className={styles.sectionBottom}>
-                  <PTable title={awards?.title} body={awards?.body} />
-                </div>
-              </div>
-
-              <div className={styles.section}>
-                <div className={styles.sectionTop}>
                   <div id="books" className={styles.heading}>
                     Books/Chapters
                   </div>
@@ -652,7 +683,7 @@ const Profile = () => {
                   </Button>
                 </div>
                 <div className={styles.sectionBottom}>
-                  <PTable title={[]} body={[]} />
+                  <PTable title={awards?.title} body={awards?.body} />
                 </div>
               </div>
 

@@ -110,7 +110,7 @@
   display: grid;
   font-size: 15px;
   font-weight: 500;
-  grid-template-columns: 1fr 1fr 1.4fr 1.2fr;
+  grid-template-columns: 1fr 1.25fr 1.25fr 1fr;
   justify-content: space-between;
 }
 
@@ -221,6 +221,7 @@
 }
 
 .publicationJournal {
+  margin-top: -12px;
   font-style: italic;
 }
 

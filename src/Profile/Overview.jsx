@@ -13,7 +13,12 @@ import {
 } from "@ant-design/icons";
 
 import crossref from "../../public/logos/crossref.jpg";
+import medline from "../../public/logos/medline.jpg";
+import doaj from "../../public/logos/doaj.png";
+import pmc from "../../public/logos/pmc.png";
+import embase from "../../public/logos/embase.svg";
 import scopus from "../../public/logos/scopus.svg";
+import scie from "../../public/logos/scie.svg";
 import wos from "../../public/logos/wos.svg";
 
 import green from "../../public/logos/green-oa.png";
@@ -36,6 +41,7 @@ const Overview = ({ data, stats, extra, size }) => {
       papers: check("Papers Presented", "Papers"),
       posters: check("Posters Presented", "Posters"),
       books: check("Books/Chapters", "Books"),
+      projects: check("Research Projects", "Projects"),
     });
   }, [size]);
 
@@ -60,28 +66,59 @@ const Overview = ({ data, stats, extra, size }) => {
             color: "#FABD81",
           },
           {
-            label1: "Indexed Publications",
-            label2: (
-              <div
-                className={styles.overviewTopCircle}
-                style={{ backgroundColor: "#7891C6" }}
-              >
-                {data?.publication?.length ?? "N/A"}
+            label1: (
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                {[
+                  {
+                    value: number(extra?.index?.pubmed),
+                    image: pmc,
+                  },
+                  {
+                    value: number(extra?.index?.scopus),
+                    image: scopus,
+                  },
+                  {
+                    value: number(extra?.index?.doaj),
+                    image: doaj,
+                  },
+                  {
+                    value: number(extra?.index?.scie),
+                    image: scie,
+                  },
+                  {
+                    value: number(extra?.index?.medline),
+                    image: medline,
+                  },
+                ].map((e, i) => (
+                  <div
+                    key={i}
+                    style={{ display: "flex", alignItems: "center", gap: 5 }}
+                  >
+                    <Image
+                      src={e.image}
+                      alt="-"
+                      width={size > 1400 ? 35 : 25}
+                      height={size > 1400 ? 35 : 25}
+                    />
+                    <span>{e.value}</span>
+                  </div>
+                ))}
               </div>
             ),
-            color: "#7891C6",
+            label2: `Indexed Publications: ${number(stats?.indexed)}`,
+            color: "#F25A1D",
           },
           {
             label1: "1st/Corresponding Author Publications",
             label2: (
               <div
                 className={styles.overviewTopCircle}
-                style={{ backgroundColor: "#ffbeaa" }}
+                style={{ backgroundColor: "#7891C6" }}
               >
                 {stats?.FAuthor ?? "N/A"}
               </div>
             ),
-            color: "#ffbeaa",
+            color: "#7891C6",
           },
           {
             label1: `Q4: ${number(stats?.quartiles?.Q4)} | None: ${number(
@@ -229,7 +266,7 @@ const Overview = ({ data, stats, extra, size }) => {
         <div>
           {[
             {
-              label1: "Projects",
+              label1: strings.projects,
               label2: number(data?.project?.length),
               logo: ProjectOutlined,
             },
