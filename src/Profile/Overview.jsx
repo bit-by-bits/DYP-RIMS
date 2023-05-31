@@ -1,4 +1,4 @@
-import React, { createElement, use } from "react";
+import React, { useState, createElement } from "react";
 import styles from "../../styles/profile.module.css";
 import Image from "next/image";
 import {
@@ -19,12 +19,25 @@ import wos from "../../public/logos/wos.svg";
 import green from "../../public/logos/green-oa.png";
 import gold from "../../public/logos/gold-oa.png";
 import bronze from "../../public/logos/bronze-oa.png";
-import closed from "../../public/logos/closed-oa.png";
+import { useEffect } from "react";
 
-const Overview = ({ data, extra }) => {
+const Overview = ({ data, stats, extra, size }) => {
   // STATES
 
+  const [strings, setStrings] = useState({});
+
   // EFFECTS
+
+  useEffect(() => {
+    const check = (str1, str2) => (size > 1400 ? str1 : str2);
+
+    setStrings({
+      conferences: check("Conferences Attended", "Conferences"),
+      papers: check("Papers Presented", "Papers"),
+      posters: check("Posters Presented", "Posters"),
+      books: check("Books/Chapters", "Books"),
+    });
+  }, [size]);
 
   // FUNCTIONS
 
@@ -63,20 +76,20 @@ const Overview = ({ data, extra }) => {
             label2: (
               <div
                 className={styles.overviewTopCircle}
-                style={{ backgroundColor: "#ffc9b7" }}
+                style={{ backgroundColor: "#ffbeaa" }}
               >
                 {data?.publication?.length ?? "N/A"}
               </div>
             ),
-            color: "#ffc9b7",
+            color: "#ffbeaa",
           },
           {
-            label1: `Q4: ${number(data?.quartiles?.Q4)} | None: ${number(
-              data?.quartiles?.null
+            label1: `Q4: ${number(stats?.quartiles?.Q4)} | None: ${number(
+              stats?.quartiles?.null
             )}`,
-            label2: `Q1: ${number(data?.quartiles?.Q1)} | Q2: ${number(
-              data?.quartiles?.Q2
-            )} | Q3: ${number(data?.quartiles?.Q3)}`,
+            label2: `Q1: ${number(stats?.quartiles?.Q1)} | Q2: ${number(
+              stats?.quartiles?.Q2
+            )} | Q3: ${number(stats?.quartiles?.Q3)}`,
             color: "grey",
           },
         ].map((e, i) => (
@@ -171,10 +184,6 @@ const Overview = ({ data, extra }) => {
                 value: number(extra?.access?.bronze),
                 image: bronze,
               },
-              {
-                value: number(extra?.access?.closed),
-                image: closed,
-              },
             ].map((e, i) => (
               <div key={i} style={{ display: "flex", gap: 8 }}>
                 <Image src={e.image} alt="-" width={15} height={25} />
@@ -188,12 +197,17 @@ const Overview = ({ data, extra }) => {
         <div>
           {[
             {
-              label1: "Papers Presented",
+              label1: strings.conferences,
+              label2: number(data?.conference?.length),
+              logo: GroupOutlined,
+            },
+            {
+              label1: strings.papers,
               label2: number(data?.paper?.length),
               logo: PaperClipOutlined,
             },
             {
-              label1: "Posters Presented",
+              label1: strings.posters,
               label2: number(data?.poster?.length),
               logo: PaperClipOutlined,
             },
@@ -201,11 +215,6 @@ const Overview = ({ data, extra }) => {
               label1: "Books/Chapters",
               label2: number(data?.book?.length),
               logo: BookOutlined,
-            },
-            {
-              label1: "Research Projects",
-              label2: number(data?.project?.length),
-              logo: ProjectOutlined,
             },
           ].map((e, i) => (
             <div key={i}>
@@ -220,9 +229,9 @@ const Overview = ({ data, extra }) => {
         <div>
           {[
             {
-              label1: "Conferences",
-              label2: number(data?.conference?.length),
-              logo: GroupOutlined,
+              label1: "Projects",
+              label2: number(data?.project?.length),
+              logo: ProjectOutlined,
             },
             {
               label1: "Funds Recieved",

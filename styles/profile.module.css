@@ -84,6 +84,7 @@
 
 .topInput input {
   background-color: #f7f7f7;
+  font-weight: 500;
 }
 
 .topButtonCircle {
@@ -197,23 +198,26 @@
 
 .publication {
   flex-direction: column;
+  text-align: left;
   align-items: flex-start;
   gap: 6px;
 }
 
 .publicationTitle {
+  color: black;
   font-weight: 600;
   font-size: 16px;
+}
+
+.publicationJournal,
+.publicationStats {
+  color: black;
 }
 
 .publicationAuthors,
 .publicationStats {
   color: var(--primary);
-}
-
-.publicationJournal,
-.publicationStats {
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .publicationJournal {
@@ -240,15 +244,19 @@
 /* SIDEBAR */
 
 .sideWrapper {
+  top: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  height: 100vh;
-  position: fixed;
-  top: 0;
   left: 0;
+  height: 100vh;
   width: 18vw;
+  position: fixed;
+  overflow-y: scroll;
   background-color: var(--primary);
+}
+
+.sideWrapper::-webkit-scrollbar {
+  display: none;
 }
 
 .sideProfile {

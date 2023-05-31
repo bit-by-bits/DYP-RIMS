@@ -60,7 +60,7 @@ const Profile = () => {
   const [data, setData] = useState({});
   const [statistics, setStatistics] = useState({});
 
-  const [publications, setPublications] = useState([]);
+  const [publications, setPublications] = useState({ title: [], body: [] });
   const [awards, setAwards] = useState([]);
   const [conferences, setConferences] = useState([]);
   const [ipr, setIpr] = useState([]);
@@ -162,141 +162,229 @@ const Profile = () => {
 
   useEffect(() => {
     if (data?.publication) {
-      console.log(data?.publication);
-
-      setPublications(
-        data?.publication?.map((e, i) => ({
-          key: i,
-          publication: (
-            <div className={styles.publication}>
-              <div className={styles.publicationTitle}>
-                {e.publication_title}
-              </div>
-              <Paragraph
-                className={styles.publicationAuthors}
-                ellipsis={{
-                  rows: 3,
-                  expandable: true,
-                  symbol: "more",
-                }}
-              >
-                {e.author_name?.map((e, i) =>
-                  e?.user ? (
-                    <span key={`first-${i}`}>
-                      {e?.user?.first_name + " " + e?.user?.last_name}
-                      <sup>1</sup>
-                      <span>, </span>
-                    </span>
-                  ) : null
-                )}
-                {e.corresponding_authors?.map(e =>
-                  e?.user ? (
-                    <span key={`corresponding-${e.id}`}>
-                      {e?.user?.first_name + " " + e?.user?.last_name}
-                      <sup>*</sup>
-                      <span>, </span>
-                    </span>
-                  ) : null
-                )}
-                {e.other_authors?.map(e => e).join(", ")}
-              </Paragraph>
-              <div className={styles.publicationJournal}>{e.journal_name}</div>
-              <div
-                className={styles.publicationStats}
-              >{`Volume: ${e.volume} • Issue: ${e.issue} • Pages: ${e.pages}`}</div>
-              <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-                <Scite DOI={e.doi_id} type={1} />
-                <Altmetric DOI={e.doi_id} type={1} />
-              </div>
-            </div>
-          ),
-          impact_factor: e.impact_factor,
-          sjr: e.sjr_quartile,
-          h_index: e.h_index,
-          index: [
+      const TITLE = [
+        {
+          title: "No.",
+          dataIndex: "key",
+          key: "key",
+          width: innerWidth > 1400 ? "5%" : "4%",
+        },
+        {
+          title: "Publication",
+          dataIndex: "publication",
+          key: "publication",
+          width: innerWidth > 1400 ? "30%" : "30%",
+        },
+        {
+          title: innerWidth > 1400 ? "Impact Factor" : "Impact",
+          dataIndex: "impact_factor",
+          key: "impact_factor",
+          sorter: (a, b) => a.impact_factor - b.impact_factor,
+        },
+        {
+          title: "SJR",
+          dataIndex: "sjr",
+          key: "sjr",
+          sorter: (a, b) => a.sjr.localeCompare(b.sjr),
+          width: innerWidth > 1400 ? "5%" : "8%",
+        },
+        {
+          title: "HIndex",
+          dataIndex: "h_index",
+          key: "h_index",
+          sorter: (a, b) => a.h_index - b.h_index,
+        },
+        {
+          title: innerWidth > 1400 ? "Indexed In" : "Indexed",
+          dataIndex: "indexed_in",
+          key: "indexed_in",
+          filters: [
             {
-              name: "PubMed",
-              bool: e.in_pmc,
+              text: "PubMed",
+              value: "PubMed",
             },
             {
-              name: "Scopus",
-              bool: e.in_scopus,
+              text: "Scopus",
+              value: "Scopus",
             },
             {
-              name: "DOAJ",
-              bool: e.in_doaj,
+              text: "DOAJ",
+              value: "DOAJ",
             },
             {
-              name: "SCIE",
-              bool: e.in_scie,
+              text: "SCIE",
+              value: "SCIE",
             },
             {
-              name: "Medline",
-              bool: e.in_medline,
+              text: "Medline",
+              value: "Medline",
             },
-          ]
-            .filter(e => e.bool)
-            .map(e => e.name),
-          indexed_in: (
+          ],
+          filterSearch: true,
+          onFilter: (value, record) => record.index.includes(value),
+        },
+        {
+          title: "Citations",
+          dataIndex: "citations",
+          key: "citations",
+          sorter: (a, b) => a.citations[sortBy] - b.citations[sortBy],
+          render: e => (
             <div className={styles.publicationGrid}>
-              {[
-                {
-                  name: "PubMed",
-                  logo: pmc,
-                  bool: e.in_pmc,
-                },
-                {
-                  name: "Scopus",
-                  logo: scopus,
-                  bool: e.in_scopus,
-                },
-                {
-                  name: "DOAJ",
-                  logo: doaj,
-                  bool: e.in_doaj,
-                },
-                {
-                  name: "SCIE",
-                  logo: scie,
-                  bool: e.in_scie,
-                },
-                {
-                  name: "Medline",
-                  logo: medline,
-                  bool: e.in_medline,
-                },
-              ]
-                .filter(e => e.bool)
-                .map(e => (
-                  <Fragment key={e.name}>
-                    <Image src={e.logo} alt={e.name} height={30} width={30} />
-                    {e.name}
-                  </Fragment>
-                ))}
+              <Image src={crossref} alt="Crossref" height={30} width={30} />
+              {`Crossref: ${number(e.crossref)}`}
+              <Image src={scopus} alt="Scopus" height={30} width={30} />
+              {`Scopus: ${number(e.scopus)}`}
+              <Image src={wos} alt="WOS" height={30} width={30} />
+              {`WOS: ${number(e.wos)}`}
             </div>
           ),
-          citations: {
-            total: e.citations_total,
-            crossref: e.citations_crossref,
-            scopus: e.citations_scopus,
-            wos: e.citations_wos,
-          },
-          published: e.year,
-          action: (
-            <Button
-              type="primary"
-              icon={<FileTextOutlined />}
-              style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
-              className={styles.publicationButton}
-              onClick={() => router.push(`/file/${e.doi_id}`)}
+        },
+        {
+          title: "Published",
+          dataIndex: "published",
+          key: "published",
+          sorter: (a, b) => a.published - b.published,
+        },
+        {
+          title: "",
+          dataIndex: "action",
+          key: "action",
+          width: innerWidth > 1400 ? "10%" : "6%",
+        },
+      ];
+
+      const BODY = data?.publication?.map((e, i) => ({
+        key: i,
+        publication: (
+          <div className={styles.publication}>
+            <div className={styles.publicationTitle}>{e.publication_title}</div>
+            <Paragraph
+              className={styles.publicationAuthors}
+              ellipsis={{
+                rows: 3,
+                expandable: true,
+                symbol: "more",
+              }}
             >
-              {innerWidth > 1400 ? "View Publication" : null}
-            </Button>
-          ),
-        }))
-      );
+              {e.author_name?.map((e, i) =>
+                e?.user ? (
+                  <span key={`first-${i}`}>
+                    {e?.user?.first_name + " " + e?.user?.last_name}
+                    <sup>1</sup>
+                    <span>, </span>
+                  </span>
+                ) : null
+              )}
+              {e.corresponding_authors?.map(e =>
+                e?.user ? (
+                  <span key={`corresponding-${e.id}`}>
+                    {e?.user?.first_name + " " + e?.user?.last_name}
+                    <sup>*</sup>
+                    <span>, </span>
+                  </span>
+                ) : null
+              )}
+              {e.other_authors?.map(e => e).join(", ")}
+            </Paragraph>
+            <div className={styles.publicationJournal}>{e.journal_name}</div>
+            <div
+              className={styles.publicationStats}
+            >{`Volume: ${e.volume} • Issue: ${e.issue} • Pages: ${e.pages}`}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+              <Scite DOI={e.doi_id} type={1} />
+              <Altmetric DOI={e.doi_id} type={1} />
+            </div>
+          </div>
+        ),
+        impact_factor: e.impact_factor,
+        sjr: e.sjr_quartile,
+        h_index: e.h_index,
+        index: [
+          {
+            name: "PubMed",
+            bool: e.in_pmc,
+          },
+          {
+            name: "Scopus",
+            bool: e.in_scopus,
+          },
+          {
+            name: "DOAJ",
+            bool: e.in_doaj,
+          },
+          {
+            name: "SCIE",
+            bool: e.in_scie,
+          },
+          {
+            name: "Medline",
+            bool: e.in_medline,
+          },
+        ]
+          .filter(e => e.bool)
+          .map(e => e.name),
+        indexed_in: (
+          <div className={styles.publicationGrid}>
+            {[
+              {
+                name: "PubMed",
+                logo: pmc,
+                bool: e.in_pmc,
+              },
+              {
+                name: "Scopus",
+                logo: scopus,
+                bool: e.in_scopus,
+              },
+              {
+                name: "DOAJ",
+                logo: doaj,
+                bool: e.in_doaj,
+              },
+              {
+                name: "SCIE",
+                logo: scie,
+                bool: e.in_scie,
+              },
+              {
+                name: "Medline",
+                logo: medline,
+                bool: e.in_medline,
+              },
+            ]
+              .filter(e => e.bool)
+              .map(e => (
+                <Fragment key={e.name}>
+                  <Image src={e.logo} alt={e.name} height={30} width={30} />
+                  {e.name}
+                </Fragment>
+              ))}
+          </div>
+        ),
+        citations: {
+          total: e.citations_total,
+          crossref: e.citations_crossref,
+          scopus: e.citations_scopus,
+          wos: e.citations_wos,
+        },
+        published: e.year,
+        action: (
+          <Button
+            type="primary"
+            icon={<FileTextOutlined />}
+            style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
+            className={styles.publicationButton}
+            onClick={() => router.push(`/file/${e.doi_id}`)}
+          >
+            {innerWidth > 1400 ? "View More" : null}
+          </Button>
+        ),
+      }));
+
+      if (innerWidth < 1400) TITLE.shift();
+      setPublications({ title: TITLE, body: BODY });
     }
-  }, [data]);
+  }, [data, innerWidth, router, sortBy]);
 
   // FUNCTIONS
 
@@ -374,14 +462,18 @@ const Profile = () => {
 
               <div className={styles.section}>
                 <div className={styles.sectionTop}>
-                  <div className={styles.heading}>Overview</div>
+                  <div id="overview" className={styles.heading}>
+                    Overview
+                  </div>
                 </div>
-                <Overview data={data} extra={extra} />
+                <Overview data={data} stats={statistics} extra={extra} size={innerWidth} />
               </div>
 
               <div className={styles.section}>
                 <div className={styles.sectionTop}>
-                  <div className={styles.heading}>Publications</div>
+                  <div id="publications" className={styles.heading}>
+                    Publications
+                  </div>
                   <div style={{ display: "flex", gap: 15 }}>
                     <Button
                       type="primary"
@@ -405,139 +497,86 @@ const Profile = () => {
                 </div>
                 <div className={styles.sectionBottom}>
                   <PTable
-                    title={[
-                      {
-                        title: "Publication",
-                        dataIndex: "publication",
-                        key: "publication",
-                      },
-                      {
-                        title: "Impact Factor",
-                        dataIndex: "impact_factor",
-                        key: "impact_factor",
-                        sorter: (a, b) => a.impact_factor - b.impact_factor,
-                      },
-                      {
-                        title: "SJR",
-                        dataIndex: "sjr",
-                        key: "sjr",
-                        sorter: (a, b) => a.sjr.localeCompare(b.sjr),
-                      },
-                      {
-                        title: "H_Index",
-                        dataIndex: "h_index",
-                        key: "h_index",
-                        sorter: (a, b) => a.h_index - b.h_index,
-                        onSort: (sorter, record) => {
-                          console.log(sorter, record);
-                        },
-                      },
-                      {
-                        title: "Indexed In",
-                        dataIndex: "indexed_in",
-                        key: "indexed_in",
-                        filters: [
-                          {
-                            text: "PubMed",
-                            value: "PubMed",
-                          },
-                          {
-                            text: "Scopus",
-                            value: "Scopus",
-                          },
-                          {
-                            text: "DOAJ",
-                            value: "DOAJ",
-                          },
-                          {
-                            text: "SCIE",
-                            value: "SCIE",
-                          },
-                          {
-                            text: "Medline",
-                            value: "Medline",
-                          },
-                        ],
-                        filterSearch: true,
-                        onFilter: (value, record) =>
-                          record.index.includes(value),
-                      },
-                      {
-                        title: "Citations",
-                        dataIndex: "citations",
-                        key: "citations",
-                        sorter: (a, b) =>
-                          a.citations[sortBy] - b.citations[sortBy],
-                        onchange: (sorter, record) => {
-                          console.log(sorter, record);
-                        },
-                        render: e => (
-                          <div className={styles.publicationGrid}>
-                            <Image
-                              src={crossref}
-                              alt="Crossref"
-                              height={30}
-                              width={30}
-                            />
-                            {`Crossref: ${number(e.crossref)}`}
-                            <Image
-                              src={scopus}
-                              alt="Scopus"
-                              height={30}
-                              width={30}
-                            />
-                            {`Scopus: ${number(e.scopus)}`}
-                            <Image src={wos} alt="WOS" height={30} width={30} />
-                            {`WOS: ${number(e.wos)}`}
-                          </div>
-                        ),
-                      },
-                      {
-                        title: "Published",
-                        dataIndex: "published",
-                        key: "published",
-                        sorter: (a, b) => a.published - b.published,
-                      },
-                      {
-                        title: "",
-                        dataIndex: "action",
-                        key: "action",
-                      },
-                    ]}
-                    body={publications}
+                    title={publications?.title}
+                    body={publications?.body}
                   />
                 </div>
               </div>
 
               <div className={styles.section}>
                 <div className={styles.sectionTop}>
-                  <div className={styles.heading}>Publications</div>
-                  <Button
-                    type="primary"
-                    className={styles.sectionButton}
-                    onClick={() => {}}
-                  >
-                    View All
-                  </Button>
+                  <div id="conferences" className={styles.heading}>
+                    Conferences
+                  </div>
                 </div>
                 <div className={styles.sectionBottom}>
-                  <PTable data={data} />
+                  <PTable title={[]} body={[]} />
                 </div>
               </div>
 
               <div className={styles.section}>
                 <div className={styles.sectionTop}>
-                  <div className={styles.heading}>Publications</div>
-                  <Button
-                    type="primary"
-                    className={styles.sectionButton}
-                    onClick={() => {}}
-                  >
-                    View All
-                  </Button>
+                  <div id="awards" className={styles.heading}>
+                    Awards
+                  </div>
                 </div>
                 <div className={styles.sectionBottom}>
-                  <PTable data={data} />
+                  <PTable title={[]} body={[]} />
+                </div>
+              </div>
+
+              <div className={styles.section}>
+                <div className={styles.sectionTop}>
+                  <div id="books" className={styles.heading}>
+                    Books/Chapters
+                  </div>
+                </div>
+                <div className={styles.sectionBottom}>
+                  <PTable title={[]} body={[]} />
+                </div>
+              </div>
+
+              <div className={styles.section}>
+                <div className={styles.sectionTop}>
+                  <div id="projects" className={styles.heading}>
+                    Research Projects
+                  </div>
+                </div>
+                <div className={styles.sectionBottom}>
+                  <PTable title={[]} body={[]} />
+                </div>
+              </div>
+
+              <div className={styles.section}>
+                <div className={styles.sectionTop}>
+                  <div id="awards" className={styles.heading}>
+                    Awards
+                  </div>
+                </div>
+                <div className={styles.sectionBottom}>
+                  <PTable title={[]} body={[]} />
+                </div>
+              </div>
+
+              <div className={styles.section}>
+                <div className={styles.sectionTop}>
+                  <div id="ipr" className={styles.heading}>
+                    IPR
+                  </div>
+                </div>
+                <div className={styles.sectionBottom}>
+                  <PTable title={[]} body={[]} />
+                </div>
+              </div>
+
+              <div className={styles.section}>
+                <div className={styles.sectionTop}>
+                  <div id="students" className={styles.heading}>
+                    Students Guided
+                  </div>
+                </div>
+                <div className={styles.sectionBottom}>
+                  <PTable title={[]} body={[]} />
                 </div>
               </div>
             </div>

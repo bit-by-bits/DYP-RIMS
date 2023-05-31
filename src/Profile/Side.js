@@ -4,7 +4,12 @@ import {
   HomeOutlined,
   ProjectOutlined,
   DownloadOutlined,
-  ProfileOutlined,
+  TrophyOutlined,
+  GroupOutlined,
+  BookOutlined,
+  BulbOutlined,
+  UserAddOutlined,
+  FileAddOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
 import Image from "next/image";
@@ -66,9 +71,50 @@ const Side = ({ user }) => {
         defaultSelectedKeys={["1"]}
         items={[
           { link: "/profile", icon: HomeOutlined, label: "Home" },
-          { link: "/upload", icon: ProjectOutlined, label: "Add Research" },
+          { link: "/upload", icon: FileAddOutlined, label: "Add Research" },
           { link: "/downloads", icon: DownloadOutlined, label: "Downloads" },
-          { link: "/profile", icon: ProfileOutlined, label: "Profile" },
+        ].map((item, index) => ({
+          key: String(index + 1),
+          icon: createElement(item.icon),
+          label: <Link href={item.link}>{item.label}</Link>,
+        }))}
+      />
+
+      <Menu
+        mode="inline"
+        className="sideMenu"
+        selectable={false}
+        items={[
+          {
+            link: "/profile#conferences",
+            icon: GroupOutlined,
+            label: "Conferences",
+          },
+          {
+            link: "/profile#books",
+            icon: BookOutlined,
+            label: "Books/Chapters",
+          },
+          {
+            link: "/profile#projects",
+            icon: ProjectOutlined,
+            label: "Research Projects",
+          },
+          {
+            link: "/profile#awards",
+            icon: TrophyOutlined,
+            label: "Awards",
+          },
+          {
+            link: "/profile#ipr",
+            icon: BulbOutlined,
+            label: "IPR",
+          },
+          {
+            link: "/profile#students",
+            icon: UserAddOutlined,
+            label: "Students Guided",
+          },
         ].map((item, index) => ({
           key: String(index + 1),
           icon: createElement(item.icon),
