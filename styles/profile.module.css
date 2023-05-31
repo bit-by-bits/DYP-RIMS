@@ -233,11 +233,11 @@
   gap: 10px;
 }
 
-.publicationButton {
+.tableButton {
   background-color: var(--primary);
 }
 
-.publicationButton:hover {
+.tableButton:hover {
   background-color: var(--primary-dark) !important;
 }
 

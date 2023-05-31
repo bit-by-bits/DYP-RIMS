@@ -61,9 +61,9 @@ const Profile = () => {
   const [statistics, setStatistics] = useState({});
 
   const [publications, setPublications] = useState({ title: [], body: [] });
-  const [awards, setAwards] = useState([]);
-  const [conferences, setConferences] = useState([]);
-  const [ipr, setIpr] = useState([]);
+  const [awards, setAwards] = useState({ title: [], body: [] });
+  const [conferences, setConferences] = useState({ title: [], body: [] });
+  const [ipr, setIpr] = useState({ title: [], body: [] });
 
   const [sortBy, setSortBy] = useState("scopus");
   const [extra, setExtra] = useState({
@@ -254,7 +254,7 @@ const Profile = () => {
       ];
 
       const BODY = data?.publication?.map((e, i) => ({
-        key: i,
+        key: `${i + 1}.`,
         publication: (
           <div className={styles.publication}>
             <div className={styles.publicationTitle}>{e.publication_title}</div>
@@ -373,7 +373,7 @@ const Profile = () => {
             type="primary"
             icon={<FileTextOutlined />}
             style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
-            className={styles.publicationButton}
+            className={styles.tableButton}
             onClick={() => router.push(`/file/${e.doi_id}`)}
           >
             {innerWidth > 1400 ? "View More" : null}
@@ -383,6 +383,64 @@ const Profile = () => {
 
       if (innerWidth < 1400) TITLE.shift();
       setPublications({ title: TITLE, body: BODY });
+    }
+
+    if (data?.awards) {
+      const TITLE = [
+        {
+          title: "No.",
+          dataIndex: "key",
+          key: "key",
+        },
+        {
+          title: "Awarding Agency",
+          dataIndex: "awarding_agency",
+          key: "awarding_agency",
+        },
+        {
+          title: "Date",
+          dataIndex: "date",
+          key: "date",
+        },
+        {
+          title: "Name",
+          dataIndex: "name",
+          key: "name",
+        },
+        {
+          title: "Department",
+          dataIndex: "department",
+          key: "department",
+        },
+        {
+          title: "",
+          dataIndex: "action",
+          key: "action",
+        },
+      ];
+
+      console.log(data?.awards);
+
+      const BODY = data?.awards?.map((e, i) => ({
+        key: `${i + 1}.`,
+        awarding_agency: e.awarding_agency,
+        date: e.date_awarded,
+        name: e.name?.user?.first_name + " " + e.name?.user?.last_name,
+        department: e.department?.name,
+        action: (
+          <Button
+            type="primary"
+            icon={<FileTextOutlined />}
+            style={{ padding: "2px 10px" }}
+            className={styles.tableButton}
+            onClick={() => router.push(`/file/${e.doi_id}`)}
+          >
+            View More
+          </Button>
+        ),
+      }));
+
+      setAwards({ title: TITLE, body: BODY });
     }
   }, [data, innerWidth, router, sortBy]);
 
@@ -513,6 +571,13 @@ const Profile = () => {
                   <div id="conferences" className={styles.heading}>
                     Conferences
                   </div>
+                  <Button
+                    type="primary"
+                    className={styles.sectionButton}
+                    onClick={() => {}}
+                  >
+                    View All
+                  </Button>
                 </div>
                 <div className={styles.sectionBottom}>
                   <PTable title={[]} body={[]} />
@@ -524,9 +589,16 @@ const Profile = () => {
                   <div id="awards" className={styles.heading}>
                     Awards
                   </div>
+                  <Button
+                    type="primary"
+                    className={styles.sectionButton}
+                    onClick={() => {}}
+                  >
+                    View All
+                  </Button>
                 </div>
                 <div className={styles.sectionBottom}>
-                  <PTable title={[]} body={[]} />
+                  <PTable title={awards?.title} body={awards?.body} />
                 </div>
               </div>
 
@@ -535,6 +607,13 @@ const Profile = () => {
                   <div id="books" className={styles.heading}>
                     Books/Chapters
                   </div>
+                  <Button
+                    type="primary"
+                    className={styles.sectionButton}
+                    onClick={() => {}}
+                  >
+                    View All
+                  </Button>
                 </div>
                 <div className={styles.sectionBottom}>
                   <PTable title={[]} body={[]} />
@@ -546,6 +625,13 @@ const Profile = () => {
                   <div id="projects" className={styles.heading}>
                     Research Projects
                   </div>
+                  <Button
+                    type="primary"
+                    className={styles.sectionButton}
+                    onClick={() => {}}
+                  >
+                    View All
+                  </Button>
                 </div>
                 <div className={styles.sectionBottom}>
                   <PTable title={[]} body={[]} />
@@ -557,6 +643,13 @@ const Profile = () => {
                   <div id="awards" className={styles.heading}>
                     Awards
                   </div>
+                  <Button
+                    type="primary"
+                    className={styles.sectionButton}
+                    onClick={() => {}}
+                  >
+                    View All
+                  </Button>
                 </div>
                 <div className={styles.sectionBottom}>
                   <PTable title={[]} body={[]} />
@@ -568,6 +661,13 @@ const Profile = () => {
                   <div id="ipr" className={styles.heading}>
                     IPR
                   </div>
+                  <Button
+                    type="primary"
+                    className={styles.sectionButton}
+                    onClick={() => {}}
+                  >
+                    View All
+                  </Button>
                 </div>
                 <div className={styles.sectionBottom}>
                   <PTable title={[]} body={[]} />
@@ -579,6 +679,13 @@ const Profile = () => {
                   <div id="students" className={styles.heading}>
                     Students Guided
                   </div>
+                  <Button
+                    type="primary"
+                    className={styles.sectionButton}
+                    onClick={() => {}}
+                  >
+                    View All
+                  </Button>
                 </div>
                 <div className={styles.sectionBottom}>
                   <PTable title={[]} body={[]} />
