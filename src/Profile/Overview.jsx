@@ -78,7 +78,7 @@ const Overview = ({ data, stats, extra, size }) => {
                 className={styles.overviewTopCircle}
                 style={{ backgroundColor: "#ffbeaa" }}
               >
-                {data?.publication?.length ?? "N/A"}
+                {stats?.FAuthor ?? "N/A"}
               </div>
             ),
             color: "#ffbeaa",

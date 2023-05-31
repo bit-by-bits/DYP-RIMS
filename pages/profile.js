@@ -466,7 +466,12 @@ const Profile = () => {
                     Overview
                   </div>
                 </div>
-                <Overview data={data} stats={statistics} extra={extra} size={innerWidth} />
+                <Overview
+                  data={data}
+                  stats={statistics}
+                  extra={extra}
+                  size={innerWidth}
+                />
               </div>
 
               <div className={styles.section}>
