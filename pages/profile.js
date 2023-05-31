@@ -78,6 +78,7 @@ const Profile = () => {
     impact: {},
     access: {},
     index: {},
+    history: [],
   });
 
   // EFFECTS
@@ -175,6 +176,7 @@ const Profile = () => {
             impact: IMPACT,
             access: ACCESS,
             index: INDEX,
+            history: extra.history,
           });
 
           // LOAD WEBSITE
@@ -257,11 +259,11 @@ const Profile = () => {
           render: e => (
             <div className={styles.publicationGrid}>
               <Image src={crossref} alt="Crossref" height={30} width={30} />
-              {`Crossref: ${number(e.crossref)}`}
+              {`Crossref: ${number(e?.crossref)}`}
               <Image src={scopus} alt="Scopus" height={30} width={30} />
-              {`Scopus: ${number(e.scopus)}`}
+              {`Scopus: ${number(e?.scopus)}`}
               <Image src={wos} alt="WOS" height={30} width={30} />
-              {`WOS: ${number(e.wos)}`}
+              {`WOS: ${number(e?.wos)}`}
             </div>
           ),
         },
@@ -279,137 +281,7 @@ const Profile = () => {
         },
       ];
 
-      const BODY = data?.publication?.map((e, i) => ({
-        key: `${i + 1}.`,
-        publication: (
-          <div className={styles.publication}>
-            <div className={styles.publicationTitle}>{e.publication_title}</div>
-            <Paragraph
-              className={styles.publicationAuthors}
-              ellipsis={{
-                rows: 3,
-                expandable: true,
-                symbol: "more",
-              }}
-            >
-              {e.author_name?.map((e, i) =>
-                e?.user ? (
-                  <span key={`first-${i}`}>
-                    {e?.user?.first_name + " " + e?.user?.last_name}
-                    <sup>1</sup>
-                    <span>, </span>
-                  </span>
-                ) : null
-              )}
-              {e.corresponding_authors?.map(e =>
-                e?.user ? (
-                  <span key={`corresponding-${e.id}`}>
-                    {e?.user?.first_name + " " + e?.user?.last_name}
-                    <sup>*</sup>
-                    <span>, </span>
-                  </span>
-                ) : null
-              )}
-              {e.other_authors?.map(e => e).join(", ")}
-            </Paragraph>
-            <div className={styles.publicationJournal}>{e.journal_name}</div>
-            <div
-              className={styles.publicationStats}
-            >{`Volume: ${e.volume} • Issue: ${e.issue} • Pages: ${e.pages}`}</div>
-            <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-              <Scite DOI={e.doi_id} type={1} />
-              <Altmetric DOI={e.doi_id} type={1} />
-            </div>
-          </div>
-        ),
-        impact_factor: e.impact_factor,
-        sjr: e.sjr_quartile,
-        h_index: e.h_index,
-        index: [
-          {
-            name: "PubMed",
-            bool: e.in_pmc,
-          },
-          {
-            name: "Scopus",
-            bool: e.in_scopus,
-          },
-          {
-            name: "DOAJ",
-            bool: e.in_doaj,
-          },
-          {
-            name: "WOS",
-            bool: e.in_wos,
-          },
-          {
-            name: "Medline",
-            bool: e.in_medline,
-          },
-        ]
-          .filter(e => e.bool)
-          .map(e => e.name),
-        indexed_in: (
-          <div className={styles.publicationGrid}>
-            {[
-              {
-                name: "PubMed",
-                logo: pmc,
-                bool: e.in_pmc,
-              },
-              {
-                name: "Scopus",
-                logo: scopus,
-                bool: e.in_scopus,
-              },
-              {
-                name: "DOAJ",
-                logo: doaj,
-                bool: e.in_doaj,
-              },
-              {
-                name: "WOS",
-                logo: wos,
-                bool: e.in_wos,
-              },
-              {
-                name: "Medline",
-                logo: medline,
-                bool: e.in_medline,
-              },
-            ]
-              .filter(e => e.bool)
-              .map(e => (
-                <Fragment key={e.name}>
-                  <Image src={e.logo} alt={e.name} height={30} width={30} />
-                  {e.name}
-                </Fragment>
-              ))}
-          </div>
-        ),
-        citations: {
-          total: e.citations_total,
-          crossref: e.citations_crossref,
-          scopus: e.citations_scopus,
-          wos: e.citations_wos,
-        },
-        published: e.year,
-        action: (
-          <Button
-            type="primary"
-            icon={<FileTextOutlined />}
-            style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
-            className={styles.tableButton}
-            onClick={() => router.push(`/file/${e.doi_id}`)}
-          >
-            {innerWidth > 1400 ? "View More" : null}
-          </Button>
-        ),
-        keywords: [
-          ...e.keywords?.map(e => e.display_name.toLowerCase()),
-          e.publication_title.toLowerCase(),
-        ],
-      }));
+      const BODY = bodyMaker(data?.publication);
 
       if (innerWidth < 1400) TITLE.shift();
       setPublications({ title: TITLE, body: BODY });
@@ -505,6 +377,136 @@ const Profile = () => {
     );
   };
 
+  const bodyMaker = arr => {
+    return arr?.map((e, i) => ({
+      key: `${i + 1}.`,
+      publication: (
+        <div className={styles.publication}>
+          <div className={styles.publicationTitle}>{e.publication_title}</div>
+          <Paragraph
+            className={styles.publicationAuthors}
+            ellipsis={{
+              rows: 3,
+              expandable: true,
+              symbol: "more",
+            }}
+          >
+            {e.author_name?.map((e, i) =>
+              e?.user ? (
+                <span key={`first-${i}`}>
+                  {e?.user?.first_name + " " + e?.user?.last_name}
+                  <sup>1</sup>
+                  <span>, </span>
+                </span>
+              ) : null
+            )}
+            {e.corresponding_authors?.map(e =>
+              e?.user ? (
+                <span key={`corresponding-${e.id}`}>
+                  {e?.user?.first_name + " " + e?.user?.last_name}
+                  <sup>*</sup>
+                  <span>, </span>
+                </span>
+              ) : null
+            )}
+            {e.other_authors?.map(e => e).join(", ")}
+          </Paragraph>
+          <div className={styles.publicationJournal}>{e.journal_name}</div>
+          <div
+            className={styles.publicationStats}
+          >{`Volume: ${e.volume} • Issue: ${e.issue} • Pages: ${e.pages}`}</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+            <Scite DOI={e.doi_id} type={1} />
+            <Altmetric DOI={e.doi_id} type={1} />
+          </div>
+        </div>
+      ),
+      impact_factor: e.impact_factor,
+      sjr: e.sjr_quartile,
+      h_index: e.h_index,
+      index: [
+        {
+          name: "PubMed",
+          bool: e.in_pmc,
+        },
+        {
+          name: "Scopus",
+          bool: e.in_scopus,
+        },
+        {
+          name: "DOAJ",
+          bool: e.in_doaj,
+        },
+        {
+          name: "WOS",
+          bool: e.in_wos,
+        },
+        {
+          name: "Medline",
+          bool: e.in_medline,
+        },
+      ]
+        .filter(e => e.bool)
+        .map(e => e.name),
+      indexed_in: (
+        <div className={styles.publicationGrid}>
+          {[
+            {
+              name: "PubMed",
+              logo: pmc,
+              bool: e.in_pmc,
+            },
+            {
+              name: "Scopus",
+              logo: scopus,
+              bool: e.in_scopus,
+            },
+            {
+              name: "DOAJ",
+              logo: doaj,
+              bool: e.in_doaj,
+            },
+            {
+              name: "WOS",
+              logo: wos,
+              bool: e.in_wos,
+            },
+            {
+              name: "Medline",
+              logo: medline,
+              bool: e.in_medline,
+            },
+          ]
+            .filter(e => e.bool)
+            .map(e => (
+              <Fragment key={e.name}>
+                <Image src={e.logo} alt={e.name} height={30} width={30} />
+                {e.name}
+              </Fragment>
+            ))}
+        </div>
+      ),
+      citations: {
+        total: e.citations_total,
+        crossref: e.citations_crossref,
+        scopus: e.citations_scopus,
+        wos: e.citations_wos,
+      },
+      published: e.year,
+      action: (
+        <Button
+          type="primary"
+          icon={<FileTextOutlined />}
+          style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
+          className={styles.tableButton}
+          onClick={() => router.push(`/file/${e.doi_id}`)}
+        >
+          {innerWidth > 1400 ? "View More" : null}
+        </Button>
+      ),
+    }));
+  };
+
   return (
     <>
       <Head>
@@ -532,34 +534,68 @@ const Profile = () => {
           />
 
           <div style={{ paddingLeft: "18vw" }}>
-            <Side user={person} />
+            <Side user={person} sets={setSections} />
 
             <div className={styles.container}>
               <div className={styles.top}>
                 <AutoComplete
                   className={styles.topInput}
-                  options={
-                    data?.publication?.map(e => ({
-                      value: e.publication_title,
-                      label: e.publication_title,
-                    })) || []
-                  }
+                  options={extra.history?.map((e, i) => ({
+                    key: i,
+                    value: e,
+                    label: e,
+                  }))}
                 >
-                  <Input
+                  <Input.Search
                     className={styles.topInput}
                     placeholder="Search for research within RIMS using title or keywords"
-                    onPressEnter={e => {
-                      if (e.target.value) {
+                    onChange={e => {
+                      axios({
+                        method: "GET",
+                        url: `${URLObj.base}/search`,
+                        headers: {
+                          "X-ACCESS-KEY": URLObj.key,
+                          "X-AUTH-TOKEN": user.token,
+                        },
+                      }).then(res => {
+                        setExtra({
+                          ...extra,
+                          history: res.data?.history?.map(e => e?.search_query),
+                        });
+                      });
+                    }}
+                    onSearch={e => {
+                      if (e) {
                         setPublications({
                           title: publications?.title,
-                          body: publications?.body.filter(p =>
-                            p.keywords?.includes(e.target?.value?.toLowerCase())
+                          body: bodyMaker(
+                            data?.publication?.filter(p =>
+                              [
+                                ...p.keywords?.map(k =>
+                                  k.display_name.toLowerCase()
+                                ),
+                                p.publication_title.toLowerCase(),
+                              ]?.includes(e?.toLowerCase())
+                            )
                           ),
                         });
-                      }
-                      setSections("publications");
+
+                        let formdata = new FormData();
+                        formdata.append("query", e);
+
+                        axios({
+                          method: "POST",
+                          url: `${URLObj.base}/search/`,
+                          headers: {
+                            "X-ACCESS-KEY": URLObj.key,
+                            "X-AUTH-TOKEN": user.token,
+                          },
+                          data: formdata,
+                        });
+
+                        setSections("publications");
+                      } else setSections("all");
                     }}
-                    prefix={<SearchOutlined style={{ marginRight: 5 }} />}
                     allowClear
                   />
                 </AutoComplete>

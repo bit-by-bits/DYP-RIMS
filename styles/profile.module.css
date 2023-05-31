@@ -77,15 +77,18 @@
   background: var(--primary);
 }
 
-.topInput {
-  height: 45px;
+.topInput,
+.topInput input,
+.topInput button {
+  height: 45px !important;
+  font-weight: 500;
   width: 100%;
   background-color: #f7f7f7;
 }
 
-.topInput input {
-  background-color: #f7f7f7;
-  font-weight: 500;
+.topInput button {
+  border-color: grey !important;
+  height: 46.5px !important;
 }
 
 .topButtonCircle {

@@ -10,12 +10,13 @@ import {
   BulbOutlined,
   UserAddOutlined,
   FileAddOutlined,
+  AppstoreAddOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "../../styles/profile.module.css";
 
-const Side = ({ user }) => {
+const Side = ({ user, sets }) => {
   // STATES
 
   // EFFECTS
@@ -69,14 +70,60 @@ const Side = ({ user }) => {
         mode="inline"
         className="sideMenu"
         defaultSelectedKeys={["1"]}
+        onClick={() => sets("all")}
         items={[
           { link: "/profile", icon: HomeOutlined, label: "Home" },
-          { link: "/upload", icon: FileAddOutlined, label: "Add Research" },
+          { link: null, icon: FileAddOutlined, label: "Add Research" },
           { link: "/downloads", icon: DownloadOutlined, label: "Downloads" },
         ].map((item, index) => ({
           key: String(index + 1),
           icon: createElement(item.icon),
-          label: <Link href={item.link}>{item.label}</Link>,
+          children:
+            index != "1"
+              ? null
+              : [
+                  {
+                    key: "1.1",
+                    icon: createElement(FileAddOutlined),
+                    label: <Link href="/upload">Add Publication</Link>,
+                  },
+                  {
+                    key: "1.2",
+                    icon: createElement(GroupOutlined),
+                    label: <Link href="/add/conference">Add Conference</Link>,
+                  },
+                  {
+                    key: "1.3",
+                    icon: createElement(BookOutlined),
+                    label: <Link href="/add/book">Add Book/Chapter</Link>,
+                  },
+                  {
+                    key: "1.4",
+                    icon: createElement(ProjectOutlined),
+                    label: <Link href="/add/project">Add Project</Link>,
+                  },
+                  {
+                    key: "1.5",
+                    icon: createElement(TrophyOutlined),
+                    label: <Link href="/add/award">Add Award</Link>,
+                  },
+                  {
+                    key: "1.6",
+                    icon: createElement(BulbOutlined),
+                    label: <Link href="/add/ipr">Add IPR</Link>,
+                  },
+                  {
+                    key: "1.7",
+                    icon: createElement(UserAddOutlined),
+                    label: <Link href="/add/student">Add Student</Link>,
+                  },
+                ],
+
+          label: item.link ? (
+            <Link href={item.link}>{item.label}</Link>
+          ) : (
+            item.label
+          ),
         }))}
       />
 
@@ -84,6 +131,7 @@ const Side = ({ user }) => {
         mode="inline"
         className="sideMenu"
         selectable={false}
+        onClick={() => sets("all")}
         items={[
           {
             link: "/profile#conferences",

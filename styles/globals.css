@@ -87,6 +87,7 @@ html {
 }
 
 .ant-table-thead .ant-table-cell,
+.ant-table-placeholder,
 .ant-table-wrapper td.ant-table-column-sort {
   background-color: transparent !important;
   text-align: center !important;
@@ -149,6 +150,14 @@ html {
 
 a.ant-typography-expand {
   color: red !important;
+}
+
+/* INPUT */
+
+.ant-input-affix-wrapper {
+  padding: 0 10px;
+  background-color: #f7f7f7;
+  border-color: grey !important;
 }
 
 /* SPINNER */
