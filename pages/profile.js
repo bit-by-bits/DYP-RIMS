@@ -1,7 +1,15 @@
 import Head from "next/head";
 import React, { useState, useEffect, Fragment, createElement } from "react";
 import styles from "../styles/profile.module.css";
-import { Button, Typography, FloatButton, Input, Spin, Table } from "antd";
+import {
+  Button,
+  Typography,
+  FloatButton,
+  Input,
+  Spin,
+  Table,
+  AutoComplete,
+} from "antd";
 import Side from "../src/Profile/Side";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -62,6 +70,8 @@ const Profile = () => {
   const [ipr, setIpr] = useState({ title: [], body: [] });
 
   const [sortBy, setSortBy] = useState("scopus");
+  const [sections, setSections] = useState("all");
+
   const [extra, setExtra] = useState({
     citations: {},
     hIndex: {},
@@ -115,7 +125,7 @@ const Profile = () => {
             pubmed: 0,
             scopus: 0,
             doaj: 0,
-            scie: 0,
+            wos: 0,
             medline: 0,
           };
 
@@ -140,16 +150,20 @@ const Profile = () => {
 
                 case "green":
                   ACCESS.green++;
+                  break;
 
                 case "bronze":
                   ACCESS.bronze++;
+                  break;
+
+                default:
               }
             } else ACCESS.closed++;
 
             if (e.in_pmc) INDEX.pubmed++;
             if (e.in_scopus) INDEX.scopus++;
             if (e.in_doaj) INDEX.doaj++;
-            if (e.in_scie) INDEX.scie++;
+            if (e.in_wos) INDEX.wos++;
             if (e.in_medline) INDEX.medline++;
           });
 
@@ -224,8 +238,8 @@ const Profile = () => {
               value: "DOAJ",
             },
             {
-              text: "SCIE",
-              value: "SCIE",
+              text: "WOS",
+              value: "WOS",
             },
             {
               text: "Medline",
@@ -325,8 +339,8 @@ const Profile = () => {
             bool: e.in_doaj,
           },
           {
-            name: "SCIE",
-            bool: e.in_scie,
+            name: "WOS",
+            bool: e.in_wos,
           },
           {
             name: "Medline",
@@ -354,9 +368,9 @@ const Profile = () => {
                 bool: e.in_doaj,
               },
               {
-                name: "SCIE",
-                logo: scie,
-                bool: e.in_scie,
+                name: "WOS",
+                logo: wos,
+                bool: e.in_wos,
               },
               {
                 name: "Medline",
@@ -391,6 +405,10 @@ const Profile = () => {
             {innerWidth > 1400 ? "View More" : null}
           </Button>
         ),
+        keywords: [
+          ...e.keywords?.map(e => e.display_name.toLowerCase()),
+          e.publication_title.toLowerCase(),
+        ],
       }));
 
       if (innerWidth < 1400) TITLE.shift();
@@ -430,14 +448,6 @@ const Profile = () => {
           key: "action",
         },
       ];
-
-      console.log(
-        "2023-05-31".toLocaleString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })
-      );
 
       const BODY = data?.awards?.map((e, i) => ({
         key: `${i + 1}.`,
@@ -526,12 +536,33 @@ const Profile = () => {
 
             <div className={styles.container}>
               <div className={styles.top}>
-                <Input
+                <AutoComplete
                   className={styles.topInput}
-                  placeholder="Search for research within RIMS using keywords"
-                  prefix={<SearchOutlined style={{ marginRight: 5 }} />}
-                  allowClear
-                />
+                  options={
+                    data?.publication?.map(e => ({
+                      value: e.publication_title,
+                      label: e.publication_title,
+                    })) || []
+                  }
+                >
+                  <Input
+                    className={styles.topInput}
+                    placeholder="Search for research within RIMS using title or keywords"
+                    onPressEnter={e => {
+                      if (e.target.value) {
+                        setPublications({
+                          title: publications?.title,
+                          body: publications?.body.filter(p =>
+                            p.keywords?.includes(e.target?.value?.toLowerCase())
+                          ),
+                        });
+                      }
+                      setSections("publications");
+                    }}
+                    prefix={<SearchOutlined style={{ marginRight: 5 }} />}
+                    allowClear
+                  />
+                </AutoComplete>
                 <Button
                   type="primary"
                   className={styles.topButton}
@@ -565,161 +596,247 @@ const Profile = () => {
                 </Button>
               </div>
 
-              <div className={styles.section}>
-                <div className={styles.sectionTop}>
-                  <div id="overview" className={styles.heading}>
-                    Overview
+              {sections == "all" && (
+                <div className={styles.section}>
+                  <div className={styles.sectionTop}>
+                    <div id="overview" className={styles.heading}>
+                      Overview
+                    </div>
                   </div>
-                </div>
-                <Overview
-                  data={data}
-                  stats={statistics}
-                  extra={extra}
-                  size={innerWidth}
-                />
-              </div>
-
-              <div className={styles.section}>
-                <div className={styles.sectionTop}>
-                  <div id="publications" className={styles.heading}>
-                    Publications
-                  </div>
-                  <div style={{ display: "flex", gap: 15 }}>
-                    <Button
-                      type="primary"
-                      className={styles.sectionButton}
-                      onClick={() => {
-                        if (sortBy === "scopus") setSortBy("wos");
-                        else if (sortBy === "wos") setSortBy("crossref");
-                        else if (sortBy === "crossref") setSortBy("scopus");
-                      }}
-                    >
-                      Sort Citations By: {sortBy.toUpperCase()}
-                    </Button>
-                    <Button
-                      type="primary"
-                      className={styles.sectionButton}
-                      onClick={() => router.push("/publications")}
-                    >
-                      View All
-                    </Button>
-                  </div>
-                </div>
-                <div className={styles.sectionBottom}>
-                  <Table
-                    columns={publications?.title}
-                    dataSource={publications?.body}
+                  <Overview
+                    data={data}
+                    stats={statistics}
+                    extra={extra}
+                    size={innerWidth}
                   />
                 </div>
-              </div>
+              )}
 
-              <div className={styles.section}>
-                <div className={styles.sectionTop}>
-                  <div id="conferences" className={styles.heading}>
-                    Conferences
+              {(sections == "all" || sections == "publications") && (
+                <div className={styles.section}>
+                  <div className={styles.sectionTop}>
+                    <div id="publications" className={styles.heading}>
+                      Publications
+                    </div>
+                    <div style={{ display: "flex", gap: 15 }}>
+                      <Button
+                        type="primary"
+                        className={styles.sectionButton}
+                        onClick={() => {
+                          if (sortBy === "scopus") setSortBy("wos");
+                          else if (sortBy === "wos") setSortBy("crossref");
+                          else if (sortBy === "crossref") setSortBy("scopus");
+                        }}
+                      >
+                        Sort Citations By: {sortBy.toUpperCase()}
+                      </Button>
+                      {sections == "all" ? (
+                        <Button
+                          type="primary"
+                          className={styles.sectionButton}
+                          onClick={() => setSections("publications")}
+                        >
+                          View All
+                        </Button>
+                      ) : (
+                        <Button
+                          type="primary"
+                          className={styles.sectionButton}
+                          onClick={() => setSections("all")}
+                        >
+                          Return Back
+                        </Button>
+                      )}
+                    </div>
                   </div>
-                  <Button
-                    type="primary"
-                    className={styles.sectionButton}
-                    onClick={() => {}}
-                  >
-                    View All
-                  </Button>
+                  <div className={styles.sectionBottom}>
+                    <Table
+                      columns={publications?.title}
+                      dataSource={publications?.body}
+                    />
+                  </div>
                 </div>
-                <div className={styles.sectionBottom}>
-                  <Table columns={[]} dataSource={[]} />
-                </div>
-              </div>
+              )}
 
-              <div className={styles.section}>
-                <div className={styles.sectionTop}>
-                  <div id="books" className={styles.heading}>
-                    Books/Chapters
+              {(sections == "all" || sections == "conferences") && (
+                <div className={styles.section}>
+                  <div className={styles.sectionTop}>
+                    <div id="conferences" className={styles.heading}>
+                      Conferences
+                    </div>
+                    {sections == "all" ? (
+                      <Button
+                        type="primary"
+                        className={styles.sectionButton}
+                        onClick={() => setSections("conferences")}
+                      >
+                        View All
+                      </Button>
+                    ) : (
+                      <Button
+                        type="primary"
+                        className={styles.sectionButton}
+                        onClick={() => setSections("all")}
+                      >
+                        Return Back
+                      </Button>
+                    )}
                   </div>
-                  <Button
-                    type="primary"
-                    className={styles.sectionButton}
-                    onClick={() => {}}
-                  >
-                    View All
-                  </Button>
+                  <div className={styles.sectionBottom}>
+                    <Table columns={[]} dataSource={[]} />
+                  </div>
                 </div>
-                <div className={styles.sectionBottom}>
-                  <Table columns={[]} dataSource={[]} />
-                </div>
-              </div>
+              )}
 
-              <div className={styles.section}>
-                <div className={styles.sectionTop}>
-                  <div id="projects" className={styles.heading}>
-                    Research Projects
+              {(sections == "all" || sections == "books") && (
+                <div className={styles.section}>
+                  <div className={styles.sectionTop}>
+                    <div id="books" className={styles.heading}>
+                      Books/Chapters
+                    </div>
+                    {sections == "all" ? (
+                      <Button
+                        type="primary"
+                        className={styles.sectionButton}
+                        onClick={() => setSections("books")}
+                      >
+                        View All
+                      </Button>
+                    ) : (
+                      <Button
+                        type="primary"
+                        className={styles.sectionButton}
+                        onClick={() => setSections("all")}
+                      >
+                        Return Back
+                      </Button>
+                    )}
                   </div>
-                  <Button
-                    type="primary"
-                    className={styles.sectionButton}
-                    onClick={() => {}}
-                  >
-                    View All
-                  </Button>
+                  <div className={styles.sectionBottom}>
+                    <Table columns={[]} dataSource={[]} />
+                  </div>
                 </div>
-                <div className={styles.sectionBottom}>
-                  <Table columns={[]} dataSource={[]} />
-                </div>
-              </div>
+              )}
 
-              <div className={styles.section}>
-                <div className={styles.sectionTop}>
-                  <div id="awards" className={styles.heading}>
-                    Awards
+              {(sections == "all" || sections == "projects") && (
+                <div className={styles.section}>
+                  <div className={styles.sectionTop}>
+                    <div id="projects" className={styles.heading}>
+                      Research Projects
+                    </div>
+                    {sections == "all" ? (
+                      <Button
+                        type="primary"
+                        className={styles.sectionButton}
+                        onClick={() => setSections("projects")}
+                      >
+                        View All
+                      </Button>
+                    ) : (
+                      <Button
+                        type="primary"
+                        className={styles.sectionButton}
+                        onClick={() => setSections("all")}
+                      >
+                        Return Back
+                      </Button>
+                    )}
                   </div>
-                  <Button
-                    type="primary"
-                    className={styles.sectionButton}
-                    onClick={() => {}}
-                  >
-                    View All
-                  </Button>
+                  <div className={styles.sectionBottom}>
+                    <Table columns={[]} dataSource={[]} />
+                  </div>
                 </div>
-                <div className={styles.sectionBottom}>
-                  <Table columns={awards?.title} dataSource={awards?.body} />
-                </div>
-              </div>
+              )}
 
-              <div className={styles.section}>
-                <div className={styles.sectionTop}>
-                  <div id="ipr" className={styles.heading}>
-                    IPR
+              {(sections == "all" || sections == "awards") && (
+                <div className={styles.section}>
+                  <div className={styles.sectionTop}>
+                    <div id="awards" className={styles.heading}>
+                      Awards
+                    </div>
+                    {sections == "all" ? (
+                      <Button
+                        type="primary"
+                        className={styles.sectionButton}
+                        onClick={() => setSections("awards")}
+                      >
+                        View All
+                      </Button>
+                    ) : (
+                      <Button
+                        type="primary"
+                        className={styles.sectionButton}
+                        onClick={() => setSections("all")}
+                      >
+                        Return Back
+                      </Button>
+                    )}
                   </div>
-                  <Button
-                    type="primary"
-                    className={styles.sectionButton}
-                    onClick={() => {}}
-                  >
-                    View All
-                  </Button>
+                  <div className={styles.sectionBottom}>
+                    <Table columns={awards?.title} dataSource={awards?.body} />
+                  </div>
                 </div>
-                <div className={styles.sectionBottom}>
-                  <Table columns={[]} dataSource={[]} />
-                </div>
-              </div>
+              )}
 
-              <div className={styles.section}>
-                <div className={styles.sectionTop}>
-                  <div id="students" className={styles.heading}>
-                    Students Guided
+              {(sections == "all" || sections == "ipr") && (
+                <div className={styles.section}>
+                  <div className={styles.sectionTop}>
+                    <div id="ipr" className={styles.heading}>
+                      IPR
+                    </div>
+                    {sections == "all" ? (
+                      <Button
+                        type="primary"
+                        className={styles.sectionButton}
+                        onClick={() => setSections("ipr")}
+                      >
+                        View All
+                      </Button>
+                    ) : (
+                      <Button
+                        type="primary"
+                        className={styles.sectionButton}
+                        onClick={() => setSections("all")}
+                      >
+                        Return Back
+                      </Button>
+                    )}
                   </div>
-                  <Button
-                    type="primary"
-                    className={styles.sectionButton}
-                    onClick={() => {}}
-                  >
-                    View All
-                  </Button>
+                  <div className={styles.sectionBottom}>
+                    <Table columns={[]} dataSource={[]} />
+                  </div>
                 </div>
-                <div className={styles.sectionBottom}>
-                  <Table columns={[]} dataSource={[]} />
+              )}
+
+              {(sections == "all" || sections == "students") && (
+                <div className={styles.section}>
+                  <div className={styles.sectionTop}>
+                    <div id="students" className={styles.heading}>
+                      Students Guided
+                    </div>
+                    {sections == "all" ? (
+                      <Button
+                        type="primary"
+                        className={styles.sectionButton}
+                        onClick={() => setSections("students")}
+                      >
+                        View All
+                      </Button>
+                    ) : (
+                      <Button
+                        type="primary"
+                        className={styles.sectionButton}
+                        onClick={() => setSections("all")}
+                      >
+                        Return Back
+                      </Button>
+                    )}
+                  </div>
+                  <div className={styles.sectionBottom}>
+                    <Table columns={[]} dataSource={[]} />
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </Spin>

@@ -82,8 +82,8 @@ const Overview = ({ data, stats, extra, size }) => {
                     image: doaj,
                   },
                   {
-                    value: number(extra?.index?.scie),
-                    image: scie,
+                    value: number(extra?.index?.wos),
+                    image: wos,
                   },
                   {
                     value: number(extra?.index?.medline),
@@ -105,7 +105,13 @@ const Overview = ({ data, stats, extra, size }) => {
                 ))}
               </div>
             ),
-            label2: `Indexed Publications: ${number(stats?.indexed)}`,
+            label2: `Indexed Publications: ${number(
+              extra?.index?.pubmed +
+                extra?.index?.scopus +
+                extra?.index?.doaj +
+                extra?.index?.wos +
+                extra?.index?.medline
+            )}`,
             color: "#F25A1D",
           },
           {
