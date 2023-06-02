@@ -105,13 +105,7 @@ const Overview = ({ data, stats, extra, size }) => {
                 ))}
               </div>
             ),
-            label2: `Indexed Publications: ${number(
-              extra?.index?.pubmed +
-                extra?.index?.scopus +
-                extra?.index?.doaj +
-                extra?.index?.wos +
-                extra?.index?.medline
-            )}`,
+            label2: `Indexed Publications: ${number(extra?.index?.total)}`,
             color: "#F25A1D",
           },
           {

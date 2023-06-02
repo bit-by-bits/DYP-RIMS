@@ -1,5 +1,10 @@
+.wrapper {
+  height: 100vh;
+}
+
 .wrapper .upload_wrapper {
-  margin: 6rem 10vw 2rem 10vw;
+  min-height: 100vh;
+  padding: 2rem;
   display: flex;
   flex-direction: "row";
   justify-content: space-between;
@@ -269,10 +274,6 @@
 }
 
 @media screen and (min-width: 1400px) {
-  .wrapper {
-    margin-top: 8rem;
-  }
-
   .wrapper .upload_left {
     gap: 2rem !important;
     padding: 3rem !important;

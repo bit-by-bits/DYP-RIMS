@@ -14,7 +14,7 @@
   display: flex;
   position: relative;
   align-items: flex-start;
-  padding: 6rem 10vw;
+  padding: 2rem;
 }
 
 .form_wrapper {
@@ -130,10 +130,6 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-}
-
-.info {
-  align-items: flex-start;
 }
 
 .info_head {

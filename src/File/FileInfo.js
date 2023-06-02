@@ -7,33 +7,48 @@ import { Avatar, Badge, Card, List, message } from "antd";
 import Scite from "../Profile/Scite";
 import Altmetric from "../Profile/Altmetric";
 
-const FileInfo = ({ setv, id, setd }) => {
+const FileInfo = ({ user, setv, DOI }) => {
+  // STATES
+
   const { Meta } = Card;
   const [data, setData] = useState({});
   const [cards, setCards] = useState([]);
 
+  // EFFECTS
+
   useEffect(() => {
-    if (id)
+    if (DOI && user?.token) {
       axios({
-        method: "GET",
-        url: `${URLObj.base}/publication/${id}`,
+        method: "PUT",
+        url: `${URLObj.base}/publications/?doi=${DOI}`,
+        headers: {
+          "X-ACCESS-KEY": URLObj.key,
+          "X-AUTH-TOKEN": user?.token,
+        },
       })
         .then(res => {
-          setData(res?.data?.publication);
-
           setv(false);
-          if (res?.data?.publication?.file) setd(true);
+          setData(res?.data?.data);
         })
         .catch(err => {
           console.log(err);
           message.error("Could not fetch file data");
         });
-  }, [id, setd, setv]);
+    }
+  }, [user, setv, DOI]);
 
   useEffect(() => {
-    if (data) {
-      const main = data.author_name?.map((e, i) => (
-        <Badge.Ribbon key={i} text="DPU" color="#9a2827">
+    if (data) setCards(getAuthors(data?.author));
+  }, [data]);
+
+  // FUNCTIONS
+
+  const readFirst = arr => (arr?.length > 0 ? arr[0] : "- Not Available -");
+
+  const getAuthors = arr =>
+    arr?.map((e, i) =>
+      e.sequence == "first" ? (
+        <Badge.Ribbon key={i} text="First" color="#9a2827">
           <Card
             hoverable
             bodyStyle={{ padding: 15, minWidth: 250 }}
@@ -41,28 +56,11 @@ const FileInfo = ({ setv, id, setd }) => {
           >
             <Meta
               title={
-                <div
-                  style={{
-                    fontSize: "0.9rem",
-                    marginBottom: -4,
-                  }}
-                >
-                  {e.searchable_name}
+                <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
+                  {e.given + " " + e.family + " " + (e.suffix ?? "")}
                 </div>
               }
-              description={
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    fontSize: "0.8rem",
-                    gap: 5,
-                  }}
-                >
-                  <span>Department:</span>
-                  <span>{e.department?.name ?? "N/A"}</span>
-                </div>
-              }
+              description={""}
               avatar={
                 <Avatar
                   src={
@@ -74,18 +72,18 @@ const FileInfo = ({ setv, id, setd }) => {
             />
           </Card>
         </Badge.Ribbon>
-      ));
-
-      const others = data.other_authors?.map((e, i) => (
+      ) : (
         <Card
-          key={data.author_name?.length + i}
+          key={i}
           hoverable
           bodyStyle={{ padding: 15 }}
           style={{ border: "1px solid #d9d9d9" }}
         >
           <Meta
             title={
-              <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>{e}</div>
+              <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
+                {e.given + " " + e.family + " " + (e.suffix ?? "")}
+              </div>
             }
             description={""}
             avatar={
@@ -97,34 +95,25 @@ const FileInfo = ({ setv, id, setd }) => {
             }
           />
         </Card>
-      ));
-
-      setCards([...(main ?? []), ...(others ?? [])]);
-    }
-  }, [data]);
+      )
+    );
 
   return (
     <>
       <div className={styles.file_text}>
         <div className={styles.file_tags}>
           <div className={styles.file_tag1}>
-            {data.publication_type ?? "Unknown Type"}
+            {data?.publication_type ?? "Unknown Type"}
           </div>
 
           <div className={styles.file_tag2}>
-            {data.file ? "PDF Available" : "PDF Not Available"}
+            {data?.file ? "PDF Available" : "PDF Not Available"}
           </div>
-
-          {data.region && data.region !== "blank" && (
-            <div className={styles.file_tag1}>{data.region}</div>
-          )}
         </div>
 
         <div
           className={styles.file_title}
-          dangerouslySetInnerHTML={{
-            __html: data?.publication_title ?? "- Not Available -",
-          }}
+          dangerouslySetInnerHTML={{ __html: readFirst(data?.title) }}
         />
 
         <div className={styles.file_info}>
@@ -133,7 +122,7 @@ const FileInfo = ({ setv, id, setd }) => {
               <div className={styles.info}>
                 <span className={styles.info_head}>Journal</span>
                 <span className={styles.info_body}>
-                  {data.journal_name ?? "- Not Available -"}
+                  {readFirst(data?.journal)}
                 </span>
               </div>
             </div>
@@ -142,7 +131,7 @@ const FileInfo = ({ setv, id, setd }) => {
               <div className={styles.info}>
                 <span className={styles.info_head}>Volume</span>
                 <span className={styles.info_body}>
-                  {data.volume ?? "- NA -"}
+                  {data?.volume ?? "- NA -"}
                 </span>
               </div>
 
@@ -151,7 +140,7 @@ const FileInfo = ({ setv, id, setd }) => {
               <div className={styles.info}>
                 <span className={styles.info_head}>Issue</span>
                 <span className={styles.info_body}>
-                  {data.issue ?? "- NA -"}
+                  {data?.issue ?? "- NA -"}
                 </span>
               </div>
 
@@ -160,7 +149,7 @@ const FileInfo = ({ setv, id, setd }) => {
               <div className={styles.info}>
                 <span className={styles.info_head}>Pages</span>
                 <span className={styles.info_body}>
-                  {data.pages ?? "- NA -"}
+                  {data?.page ?? "- NA -"}
                 </span>
               </div>
             </div>
@@ -171,7 +160,9 @@ const FileInfo = ({ setv, id, setd }) => {
               <div className={styles.info}>
                 <span className={styles.info_head}>Published</span>
                 <span className={styles.info_body}>
-                  {data.year ?? "- NA -"}
+                  {data?.published_date?.length > 0
+                    ? data?.published_date?.split("-").reverse().join("-")
+                    : "- NA -"}
                 </span>
               </div>
 
@@ -180,7 +171,7 @@ const FileInfo = ({ setv, id, setd }) => {
               <div className={styles.info}>
                 <span className={styles.info_head}>Citations</span>
                 <span className={styles.info_body}>
-                  {data.citations ?? "- NA -"}
+                  {data?.citations ?? "- NA -"}
                 </span>
               </div>
             </div>
@@ -206,22 +197,19 @@ const FileInfo = ({ setv, id, setd }) => {
         <div className={styles.file_grid}>
           <div className={styles.file_head}>Keywords</div>
           <div
-            style={{
-              gap: "2rem",
-              paddingTop: "2rem",
-            }}
+            style={{ gap: "2rem", paddingTop: "2rem" }}
             className={styles.file_body}
           >
-            <Scite DOI={data.doi_id} type={0} />
-            <Altmetric DOI={data.doi_id} type={0} />
+            <Scite DOI={DOI} type={0} />
+            <Altmetric DOI={DOI} type={0} />
           </div>
         </div>
 
         <div className={`${styles.smooth} ${styles.abstract}`}>
           <div className={styles.file_head}>Abstract</div>
           <div className={styles.abs_body}>
-            {data.abstract && data.abstract != ""
-              ? data.abstract
+            {data?.abstract && data?.abstract != ""
+              ? data?.abstract
               : "- Not Available -"}
           </div>
         </div>
@@ -233,14 +221,14 @@ const FileInfo = ({ setv, id, setd }) => {
               <div className={styles.file_bodyitem}>
                 <div className={styles.file_bodybold}>Pub Med ID</div>
                 <div className={styles.file_bodyweak}>
-                  {data.pubmed_id ?? "- Not Available -"}
+                  {data?.pubmed_id ?? "- Not Available -"}
                 </div>
               </div>
 
               <div className={styles.file_bodyitem}>
                 <div className={styles.file_bodybold}>DOI ID</div>
                 <div className={styles.file_bodyweak}>
-                  {data.doi_id ?? "- Not Available -"}
+                  {DOI ?? "- Not Available -"}
                 </div>
               </div>
             </div>
@@ -252,7 +240,7 @@ const FileInfo = ({ setv, id, setd }) => {
               <div className={styles.file_bodyitem}>
                 <div className={styles.file_bodybold}>Impact Factor</div>
                 <div className={styles.file_bodyweak}>
-                  {data.impact_factor ?? "- Not Available -"}
+                  {data?.impact_factor ?? "- Not Available -"}
                 </div>
               </div>
 
@@ -260,14 +248,14 @@ const FileInfo = ({ setv, id, setd }) => {
                 <div className={styles.file_bodyitem}>
                   <div className={styles.file_bodybold}>H-Index</div>
                   <div className={styles.file_bodyweak}>
-                    {data.h_index ?? "- NA -"}
+                    {data?.hIndex ?? "- NA -"}
                   </div>
                 </div>
 
                 <div className={styles.file_bodyitem}>
                   <div className={styles.file_bodybold}>SJR Quartile</div>
                   <div className={styles.file_bodyweak}>
-                    {data.sjr ?? "- NA -"}
+                    {data?.sjr_quartile ?? "- NA -"}
                   </div>
                 </div>
               </div>

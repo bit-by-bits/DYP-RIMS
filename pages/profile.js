@@ -18,7 +18,6 @@ import {
   BellOutlined,
   FileTextOutlined,
   LogoutOutlined,
-  SearchOutlined,
   SettingOutlined,
   SortAscendingOutlined,
   SortDescendingOutlined,
@@ -51,7 +50,11 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && user.token === "") router.push("/");
+    if (typeof window !== "undefined")
+      user
+        ? Date.now() - user.setUpTime > 3600000 &&
+          localStorage.removeItem("user")
+        : router.push("/");
   }, [router, user]);
 
   // STATES
@@ -65,9 +68,12 @@ const Profile = () => {
   const [statistics, setStatistics] = useState({});
 
   const [publications, setPublications] = useState({ title: [], body: [] });
-  const [awards, setAwards] = useState({ title: [], body: [] });
   const [conferences, setConferences] = useState({ title: [], body: [] });
+  const [books, setBooks] = useState({ title: [], body: [] });
+  const [projects, setProjects] = useState({ title: [], body: [] });
+  const [awards, setAwards] = useState({ title: [], body: [] });
   const [ipr, setIpr] = useState({ title: [], body: [] });
+  const [students, setStudents] = useState({ title: [], body: [] });
 
   const [sortBy, setSortBy] = useState("scopus");
   const [sections, setSections] = useState("all");
@@ -90,7 +96,7 @@ const Profile = () => {
         url: `${URLObj.base}/home`,
         headers: {
           "X-ACCESS-KEY": URLObj.key,
-          "X-AUTH-TOKEN": user.token,
+          "X-AUTH-TOKEN": user?.token,
         },
       })
         .then(res => {
@@ -128,6 +134,7 @@ const Profile = () => {
             doaj: 0,
             wos: 0,
             medline: 0,
+            total: 0,
           };
 
           res.data?.data?.publication?.forEach(e => {
@@ -166,6 +173,15 @@ const Profile = () => {
             if (e.in_doaj) INDEX.doaj++;
             if (e.in_wos) INDEX.wos++;
             if (e.in_medline) INDEX.medline++;
+
+            if (
+              e.in_pmc ||
+              e.in_scopus ||
+              e.in_doaj ||
+              e.in_wos ||
+              e.in_medline
+            )
+              INDEX.total++;
           });
 
           IMPACT.average = IMPACT.total / res.data?.data?.publication?.length;
@@ -287,6 +303,153 @@ const Profile = () => {
       setPublications({ title: TITLE, body: BODY });
     }
 
+    if (data?.conferences) {
+      const TITLE = [
+        {
+          title: "No.",
+          dataIndex: "key",
+          key: "key",
+        },
+        {
+          title: "Conference Type",
+          dataIndex: "type",
+          key: "type",
+        },
+        {
+          title: "Paper Presented",
+          dataIndex: "paper",
+          key: "paper",
+        },
+        {
+          title: "Poster Presented",
+          dataIndex: "poster",
+          key: "poster",
+        },
+        {
+          title: "Date",
+          dataIndex: "date",
+          key: "date",
+        },
+        {
+          title: "Location",
+          dataIndex: "location",
+          key: "location",
+        },
+        {
+          title: "",
+          dataIndex: "action",
+          key: "action",
+        },
+      ];
+
+      const BODY = [];
+
+      setConferences({ title: TITLE, body: BODY });
+    }
+
+    if (data?.books) {
+      const TITLE = [
+        {
+          title: "No.",
+          dataIndex: "key",
+          key: "key",
+        },
+        {
+          title: "Title",
+          dataIndex: "title",
+          key: "title",
+        },
+        {
+          title: "Type",
+          dataIndex: "type",
+          key: "type",
+        },
+        {
+          title: "Book Name",
+          dataIndex: "book",
+          key: "book",
+        },
+        {
+          title: "Publisher",
+          dataIndex: "publisher",
+          key: "publisher",
+        },
+        {
+          title: "Published",
+          dataIndex: "published",
+          key: "published",
+        },
+        {
+          title: "",
+          dataIndex: "action",
+          key: "action",
+        },
+      ];
+
+      const BODY = [];
+
+      setBooks({ title: TITLE, body: BODY });
+    }
+
+    if (data?.projects) {
+      const TITLE = [
+        {
+          title: "No.",
+          dataIndex: "key",
+          key: "key",
+        },
+        {
+          title: "Principal Investigator",
+          dataIndex: "pi",
+          key: "pi",
+        },
+        {
+          title: "Co-Investigator",
+          dataIndex: "ci",
+          key: "ci",
+        },
+        {
+          title: "Funding Agency",
+          dataIndex: "agency",
+          key: "agency",
+        },
+        {
+          title: "Country",
+          dataIndex: "country",
+          key: "country",
+        },
+        {
+          title: "Agency Type",
+          dataIndex: "type",
+          key: "type",
+        },
+        {
+          title: "Amount",
+          dataIndex: "amount",
+          key: "amount",
+        },
+        {
+          title: "Start Date",
+          dataIndex: "start",
+          key: "start",
+        },
+        {
+          title: "End Date",
+          dataIndex: "end",
+          key: "end",
+        },
+        {
+          title: "",
+          dataIndex: "action",
+          key: "action",
+        },
+      ];
+
+      const BODY = [];
+
+      setProjects({ title: TITLE, body: BODY });
+    }
+
     if (data?.awards) {
       const TITLE = [
         {
@@ -295,24 +458,24 @@ const Profile = () => {
           key: "key",
         },
         {
+          title: "Award Name",
+          dataIndex: "name",
+          key: "name",
+        },
+        {
           title: "Awarding Agency",
-          dataIndex: "awarding_agency",
-          key: "awarding_agency",
+          dataIndex: "agency",
+          key: "agency",
+        },
+        {
+          title: "Type",
+          dataIndex: "type",
+          key: "type",
         },
         {
           title: "Date",
           dataIndex: "date",
           key: "date",
-        },
-        {
-          title: "Name",
-          dataIndex: "name",
-          key: "name",
-        },
-        {
-          title: "Department",
-          dataIndex: "department",
-          key: "department",
         },
         {
           title: "",
@@ -346,7 +509,93 @@ const Profile = () => {
 
       setAwards({ title: TITLE, body: BODY });
     }
-  }, [data, innerWidth, router, sortBy]);
+
+    if (data?.ipr) {
+      const TITLE = [
+        {
+          title: "No.",
+          dataIndex: "key",
+
+          key: "key",
+        },
+        {
+          title: "IPR",
+          dataIndex: "ipr",
+          key: "ipr",
+        },
+        {
+          title: "Title",
+          dataIndex: "title",
+          key: "title",
+        },
+        {
+          title: "Status",
+          dataIndex: "status",
+          key: "status",
+        },
+        {
+          title: "Awarding Agency",
+          dataIndex: "agency",
+          key: "agency",
+        },
+        {
+          title: "Date",
+          dataIndex: "date",
+          key: "date",
+        },
+        {
+          title: "",
+          dataIndex: "action",
+          key: "action",
+        },
+      ];
+
+      const BODY = [];
+
+      setIpr({ title: TITLE, body: BODY });
+    }
+
+    if (data?.students) {
+      const TITLE = [
+        {
+          title: "No.",
+          dataIndex: "key",
+          key: "key",
+        },
+        {
+          title: "Student Name",
+          dataIndex: "name",
+          key: "name",
+        },
+        {
+          title: "Degree",
+          dataIndex: "degree",
+          key: "degree",
+        },
+        {
+          title: "Thesis Topic",
+          dataIndex: "thesis",
+          key: "thesis",
+        },
+        {
+          title: "Year",
+          dataIndex: "year",
+          key: "year",
+        },
+        {
+          title: "",
+          dataIndex: "action",
+          key: "action",
+        },
+      ];
+
+      const BODY = [];
+
+      setStudents({ title: TITLE, body: BODY });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   // FUNCTIONS
 
@@ -534,7 +783,7 @@ const Profile = () => {
           />
 
           <div style={{ paddingLeft: "18vw" }}>
-            <Side user={person} sets={setSections} />
+            <Side user={person} sets={setSections} profile={true} />
 
             <div className={styles.container}>
               <div className={styles.top}>
@@ -555,7 +804,7 @@ const Profile = () => {
                         url: `${URLObj.base}/search`,
                         headers: {
                           "X-ACCESS-KEY": URLObj.key,
-                          "X-AUTH-TOKEN": user.token,
+                          "X-AUTH-TOKEN": user?.token,
                         },
                       }).then(res => {
                         setExtra({
@@ -588,7 +837,7 @@ const Profile = () => {
                           url: `${URLObj.base}/search/`,
                           headers: {
                             "X-ACCESS-KEY": URLObj.key,
-                            "X-AUTH-TOKEN": user.token,
+                            "X-AUTH-TOKEN": user?.token,
                           },
                           data: formdata,
                         });
@@ -719,7 +968,10 @@ const Profile = () => {
                     )}
                   </div>
                   <div className={styles.sectionBottom}>
-                    <Table columns={[]} dataSource={[]} />
+                    <Table
+                      columns={conferences?.title}
+                      dataSource={conferences?.body}
+                    />
                   </div>
                 </div>
               )}
@@ -749,7 +1001,7 @@ const Profile = () => {
                     )}
                   </div>
                   <div className={styles.sectionBottom}>
-                    <Table columns={[]} dataSource={[]} />
+                    <Table columns={books?.title} dataSource={books?.body} />
                   </div>
                 </div>
               )}
@@ -779,7 +1031,10 @@ const Profile = () => {
                     )}
                   </div>
                   <div className={styles.sectionBottom}>
-                    <Table columns={[]} dataSource={[]} />
+                    <Table
+                      columns={projects?.title}
+                      dataSource={projects?.body}
+                    />
                   </div>
                 </div>
               )}
@@ -839,7 +1094,7 @@ const Profile = () => {
                     )}
                   </div>
                   <div className={styles.sectionBottom}>
-                    <Table columns={[]} dataSource={[]} />
+                    <Table columns={ipr?.title} dataSource={ipr?.body} />
                   </div>
                 </div>
               )}
@@ -869,7 +1124,10 @@ const Profile = () => {
                     )}
                   </div>
                   <div className={styles.sectionBottom}>
-                    <Table columns={[]} dataSource={[]} />
+                    <Table
+                      columns={students?.title}
+                      dataSource={students?.body}
+                    />
                   </div>
                 </div>
               )}
