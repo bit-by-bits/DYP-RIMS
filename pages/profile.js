@@ -55,8 +55,6 @@ const Profile = () => {
   const [statistics, setStatistics] = useState({});
 
   const [publications, setPublications] = useState({ title: [], body: [] });
-  useEffect(() => console.log(publications), [publications]);
-
   const [conferences, setConferences] = useState({ title: [], body: [] });
   const [books, setBooks] = useState({ title: [], body: [] });
   const [projects, setProjects] = useState({ title: [], body: [] });
@@ -769,15 +767,7 @@ const Profile = () => {
 
       <div className={styles.wrapper}>
         <Spin
-          style={{
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            maxHeight: "100vh",
-            position: "fixed",
-            backgroundColor: "rgba(256, 256, 256, 0.8)",
-          }}
+          className="spinner"
           spinning={visible}
           size="large"
           tip="Please wait as page loads"

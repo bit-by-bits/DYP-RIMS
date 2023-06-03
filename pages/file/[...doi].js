@@ -63,15 +63,7 @@ const File = () => {
 
       <div className={styles.wrapper}>
         <Spin
-          style={{
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            maxHeight: "100vh",
-            position: "fixed",
-            backgroundColor: "rgba(256, 256, 256, 0.8)",
-          }}
+          className="spinner"
           spinning={visible}
           size="large"
           tip="Please wait as page loads"

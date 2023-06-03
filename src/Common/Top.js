@@ -45,6 +45,14 @@ const Top = ({ main, user }) => {
       })
         .then(res => {
           setData(res.data?.data);
+
+          if (JSON.parse(localStorage.getItem("search"))) {
+            searchPubs(
+              JSON.parse(localStorage.getItem("search"))?.query,
+              res.data?.data
+            );
+            localStorage.removeItem("search");
+          }
         })
         .catch(err => {
           console.log(err);
@@ -53,6 +61,19 @@ const Top = ({ main, user }) => {
   }, [user]);
 
   // FUNCTIONS
+
+  const logoutUser = () => {
+    localStorage.removeItem("user");
+    router.push("/");
+  };
+
+  const openNotifications = () => {
+    message.error("Notifications are not available yet!");
+  };
+
+  const openSettings = () => {
+    message.error("You cannot access settings yet!");
+  };
 
   const getHistory = () => {
     axios({
@@ -69,6 +90,62 @@ const Top = ({ main, user }) => {
       .catch(err => {
         console.log(err);
       });
+  };
+
+  const searchPubs = (e, data) => {
+    console.log(
+      e,
+      data,
+      main,
+      data?.filter(p =>
+        [
+          ...p.keywords?.map(k => k.display_name.toLowerCase()),
+          p.publication_title.toLowerCase(),
+        ]?.includes(e?.toLowerCase())
+      )
+    );
+
+    if (main?.publications) {
+      if (e) {
+        main?.setPublications({
+          title: main?.publications?.title,
+          body: publicationsMaker(
+            data?.filter(p =>
+              [
+                ...p.keywords?.map(k => k.display_name.toLowerCase()),
+                p.publication_title.toLowerCase(),
+              ]?.includes(e?.toLowerCase())
+            )
+          ),
+        });
+
+        let formdata = new FormData();
+        formdata.append("query", e);
+
+        axios({
+          method: "POST",
+          url: `${URLObj.base}/search/`,
+          headers: {
+            "X-ACCESS-KEY": URLObj.key,
+            "X-AUTH-TOKEN": user?.token,
+          },
+          data: formdata,
+        });
+
+        main?.setSections("publications");
+      } else {
+        main?.setPublications({
+          title: main?.publications?.title,
+          body: publicationsMaker(data),
+        });
+
+        main?.setSections("all");
+      }
+    } else {
+      localStorage.setItem("search", JSON.stringify({ query: e }));
+
+      router.push("/profile");
+    }
   };
 
   const publicationsMaker = arr =>
@@ -214,38 +291,7 @@ const Top = ({ main, user }) => {
           className={styles.topInput}
           placeholder="Search for research within RIMS using title or keywords"
           onChange={getHistory}
-          onSearch={e => {
-            if (main?.publications) {
-              if (e) {
-                main?.setPublications({
-                  title: main?.publications?.title,
-                  body: publicationsMaker(
-                    data?.filter(p =>
-                      [
-                        ...p.keywords?.map(k => k.display_name.toLowerCase()),
-                        p.publication_title.toLowerCase(),
-                      ]?.includes(e?.toLowerCase())
-                    )
-                  ),
-                });
-
-                let formdata = new FormData();
-                formdata.append("query", e);
-
-                axios({
-                  method: "POST",
-                  url: `${URLObj.base}/search/`,
-                  headers: {
-                    "X-ACCESS-KEY": URLObj.key,
-                    "X-AUTH-TOKEN": user?.token,
-                  },
-                  data: formdata,
-                });
-
-                main?.setSections("publications");
-              } else main?.setSections("all");
-            } else message.error("Move to the Home page to search!");
-          }}
+          onSearch={e => searchPubs(e, data)}
           allowClear
         />
       </AutoComplete>
@@ -259,24 +305,21 @@ const Top = ({ main, user }) => {
       <Button
         type="primary"
         className={[`${styles.topButtonCircle} ${styles.topButton}`]}
-        onClick={() => {
-          localStorage.removeItem("user");
-          router.push("/");
-        }}
+        onClick={logoutUser}
       >
         {createElement(LogoutOutlined)}
       </Button>
       <Button
         type="primary"
         className={[`${styles.topButtonCircle} ${styles.topButton}`]}
-        onClick={() => router.push("/notifications")}
+        onClick={openNotifications}
       >
         {createElement(BellOutlined)}
       </Button>
       <Button
         type="primary"
         className={[`${styles.topButtonCircle} ${styles.topButton}`]}
-        onClick={() => router.push("/settings")}
+        onClick={openSettings}
       >
         {createElement(SettingOutlined)}
       </Button>

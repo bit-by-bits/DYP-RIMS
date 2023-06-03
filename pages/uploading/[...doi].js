@@ -38,34 +38,26 @@ const Uploading = () => {
   // STATES
 
   const [visible, setVisible] = useState(true);
-  const [finished, setFinished] = useState(false);
+  const [pending, ssetPending] = useState(true);
 
   // EFFECTS
 
   useEffect(() => {
-    if (finished) setTimeout(() => router.push("/profile"), 1999);
-  }, [finished, router]);
+    if (!pending) setTimeout(() => router.push("/profile"), 1200);
+  }, [pending, router]);
 
   // FUNCTIONS
 
   return (
     <>
       <Head>
-        <title>{!finished ? "Confirm Upload" : "Uploaded"}</title>
+        <title>{pending ? "Confirm Upload" : "Uploaded"}</title>
         <link rel="icon" href="../logos/dpu-2.png" />
       </Head>
 
       <div className={styles.wrapper}>
         <Spin
-          style={{
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            maxHeight: "100vh",
-            position: "fixed",
-            backgroundColor: "rgba(256, 256, 256, 0.8)",
-          }}
+          className="spinner"
           spinning={visible}
           size="large"
           tip="Please wait as page loads"
@@ -80,40 +72,19 @@ const Uploading = () => {
             <div className={styles.uploading_wrapper}>
               <Top main={{}} user={user} />
 
-              {[
-                {
-                  status: "Uploading",
-                  top: "Your file is being uploaded to RIMS.",
-                  bottom: "Kindly confirm the corresponding authors.",
-                  image: "/upload/uploading.png",
-                },
-                {
-                  status: "Uploaded",
-                  top: "Your file has been successfully uploaded to RIMS.",
-                  bottom: "Wait while we redirect you to the home page...",
-                  image: "/upload/uploaded.png",
-                },
-              ].map(
-                (e, i) =>
-                  finished == i && (
-                    <div className={styles.status} key={i}>
-                      <Image
-                        width={70}
-                        height={75}
-                        src={e.image}
-                        title={e.status}
-                        alt={e.status}
-                      />
-                      <div className={styles.uploading_head}>
-                        <span>{e.top}</span>
-                        <span>{e.bottom}</span>
-                      </div>
-                    </div>
-                  )
-              )}
+              <div className={styles.uploading_head}>
+                {pending
+                  ? "Confirm Corresponding Author(s)"
+                  : "Publication Uploaded Successfully!"}
+              </div>
 
-              {!finished && (
-                <FileInfo user={user} setv={setVisible} DOI={DOI} />
+              {pending && (
+                <FileInfo
+                  user={user}
+                  setp={ssetPending}
+                  setv={setVisible}
+                  DOI={DOI}
+                />
               )}
 
               <a
