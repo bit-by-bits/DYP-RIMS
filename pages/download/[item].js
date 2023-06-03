@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import styles from "../../styles/download.module.css";
 import Navbar from "../../src/Common/Navbar";
-import Side from "../../src/Profile/Side";
+import Side from "../../src/Common/Side";
 import { useRouter } from "next/router";
 import axios from "axios";
 import URLObj from "../../src/baseURL";

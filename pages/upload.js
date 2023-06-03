@@ -6,7 +6,8 @@ import styles from "../styles/upload.module.css";
 import Image from "next/image";
 import URLObj from "../src/baseURL";
 import { FloatButton, Spin, message } from "antd";
-import Side from "../src/Profile/Side";
+import Side from "../src/Common/Side";
+import Top from "../src/Common/Top";
 
 const Upload = () => {
   // BOILERPLATE
@@ -46,93 +47,52 @@ const Upload = () => {
 
   // FUNCTIONS
 
-  const search = () => {
+  const isValidHttpUrl = string => {
+    try {
+      const url = new URL(string);
+      return url.protocol === "http:" || url.protocol === "https:";
+    } catch (err) {
+      return false;
+    }
+  };
+
+  const searchDOI = () => {
     setSearching({ file: searching.file, doi: true });
 
-    const formData = new FormData();
-    formData.append("doi", DOI);
+    if (!DOI) {
+      setSearching({ file: searching.file, doi: false });
+      message.error("Enter a DOI first");
 
-    axios({
-      method: "POST",
-      url: `${URLObj.base}/doi/validate/manual/`,
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-        "Content-Type": "multipart/form-data",
-      },
-      data: formData,
-    })
-      .then(res => {
-        const isValidHttpUrl = string => {
-          try {
-            const url = new URL(string);
-            return url.protocol === "http:" || url.protocol === "https:";
-          } catch (err) {
-            return false;
-          }
-        };
+      return;
+    } else {
+      let doi = DOI;
 
-        let doi = res.data.doiID;
-        if (isValidHttpUrl(doi)) doi = doi.split("//").pop();
+      if (isValidHttpUrl(doi)) doi = doi.split("//").pop();
+      if (doi.includes("doi.org/")) doi = doi.split("doi.org/").pop();
 
-        localStorage.setItem("udoi", doi);
-        message.success("Wait while we redirect you");
-
-        setTimeout(() => {
-          setSearching({ file: searching.file, doi: false });
-          router.push(`/uploading/${doi}`);
-        }, 1001);
+      axios({
+        method: "PUT",
+        url: `${URLObj.base}/publications/?doi=${doi}`,
+        headers: {
+          "X-ACCESS-KEY": URLObj.key,
+          "X-AUTH-TOKEN": user?.token,
+        },
       })
-      .catch(err => {
-        setSearching({ file: searching.file, doi: false });
-        message.error("Enter a valid DOI");
-      });
+        .then(res => {
+          setSearching({ file: searching.file, doi: false });
+
+          message.success("Wait while we redirect you");
+          router.push(`/uploading/${doi}`);
+        })
+        .catch(err => {
+          setSearching({ file: searching.file, doi: false });
+          message.error("Enter a valid DOI");
+        });
+    }
   };
 
   const add = () => {
-    setSearching({ file: true, doi: searching.doi });
-
-    if (!file) {
-      setSearching({ file: false, doi: searching.doi });
-      message.error("Select a file first");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    axios({
-      method: "POST",
-      url: `${URLObj.base}/doi/validate/`,
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-        "Content-Type": "multipart/form-data",
-      },
-      data: formData,
-    })
-      .then(res => {
-        const isValidHttpUrl = string => {
-          try {
-            const url = new URL(string);
-            return url.protocol === "http:" || url.protocol === "https:";
-          } catch (err) {
-            return false;
-          }
-        };
-
-        let doi = res.data.doiID;
-        if (isValidHttpUrl(doi)) doi = doi.split("//").pop();
-        localStorage.setItem("udoi", doi);
-        message.success("Wait while we redirect you");
-
-        setTimeout(() => {
-          setSearching({ file: false, doi: searching.doi });
-          router.push(`/uploading/${doi}`);
-        }, 1001);
-      })
-      .catch(err => {
-        setSearching({ file: false, doi: searching.doi });
-        message.error("Enter a valid file");
-      });
+    message.error("This feature is not available yet");
   };
 
   return (
@@ -162,9 +122,11 @@ const Upload = () => {
           />
 
           <div style={{ paddingLeft: "18vw" }}>
-            <Side user={user} sets={() => {}} />
+            <Side sets={() => {}} />
 
             <div className={styles.upload_wrapper}>
+              <Top main={{}} user={user} />
+
               <div className={styles.upload_left}>
                 <Image
                   width={60}
@@ -214,30 +176,11 @@ const Upload = () => {
                     onChange={e => setDOI(e.target.value)}
                   />
                   {searching.doi ? (
-                    <div
-                      style={{
-                        height: "40px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        width: "110px",
-                      }}
-                      className={styles.upload_btn}
-                    >
+                    <div className={styles.upload_btn}>
                       <div className={styles.dots} />
                     </div>
                   ) : (
-                    <div
-                      onClick={search}
-                      style={{
-                        height: "40px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        width: "110px",
-                      }}
-                      className={styles.upload_btn}
-                    >
+                    <div onClick={searchDOI} className={styles.upload_btn}>
                       Add DOI
                     </div>
                   )}

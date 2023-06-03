@@ -1,24 +1,13 @@
 import Head from "next/head";
-import React, { useState, useEffect, Fragment, createElement } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import styles from "../styles/profile.module.css";
-import {
-  Button,
-  Typography,
-  FloatButton,
-  Input,
-  Spin,
-  Table,
-  AutoComplete,
-} from "antd";
-import Side from "../src/Profile/Side";
+import { Button, Typography, FloatButton, Spin, Table } from "antd";
+import Side from "../src/Common/Side";
 import { useRouter } from "next/router";
 import axios from "axios";
 import URLObj from "../src/baseURL";
 import {
-  BellOutlined,
   FileTextOutlined,
-  LogoutOutlined,
-  SettingOutlined,
   SortAscendingOutlined,
   SortDescendingOutlined,
 } from "@ant-design/icons";
@@ -29,14 +18,13 @@ import crossref from "../public/logos/crossref.jpg";
 import medline from "../public/logos/medline.jpg";
 import doaj from "../public/logos/doaj.png";
 import pmc from "../public/logos/pmc.png";
-import embase from "../public/logos/embase.svg";
 import scopus from "../public/logos/scopus.svg";
-import scie from "../public/logos/scie.svg";
 import wos from "../public/logos/wos.svg";
 
 import Scite from "../src/Profile/Scite";
 import Altmetric from "../src/Profile/Altmetric";
 import { useWindowSize } from "rooks";
+import Top from "../src/Common/Top";
 
 const Profile = () => {
   // BOILERPLATE
@@ -63,11 +51,12 @@ const Profile = () => {
   const { innerWidth } = useWindowSize();
   const [visible, setVisible] = useState(true);
 
-  const [person, setPerson] = useState({});
   const [data, setData] = useState({});
   const [statistics, setStatistics] = useState({});
 
   const [publications, setPublications] = useState({ title: [], body: [] });
+  useEffect(() => console.log(publications), [publications]);
+
   const [conferences, setConferences] = useState({ title: [], body: [] });
   const [books, setBooks] = useState({ title: [], body: [] });
   const [projects, setProjects] = useState({ title: [], body: [] });
@@ -84,7 +73,6 @@ const Profile = () => {
     impact: {},
     access: {},
     index: {},
-    history: [],
   });
 
   // EFFECTS
@@ -100,7 +88,24 @@ const Profile = () => {
         },
       })
         .then(res => {
-          setPerson(res.data?.user);
+          // LOAD USER
+
+          const u = res.data?.user;
+
+          const USER = {
+            ...user,
+            username: u?.username,
+            name: u?.user?.first_name + " " + u?.user?.last_name,
+            level: u?.access_level[0]?.display_text,
+            email: u?.user?.email,
+            picture: u?.profile_picture,
+            designation: u?.designation,
+          };
+
+          localStorage.setItem("user", JSON.stringify(USER));
+
+          // LOAD DATA
+
           setData(res.data?.data);
           setStatistics(res.data?.statistics);
 
@@ -192,7 +197,6 @@ const Profile = () => {
             impact: IMPACT,
             access: ACCESS,
             index: INDEX,
-            history: extra.history,
           });
 
           // LOAD WEBSITE
@@ -297,7 +301,7 @@ const Profile = () => {
         },
       ];
 
-      const BODY = bodyMaker(data?.publication);
+      const BODY = publicationsMaker(data?.publication);
 
       if (innerWidth < 1400) TITLE.shift();
       setPublications({ title: TITLE, body: BODY });
@@ -626,7 +630,7 @@ const Profile = () => {
     );
   };
 
-  const bodyMaker = arr => {
+  const publicationsMaker = arr => {
     return arr?.map((e, i) => ({
       key: `${i + 1}.`,
       publication: (
@@ -783,103 +787,13 @@ const Profile = () => {
           />
 
           <div style={{ paddingLeft: "18vw" }}>
-            <Side user={person} sets={setSections} profile={true} />
+            <Side sets={setSections} />
 
             <div className={styles.container}>
-              <div className={styles.top}>
-                <AutoComplete
-                  className={styles.topInput}
-                  options={extra.history?.map((e, i) => ({
-                    key: i,
-                    value: e,
-                    label: e,
-                  }))}
-                >
-                  <Input.Search
-                    className={styles.topInput}
-                    placeholder="Search for research within RIMS using title or keywords"
-                    onChange={e => {
-                      axios({
-                        method: "GET",
-                        url: `${URLObj.base}/search`,
-                        headers: {
-                          "X-ACCESS-KEY": URLObj.key,
-                          "X-AUTH-TOKEN": user?.token,
-                        },
-                      }).then(res => {
-                        setExtra({
-                          ...extra,
-                          history: res.data?.history?.map(e => e?.search_query),
-                        });
-                      });
-                    }}
-                    onSearch={e => {
-                      if (e) {
-                        setPublications({
-                          title: publications?.title,
-                          body: bodyMaker(
-                            data?.publication?.filter(p =>
-                              [
-                                ...p.keywords?.map(k =>
-                                  k.display_name.toLowerCase()
-                                ),
-                                p.publication_title.toLowerCase(),
-                              ]?.includes(e?.toLowerCase())
-                            )
-                          ),
-                        });
-
-                        let formdata = new FormData();
-                        formdata.append("query", e);
-
-                        axios({
-                          method: "POST",
-                          url: `${URLObj.base}/search/`,
-                          headers: {
-                            "X-ACCESS-KEY": URLObj.key,
-                            "X-AUTH-TOKEN": user?.token,
-                          },
-                          data: formdata,
-                        });
-
-                        setSections("publications");
-                      } else setSections("all");
-                    }}
-                    allowClear
-                  />
-                </AutoComplete>
-                <Button
-                  type="primary"
-                  className={styles.topButton}
-                  onClick={() => router.push("/upload")}
-                >
-                  Add Publications
-                </Button>
-                <Button
-                  type="primary"
-                  className={[`${styles.topButtonCircle} ${styles.topButton}`]}
-                  onClick={() => {
-                    localStorage.removeItem("user");
-                    router.push("/");
-                  }}
-                >
-                  {createElement(LogoutOutlined)}
-                </Button>
-                <Button
-                  type="primary"
-                  className={[`${styles.topButtonCircle} ${styles.topButton}`]}
-                  onClick={() => router.push("/notifications")}
-                >
-                  {createElement(BellOutlined)}
-                </Button>
-                <Button
-                  type="primary"
-                  className={[`${styles.topButtonCircle} ${styles.topButton}`]}
-                  onClick={() => router.push("/settings")}
-                >
-                  {createElement(SettingOutlined)}
-                </Button>
-              </div>
+              <Top
+                main={{ publications, setPublications, setSections }}
+                user={user}
+              />
 
               {sections == "all" && (
                 <div className={styles.section}>

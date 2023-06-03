@@ -1,5 +1,5 @@
 import { Button, Menu, message } from "antd";
-import React, { createElement } from "react";
+import React, { useState, useEffect, createElement } from "react";
 import {
   HomeOutlined,
   ProjectOutlined,
@@ -10,13 +10,36 @@ import {
   BulbOutlined,
   UserAddOutlined,
   FileAddOutlined,
-  AppstoreAddOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "../../styles/profile.module.css";
+import { useRouter } from "next/router";
 
-const Side = ({ user, sets, profile }) => {
+const Side = ({ sets }) => {
+  // BOILERPLATE
+
+  const router = useRouter();
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    getUser();
+    setTimeout(() => getUser(), 2000);
+  }, []);
+
+  const getUser = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
+  };
+
+  useEffect(() => {
+    if (typeof window !== "undefined")
+      user
+        ? Date.now() - user.setUpTime > 3600000 &&
+          localStorage.removeItem("user")
+        : router.push("/");
+  }, [router, user]);
+
   // STATES
 
   // EFFECTS
@@ -29,50 +52,48 @@ const Side = ({ user, sets, profile }) => {
 
   return (
     <div className={styles.sideWrapper}>
-      {profile && (
-        <div className={styles.sideProfile}>
-          <Image
-            priority={true}
-            className={styles.sideImage}
-            alt={user?.user?.username ?? "user"}
-            src={
-              user?.profile_picture ??
-              "https://dreamvilla.life/wp-content/uploads/2017/07/dummy-profile-pic.png"
-            }
-            width={100}
-            height={100}
-          />
-          <div className={styles.sideName}>
-            {user?.user
-              ? user?.user?.first_name + " " + user?.user?.last_name
-              : "N/A"}
-          </div>
-          <div>{user?.email}</div>
-          <div className={styles.sideContent}>
-            <div>
-              <span className={styles.sideCircle} />
-              <span>{user?.designation ?? "N/A"}</span>
-            </div>
-            <div>
-              <span className={styles.sideCircle} />
-              <span>
-                {user?.access_level
-                  ? user?.access_level[0]?.display_text ?? "N/A"
-                  : "N/A"}
-              </span>
-            </div>
-          </div>
-          <Button className={styles.sideButton} onClick={edit} type="primary">
-            Edit Profile
-          </Button>
+      <div className={styles.sideProfile}>
+        <Image
+          priority={true}
+          className={styles.sideImage}
+          alt={user?.userame ?? "user"}
+          src={
+            user?.profile_picture ??
+            "https://dreamvilla.life/wp-content/uploads/2017/07/dummy-profile-pic.png"
+          }
+          width={100}
+          height={100}
+        />
+        <div className={styles.sideName}>
+          {user?.name?.toUpperCase() ?? "N/A"}
         </div>
-      )}
+        <div
+          style={{
+            fontSize: "0.7rem",
+            color: "rgba(256, 256, 256, 0.7)",
+            marginBottom: 5,
+          }}
+        >
+          {user?.email}
+        </div>
+        <div className={styles.sideContent}>
+          <div>
+            <span className={styles.sideCircle} />
+            <span>{user?.designation ?? "N/A"}</span>
+          </div>
+          <div>
+            <span className={styles.sideCircle} />
+            <span>{user?.level ?? "N/A"}</span>
+          </div>
+        </div>
+        <Button className={styles.sideButton} onClick={edit} type="primary">
+          Edit Profile
+        </Button>
+      </div>
 
       <Menu
         mode="inline"
         className="sideMenu"
-        style={profile ? {} : { marginTop: 20 }}
-        defaultSelectedKeys={profile ? ["1"] : []}
         onClick={() => sets("all")}
         items={[
           { link: "/profile", icon: HomeOutlined, label: "Home" },

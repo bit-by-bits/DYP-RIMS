@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import URLObj from "../baseURL";
 import { CheckSquareOutlined, CloseSquareOutlined } from "@ant-design/icons";
-import { Avatar, Badge, Card, List, message } from "antd";
+import { Avatar, Badge, Button, Card, List, Table, message } from "antd";
 import Scite from "../Profile/Scite";
 import Altmetric from "../Profile/Altmetric";
 
@@ -19,7 +19,7 @@ const FileInfo = ({ user, setv, DOI }) => {
 
   const [data, setData] = useState({});
 
-  const [authors, setAuthors] = useState([]);
+  const [authors, setAuthors] = useState({ title: [], body: [], final: [] });
   const [citations, setCitations] = useState([]);
 
   // EFFECTS
@@ -27,7 +27,7 @@ const FileInfo = ({ user, setv, DOI }) => {
   useEffect(() => {
     if (DOI && user?.token) {
       axios({
-        method: "GET",
+        method: "PUT",
         url: `${URLObj.base}/publications/?doi=${DOI}`,
         headers: {
           "X-ACCESS-KEY": URLObj.key,
@@ -36,7 +36,7 @@ const FileInfo = ({ user, setv, DOI }) => {
       })
         .then(res => {
           setv(false);
-          setData(res?.data?.data[0]);
+          setData(res?.data?.data);
         })
         .catch(err => {
           console.log(err);
@@ -47,14 +47,8 @@ const FileInfo = ({ user, setv, DOI }) => {
 
   useEffect(() => {
     if (data) {
-      setAuthors(getAuthors());
-      setCitations(
-        getCitations([
-          { name: "WOS", image: wos },
-          { name: "Scopus", image: scopus },
-          { name: "Crossref", image: crossref },
-        ])
-      );
+      getAuthors(data?.author);
+      setCitations(getCitations(data?.indexed_at));
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,118 +56,123 @@ const FileInfo = ({ user, setv, DOI }) => {
 
   // FUNCTIONS
 
-  const getAuthors = () => {
-    const MAIN = data?.author_name?.map(e => (
-      <Ribbon key={e.id} text="First" color="#9a2827">
-        <Card
-          hoverable
-          bodyStyle={{ padding: 15, minWidth: 250 }}
-          style={{ border: "1px solid #d9d9d9" }}
-        >
-          <Meta
-            title={
-              <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
-                {e.user?.first_name + " " + e.user?.last_name}
-              </div>
-            }
-            description={e.department?.name ?? "- Not Available -"}
-            avatar={
-              <Avatar
-                src={
-                  e.profile_picture ??
-                  "https://cdn.landesa.org/wp-content/uploads/default-user-image.png"
-                }
-              />
-            }
-          />
-        </Card>
-      </Ribbon>
-    ));
+  const readFirst = arr => (arr?.length > 0 ? arr[0] : "- Not Available -");
 
-    const CORR = data?.corresponding_authors?.map(e => (
-      <Ribbon key={e.id} text="Corr" color="#9a2827">
-        <Card
-          hoverable
-          bodyStyle={{ padding: 15, minWidth: 250 }}
-          style={{ border: "1px solid #d9d9d9" }}
-        >
-          <Meta
-            title={
-              <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
-                {e.user?.first_name + " " + e.user?.last_name}
-              </div>
-            }
-            description={e.department?.name ?? "- Not Available -"}
-            avatar={
-              <Avatar
-                src={
-                  e.profile_picture ??
-                  "https://cdn.landesa.org/wp-content/uploads/default-user-image.png"
-                }
-              />
-            }
-          />
-        </Card>
-      </Ribbon>
-    ));
+  const submit = () => {
+    const DATA = JSON.stringify({
+      doi: DOI,
+      author: authors?.final,
+    });
 
-    const OTHERS = data?.other_authors?.map((e, i) => (
+    axios({
+      method: "POST",
+      url: `${URLObj.base}/publications/`,
+      headers: {
+        "X-ACCESS-KEY": URLObj.key,
+        "X-AUTH-TOKEN": user?.token,
+        "X-TEST-ENVIRONMENT": "0",
+        "Content-Type": "application/json",
+      },
+      data: DATA,
+    })
+      .then(res => {
+        message.success("Publication Added");
+        setv(false);
+      })
+      .catch(err => {
+        message.error("Couldn't Add Publication");
+        console.log(err);
+      });
+  };
+
+  const getAuthors = arr => {
+    if (arr?.length > 0) {
+      const TITLE = [
+        {
+          title: "No.",
+          dataIndex: "no",
+          key: "no",
+          width: "8%",
+        },
+        {
+          title: "Name",
+          dataIndex: "name",
+          key: "name",
+          width: "22%",
+          render: text => (
+            <div
+              style={{ fontWeight: 800, fontSize: "1.1rem", color: "black" }}
+            >
+              {text}
+            </div>
+          ),
+        },
+        {
+          title: "Affiliation",
+          dataIndex: "affiliation",
+          key: "affiliation",
+          width: "55%",
+        },
+      ];
+
+      const BODY = arr.map((e, i) => ({
+        key: i,
+        no: `${i + 1}.`,
+        name: e.given + " " + e.family,
+        sequence: e.sequence ?? "additional",
+        affiliation:
+          e.affiliation?.length > 0
+            ? e.affiliation.map(e => e.name).join(", ")
+            : "- Not Affiliated -",
+      }));
+
+      setAuthors({ title: TITLE, body: BODY, final: arr });
+    } else setAuthors({ title: [], body: [], final: [] });
+  };
+
+  const getCitations = obj => {
+    if (!obj) return [];
+
+    const CITATIONS = [];
+
+    if (obj.in_scopus)
+      CITATIONS.push({
+        name: "Scopus",
+        image: scopus,
+        value: obj.in_scopus.citedby_count,
+      });
+
+    if (obj.in_crossref)
+      CITATIONS.push({
+        name: "Crossref",
+        image: crossref,
+        value: obj.in_crossref.citation_count,
+      });
+
+    if (obj.in_wos)
+      CITATIONS.push({
+        name: "WOS",
+        image: wos,
+        value: obj.in_wos.citation_count,
+      });
+
+    return CITATIONS.map((e, i) => (
       <Card
         key={i}
         hoverable
-        bodyStyle={{ padding: 15, minWidth: 250 }}
+        bodyStyle={{ padding: 15 }}
         style={{ border: "1px solid #d9d9d9" }}
       >
         <Meta
           title={
-            <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>{e}</div>
+            <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>{e.name}</div>
           }
-          description={"Non-DPU"}
-          avatar={
-            <Avatar
-              src={
-                "https://cdn.landesa.org/wp-content/uploads/default-user-image.png"
-              }
-            />
-          }
+          description={`${e.value} Citation${e.value > 1 ? "s" : ""}`}
+          avatar={<Avatar src={e.image?.src} />}
         />
       </Card>
     ));
-
-    const AUTHORS = [];
-
-    if (MAIN?.length > 0) AUTHORS.push(...MAIN);
-    if (CORR?.length > 0) AUTHORS.push(...CORR);
-    if (OTHERS?.length > 0) AUTHORS.push(...OTHERS);
-
-    return AUTHORS;
   };
-
-  const getCitations = arr =>
-    arr
-      ?.filter(e => data[`in_${e.name?.toLowerCase()}`])
-      .map((e, i) => (
-        <Card
-          key={i}
-          hoverable
-          bodyStyle={{ padding: 15 }}
-          style={{ border: "1px solid #d9d9d9" }}
-        >
-          <Meta
-            title={
-              <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
-                {e.name}
-              </div>
-            }
-            description={`${
-              data[`citations_${e.name?.toLowerCase()}`]
-            } Citation${
-              data[`citations_${e.name?.toLowerCase()}`] > 1 ? "s" : ""
-            }`}
-            avatar={<Avatar src={e.image?.src} />}
-          />
-        </Card>
-      ));
 
   return (
     <>
@@ -190,9 +189,7 @@ const FileInfo = ({ user, setv, DOI }) => {
 
         <div
           className={styles.file_title}
-          dangerouslySetInnerHTML={{
-            __html: data?.publication_title ?? "- Not Available -",
-          }}
+          dangerouslySetInnerHTML={{ __html: readFirst(data?.title) }}
         />
 
         {data?.keywords && data?.keywords.length > 0 && (
@@ -211,7 +208,7 @@ const FileInfo = ({ user, setv, DOI }) => {
               <div className={styles.info}>
                 <span className={styles.info_head}>Journal</span>
                 <span className={styles.info_body}>
-                  {data?.journal_name ?? "- Not Available -"}
+                  {readFirst(data?.journal)}
                 </span>
               </div>
             </div>
@@ -238,7 +235,7 @@ const FileInfo = ({ user, setv, DOI }) => {
               <div className={styles.info}>
                 <span className={styles.info_head}>Pages</span>
                 <span className={styles.info_body}>
-                  {data?.pages ?? "- NA -"}
+                  {data?.page ?? "- NA -"}
                 </span>
               </div>
 
@@ -247,7 +244,7 @@ const FileInfo = ({ user, setv, DOI }) => {
               <div className={styles.info}>
                 <span className={styles.info_head}>Published</span>
                 <span className={styles.info_body}>
-                  {data?.year ?? "- NA -"}
+                  {data?.published_date?.["date-parts"]?.[0]?.[0] ?? "- NA -"}
                 </span>
               </div>
             </div>
@@ -268,15 +265,36 @@ const FileInfo = ({ user, setv, DOI }) => {
         <div style={{ width: "100%" }} className={styles.authors}>
           <div className={styles.info_head}>Authors</div>
           <div className={styles.auth_body}>
-            <List
-              grid={{ gutter: 16 }}
-              pagination={{
-                position: "bottom",
-                align: "center",
-                pageSize: 10,
+            <Table
+              className="uploadTable"
+              rowSelection={{
+                type: "checkbox",
+                onChange: (selectedRowKeys, selectedRows) => {
+                  const FINAL = authors?.final?.map((e, i) => {
+                    if (e.sequence == "first")
+                      return { ...e, sequence: "first" };
+                    else {
+                      let status = false;
+
+                      selectedRows.forEach(r => {
+                        if (r.name == e.given + " " + e.family) status = true;
+                      });
+
+                      if (status) return { ...e, sequence: "corresponding" };
+                      else return { ...e, sequence: "additional" };
+                    }
+                  });
+
+                  console.log(FINAL);
+                  setAuthors({ ...authors, final: FINAL });
+                },
+                getCheckboxProps: r => ({ disabled: r.sequence == "first" }),
+                columnTitle: "Select Authors",
+                columnWidth: "15%",
               }}
-              dataSource={authors}
-              renderItem={item => <List.Item>{item}</List.Item>}
+              dataSource={authors?.body}
+              columns={authors?.title}
+              footer={() => <Button onClick={submit}>Confirm</Button>}
             />
           </div>
         </div>
@@ -332,7 +350,7 @@ const FileInfo = ({ user, setv, DOI }) => {
                 <div className={styles.file_bodyitem}>
                   <div className={styles.file_bodybold}>H-Index</div>
                   <div className={styles.file_bodyweak}>
-                    {data?.h_index ?? "- NA -"}
+                    {data?.hIndex ?? "- NA -"}
                   </div>
                 </div>
 
@@ -353,11 +371,23 @@ const FileInfo = ({ user, setv, DOI }) => {
                 style={{ transform: "translateX(-1rem)" }}
                 className={styles.file_bodygrid}
               >
-                {["DOAJ", "Embase", "Medline", "PMC", "SCIE", "Scopus"]
-                  .map(e => ({
-                    label: e,
-                    value: data["in_" + e.toLowerCase()],
-                  }))
+                {["Scopus", "DOAJ", "Crossref", "PubMed", "WOS", "Medline"]
+                  .map(e =>
+                    e == "Medline"
+                      ? {
+                          label: e,
+                          value:
+                            data.indexed_at &&
+                            data.indexed_at.in_pubmed &&
+                            data.indexed_at.in_pubmed.index_at == "MEDLINE",
+                        }
+                      : {
+                          label: e,
+                          value: data.indexed_at
+                            ? data.indexed_at["in_" + e.toLowerCase()]
+                            : false,
+                        }
+                  )
                   .map((e, i) => (
                     <span
                       style={{

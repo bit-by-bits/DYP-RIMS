@@ -108,6 +108,10 @@ html {
   border-radius: 20px !important;
 }
 
+.uploadTable .ant-table-tbody > tr {
+  border-radius: 0px !important;
+}
+
 .ant-table-wrapper .ant-table-tbody > tr.ant-table-row:hover > td {
   background-color: transparent !important;
 }

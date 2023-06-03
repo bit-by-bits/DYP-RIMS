@@ -4,7 +4,8 @@ import styles from "../../styles/file.module.css";
 import React, { useState, useEffect } from "react";
 import FileInfo from "../../src/File/FileInfo";
 import { FloatButton, Spin, message } from "antd";
-import Side from "../../src/Profile/Side";
+import Side from "../../src/Common/Side";
+import Top from "../../src/Common/Top";
 
 const File = () => {
   // BOILERPLATE
@@ -80,18 +81,40 @@ const File = () => {
           />
 
           <div style={{ paddingLeft: "18vw" }}>
-            <Side user={user} sets={() => {}} />
+            <Side sets={() => {}} />
 
             <div className={styles.file_wrapper}>
-              <FileInfo user={user} setv={setVisible} DOI={DOI} />
+              <Top main={{}} user={user} />
 
-              <div className={styles.file_btns}>
-                <div onClick={editPub} className={styles.file_btn2}>
-                  Edit
-                </div>
+              <div>
+                <FileInfo user={user} setv={setVisible} DOI={DOI} />
 
-                <div onClick={downloadPub} className={styles.file_btn1}>
-                  Download
+                <div className={styles.file_btns}>
+                  {[
+                    {
+                      name: "Delete",
+                      function: deletePub,
+                      class: styles.file_btn2,
+                    },
+                    {
+                      name: "Edit Info",
+                      function: editPub,
+                      class: styles.file_btn1,
+                    },
+                    {
+                      name: "Download",
+                      function: downloadPub,
+                      class: styles.file_btn2,
+                    },
+                  ].map(btn => (
+                    <div
+                      key={btn.name}
+                      onClick={btn.function}
+                      className={btn.class}
+                    >
+                      {btn.name.toUpperCase()}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

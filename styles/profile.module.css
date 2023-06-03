@@ -66,6 +66,7 @@
 /* TOPBAR  */
 
 .top {
+  width: calc(100vw - 4rem - 18vw);
   justify-content: space-between;
   gap: 10px;
 }
@@ -310,6 +311,10 @@
 
 .sideButton:hover {
   background-color: var(--primary-dark) !important;
+}
+
+.sideMenu {
+  border-top: none !important;
 }
 
 /* MEDIA QUERIES */

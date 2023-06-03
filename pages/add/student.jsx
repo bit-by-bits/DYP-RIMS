@@ -3,7 +3,7 @@ import styles from "../../styles/add.module.css";
 import Head from "next/head";
 import Navbar from "../../src/Common/Navbar";
 import { useEffect, useState } from "react";
-import Side from "../../src/Profile/Side";
+import Side from "../../src/Common/Side";
 
 const Students = () => {
   const [user, setUser] = useState({});
