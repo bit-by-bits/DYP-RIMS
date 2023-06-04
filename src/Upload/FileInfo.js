@@ -200,7 +200,10 @@ const FileInfo = ({ user, setp, setv, DOI }) => {
         </div>
 
         <div style={{ width: "100%" }} className={styles.authors}>
-          <div className={styles.info_head}>Select Corresponding Author</div>
+          <div className={styles.info_head}>
+            Select Corresponding Author if from Dr. D.Y. Patil Medical College,
+            Pune
+          </div>
           <div className={styles.auth_body}>
             <Table
               className="uploadTable"
