@@ -44,9 +44,6 @@ const FileInfo = ({ user, setp, setv, DOI }) => {
 
   useEffect(() => {
     if (authors?.final?.length > 0) {
-      console.log(
-        authors?.final.map(e => [e.given + " " + e.family, e.in_dyp])
-      );
       getAuthors(authors?.final);
     }
   }, [authors?.final]);
@@ -203,32 +200,25 @@ const FileInfo = ({ user, setp, setv, DOI }) => {
         </div>
 
         <div style={{ width: "100%" }} className={styles.authors}>
-          <div className={styles.info_head}>Authors</div>
+          <div className={styles.info_head}>Select Corresponding Author</div>
           <div className={styles.auth_body}>
             <Table
               className="uploadTable"
               rowSelection={{
-                type: "checkbox",
-                onChange: (selectedRowKeys, selectedRows) => {
-                  const FINAL = authors?.final?.map((e, i) => {
-                    if (e.sequence == "first")
-                      return { ...e, sequence: "first" };
-                    else {
-                      let status = false;
-
-                      selectedRows.forEach(r => {
-                        if (r.name == e.given + " " + e.family) status = true;
-                      });
-
-                      if (status) return { ...e, sequence: "corresponding" };
-                      else return { ...e, sequence: "additional" };
-                    }
-                  });
+                type: "radio",
+                onChange: (key, row) => {
+                  const FINAL = authors?.final?.map(e =>
+                    e.sequence == "first"
+                      ? { ...e, sequence: "first" }
+                      : e.given + " " + e.family == row?.[0]?.name
+                      ? { ...e, sequence: "corresponding" }
+                      : { ...e, sequence: "additional" }
+                  );
 
                   setAuthors({ ...authors, final: FINAL });
                 },
                 getCheckboxProps: r => ({ disabled: r.sequence == "first" }),
-                columnTitle: "Select Authors",
+                columnTitle: "Select Author",
                 columnWidth: "15%",
               }}
               dataSource={authors?.body}

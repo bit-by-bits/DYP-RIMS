@@ -43,8 +43,11 @@ const Uploading = () => {
   // EFFECTS
 
   useEffect(() => {
-    if (!pending) setTimeout(() => router.push("/profile"), 1200);
-  }, [pending, router]);
+    if (!pending)
+      setTimeout(() => {
+        router.push(`/file/${DOI}`);
+      }, 3000);
+  }, [DOI, pending, router]);
 
   // FUNCTIONS
 
@@ -74,7 +77,7 @@ const Uploading = () => {
 
               <div className={styles.uploading_head}>
                 {pending
-                  ? "Confirm Corresponding Author(s)"
+                  ? "Select Authors from Dr. D.Y. Patil Medical College, Pune"
                   : "Publication Uploaded Successfully!"}
               </div>
 

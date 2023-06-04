@@ -393,7 +393,7 @@ const Profile = () => {
       setBooks({ title: TITLE, body: BODY });
     }
 
-    if (data?.projects) {
+    if (data?.research) {
       const TITLE = [
         {
           title: "No.",
@@ -512,7 +512,7 @@ const Profile = () => {
       setAwards({ title: TITLE, body: BODY });
     }
 
-    if (data?.ipr) {
+    if (data?.IPR) {
       const TITLE = [
         {
           title: "No.",
@@ -557,7 +557,7 @@ const Profile = () => {
       setIpr({ title: TITLE, body: BODY });
     }
 
-    if (data?.students) {
+    if (data?.students_guided) {
       const TITLE = [
         {
           title: "No.",
