@@ -31,6 +31,13 @@
   font-size: 1.4rem;
 }
 
+.file_text .file_subtitle {
+  color: black;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-top: -10px;
+}
+
 .file_tags,
 .file_keywords,
 .file_keywords2 {
@@ -226,13 +233,12 @@
 .file_btn1,
 .file_btn2 {
   color: var(--primary) !important;
-  font-weight: 700 !important;
-  font-size: 1rem !important;
+  font-weight: 900 !important;
   cursor: pointer !important;
   text-align: center !important;
   border: 3px solid var(--primary) !important;
   border-radius: 8px !important;
-  padding: 0.8rem 1.7rem !important;
+  padding: 8px 15px !important;
 }
 
 .file_btn1 {

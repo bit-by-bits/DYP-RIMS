@@ -2,12 +2,9 @@ import styles from "../../styles/file.module.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import URLObj from "../baseURL";
-import Image from "next/image";
-import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { Avatar, Badge, Card, message } from "antd";
 import Scite from "../Profile/Scite";
 import Altmetric from "../Profile/Altmetric";
-import ListSection from "./ListSection";
 
 import scopus from "../../public/logos/scopus.svg";
 import wos from "../../public/logos/wos.svg";
@@ -15,6 +12,7 @@ import crossref from "../../public/logos/crossref.jpg";
 import pmc from "../../public/logos/pmc.png";
 import doaj from "../../public/logos/doaj.png";
 import medline from "../../public/logos/medline.jpg";
+import ListSection from "../Common/ListSection";
 
 const FileInfo = ({ user, setv, DOI }) => {
   // STATES

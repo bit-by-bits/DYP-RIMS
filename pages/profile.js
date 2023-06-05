@@ -68,7 +68,6 @@ const Profile = () => {
 
   const [extra, setExtra] = useState({
     citations: {},
-    hIndex: {},
     impact: {},
     access: {},
     index: {},
@@ -111,27 +110,11 @@ const Profile = () => {
 
           // EXTRA CALCULATIONS
 
-          const TEMP = {
-            total: 0,
-            crossref: 0,
-            scopus: 0,
-            wos: 0,
-          };
+          let CITATIONS = { total: 0, crossref: 0, scopus: 0, wos: 0 };
 
-          let CITATIONS = { ...TEMP };
-          let H_INDEX = { ...TEMP };
+          let IMPACT = { total: 0, average: 0 };
 
-          let IMPACT = {
-            total: 0,
-            average: 0,
-          };
-
-          let ACCESS = {
-            gold: 0,
-            green: 0,
-            bronze: 0,
-            closed: 0,
-          };
+          let ACCESS = { gold: 0, green: 0, bronze: 0, closed: 0 };
 
           let INDEX = {
             pubmed: 0,
@@ -147,11 +130,6 @@ const Profile = () => {
             CITATIONS.crossref += e.citations_crossref;
             CITATIONS.scopus += e.citations_scopus;
             CITATIONS.wos += e.citations_wos;
-
-            H_INDEX.total += e.h_index_total;
-            H_INDEX.crossref += e.h_index_crossref;
-            H_INDEX.scopus += e.h_index_scopus;
-            H_INDEX.wos += e.h_index_wos;
 
             IMPACT.total += e.impact_factor;
 
@@ -193,7 +171,6 @@ const Profile = () => {
 
           setExtra({
             citations: CITATIONS,
-            hIndex: H_INDEX,
             impact: IMPACT,
             access: ACCESS,
             index: INDEX,

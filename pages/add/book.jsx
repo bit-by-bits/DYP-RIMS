@@ -73,7 +73,7 @@ const Books = () => {
     })
       .then(res => {
         message.success("Book added successfully");
-        router.push(`/books/${res.ISBN}`);
+        router.push(`/book/${ISBN}`);
         form.resetFields();
       })
       .catch(err => {
@@ -308,19 +308,19 @@ const Books = () => {
 
                   <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                     <Button
-                      className={styles.primary}
                       type="primary"
+                      className={styles.secondary}
                       htmlType="submit"
                     >
-                      Submit
+                      SUBMIT
                     </Button>
                     <Button
                       onClick={() => setStep(0)}
-                      className={styles.secondary}
+                      className={styles.primary}
                       type="primary"
                       htmlType="reset"
                     >
-                      Back
+                      RETURN BACK
                     </Button>
                   </Form.Item>
                 </Form>

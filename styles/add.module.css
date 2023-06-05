@@ -21,7 +21,7 @@
 }
 
 .heading {
-  color: #9a2827;
+  color: var(--primary);
 }
 
 .primary,
@@ -31,17 +31,17 @@
   border-radius: 8px;
   margin-left: 10px;
   color: white;
-  background: #9a2827 !important;
+  background: var(--primary) !important;
 }
 
 .secondary {
   background-color: white !important;
-  color: #9a2827 !important;
-  border: 2px solid #9a2827 !important;
+  color: var(--primary) !important;
+  border: 2px solid var(--primary) !important;
 }
 
 .primary:hover {
-  background-color: #7e1918 !important;
+  background-color: var(--primary-dark) !important;
 }
 
 .secondary:hover {

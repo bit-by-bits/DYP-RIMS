@@ -168,18 +168,9 @@ const Overview = ({ data, stats, extra, size }) => {
           <div className={styles.overviewMiddleTop}>H-Index</div>
           <div style={{ display: "flex", gap: 15 }}>
             {[
-              {
-                value: number(extra?.hIndex?.crossref),
-                image: crossref,
-              },
-              {
-                value: number(extra?.hIndex?.scopus),
-                image: scopus,
-              },
-              {
-                value: number(extra?.hIndex?.wos),
-                image: wos,
-              },
+              { value: number(stats?.h_index_crossref), image: crossref },
+              { value: number(stats?.h_index_scopus), image: scopus },
+              { value: number(stats?.h_index_wos), image: wos },
             ].map((e, i) => (
               <div
                 key={i}
