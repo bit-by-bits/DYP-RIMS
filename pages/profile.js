@@ -25,6 +25,7 @@ import Scite from "../src/Profile/Scite";
 import Altmetric from "../src/Profile/Altmetric";
 import { useWindowSize } from "rooks";
 import Top from "../src/Common/Top";
+import Section from "../src/Profile/Section";
 
 const Profile = () => {
   // BOILERPLATE
@@ -98,6 +99,7 @@ const Profile = () => {
             email: u?.user?.email,
             picture: u?.profile_picture,
             designation: u?.designation,
+            department: u?.department?.name,
           };
 
           localStorage.setItem("user", JSON.stringify(USER));
@@ -273,7 +275,15 @@ const Profile = () => {
           title: t => titleMaker(t, "citations", "Citations", "Citations"),
           dataIndex: "citations",
           key: "citations",
-          sorter: (a, b) => a.citations[sortBy] - b.citations[sortBy],
+          sorter: (a, b) => {
+            console.log(
+              a.citations[sortBy] - b.citations[sortBy],
+              a,
+              b,
+              sortBy
+            );
+            return a.citations[sortBy] - b.citations[sortBy];
+          },
           render: e => (
             <div className={styles.publicationGrid}>
               <Image src={crossref} alt="Crossref" height={30} width={30} />
@@ -313,7 +323,17 @@ const Profile = () => {
           key: "key",
         },
         {
-          title: "Conference Type",
+          title: "Name",
+          dataIndex: "name",
+          key: "name",
+        },
+        {
+          title: "Attended As",
+          dataIndex: "attended_as",
+          key: "attended_as",
+        },
+        {
+          title: "Type",
           dataIndex: "type",
           key: "type",
         },
@@ -431,12 +451,12 @@ const Profile = () => {
           key: "amount",
         },
         {
-          title: "Start Date",
+          title: "Start",
           dataIndex: "start",
           key: "start",
         },
         {
-          title: "End Date",
+          title: "End",
           dataIndex: "end",
           key: "end",
         },
@@ -597,7 +617,7 @@ const Profile = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, [data, sortBy]);
 
   // FUNCTIONS
 
@@ -847,194 +867,47 @@ const Profile = () => {
                 </div>
               )}
 
-              {(sections == "all" || sections == "conferences") && (
-                <div className={styles.section}>
-                  <div className={styles.sectionTop}>
-                    <div id="conferences" className={styles.heading}>
-                      Conferences
-                    </div>
-                    {sections == "all" ? (
-                      <Button
-                        type="primary"
-                        className={styles.sectionButton}
-                        onClick={() => setSections("conferences")}
-                      >
-                        View All
-                      </Button>
-                    ) : (
-                      <Button
-                        type="primary"
-                        className={styles.sectionButton}
-                        onClick={() => setSections("all")}
-                      >
-                        Return Back
-                      </Button>
-                    )}
-                  </div>
-                  <div className={styles.sectionBottom}>
-                    <Table
-                      columns={conferences?.title}
-                      dataSource={conferences?.body}
-                    />
-                  </div>
-                </div>
-              )}
+              <Section
+                str="Conferences"
+                data={conferences}
+                sec={sections}
+                setSec={setSections}
+              />
 
-              {(sections == "all" || sections == "books") && (
-                <div className={styles.section}>
-                  <div className={styles.sectionTop}>
-                    <div id="books" className={styles.heading}>
-                      Books/Chapters
-                    </div>
-                    {sections == "all" ? (
-                      <Button
-                        type="primary"
-                        className={styles.sectionButton}
-                        onClick={() => setSections("books")}
-                      >
-                        View All
-                      </Button>
-                    ) : (
-                      <Button
-                        type="primary"
-                        className={styles.sectionButton}
-                        onClick={() => setSections("all")}
-                      >
-                        Return Back
-                      </Button>
-                    )}
-                  </div>
-                  <div className={styles.sectionBottom}>
-                    <Table columns={books?.title} dataSource={books?.body} />
-                  </div>
-                </div>
-              )}
+              <Section
+                str="Books"
+                data={books}
+                sec={sections}
+                setSec={setSections}
+              />
 
-              {(sections == "all" || sections == "projects") && (
-                <div className={styles.section}>
-                  <div className={styles.sectionTop}>
-                    <div id="projects" className={styles.heading}>
-                      Research Projects
-                    </div>
-                    {sections == "all" ? (
-                      <Button
-                        type="primary"
-                        className={styles.sectionButton}
-                        onClick={() => setSections("projects")}
-                      >
-                        View All
-                      </Button>
-                    ) : (
-                      <Button
-                        type="primary"
-                        className={styles.sectionButton}
-                        onClick={() => setSections("all")}
-                      >
-                        Return Back
-                      </Button>
-                    )}
-                  </div>
-                  <div className={styles.sectionBottom}>
-                    <Table
-                      columns={projects?.title}
-                      dataSource={projects?.body}
-                    />
-                  </div>
-                </div>
-              )}
+              <Section
+                str="Projects"
+                data={projects}
+                sec={sections}
+                setSec={setSections}
+              />
 
-              {(sections == "all" || sections == "awards") && (
-                <div className={styles.section}>
-                  <div className={styles.sectionTop}>
-                    <div id="awards" className={styles.heading}>
-                      Awards
-                    </div>
-                    {sections == "all" ? (
-                      <Button
-                        type="primary"
-                        className={styles.sectionButton}
-                        onClick={() => setSections("awards")}
-                      >
-                        View All
-                      </Button>
-                    ) : (
-                      <Button
-                        type="primary"
-                        className={styles.sectionButton}
-                        onClick={() => setSections("all")}
-                      >
-                        Return Back
-                      </Button>
-                    )}
-                  </div>
-                  <div className={styles.sectionBottom}>
-                    <Table columns={awards?.title} dataSource={awards?.body} />
-                  </div>
-                </div>
-              )}
+              <Section
+                str="Awards"
+                data={awards}
+                sec={sections}
+                setSec={setSections}
+              />
 
-              {(sections == "all" || sections == "ipr") && (
-                <div className={styles.section}>
-                  <div className={styles.sectionTop}>
-                    <div id="ipr" className={styles.heading}>
-                      IPR
-                    </div>
-                    {sections == "all" ? (
-                      <Button
-                        type="primary"
-                        className={styles.sectionButton}
-                        onClick={() => setSections("ipr")}
-                      >
-                        View All
-                      </Button>
-                    ) : (
-                      <Button
-                        type="primary"
-                        className={styles.sectionButton}
-                        onClick={() => setSections("all")}
-                      >
-                        Return Back
-                      </Button>
-                    )}
-                  </div>
-                  <div className={styles.sectionBottom}>
-                    <Table columns={ipr?.title} dataSource={ipr?.body} />
-                  </div>
-                </div>
-              )}
+              <Section
+                str="IPR"
+                data={ipr}
+                sec={sections}
+                setSec={setSections}
+              />
 
-              {(sections == "all" || sections == "students") && (
-                <div className={styles.section}>
-                  <div className={styles.sectionTop}>
-                    <div id="students" className={styles.heading}>
-                      Students Guided
-                    </div>
-                    {sections == "all" ? (
-                      <Button
-                        type="primary"
-                        className={styles.sectionButton}
-                        onClick={() => setSections("students")}
-                      >
-                        View All
-                      </Button>
-                    ) : (
-                      <Button
-                        type="primary"
-                        className={styles.sectionButton}
-                        onClick={() => setSections("all")}
-                      >
-                        Return Back
-                      </Button>
-                    )}
-                  </div>
-                  <div className={styles.sectionBottom}>
-                    <Table
-                      columns={students?.title}
-                      dataSource={students?.body}
-                    />
-                  </div>
-                </div>
-              )}
+              <Section
+                str="Students"
+                data={students}
+                sec={sections}
+                setSec={setSections}
+              />
             </div>
           </div>
         </Spin>

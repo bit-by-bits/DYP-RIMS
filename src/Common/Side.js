@@ -9,6 +9,7 @@ import {
   BookOutlined,
   BulbOutlined,
   UserAddOutlined,
+  FileTextOutlined,
   FileAddOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
@@ -16,7 +17,7 @@ import Image from "next/image";
 import styles from "../../styles/profile.module.css";
 import { useRouter } from "next/router";
 
-const Side = ({ sets }) => {
+const Side = ({ sets = () => {} }) => {
   // BOILERPLATE
 
   const router = useRouter();
@@ -108,7 +109,7 @@ const Side = ({ sets }) => {
               : [
                   {
                     key: "1.1",
-                    icon: createElement(FileAddOutlined),
+                    icon: createElement(FileTextOutlined),
                     label: <Link href="/upload">Add Publication</Link>,
                   },
                   {
@@ -157,6 +158,11 @@ const Side = ({ sets }) => {
         selectable={false}
         onClick={() => sets("all")}
         items={[
+          {
+            link: "/profile#publications",
+            icon: FileTextOutlined,
+            label: "Publications",
+          },
           {
             link: "/profile#conferences",
             icon: GroupOutlined,

@@ -2,14 +2,19 @@ import styles from "../../styles/file.module.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import URLObj from "../baseURL";
-import { CheckSquareOutlined, CloseSquareOutlined } from "@ant-design/icons";
-import { Avatar, Badge, Card, List, message } from "antd";
+import Image from "next/image";
+import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { Avatar, Badge, Card, message } from "antd";
 import Scite from "../Profile/Scite";
 import Altmetric from "../Profile/Altmetric";
+import ListSection from "./ListSection";
 
 import scopus from "../../public/logos/scopus.svg";
 import wos from "../../public/logos/wos.svg";
 import crossref from "../../public/logos/crossref.jpg";
+import pmc from "../../public/logos/pmc.png";
+import doaj from "../../public/logos/doaj.png";
+import medline from "../../public/logos/medline.jpg";
 
 const FileInfo = ({ user, setv, DOI }) => {
   // STATES
@@ -21,6 +26,9 @@ const FileInfo = ({ user, setv, DOI }) => {
 
   const [authors, setAuthors] = useState([]);
   const [citations, setCitations] = useState([]);
+  const [ids, setIds] = useState([]);
+  const [indices, setIndices] = useState([]);
+  const [indexes, setIndexes] = useState([]);
 
   // EFFECTS
 
@@ -46,18 +54,7 @@ const FileInfo = ({ user, setv, DOI }) => {
   }, [user, setv, DOI]);
 
   useEffect(() => {
-    if (data) {
-      setAuthors(getAuthors());
-      setCitations(
-        getCitations([
-          { name: "WOS", image: wos },
-          { name: "Scopus", image: scopus },
-          { name: "Crossref", image: crossref },
-        ])
-      );
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (data) getAll();
   }, [data]);
 
   // FUNCTIONS
@@ -146,13 +143,16 @@ const FileInfo = ({ user, setv, DOI }) => {
     if (CORR?.length > 0) AUTHORS.push(...CORR);
     if (OTHERS?.length > 0) AUTHORS.push(...OTHERS);
 
-    return AUTHORS;
+    setAuthors(AUTHORS);
   };
 
-  const getCitations = arr =>
-    arr
-      ?.filter(e => data[`in_${e.name?.toLowerCase()}`])
-      .map((e, i) => (
+  const getCitations = () => {
+    setCitations(
+      [
+        { name: "WOS", image: wos },
+        { name: "Scopus", image: scopus },
+        { name: "Crossref", image: crossref },
+      ].map((e, i) => (
         <Card
           key={i}
           hoverable
@@ -173,7 +173,147 @@ const FileInfo = ({ user, setv, DOI }) => {
             avatar={<Avatar src={e.image?.src} />}
           />
         </Card>
-      ));
+      ))
+    );
+  };
+
+  const getIds = () => {
+    setIds(
+      [
+        {
+          name: "PubMed ID",
+          value: data?.pubmed_id ?? "- Not Available -",
+        },
+        {
+          name: "DOI ID",
+          value: DOI ?? "- Not Available -",
+        },
+      ].map((e, i) => (
+        <Card
+          key={i}
+          hoverable
+          bodyStyle={{ padding: 15 }}
+          style={{ border: "1px solid #d9d9d9" }}
+        >
+          <Meta
+            description={e.value}
+            title={
+              <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
+                {e.name}
+              </div>
+            }
+          />
+        </Card>
+      ))
+    );
+  };
+
+  const getIndices = () => {
+    setIndices(
+      [
+        {
+          name: "Impact Factor",
+          value: data?.impact_factor ?? "- Not Available -",
+        },
+        {
+          name: "H-Index",
+          value: data?.h_index ?? "- NA -",
+        },
+        {
+          name: "SJR Quartile",
+          value: data?.sjr_quartile ?? "- NA -",
+        },
+        {
+          name: "Open Access",
+          value: data?.open_access
+            ? `${data?.open_access_status
+                .at(0)
+                ?.toUpperCase()}${data?.open_access_status.slice(1)} Access`
+            : "Closed Access",
+        },
+      ].map((e, i) => (
+        <Card
+          key={i}
+          hoverable
+          bodyStyle={{ padding: 20 }}
+          style={{ border: "1px solid black" }}
+        >
+          <Meta
+            align="center"
+            description={e.value}
+            title={
+              <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
+                {e.name}
+              </div>
+            }
+          />
+        </Card>
+      ))
+    );
+  };
+
+  const getIndexes = () => {
+    setIndexes(
+      [
+        {
+          name: "PubMed",
+          logo: pmc,
+          bool: data?.in_pubmed,
+        },
+        {
+          name: "Scopus",
+          logo: scopus,
+          bool: data?.in_scopus,
+        },
+        {
+          name: "DOAJ",
+          logo: doaj,
+          bool: data?.in_doaj,
+        },
+        {
+          name: "WOS",
+          logo: wos,
+          bool: data?.in_wos,
+        },
+        {
+          name: "Medline",
+          logo: medline,
+          bool: data?.in_medline,
+        },
+      ].map((e, i) => (
+        <Card
+          key={i}
+          hoverable
+          bodyStyle={{ padding: 15 }}
+          style={{ border: "1px solid #d9d9d9" }}
+        >
+          <Meta
+            title={
+              <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
+                {e.name}
+              </div>
+            }
+            description={
+              e.bool ? (
+                <span style={{ color: "#52c41a" }}>Indexed</span>
+              ) : (
+                <span style={{ color: "#f5222d" }}>Not Indexed</span>
+              )
+            }
+            avatar={<Avatar src={e.logo?.src} />}
+          />
+        </Card>
+      ))
+    );
+  };
+
+  const getAll = () => {
+    getAuthors();
+    getCitations();
+    getIds();
+    getIndices();
+    getIndexes();
+  };
 
   return (
     <>
@@ -254,32 +394,8 @@ const FileInfo = ({ user, setv, DOI }) => {
           </div>
         </div>
 
-        <div style={{ width: "100%" }} className={styles.authors}>
-          <div className={styles.info_head}>Citations</div>
-          <div className={styles.auth_body}>
-            <List
-              grid={{ gutter: 16 }}
-              dataSource={citations}
-              renderItem={item => <List.Item>{item}</List.Item>}
-            />
-          </div>
-        </div>
-
-        <div style={{ width: "100%" }} className={styles.authors}>
-          <div className={styles.info_head}>Authors</div>
-          <div className={styles.auth_body}>
-            <List
-              grid={{ gutter: 16 }}
-              pagination={{
-                position: "bottom",
-                align: "center",
-                pageSize: 10,
-              }}
-              dataSource={authors}
-              renderItem={item => <List.Item>{item}</List.Item>}
-            />
-          </div>
-        </div>
+        <ListSection head="Citations" data={citations} />
+        <ListSection head="Authors" data={authors} paginate={true} />
 
         <div className={`${styles.down} ${styles.file_grid}`}>
           <div className={styles.file_head}>Statistics</div>
@@ -289,96 +405,18 @@ const FileInfo = ({ user, setv, DOI }) => {
           </div>
         </div>
 
+        <ListSection data={indices} />
+        <ListSection head="Indexed In" data={indexes} />
+        <ListSection head="File IDs" data={ids} />
+
         {data?.abstract && data?.abstract != "" && (
-          <div className={`${styles.smooth} ${styles.abstract}`}>
+          <div className={styles.abstract}>
             <div className={styles.file_head}>Abstract</div>
             <div className={styles.abs_body}>
               {data?.abstract ?? "- Not Available -"}
             </div>
           </div>
         )}
-
-        <div className={styles.file_grid}>
-          <div className={styles.smooth}>
-            <div className={styles.file_head}>File ID</div>
-            <div className={styles.file_body}>
-              <div className={styles.file_bodyitem}>
-                <div className={styles.file_bodybold}>Pub Med ID</div>
-                <div className={styles.file_bodyweak}>
-                  {data?.pubmed_id ?? "- Not Available -"}
-                </div>
-              </div>
-
-              <div className={styles.file_bodyitem}>
-                <div className={styles.file_bodybold}>DOI ID</div>
-                <div className={styles.file_bodyweak}>
-                  {DOI ?? "- Not Available -"}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.smooth}>
-            <div className={styles.file_head}>File Index</div>
-            <div className={styles.file_body}>
-              <div className={styles.file_bodyitem}>
-                <div className={styles.file_bodybold}>Impact Factor</div>
-                <div className={styles.file_bodyweak}>
-                  {data?.impact_factor ?? "- Not Available -"}
-                </div>
-              </div>
-
-              <div className={`${styles.file_bodygrid} ${styles.bi_grid}`}>
-                <div className={styles.file_bodyitem}>
-                  <div className={styles.file_bodybold}>H-Index</div>
-                  <div className={styles.file_bodyweak}>
-                    {data?.h_index ?? "- NA -"}
-                  </div>
-                </div>
-
-                <div className={styles.file_bodyitem}>
-                  <div className={styles.file_bodybold}>SJR Quartile</div>
-                  <div className={styles.file_bodyweak}>
-                    {data?.sjr_quartile ?? "- NA -"}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.smooth}>
-            <div className={styles.file_head}>Indexed In</div>
-            <div className={styles.file_body}>
-              <div
-                style={{ transform: "translateX(-1rem)" }}
-                className={styles.file_bodygrid}
-              >
-                {["DOAJ", "Embase", "Medline", "PMC", "SCIE", "Scopus"]
-                  .map(e => ({
-                    label: e,
-                    value: data["in_" + e.toLowerCase()],
-                  }))
-                  .map((e, i) => (
-                    <span
-                      style={{
-                        gap: 10,
-                        display: "flex",
-                        justifyContent: "flex-end",
-                      }}
-                      key={i}
-                    >
-                      <span className={styles.file_bodybold}>{e.label}</span>
-                      {e.value ? (
-                        <CheckSquareOutlined style={{ color: "#52c41a" }} />
-                      ) : (
-                        <CloseSquareOutlined style={{ color: "#d70040" }} />
-                      )}
-                    </span>
-                  ))}
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </>
   );

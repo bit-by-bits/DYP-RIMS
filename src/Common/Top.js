@@ -20,7 +20,7 @@ import pmc from "../../public/logos/pmc.png";
 import scopus from "../../public/logos/scopus.svg";
 import wos from "../../public/logos/wos.svg";
 
-const Top = ({ main, user }) => {
+const Top = ({ main = {}, user }) => {
   // STATES
 
   const { Search } = Input;

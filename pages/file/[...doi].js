@@ -73,10 +73,10 @@ const File = () => {
           />
 
           <div style={{ paddingLeft: "18vw" }}>
-            <Side sets={() => {}} />
+            <Side />
 
             <div className={styles.file_wrapper}>
-              <Top main={{}} user={user} />
+              <Top user={user} />
 
               <div>
                 <FileInfo user={user} setv={setVisible} DOI={DOI} />

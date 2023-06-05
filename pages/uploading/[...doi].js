@@ -70,10 +70,10 @@ const Uploading = () => {
           />
 
           <div style={{ paddingLeft: "18vw" }}>
-            <Side sets={() => {}} />
+            <Side />
 
             <div className={styles.uploading_wrapper}>
-              <Top main={{}} user={user} />
+              <Top user={user} />
 
               <div className={styles.uploading_head}>
                 {pending

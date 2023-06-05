@@ -114,10 +114,10 @@ const Upload = () => {
           />
 
           <div style={{ paddingLeft: "18vw" }}>
-            <Side sets={() => {}} />
+            <Side />
 
             <div className={styles.upload_wrapper}>
-              <Top main={{}} user={user} />
+              <Top user={user} />
 
               <div className={styles.upload_left}>
                 <Image
