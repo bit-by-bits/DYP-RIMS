@@ -36,7 +36,7 @@ const Side = ({ sets = () => {} }) => {
   useEffect(() => {
     if (typeof window !== "undefined")
       user
-        ? Date.now() - user.setUpTime > 3600000 &&
+        ? Date.now() - user?.setUpTime > 3600000 &&
           localStorage.removeItem("user")
         : router.push("/");
   }, [router, user]);
@@ -59,7 +59,7 @@ const Side = ({ sets = () => {} }) => {
           className={styles.sideImage}
           alt={user?.userame ?? "user"}
           src={
-            user?.profile_picture ??
+            user?.picture ??
             "https://dreamvilla.life/wp-content/uploads/2017/07/dummy-profile-pic.png"
           }
           width={100}

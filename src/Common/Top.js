@@ -93,34 +93,35 @@ const Top = ({ main = {}, user }) => {
   };
 
   const searchPubs = (e, data) => {
-    console.log(
-      e,
-      data,
-      main,
-      data?.filter(p =>
-        [
-          ...p.keywords?.map(k => k.display_name.toLowerCase()),
-          p.publication_title.toLowerCase(),
-        ]?.includes(e?.toLowerCase())
-      )
-    );
-
     if (main?.publications) {
       if (e) {
         main?.setPublications({
           title: main?.publications?.title,
           body: publicationsMaker(
-            data?.filter(p =>
-              [
-                ...p.keywords?.map(k => k.display_name.toLowerCase()),
-                p.publication_title.toLowerCase(),
-              ]?.includes(e?.toLowerCase())
-            )
+            data?.filter(p => {
+              const keywords = [
+                ...p.keywords?.map(k =>
+                  k.display_name.replaceAll(" ", "").toLowerCase()
+                ),
+                p.publication_title.replaceAll(" ", "").toLowerCase(),
+              ];
+
+              const query = e.replaceAll(" ", "").toLowerCase();
+
+              console.log(query);
+
+              return (
+                keywords?.includes(query) ||
+                keywords?.includes(query.slice(0, -1)) ||
+                keywords?.some(k => k?.includes(query)) ||
+                keywords?.some(k => k?.includes(query.slice(0, -1)))
+              );
+            })
           ),
         });
 
         let formdata = new FormData();
-        formdata.append("query", e);
+        formdata?.append("query", e);
 
         axios({
           method: "POST",

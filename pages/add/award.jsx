@@ -57,7 +57,7 @@ const Awards = () => {
     })
       .then(res => {
         setDepts(
-          res.data.departments.map(dept => ({
+          res.data?.departments.map(dept => ({
             value: dept.id,
             label: dept.name,
           }))
@@ -69,7 +69,7 @@ const Awards = () => {
   // AUTOFILL DEPARTMENT
   useEffect(() => {
     depts.forEach(dept => {
-      if (dept.label === user.dept) setDept(dept.value);
+      if (dept.label === user?.dept) setDept(dept.value);
     });
   }, [user, depts]);
 
@@ -78,20 +78,20 @@ const Awards = () => {
     console.log(values);
 
     let data = new FormData();
-    data.append("name", values.faculty);
-    data.append("dept_id", values.department);
-    data.append("agency", values.agency);
-    data.append("start_date", convert(values.start_date));
-    data.append("end_date", convert(values.end_date));
-    data.append("certificate", file);
-    data.append("type", "award");
+    data?.append("name", values.faculty);
+    data?.append("dept_id", values.department);
+    data?.append("agency", values.agency);
+    data?.append("start_date", convert(values.start_date));
+    data?.append("end_date", convert(values.end_date));
+    data?.append("certificate", file);
+    data?.append("type", "award");
 
     axios({
       method: "POST",
       maxBodyLength: Infinity,
       url: `${URLObj.base}/award/data/add/`,
       headers: {
-        Authorization: `Bearer ${user.token}`,
+        Authorization: `Bearer ${user?.token}`,
         "Content-Type": "multipart/form-data",
       },
       data: data,
@@ -124,7 +124,7 @@ const Awards = () => {
       method: "POST",
       url: URLObj.ai,
       headers: {
-        Authorization: `Bearer ${user.token}`,
+        Authorization: `Bearer ${user?.token}`,
         "Content-Type": "multipart/form-data",
       },
       data: formData,
@@ -169,12 +169,12 @@ const Awards = () => {
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
           initialValues={{
-            faculty: data.name,
+            faculty: data?.name,
             department: dept,
-            award: data.award_name,
-            start_date: data.start_date,
-            end_date: data.end_date,
-            location: data.location,
+            award: data?.award_name,
+            start_date: data?.start_date,
+            end_date: data?.end_date,
+            location: data?.location,
           }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}

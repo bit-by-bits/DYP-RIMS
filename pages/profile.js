@@ -41,7 +41,7 @@ const Profile = () => {
   useEffect(() => {
     if (typeof window !== "undefined")
       user
-        ? Date.now() - user.setUpTime > 3600000 &&
+        ? Date.now() - user?.setUpTime > 3600000 &&
           localStorage.removeItem("user")
         : router.push("/");
   }, [router, user]);
@@ -814,7 +814,7 @@ const Profile = () => {
                           else if (sortBy === "crossref") setSortBy("scopus");
                         }}
                       >
-                        Sort Citations By: {sortBy.toUpperCase()}
+                        Sorting Citations By: {sortBy.toUpperCase()}
                       </Button>
                       {sections == "all" ? (
                         <Button

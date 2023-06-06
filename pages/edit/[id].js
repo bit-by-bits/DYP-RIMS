@@ -22,7 +22,7 @@ const Edit = () => {
   }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && user.token === "") router.push("/");
+    if (typeof window !== "undefined" && user?.token === "") router.push("/");
   }, [router, user]);
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const Edit = () => {
         <Loader visible={visible} />
         <h2
           style={{ margin: "8vw 0 2vw 10vw", color: "#9a2827" }}
-        >{`Hey ${user.name}. Please fill the empty fields (if any).`}</h2>
+        >{`Hey ${user?.name}. Please fill the empty fields (if any).`}</h2>
         <FileForm setVisible={setVisible} id={ID} user={user} />
         <a href="https://www.qtanea.com/" rel="noreferrer" target="_blank">
           <Image

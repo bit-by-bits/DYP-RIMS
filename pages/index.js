@@ -16,7 +16,7 @@ export default function Home() {
     const user = JSON.parse(localStorage.getItem("user"));
 
     if (user) {
-      const time = Date.now() - user.setUpTime;
+      const time = Date.now() - user?.setUpTime;
 
       if (time < 3600000) router.push("/profile");
       else localStorage.removeItem("user");
@@ -49,7 +49,7 @@ export default function Home() {
 
             localStorage.setItem(
               "user",
-              JSON.stringify({ token: res.data.token, setUpTime: Date.now() })
+              JSON.stringify({ token: res.data?.token, setUpTime: Date.now() })
             );
 
             router.push("/profile");

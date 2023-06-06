@@ -24,7 +24,7 @@ const Books = () => {
   useEffect(() => {
     if (typeof window !== "undefined")
       user
-        ? Date.now() - user.setUpTime > 3600000 &&
+        ? Date.now() - user?.setUpTime > 3600000 &&
           localStorage.removeItem("user")
         : router.push("/");
   }, [router, user]);
@@ -55,19 +55,20 @@ const Books = () => {
 
   const onFinish = values => {
     const formdata = new FormData();
-    formdata.append("faculty", values.faculty);
-    formdata.append("department", values.department);
-    formdata.append("type", values.type);
-    formdata.append("title", values.title);
-    formdata.append("book", values.book);
-    formdata.append("year", values.year);
-    formdata.append("isbn", values.isbn);
+    formdata?.append("faculty", values.faculty);
+    formdata?.append("department", values.department);
+    formdata?.append("type", values.type);
+    formdata?.append("title", values.title);
+    formdata?.append("book", values.book);
+    formdata?.append("year", values.year);
+    formdata?.append("isbn", values.isbn);
 
     axios({
       method: "POST",
       url: `${URLObj.base}/books/`,
       headers: {
         "X-ACCESS-KEY": URLObj.key,
+        "X-AUTH-TOKEN": user?.token,
       },
       data: formdata,
     })
@@ -82,6 +83,7 @@ const Books = () => {
   };
 
   const onFinishFailed = errorInfo => {
+    message.error("Something went wrong");
     console.log("Failed:", errorInfo);
   };
 
@@ -89,7 +91,7 @@ const Books = () => {
     setSearching(true);
 
     const formdata = new FormData();
-    formdata.append("isbn", ISBN);
+    formdata?.append("isbn", ISBN);
 
     axios({
       method: "GET",
@@ -248,7 +250,7 @@ const Books = () => {
                       },
                     ]}
                   >
-                    <Select showSearch placeholder="Select a person" allowClear>
+                    <Select showSearch placeholder="Select a type" allowClear>
                       <Select.Option value="book">Book</Select.Option>
                       <Select.Option value="chapter">Chapter</Select.Option>
                     </Select>

@@ -27,7 +27,7 @@ const Download = () => {
   useEffect(() => {
     if (ITEM)
       axios({
-        url: `${URLObj.base}/export/get/schedule/${ITEM}/?userID=${user.id}`,
+        url: `${URLObj.base}/export/get/schedule/${ITEM}/?userID=${user?.id}`,
         method: "GET",
       }).then(res => {});
   }, [ITEM, user]);

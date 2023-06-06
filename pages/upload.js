@@ -23,7 +23,7 @@ const Upload = () => {
   useEffect(() => {
     if (typeof window !== "undefined")
       user
-        ? Date.now() - user.setUpTime > 3600000 &&
+        ? Date.now() - user?.setUpTime > 3600000 &&
           localStorage.removeItem("user")
         : router.push("/");
   }, [router, user]);

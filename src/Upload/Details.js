@@ -28,7 +28,7 @@ const Details = ({ setv, setf, doi }) => {
   }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && user.token === "") router.push("/");
+    if (typeof window !== "undefined" && user?.token === "") router.push("/");
   }, [router, user]);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const Details = ({ setv, setf, doi }) => {
       url: `${URLObj.cross}/${localStorage.getItem("udoi")}`,
     })
       .then(response => {
-        const msg = response.data.message;
+        const msg = response.data?.message;
         setData(msg);
 
         const authorList = msg?.author;
@@ -103,7 +103,7 @@ const Details = ({ setv, setf, doi }) => {
       axios({
         method: "GET",
         url: `${URLObj.base}/citation-count/?doi=${doi}`,
-        headers: { Authorization: `Bearer ${user.token}` },
+        headers: { Authorization: `Bearer ${user?.token}` },
       })
         .then(response =>
           setCitations(
@@ -118,7 +118,7 @@ const Details = ({ setv, setf, doi }) => {
         method: "GET",
         url: `${URLObj.pubmed}/?tool=journalchecker.com&email=hello@qtanea.com&ids=${doi}&format=json`,
       })
-        .then(response => setPubmed(response.data.records[0].pmid ?? 0))
+        .then(response => setPubmed(response.data?.records[0].pmid ?? 0))
         .catch(error => console.log("PTE: " + error));
     }
   }, [doi, setv, user]);
@@ -145,40 +145,40 @@ const Details = ({ setv, setf, doi }) => {
 
   const onFinish = values => {
     let data = new FormData();
-    data.append("doi", values.doi);
-    data.append("pubmed_id", values.pubmed);
-    data.append("publication_type", values.type);
-    data.append("publication_title", values.title);
-    data.append("journal_name", values.journal);
-    data.append("year", values.published);
-    data.append("abstract", values.abstract);
-    data.append("issue", values.issue);
-    data.append("volume", values.volume);
-    data.append("pages", values.pages);
-    data.append(
+    data?.append("doi", values.doi);
+    data?.append("pubmed_id", values.pubmed);
+    data?.append("publication_type", values.type);
+    data?.append("publication_title", values.title);
+    data?.append("journal_name", values.journal);
+    data?.append("year", values.published);
+    data?.append("abstract", values.abstract);
+    data?.append("issue", values.issue);
+    data?.append("volume", values.volume);
+    data?.append("pages", values.pages);
+    data?.append(
       "other_authors",
       "{ " + authors.selected.map(e => e.value).join(", ") + " }"
     );
     indexed.options.forEach((e, i) =>
-      data.append(
+      data?.append(
         e.value,
         values.indexed.map(e => e.value).includes(indexed.options[i].value)
           ? 1
           : 0
       )
     );
-    data.append("citations", values.citations);
-    data.append("hindex", values.hindex);
-    data.append("sjr", values.sjr);
-    data.append("impact_factor", values.ifactor);
-    data.append("file", values.file.file.originFileObj);
+    data?.append("citations", values.citations);
+    data?.append("hindex", values.hindex);
+    data?.append("sjr", values.sjr);
+    data?.append("impact_factor", values.ifactor);
+    data?.append("file", values.file.file.originFileObj);
 
     axios({
       method: "POST",
       maxBodyLength: Infinity,
       url: `${URLObj.base}/research/data/save/`,
       headers: {
-        Authorization: `Bearer ${user.token}`,
+        Authorization: `Bearer ${user?.token}`,
         "Content-Type": "multipart/form-data",
       },
       data: data,

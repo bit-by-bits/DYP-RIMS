@@ -22,7 +22,7 @@ const Navbar = () => {
 
   const download = item => () => {
     const data = new FormData();
-    data.append("userID", user.id);
+    data?.append("userID", user?.id);
 
     axios({
       url: `${URLObj.base}/export/schedule/${item}/`,

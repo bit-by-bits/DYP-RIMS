@@ -78,40 +78,40 @@ const FileForm = ({ setVisible, id, user }) => {
 
   const onFinish = values => {
     let data = new FormData();
-    data.append("doi", values.doi);
-    data.append("pubmed_id", values.pubmed);
-    data.append("publication_type", values.type);
-    data.append("publication_title", values.title);
-    data.append("journal_name", values.journal);
-    data.append("year", values.published);
-    data.append("abstract", values.abstract);
-    data.append("issue", values.issue);
-    data.append("volume", values.volume);
-    data.append("pages", values.pages);
-    data.append(
+    data?.append("doi", values.doi);
+    data?.append("pubmed_id", values.pubmed);
+    data?.append("publication_type", values.type);
+    data?.append("publication_title", values.title);
+    data?.append("journal_name", values.journal);
+    data?.append("year", values.published);
+    data?.append("abstract", values.abstract);
+    data?.append("issue", values.issue);
+    data?.append("volume", values.volume);
+    data?.append("pages", values.pages);
+    data?.append(
       "other_authors",
       "{ " + authors.selected.map(e => e.value).join(", ") + " }"
     );
     indexed.options.forEach((e, i) =>
-      data.append(
+      data?.append(
         e.value,
         values.indexed.map(e => e.value).includes(indexed.options[i].value)
           ? 1
           : 0
       )
     );
-    data.append("citations", values.citations);
-    data.append("hindex", values.hindex);
-    data.append("sjr", values.sjr);
-    data.append("impact_factor", values.ifactor);
-    data.append("file", values.file.file.originFileObj);
+    data?.append("citations", values.citations);
+    data?.append("hindex", values.hindex);
+    data?.append("sjr", values.sjr);
+    data?.append("impact_factor", values.ifactor);
+    data?.append("file", values.file.file.originFileObj);
 
     axios({
       method: "POST",
       maxBodyLength: Infinity,
       url: `${URLObj.base}/publication/${id}/edit/`,
       headers: {
-        Authorization: `Bearer ${user.token}`,
+        Authorization: `Bearer ${user?.token}`,
         "Content-Type": "multipart/form-data",
       },
       data: data,
@@ -139,22 +139,22 @@ const FileForm = ({ setVisible, id, user }) => {
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
           initialValues={{
-            pubmed: data.pubmed_id ?? " ",
-            doi: data.doi_id ?? " ",
-            type: data.publication_type ?? " ",
-            title: data.publication_title ?? " ",
-            journal: data.journal_name ?? " ",
-            published: data.year ?? " ",
-            abstract: data.abstract ?? " ",
+            pubmed: data?.pubmed_id ?? " ",
+            doi: data?.doi_id ?? " ",
+            type: data?.publication_type ?? " ",
+            title: data?.publication_title ?? " ",
+            journal: data?.journal_name ?? " ",
+            published: data?.year ?? " ",
+            abstract: data?.abstract ?? " ",
             volume: !isNaN(parseInt(data?.volume)) ? parseInt(data?.volume) : 0,
             issue: !isNaN(parseInt(data?.issue)) ? parseInt(data?.issue) : 0,
-            pages: data.pages ?? " ",
-            citations: data.citations ?? " ",
+            pages: data?.pages ?? " ",
+            citations: data?.citations ?? " ",
             hindex: !isNaN(parseInt(data?.h_index))
               ? parseInt(data?.h_index)
               : 0,
-            sjr: data.sjr ?? " ",
-            ifactor: data.impact_factor ?? " ",
+            sjr: data?.sjr ?? " ",
+            ifactor: data?.impact_factor ?? " ",
             indexed: indexed.selected ?? " ",
             authors: authors.selected ?? " ",
           }}

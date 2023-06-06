@@ -2,7 +2,7 @@ import styles from "../../styles/file.module.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import URLObj from "../baseURL";
-import { Avatar, Badge, Card, message } from "antd";
+import { Avatar, Badge, Card, Modal, Upload, message } from "antd";
 import Scite from "../Profile/Scite";
 import Altmetric from "../Profile/Altmetric";
 
@@ -13,14 +13,17 @@ import pmc from "../../public/logos/pmc.png";
 import doaj from "../../public/logos/doaj.png";
 import medline from "../../public/logos/medline.jpg";
 import ListSection from "../Common/ListSection";
+import { InboxOutlined } from "@ant-design/icons";
 
 const FileInfo = ({ user, setv, DOI }) => {
   // STATES
 
   const { Meta } = Card;
   const { Ribbon } = Badge;
+  const { Dragger } = Upload;
 
   const [data, setData] = useState({});
+  const [fileData, setFileData] = useState({ modal: false, file: null });
 
   const [authors, setAuthors] = useState([]);
   const [citations, setCitations] = useState([]);
@@ -55,6 +58,10 @@ const FileInfo = ({ user, setv, DOI }) => {
     if (data) getAll();
   }, [data]);
 
+  useEffect(() => {
+    if (fileData?.file) uploadFile();
+  }, [fileData]);
+
   // FUNCTIONS
 
   const getAuthors = () => {
@@ -71,7 +78,7 @@ const FileInfo = ({ user, setv, DOI }) => {
                 {e.user?.first_name + " " + e.user?.last_name}
               </div>
             }
-            description={e.department?.name ?? "- Not Available -"}
+            description={`DPU · ${e.department?.name ?? "- Not Available -"}`}
             avatar={
               <Avatar
                 src={
@@ -98,7 +105,7 @@ const FileInfo = ({ user, setv, DOI }) => {
                 {e.user?.first_name + " " + e.user?.last_name}
               </div>
             }
-            description={e.department?.name ?? "- Not Available -"}
+            description={`DPU · ${e.department?.name ?? "- Not Available -"}`}
             avatar={
               <Avatar
                 src={
@@ -123,7 +130,6 @@ const FileInfo = ({ user, setv, DOI }) => {
           title={
             <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>{e}</div>
           }
-          description={"Non-DPU"}
           avatar={
             <Avatar
               src={
@@ -238,12 +244,10 @@ const FileInfo = ({ user, setv, DOI }) => {
         >
           <Meta
             align="center"
-            description={e.value}
-            title={
-              <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
-                {e.name}
-              </div>
+            description={
+              <div style={{ fontSize: 16, fontWeight: 700 }}>{e.value}</div>
             }
+            title={<div style={{ color: "#9a2827" }}>{e.name}</div>}
           />
         </Card>
       ))
@@ -313,6 +317,37 @@ const FileInfo = ({ user, setv, DOI }) => {
     getIndexes();
   };
 
+  const uploadFile = () => {
+    if (user?.token) {
+      const str = JSON.stringify({
+        doi: DOI,
+        file: fileData?.file,
+        author: [],
+      });
+
+      axios({
+        method: "POST",
+        url: `${URLObj.base}/publications/`,
+        headers: {
+          "X-ACCESS-KEY": URLObj.key,
+          "X-AUTH-TOKEN": user?.token,
+          "X-TEST-ENVIRONMENT": "0",
+          "Content-Type": "application/json",
+        },
+        data: str,
+      })
+        .then(res => {
+          message.success("File uploaded successfully");
+          setData({ ...data, file: res?.data?.data?.file });
+          setFileData({ ...fileData, modal: false });
+        })
+        .catch(err => {
+          message.error("Could not upload file");
+          console.log(err);
+        });
+    }
+  };
+
   return (
     <>
       <div className={styles.file_text}>
@@ -321,9 +356,55 @@ const FileInfo = ({ user, setv, DOI }) => {
             {data?.publication_type ?? "Unknown Type"}
           </div>
 
-          <div className={styles.file_tag2}>
-            {data?.file ? "PDF Available" : "PDF Not Available"}
-          </div>
+          {data?.file ? (
+            <div className={styles.file_tag2}>PDF Available</div>
+          ) : (
+            <>
+              <div
+                style={{ cursor: "pointer" }}
+                onClick={() => setFileData({ ...fileData, modal: true })}
+                className={styles.file_tag2}
+              >
+                PDF Not Available
+              </div>
+
+              <Modal
+                title="Upload PDF"
+                open={fileData?.modal}
+                onCancel={() => setFileData({ ...fileData, modal: false })}
+                footer={null}
+              >
+                <Dragger
+                  name="file"
+                  multiple={false}
+                  onChange={info => {
+                    const { status } = info.file;
+                    if (status !== "uploading") {
+                      console.log(info.file, info.fileList);
+                    }
+                    if (status === "done") {
+                      message.success(`${info.file.name} file uploaded.`);
+
+                      setFileData({ ...fileData, file: info.file });
+                    } else if (status === "error") {
+                      message.error(`${info.file.name} file upload failed.`);
+                    }
+                  }}
+                >
+                  <InboxOutlined
+                    style={{ fontSize: 60, margin: "10px 0", color: "#9a2827" }}
+                  />
+                  <p className="ant-upload-text">
+                    Click or drag file to this area to upload
+                  </p>
+                  <p className="ant-upload-hint">
+                    Support for a single or bulk upload. Strictly prohibited
+                    from uploading company data or other banned files.
+                  </p>
+                </Dragger>
+              </Modal>
+            </>
+          )}
         </div>
 
         <div
@@ -393,6 +474,9 @@ const FileInfo = ({ user, setv, DOI }) => {
         </div>
 
         <ListSection head="Citations" data={citations} />
+        <ListSection head="Indexed In" data={indexes} />
+        <ListSection head="File IDs" data={ids} />
+        <ListSection data={indices} />
         <ListSection head="Authors" data={authors} paginate={true} />
 
         <div className={`${styles.down} ${styles.file_grid}`}>
@@ -402,10 +486,6 @@ const FileInfo = ({ user, setv, DOI }) => {
             <Altmetric DOI={DOI} type={0} />
           </div>
         </div>
-
-        <ListSection data={indices} />
-        <ListSection head="Indexed In" data={indexes} />
-        <ListSection head="File IDs" data={ids} />
 
         {data?.abstract && data?.abstract != "" && (
           <div className={styles.abstract}>
