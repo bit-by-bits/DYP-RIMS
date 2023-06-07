@@ -84,7 +84,7 @@ const Side = ({ sets = () => {} }) => {
           </div>
           <div>
             <span className={styles.sideCircle} />
-            <span>{user?.level ?? "N/A"}</span>
+            <span>{user?.level?.slice(0, -1) ?? "N/A"}</span>
           </div>
         </div>
         <Button className={styles.sideButton} onClick={edit} type="primary">

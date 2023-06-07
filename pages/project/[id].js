@@ -5,16 +5,16 @@ import React, { useState, useEffect } from "react";
 import { FloatButton, Spin, message } from "antd";
 import Side from "../../src/Common/Side";
 import Top from "../../src/Common/Top";
-import BookInfo from "../../src/Add/BookInfo";
+import ProjectInfo from "../../src/Add/ProjectInfo";
 
-const Book = () => {
+const Project = () => {
   // BOILERPLATE
 
   const router = useRouter();
   const [user, setUser] = useState({});
 
-  const { isbn } = router.query;
-  const [ISBN, setISBN] = useState("");
+  const { id } = router.query;
+  const [ID, setID] = useState("");
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -30,8 +30,8 @@ const Book = () => {
   }, [router, user]);
 
   useEffect(() => {
-    if (router.isReady) setISBN(isbn);
-  }, [router, isbn]);
+    if (router.isReady) setID(id);
+  }, [router, id]);
 
   // STATES
 
@@ -78,7 +78,7 @@ const Book = () => {
               <Top user={user} />
 
               <div>
-                <BookInfo user={user} setv={setVisible} ISBN={ISBN} />
+                <ProjectInfo user={user} setv={setVisible} ID={ID} />
 
                 <div className={styles.file_btns}>
                   {[
@@ -116,4 +116,4 @@ const Book = () => {
   );
 };
 
-export default Book;
+export default Project;

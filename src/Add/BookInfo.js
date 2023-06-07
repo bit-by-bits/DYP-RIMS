@@ -2,13 +2,10 @@ import styles from "../../styles/file.module.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import URLObj from "../baseURL";
-import { Avatar, Badge, Card, Image, message } from "antd";
+import { Image, message } from "antd";
 
 const BookInfo = ({ user, setv, ISBN }) => {
   // STATES
-
-  const { Meta } = Card;
-  const { Ribbon } = Badge;
 
   const [data, setData] = useState({});
 
@@ -21,6 +18,7 @@ const BookInfo = ({ user, setv, ISBN }) => {
         url: `${URLObj.base}/books/?isbn=${ISBN}`,
         headers: {
           "X-ACCESS-KEY": URLObj.key,
+          "X-AUTH-TOKEN": user?.token,
         },
       })
         .then(res => {
@@ -121,11 +119,13 @@ const BookInfo = ({ user, setv, ISBN }) => {
               </div>
             </div>
 
-            <Image
-              style={{ margin: "10px 0", maxHeight: 400 }}
-              alt={data?.title ?? "- Not Available -"}
-              src={data?.imageLinks?.thumbnail}
-            />
+            {data?.imageLinks?.thumbnail && (
+              <Image
+                style={{ margin: "10px 0", maxHeight: 400 }}
+                alt={data?.title ?? "- Not Available -"}
+                src={data?.imageLinks?.thumbnail}
+              />
+            )}
           </div>
         </div>
       </div>
