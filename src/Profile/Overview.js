@@ -16,9 +16,7 @@ import crossref from "../../public/logos/crossref.jpg";
 import medline from "../../public/logos/medline.jpg";
 import doaj from "../../public/logos/doaj.png";
 import pmc from "../../public/logos/pmc.png";
-import embase from "../../public/logos/embase.svg";
 import scopus from "../../public/logos/scopus.svg";
-import scie from "../../public/logos/scie.svg";
 import wos from "../../public/logos/wos.svg";
 
 import green from "../../public/logos/green-oa.png";
@@ -226,7 +224,7 @@ const Overview = ({ data, stats, extra, size }) => {
           {[
             {
               label1: strings.conferences,
-              label2: number(data?.conference?.length),
+              label2: number(data?.conferences?.length),
               logo: GroupOutlined,
             },
             {
@@ -241,7 +239,7 @@ const Overview = ({ data, stats, extra, size }) => {
             },
             {
               label1: "Books/Chapters",
-              label2: number(data?.book?.length),
+              label2: number(data?.books?.length),
               logo: BookOutlined,
             },
           ].map((e, i) => (
@@ -258,7 +256,7 @@ const Overview = ({ data, stats, extra, size }) => {
           {[
             {
               label1: strings.projects,
-              label2: number(data?.project?.length),
+              label2: number(data?.research?.length),
               logo: ProjectOutlined,
             },
             {
@@ -268,17 +266,17 @@ const Overview = ({ data, stats, extra, size }) => {
             },
             {
               label1: "Awards",
-              label2: number(data?.award?.length),
+              label2: number(data?.awards?.length),
               logo: TrophyOutlined,
             },
             {
               label1: "Students Guided",
-              label2: number(data?.student?.length),
+              label2: number(data?.students_guided?.length),
               logo: UsergroupAddOutlined,
             },
             {
               label1: "IPR",
-              label2: number(data?.ipr?.length),
+              label2: number(data?.IPR?.length),
               logo: BulbOutlined,
             },
           ].map((e, i) => (

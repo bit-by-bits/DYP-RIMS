@@ -90,15 +90,19 @@ const Profile = () => {
 
           const u = res.data?.user;
 
+          const access_level = u?.access_level?.find(
+            e => e.id === Math.max(...u?.access_level?.map(e => e.id))
+          );
+
           const USER = {
             ...user,
             username: u?.username,
             name: u?.user?.first_name + " " + u?.user?.last_name,
-            level: u?.access_level[0]?.display_text,
             email: u?.user?.email,
             picture: u?.profile_picture,
             designation: u?.designation,
             department: u?.department?.name,
+            level: access_level?.display_text + access_level?.id,
           };
 
           localStorage.setItem("user", JSON.stringify(USER));
@@ -211,7 +215,7 @@ const Profile = () => {
           dataIndex: "sjr",
           key: "sjr",
           sorter: (a, b) => a.sjr.localeCompare(b.sjr),
-          width: innerWidth > 1400 ? "5%" : "8%",
+          width: innerWidth > 1400 ? "5%" : "9%",
         },
         {
           title: t => titleMaker(t, "h_index", "H-Index", "HIndex"),
@@ -252,15 +256,7 @@ const Profile = () => {
           title: t => titleMaker(t, "citations", "Citations", "Citations"),
           dataIndex: "citations",
           key: "citations",
-          sorter: (a, b) => {
-            console.log(
-              a.citations[sortBy] - b.citations[sortBy],
-              a,
-              b,
-              sortBy
-            );
-            return a.citations[sortBy] - b.citations[sortBy];
-          },
+          sorter: (a, b) => a.citations[sortBy] - b.citations[sortBy],
           render: e => (
             <div className={styles.publicationGrid}>
               <Image src={crossref} alt="Crossref" height={30} width={30} />
@@ -282,7 +278,7 @@ const Profile = () => {
           title: "",
           dataIndex: "action",
           key: "action",
-          width: innerWidth > 1400 ? "10%" : "6%",
+          width: innerWidth > 1400 ? "12%" : "6%",
         },
       ];
 
@@ -310,17 +306,18 @@ const Profile = () => {
           key: "attended_as",
         },
         {
-          title: "Type",
+          title: t => titleMaker(t, "type", "Type", "Type"),
           dataIndex: "type",
           key: "type",
+          sorter: (a, b) => a.type.localeCompare(b.type),
         },
         {
-          title: "Paper Presented",
+          title: t => titleMaker(t, "paper", "Paper Presented", "Paper"),
           dataIndex: "paper",
           key: "paper",
         },
         {
-          title: "Poster Presented",
+          title: t => titleMaker(t, "poster", "Poster Presented", "Poster"),
           dataIndex: "poster",
           key: "poster",
         },
@@ -341,8 +338,33 @@ const Profile = () => {
         },
       ];
 
-      const BODY = [];
+      const BODY = data?.conferences?.map((e, i) => ({
+        key: `${i + 1}.`,
+        name: e.conference_name,
+        attended_as: e.attended_as,
+        type: e.type,
+        paper: e.is_paper_presented
+          ? e.papers?.map(e => e.title).join(", ")
+          : "N/A",
+        poster: e.is_poster_presented
+          ? e.posters?.map(e => e.title).join(", ")
+          : "N/A",
+        date: date(e.date),
+        location: e.location,
+        action: (
+          <Button
+            type="primary"
+            icon={<FileTextOutlined />}
+            style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
+            className={styles.tableButton}
+            onClick={() => router.push(`/conference/${e.id}`)}
+          >
+            {innerWidth > 1400 ? "View More" : null}
+          </Button>
+        ),
+      }));
 
+      if (innerWidth < 1400) TITLE.shift();
       setConferences({ title: TITLE, body: BODY });
     }
 
@@ -398,17 +420,18 @@ const Profile = () => {
           key: "key",
         },
         {
-          title: "Principal Investigator",
+          title: t =>
+            titleMaker(t, "pi", "Principal Investigator", "Principal"),
           dataIndex: "pi",
           key: "pi",
         },
         {
-          title: "Co-Investigator",
+          title: t => titleMaker(t, "ci", "Co-Investigator", "Co"),
           dataIndex: "ci",
           key: "ci",
         },
         {
-          title: "Funding Agency",
+          title: t => titleMaker(t, "agency", "Funding Agency", "Agency"),
           dataIndex: "agency",
           key: "agency",
         },
@@ -418,7 +441,7 @@ const Profile = () => {
           key: "country",
         },
         {
-          title: "Agency Type",
+          title: t => titleMaker(t, "type", "Agency Type", "Type"),
           dataIndex: "type",
           key: "type",
         },
@@ -444,8 +467,30 @@ const Profile = () => {
         },
       ];
 
-      const BODY = [];
+      const BODY = data?.research?.map((e, i) => ({
+        key: `${i + 1}.`,
+        pi: e.principal_investigator,
+        ci: e.co_investigator,
+        agency: e.funding_agency,
+        country: e.country_funding_agency,
+        type: e.type,
+        amount: e.funds,
+        start: date(e.starting_date),
+        end: date(e.end_date),
+        action: (
+          <Button
+            type="primary"
+            icon={<FileTextOutlined />}
+            style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
+            className={styles.tableButton}
+            onClick={() => router.push(`/project/${e.id}`)}
+          >
+            {innerWidth > 1400 ? "View More" : null}
+          </Button>
+        ),
+      }));
 
+      if (innerWidth < 1400) TITLE.shift();
       setProjects({ title: TITLE, body: BODY });
     }
 
@@ -467,9 +512,10 @@ const Profile = () => {
           key: "agency",
         },
         {
-          title: "Type",
+          title: t => titleMaker(t, "type", "Type", "Type"),
           dataIndex: "type",
           key: "type",
+          sorter: (a, b) => a.type.localeCompare(b.type),
         },
         {
           title: "Date",
@@ -485,27 +531,24 @@ const Profile = () => {
 
       const BODY = data?.awards?.map((e, i) => ({
         key: `${i + 1}.`,
-        awarding_agency: e.awarding_agency,
-        date: new Date(e.date_awarded).toLocaleString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }),
+        agency: e.awarding_agency,
+        date: date(e.date_awarded),
         name: e.name?.user?.first_name + " " + e.name?.user?.last_name,
         department: e.department?.name,
         action: (
           <Button
             type="primary"
             icon={<FileTextOutlined />}
-            style={{ padding: "2px 10px" }}
+            style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
             className={styles.tableButton}
-            onClick={() => router.push(`/file/${e.doi_id}`)}
+            onClick={() => router.push(`/award/${e.id}`)}
           >
-            View More
+            {innerWidth > 1400 ? "View More" : null}
           </Button>
         ),
       }));
 
+      if (innerWidth < 1400) TITLE.shift();
       setAwards({ title: TITLE, body: BODY });
     }
 
@@ -518,7 +561,7 @@ const Profile = () => {
           key: "key",
         },
         {
-          title: "IPR",
+          title: t => titleMaker(t, "ipr", "IPR Awarded", "IPR"),
           dataIndex: "ipr",
           key: "ipr",
         },
@@ -549,8 +592,27 @@ const Profile = () => {
         },
       ];
 
-      const BODY = [];
+      const BODY = data?.IPR?.map((e, i) => ({
+        key: `${i + 1}.`,
+        ipr: e.IPR_awarded,
+        title: e.title_of_ipr,
+        status: e.status,
+        agency: e.awarding_agency,
+        date: date(e.date_of_publication),
+        action: (
+          <Button
+            type="primary"
+            icon={<FileTextOutlined />}
+            style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
+            className={styles.tableButton}
+            onClick={() => router.push(`/ipr/${e.id}`)}
+          >
+            {innerWidth > 1400 ? "View More" : null}
+          </Button>
+        ),
+      }));
 
+      if (innerWidth < 1400) TITLE.shift();
       setIpr({ title: TITLE, body: BODY });
     }
 
@@ -597,6 +659,13 @@ const Profile = () => {
   }, [data, sortBy]);
 
   // FUNCTIONS
+
+  const date = d =>
+    new Date(d).toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }) ?? d;
 
   const number = num => (num ? (isNaN(num) ? 0 : num) : 0);
 

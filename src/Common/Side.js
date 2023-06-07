@@ -25,7 +25,7 @@ const Side = ({ sets = () => {} }) => {
 
   useEffect(() => {
     getUser();
-    setTimeout(() => getUser(), 2000);
+    setTimeout(() => getUser(), 5000);
   }, []);
 
   const getUser = () => {
