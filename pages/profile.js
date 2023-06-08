@@ -745,7 +745,7 @@ const Profile = () => {
       index: [
         {
           name: "PubMed",
-          bool: e.in_pmc,
+          bool: e.in_pubmed,
         },
         {
           name: "Scopus",
@@ -772,7 +772,7 @@ const Profile = () => {
             {
               name: "PubMed",
               logo: pmc,
-              bool: e.in_pmc,
+              bool: e.in_pubmed,
             },
             {
               name: "Scopus",

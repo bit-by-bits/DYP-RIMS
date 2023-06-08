@@ -91,12 +91,12 @@ const FileInfo = ({ user, setv, DOI }) => {
               </div>
             }
             description={`DPU · ${
-              e.profile?.department?.name ?? "- Not Available -"
+              e.profile?.[0]?.department?.name ?? "- Not Available -"
             }`}
             avatar={
               <Avatar
                 src={
-                  e.profile?.profile_picture ??
+                  e.profile?.[0]?.profile_picture ??
                   "https://cdn.landesa.org/wp-content/uploads/default-user-image.png"
                 }
               />
@@ -183,6 +183,14 @@ const FileInfo = ({ user, setv, DOI }) => {
           name: "DOI ID",
           value: DOI ?? "- Not Available -",
         },
+        {
+          name: "WOS ID",
+          value: data?.wos_id ?? "- Not Available -",
+        },
+        {
+          name: "Scopus ID",
+          value: data?.scopus_id ?? "- Not Available -",
+        },
       ].map((e, i) => (
         <Card
           key={i}
@@ -231,12 +239,14 @@ const FileInfo = ({ user, setv, DOI }) => {
           key={i}
           hoverable
           bodyStyle={{ padding: 20 }}
-          style={{ border: "1px solid black" }}
+          style={{ border: "1px solid #d9d9d9" }}
         >
           <Meta
             align="center"
             description={
-              <div style={{ fontSize: 22, fontWeight: 900 }}>{e.value}</div>
+              <div style={{ fontSize: 22, fontWeight: 900, color: "grey" }}>
+                {e.value}
+              </div>
             }
             title={
               <div style={{ color: "#9a2827", fontSize: 14, marginBottom: -4 }}>
@@ -356,11 +366,15 @@ const FileInfo = ({ user, setv, DOI }) => {
           ) : (
             <>
               <div
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  backgroundColor: "#f5222d",
+                  borderColor: "#d80b16",
+                }}
                 onClick={() => setFileData({ ...fileData, modal: true })}
                 className={styles.file_tag2}
               >
-                PDF Not Available
+                PDF Not Available (Click To Upload)
               </div>
 
               <Modal

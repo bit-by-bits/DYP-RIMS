@@ -53,13 +53,13 @@
   font-weight: 600;
   font-size: 0.8rem;
   border: 2px solid #ef5d5b;
-  color: #ef5d5b;
-  background-color: white;
-}
-
-.file_tag1 {
   color: white;
   background-color: #f37775;
+}
+
+.file_tag2 {
+  background-color: #52c41a;
+  border-color: #3ca109;
 }
 
 .file_keyword,
@@ -118,6 +118,7 @@
 
 .info_body {
   font-size: 0.9rem;
+  width: max-content;
 }
 
 .file_text .file_grid {

@@ -6,6 +6,8 @@ import FileInfo from "../../src/File/FileInfo";
 import { FloatButton, Spin, message } from "antd";
 import Side from "../../src/Common/Side";
 import Top from "../../src/Common/Top";
+import axios from "axios";
+import URLObj from "../../src/baseURL";
 
 const File = () => {
   // BOILERPLATE
@@ -47,7 +49,25 @@ const File = () => {
   };
 
   const deletePub = () => {
-    message.error("Delete functionality unavailable!");
+    const str = JSON.stringify({ doi: DOI });
+
+    axios({
+      method: "DELETE",
+      url: `${URLObj.base}/publications/`,
+      headers: {
+        "X-ACCESS-KEY": URLObj.key,
+        "X-AUTH-TOKEN": user?.token,
+        "Content-Type": "application/json",
+      },
+      data: str,
+    })
+      .then(res => {
+        message.success("Publication deleted successfully!");
+        router.push("/profile");
+      })
+      .catch(err => {
+        message.error("Publication deletion failed!");
+      });
   };
 
   const editPub = () => {
