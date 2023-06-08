@@ -78,7 +78,7 @@ const File = () => {
     <>
       <Head>
         <title>File</title>
-        <link rel="icon" href="../logos/dpu-2.png" />
+        <link rel="icon" href="../../logos/dpu-2.png" />
       </Head>
 
       <div className={styles.wrapper}>

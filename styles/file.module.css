@@ -244,17 +244,40 @@
   padding: 8px 15px !important;
 }
 
+.uploadTableButton {
+  border: none !important;
+}
+
+.uploadTableButton,
 .file_btn1 {
   color: white !important;
   background-color: var(--primary) !important;
 }
 
+.uploadTableButton:hover,
 .file_btn1:hover {
   background-color: #7e1918 !important;
 }
 
 .file_btn2:hover {
   background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.dots {
+  z-index: 0;
+  height: 6px;
+  margin: 0.43rem;
+  aspect-ratio: 4;
+  background: radial-gradient(circle closest-side, #fff 90%, #0000) 0 /
+    calc(100% / 3) 100% space;
+  clip-path: inset(0 100% 0 0);
+  animation: dotLoader 1s steps(4) infinite;
+}
+
+@keyframes dotLoader {
+  to {
+    clip-path: inset(0 -34% 0 0);
+  }
 }
 
 @media screen and (min-width: 1400px) {

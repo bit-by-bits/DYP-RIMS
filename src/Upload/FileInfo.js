@@ -3,11 +3,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import URLObj from "../baseURL";
 import { Button, Table, message } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
 
 const FileInfo = ({ user, setp, setv, DOI }) => {
   // STATES
 
   const [data, setData] = useState({});
+  const [checking, setChecking] = useState(false);
   const [authors, setAuthors] = useState({
     title: [],
     body: [],
@@ -63,30 +65,36 @@ const FileInfo = ({ user, setp, setv, DOI }) => {
   const readFirst = arr => (arr?.length > 0 ? arr[0] : "- Not Available -");
 
   const submit = () => {
-    const str = JSON.stringify({
-      doi: DOI,
-      author: authors?.final,
-    });
+    if (!checking) {
+      setChecking(true);
 
-    axios({
-      method: "POST",
-      url: `${URLObj.base}/publications/`,
-      headers: {
-        "X-ACCESS-KEY": URLObj.key,
-        "X-AUTH-TOKEN": user?.token,
-        "X-TEST-ENVIRONMENT": "0",
-        "Content-Type": "application/json",
-      },
-      data: str,
-    })
-      .then(res => {
-        message.success("Publication Added");
-        setp(false);
-      })
-      .catch(err => {
-        message.error("Couldn't Add Publication");
-        console.log(err);
+      const str = JSON.stringify({
+        doi: DOI,
+        author: authors?.final,
       });
+
+      axios({
+        method: "POST",
+        url: `${URLObj.base}/publications/`,
+        headers: {
+          "X-ACCESS-KEY": URLObj.key,
+          "X-AUTH-TOKEN": user?.token,
+          "X-TEST-ENVIRONMENT": "0",
+          "Content-Type": "application/json",
+        },
+        data: str,
+      })
+        .then(res => {
+          message.success("Publication Added");
+          setChecking(false);
+          setp(false);
+        })
+        .catch(err => {
+          message.error("Couldn't Add Publication");
+          setChecking(false);
+          console.log(err);
+        });
+    }
   };
 
   const getAuthors = arr => {
@@ -96,13 +104,13 @@ const FileInfo = ({ user, setp, setv, DOI }) => {
           title: "No.",
           dataIndex: "no",
           key: "no",
-          width: "8%",
+          width: "10%",
         },
         {
           title: "Name",
           dataIndex: "name",
           key: "name",
-          width: "22%",
+          width: "25%",
           render: text => (
             <div
               style={{ fontWeight: 800, fontSize: "1.1rem", color: "black" }}
@@ -115,6 +123,13 @@ const FileInfo = ({ user, setp, setv, DOI }) => {
           title: "Department",
           dataIndex: "department",
           key: "department",
+          width: "35%",
+        },
+        {
+          title: "",
+          dataIndex: "action",
+          key: "action",
+          width: "15%",
         },
       ];
 
@@ -126,6 +141,50 @@ const FileInfo = ({ user, setp, setv, DOI }) => {
           name: e.given + " " + e.family,
           sequence: e.sequence ?? "additional",
           department: e.profile?.[0]?.department?.name ?? "- NA -",
+          action: (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                width: "100%",
+                gap: 10,
+              }}
+            >
+              <Button
+                className={styles.uploadTableButton}
+                onClick={() => {
+                  const FINAL = authors?.final?.map(f =>
+                    f.given + " " + f.family == e.given + " " + e.family
+                      ? {
+                          ...f,
+                          profile: [
+                            {
+                              ...f.profile?.[0],
+                              department: "N/A",
+                            },
+                          ],
+                        }
+                      : f
+                  );
+
+                  setAuthors({ ...authors, final: FINAL });
+                }}
+              >
+                Delink
+              </Button>
+              <DeleteOutlined
+                onClick={() => {
+                  const FINAL = authors?.final?.map(f =>
+                    f.given + " " + f.family == e.given + " " + e.family
+                      ? { ...f, sequence: "additional", in_dyp: false }
+                      : f
+                  );
+
+                  setAuthors({ ...authors, final: FINAL });
+                }}
+              />
+            </div>
+          ),
         }));
 
       const OTHERS = arr
@@ -237,7 +296,11 @@ const FileInfo = ({ user, setp, setv, DOI }) => {
               }}
               dataSource={authors?.body}
               columns={authors?.title}
-              footer={() => <Button onClick={submit}>Confirm</Button>}
+              footer={() => (
+                <Button className={styles.uploadTableButton} onClick={submit}>
+                  {checking ? <div className={styles.dots} /> : "Submit"}
+                </Button>
+              )}
             />
           </div>
         </div>

@@ -155,14 +155,14 @@ const Profile = () => {
               }
             } else ACCESS.closed++;
 
-            if (e.in_pmc) INDEX.pubmed++;
+            if (e.in_pubmed) INDEX.pubmed++;
             if (e.in_scopus) INDEX.scopus++;
             if (e.in_doaj) INDEX.doaj++;
             if (e.in_wos) INDEX.wos++;
             if (e.in_medline) INDEX.medline++;
 
             if (
-              e.in_pmc ||
+              e.in_pubmed ||
               e.in_scopus ||
               e.in_doaj ||
               e.in_wos ||
