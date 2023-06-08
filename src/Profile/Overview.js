@@ -229,12 +229,12 @@ const Overview = ({ data, stats, extra, size }) => {
             },
             {
               label1: strings.papers,
-              label2: number(data?.paper?.length),
+              label2: number(extra?.papers),
               logo: PaperClipOutlined,
             },
             {
               label1: strings.posters,
-              label2: number(data?.poster?.length),
+              label2: number(extra?.posters),
               logo: PaperClipOutlined,
             },
             {
@@ -261,7 +261,7 @@ const Overview = ({ data, stats, extra, size }) => {
             },
             {
               label1: "Funds Recieved",
-              label2: number(data?.fund?.length),
+              label2: number(extra?.funds),
               logo: DollarCircleOutlined,
             },
             {

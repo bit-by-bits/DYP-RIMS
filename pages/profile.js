@@ -65,12 +65,14 @@ const Profile = () => {
 
   const [sortBy, setSortBy] = useState("scopus");
   const [sections, setSections] = useState("all");
-
   const [extra, setExtra] = useState({
     citations: {},
     impact: {},
     access: {},
     index: {},
+    funds: 0,
+    papers: 0,
+    posters: 0,
   });
 
   // EFFECTS
@@ -129,6 +131,10 @@ const Profile = () => {
             total: 0,
           };
 
+          let FUNDS = 0;
+          let PAPERS = 0;
+          let POSTERS = 0;
+
           res.data?.data?.publication?.forEach(e => {
             CITATIONS.total += e.citations_total;
             CITATIONS.crossref += e.citations_crossref;
@@ -173,11 +179,24 @@ const Profile = () => {
 
           IMPACT.average = IMPACT.total / res.data?.data?.publication?.length;
 
+          res.data?.data?.conferences?.forEach(e => {
+            if (e.is_paper_presented) PAPERS += e.papers?.length;
+
+            if (e.is_poster_presented) POSTERS += e.posters?.length;
+          });
+
+          res.data?.data?.research?.forEach(e => {
+            FUNDS += e.funds;
+          });
+
           setExtra({
             citations: CITATIONS,
             impact: IMPACT,
             access: ACCESS,
             index: INDEX,
+            funds: FUNDS,
+            papers: PAPERS,
+            posters: POSTERS,
           });
 
           // LOAD WEBSITE
@@ -695,6 +714,19 @@ const Profile = () => {
   };
 
   const publicationsMaker = arr => {
+    const check = num => {
+      if (
+        num === null ||
+        num === undefined ||
+        num === 0 ||
+        num === "" ||
+        num === "null" ||
+        num === "undefined"
+      )
+        return "N/A";
+      else return num;
+    };
+
     return arr?.map((e, i) => ({
       key: `${i + 1}.`,
       publication: (
@@ -739,9 +771,9 @@ const Profile = () => {
           </div>
         </div>
       ),
-      impact_factor: e.impact_factor,
-      sjr: e.sjr_quartile,
-      h_index: e.h_index,
+      impact_factor: check(e.impact_factor),
+      sjr: check(e.sjr),
+      h_index: check(e.h_index),
       index: [
         {
           name: "PubMed",
@@ -810,7 +842,7 @@ const Profile = () => {
         scopus: e.citations_scopus,
         wos: e.citations_wos,
       },
-      published: e.year,
+      published: check(e.year),
       action: (
         <Button
           type="primary"
