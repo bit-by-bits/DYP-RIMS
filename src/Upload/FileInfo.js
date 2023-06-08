@@ -40,12 +40,22 @@ const FileInfo = ({ user, setp, setv, DOI }) => {
 
   useEffect(() => {
     if (data) getAuthors(data?.author);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {
     if (authors?.final?.length > 0) {
       getAuthors(authors?.final);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authors?.final]);
+
+  useEffect(() => {
+    console.log(
+      authors?.final?.map(e => [e.given + " " + e.family, e.sequence])
+    );
   }, [authors?.final]);
 
   // FUNCTIONS
@@ -53,7 +63,7 @@ const FileInfo = ({ user, setp, setv, DOI }) => {
   const readFirst = arr => (arr?.length > 0 ? arr[0] : "- Not Available -");
 
   const submit = () => {
-    const DATA = JSON.stringify({
+    const str = JSON.stringify({
       doi: DOI,
       author: authors?.final,
     });
@@ -67,7 +77,7 @@ const FileInfo = ({ user, setp, setv, DOI }) => {
         "X-TEST-ENVIRONMENT": "0",
         "Content-Type": "application/json",
       },
-      data: DATA,
+      data: str,
     })
       .then(res => {
         message.success("Publication Added");
@@ -211,16 +221,17 @@ const FileInfo = ({ user, setp, setv, DOI }) => {
                 type: "radio",
                 onChange: (key, row) => {
                   const FINAL = authors?.final?.map(e =>
-                    e.sequence == "first"
+                    e.given + " " + e.family == row?.[0]?.name
+                      ? e.sequence == "first"
+                        ? { ...e, sequence: "firstncorr" }
+                        : { ...e, sequence: "corresponding" }
+                      : e.sequence == "first"
                       ? { ...e, sequence: "first" }
-                      : e.given + " " + e.family == row?.[0]?.name
-                      ? { ...e, sequence: "corresponding" }
                       : { ...e, sequence: "additional" }
                   );
 
                   setAuthors({ ...authors, final: FINAL });
                 },
-                getCheckboxProps: r => ({ disabled: r.sequence == "first" }),
                 columnTitle: "Select Author",
                 columnWidth: "15%",
               }}

@@ -35,7 +35,7 @@ const AwardInfo = ({ user, setv, ID }) => {
           message.error("Could not fetch file data");
         });
     }
-  }, [user, ID]);
+  }, [ID, user, setv]);
 
   useEffect(() => {
     if (fileData?.file) {
@@ -60,6 +60,8 @@ const AwardInfo = ({ user, setv, ID }) => {
           message.error("Could not upload file");
         });
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileData]);
 
   // FUNCTIONS

@@ -5,11 +5,11 @@ import { useRouter } from "next/router";
 import styles from "../styles/upload.module.css";
 import Image from "next/image";
 import URLObj from "../src/baseURL";
-import { FloatButton, Spin, message } from "antd";
+import { FloatButton, Input, Spin, Upload, message } from "antd";
 import Side from "../src/Common/Side";
 import Top from "../src/Common/Top";
 
-const Upload = () => {
+const Publications = () => {
   // BOILERPLATE
 
   const router = useRouter();
@@ -30,12 +30,12 @@ const Upload = () => {
 
   // STATES
 
+  const { Dragger } = Upload;
   const [visible, setVisible] = useState(true);
 
-  const [file, setFile] = useState();
   const [DOI, setDOI] = useState();
-
-  const [searching, setSearching] = useState({ file: false, doi: false });
+  const [file, setFile] = useState();
+  const [searching, setSearching] = useState(false);
 
   // EFFECTS
 
@@ -44,6 +44,10 @@ const Upload = () => {
       setVisible(false);
     }, 1400);
   }, []);
+
+  useEffect(() => {
+    if (file) add();
+  }, [file]);
 
   // FUNCTIONS
 
@@ -57,10 +61,10 @@ const Upload = () => {
   };
 
   const searchDOI = () => {
-    setSearching({ file: searching.file, doi: true });
+    setSearching(true);
 
     if (!DOI) {
-      setSearching({ file: searching.file, doi: false });
+      setSearching(false);
       message.error("Enter a DOI first");
 
       return;
@@ -79,26 +83,31 @@ const Upload = () => {
         },
       })
         .then(res => {
-          setSearching({ file: searching.file, doi: false });
+          setSearching(false);
 
           message.success("Wait while we redirect you");
           router.push(`/uploading/${doi}`);
         })
         .catch(err => {
-          setSearching({ file: searching.file, doi: false });
+          setSearching(false);
           message.error("Enter a valid DOI");
         });
     }
   };
 
   const add = () => {
-    message.error("This feature is not available yet");
+    if (!file) {
+      message.error("Select a file first");
+      return;
+    }
+
+    message.error("This feature is not available yet. Please use DOI instead");
   };
 
   return (
     <>
       <Head>
-        <title>Upload</title>
+        <title>Add Publications</title>
         <link rel="icon" href="logos/dpu-2.png" />
       </Head>
 
@@ -120,54 +129,37 @@ const Upload = () => {
               <Top user={user} />
 
               <div className={styles.upload_left}>
-                <Image
-                  width={60}
-                  height={60}
-                  alt="ADD"
-                  src="/upload/upload.png"
-                  className={styles.upload_img}
-                />
-                <div className={styles.upload_title}>Add a file</div>
-
-                <div className={styles.upload_msg}>
-                  Kindly upload a .pdf file.
-                </div>
-
-                <label htmlFor="file" className={styles.label}>
-                  <input
-                    className={styles.upload_input1}
-                    onChange={e => setFile(e.target.files[0])}
-                    type="file"
-                    id="file"
-                    accept="application/pdf"
+                <Dragger
+                  name="file"
+                  multiple={false}
+                  style={{ border: "none", width: "65vw" }}
+                  beforeUpload={file => setFile(file)}
+                >
+                  <Image
+                    width={60}
+                    height={60}
+                    alt="ADD"
+                    src="/upload/upload.png"
+                    className={styles.upload_img}
                   />
+                  <div className={styles.upload_title}>Add a file</div>
 
-                  <div className={styles.upload_btn2}>Select File</div>
-                  <div className={styles.upload_text}>
-                    {file ? "Selected " + file.name : "No File Selected"}
+                  <div className={styles.upload_msg}>
+                    Click or drag file to this area to upload
                   </div>
-                </label>
-
-                {searching.file ? (
-                  <div className={styles.upload_btn}>
-                    <div className={styles.dots} />
-                  </div>
-                ) : (
-                  <div onClick={add} className={styles.upload_btn}>
-                    Add File
-                  </div>
-                )}
+                </Dragger>
 
                 <div className={styles.upload_msg}>Or add a file using DOI</div>
                 <div className={styles.flex}>
-                  <input
-                    type="text"
-                    id="doi_text"
-                    placeholder="Enter DOI"
+                  <Input
                     className={styles.upload_input2}
+                    autoComplete={true}
+                    placeholder="enter doi here"
                     onChange={e => setDOI(e.target.value)}
+                    onPressEnter={searchDOI}
                   />
-                  {searching.doi ? (
+
+                  {searching ? (
                     <div className={styles.upload_btn}>
                       <div className={styles.dots} />
                     </div>
@@ -186,4 +178,4 @@ const Upload = () => {
   );
 };
 
-export default Upload;
+export default Publications;

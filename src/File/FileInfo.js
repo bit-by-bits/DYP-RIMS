@@ -65,8 +65,20 @@ const FileInfo = ({ user, setv, DOI }) => {
   // FUNCTIONS
 
   const getAuthors = () => {
-    const MAIN = data?.author_name?.map(e => (
-      <Ribbon key={e.id} text="First" color="#9a2827">
+    const ribbon = (i, e) => (
+      <Ribbon
+        key={i}
+        text={
+          e.sequence == "first"
+            ? "First"
+            : e.sequence == "corresponding"
+            ? "Corr"
+            : e.sequence == "firstncorr"
+            ? "First & Corr"
+            : ""
+        }
+        color="#9a2827"
+      >
         <Card
           hoverable
           bodyStyle={{ padding: 15, minWidth: 250 }}
@@ -75,14 +87,16 @@ const FileInfo = ({ user, setv, DOI }) => {
           <Meta
             title={
               <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
-                {e.user?.first_name + " " + e.user?.last_name}
+                {e.given + " " + e.family}
               </div>
             }
-            description={`DPU · ${e.department?.name ?? "- Not Available -"}`}
+            description={`DPU · ${
+              e.profile?.department?.name ?? "- Not Available -"
+            }`}
             avatar={
               <Avatar
                 src={
-                  e.profile_picture ??
+                  e.profile?.profile_picture ??
                   "https://cdn.landesa.org/wp-content/uploads/default-user-image.png"
                 }
               />
@@ -90,36 +104,9 @@ const FileInfo = ({ user, setv, DOI }) => {
           />
         </Card>
       </Ribbon>
-    ));
+    );
 
-    const CORR = data?.corresponding_authors?.map(e => (
-      <Ribbon key={e.id} text="Corr" color="#9a2827">
-        <Card
-          hoverable
-          bodyStyle={{ padding: 15, minWidth: 250 }}
-          style={{ border: "1px solid #d9d9d9" }}
-        >
-          <Meta
-            title={
-              <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
-                {e.user?.first_name + " " + e.user?.last_name}
-              </div>
-            }
-            description={`DPU · ${e.department?.name ?? "- Not Available -"}`}
-            avatar={
-              <Avatar
-                src={
-                  e.profile_picture ??
-                  "https://cdn.landesa.org/wp-content/uploads/default-user-image.png"
-                }
-              />
-            }
-          />
-        </Card>
-      </Ribbon>
-    ));
-
-    const OTHERS = data?.other_authors?.map((e, i) => (
+    const noRibbon = (i, e) => (
       <Card
         key={i}
         hoverable
@@ -128,7 +115,9 @@ const FileInfo = ({ user, setv, DOI }) => {
       >
         <Meta
           title={
-            <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>{e}</div>
+            <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
+              {e.given + " " + e.family}
+            </div>
           }
           avatar={
             <Avatar
@@ -139,15 +128,17 @@ const FileInfo = ({ user, setv, DOI }) => {
           }
         />
       </Card>
-    ));
+    );
 
-    const AUTHORS = [];
-
-    if (MAIN?.length > 0) AUTHORS.push(...MAIN);
-    if (CORR?.length > 0) AUTHORS.push(...CORR);
-    if (OTHERS?.length > 0) AUTHORS.push(...OTHERS);
-
-    setAuthors(AUTHORS);
+    setAuthors(
+      data?.actual_author?.map((e, i) =>
+        e.sequence == "first" ||
+        e.sequence == "corresponding" ||
+        e.sequence == "firstncorr"
+          ? ribbon(i, e)
+          : noRibbon(i, e)
+      )
+    );
   };
 
   const getCitations = () => {
@@ -245,9 +236,13 @@ const FileInfo = ({ user, setv, DOI }) => {
           <Meta
             align="center"
             description={
-              <div style={{ fontSize: 16, fontWeight: 700 }}>{e.value}</div>
+              <div style={{ fontSize: 22, fontWeight: 900 }}>{e.value}</div>
             }
-            title={<div style={{ color: "#9a2827" }}>{e.name}</div>}
+            title={
+              <div style={{ color: "#9a2827", fontSize: 14, marginBottom: -4 }}>
+                {e.name}
+              </div>
+            }
           />
         </Card>
       ))
@@ -491,7 +486,8 @@ const FileInfo = ({ user, setv, DOI }) => {
           <div className={styles.abstract}>
             <div className={styles.file_head}>Abstract</div>
             <div className={styles.abs_body}>
-              {data?.abstract ?? "- Not Available -"}
+              {data?.abstract?.replace(/(<([^>]+)>)/gi, " ") ??
+                "- Not Available -"}
             </div>
           </div>
         )}

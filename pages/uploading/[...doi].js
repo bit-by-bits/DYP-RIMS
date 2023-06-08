@@ -46,7 +46,7 @@ const Uploading = () => {
     if (!pending)
       setTimeout(() => {
         router.push(`/file/${DOI}`);
-      }, 3000);
+      }, 2000);
   }, [DOI, pending, router]);
 
   // FUNCTIONS

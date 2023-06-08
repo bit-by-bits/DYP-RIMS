@@ -699,7 +699,12 @@ const Profile = () => {
       key: `${i + 1}.`,
       publication: (
         <div className={styles.publication}>
-          <div className={styles.publicationTitle}>{e.publication_title}</div>
+          <div
+            className={styles.publicationTitle}
+            dangerouslySetInnerHTML={{
+              __html: e?.publication_title ?? "- Not Available -",
+            }}
+          />
           <Paragraph
             className={styles.publicationAuthors}
             ellipsis={{
@@ -708,25 +713,21 @@ const Profile = () => {
               symbol: "more",
             }}
           >
-            {e.author_name?.map((e, i) =>
-              e?.user ? (
-                <span key={`first-${i}`}>
-                  {e?.user?.first_name + " " + e?.user?.last_name}
-                  <sup>1</sup>
-                  <span>, </span>
-                </span>
-              ) : null
-            )}
-            {e.corresponding_authors?.map(e =>
-              e?.user ? (
-                <span key={`corresponding-${e.id}`}>
-                  {e?.user?.first_name + " " + e?.user?.last_name}
-                  <sup>*</sup>
-                  <span>, </span>
-                </span>
-              ) : null
-            )}
-            {e.other_authors?.map(e => e).join(", ")}
+            {e.actual_author.map((e, i) => (
+              <span key={i}>
+                <span>{e?.given + " " + e?.family}</span>
+                <sup>
+                  {e.sequence === "first"
+                    ? "1"
+                    : e.sequence === "corresponding"
+                    ? "*"
+                    : e.sequence === "firstncorr"
+                    ? "1*"
+                    : null}
+                </sup>
+                <span>, </span>
+              </span>
+            )) ?? "- Not Available -"}
           </Paragraph>
           <div className={styles.publicationJournal}>{e.journal_name}</div>
           <div
