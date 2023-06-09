@@ -98,6 +98,7 @@ const Books = () => {
       url: `${URLObj.base}/books/?isbn=${ISBN}`,
       headers: {
         "X-ACCESS-KEY": URLObj.key,
+        "X-AUTH-TOKEN": user?.token,
       },
     })
       .then(res => {

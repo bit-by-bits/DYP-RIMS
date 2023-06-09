@@ -63,9 +63,24 @@ const Projects = () => {
     formdata?.append("funding_agency", values.agency);
     formdata?.append("country_funding_agency", values.country);
     formdata?.append("type", values.type);
-    formdata?.append("starting_date", values.sdate);
-    formdata?.append("end_date", values.edate);
-    formdata?.append("duration", values.duration);
+
+    const sdate = values.sdate;
+    formdata?.append(
+      "starting_date",
+      `${sdate.year()}-${sdate.month() + 1}-${sdate.date()}`
+    );
+
+    const edate = values.edate;
+    formdata?.append(
+      "end_date",
+      `${edate.year()}-${edate.month() + 1}-${edate.date()}`
+    );
+
+    const duration = `${edate.year() - sdate.year()} years ${
+      edate.month() - sdate.month()
+    } months`;
+
+    formdata?.append("duration", duration);
     formdata?.append("funds", values.funds);
 
     axios({
@@ -125,7 +140,6 @@ const Projects = () => {
                   style={{ width: "80vw", transform: "translateX(-10vw)" }}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
-                  initialValues={{}}
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
                   autoComplete="off"
@@ -215,19 +229,6 @@ const Projects = () => {
                     ]}
                   >
                     <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Project Duration"
-                    name="duration"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter project duration!",
-                      },
-                    ]}
-                  >
-                    <Input />
                   </Form.Item>
 
                   <Form.Item

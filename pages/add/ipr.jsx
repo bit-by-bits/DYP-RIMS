@@ -51,7 +51,7 @@ const IPR = () => {
 
   useEffect(() => {
     form.resetFields();
-  }, [form]);
+  }, [form, visible]);
 
   // FUNCTIONS
 
@@ -64,7 +64,12 @@ const IPR = () => {
     formdata?.append("ipr_title", values.title);
     formdata?.append("status", values.status);
     formdata?.append("awarding_agency", values.agency);
-    formdata?.append("date", values.date);
+
+    const date = values.date;
+    formdata?.append(
+      "date",
+      `${date.year()}-${date.month() + 1}-${date.date()}`
+    );
 
     axios({
       method: "POST",

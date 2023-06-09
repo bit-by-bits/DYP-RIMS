@@ -51,7 +51,7 @@ const Students = () => {
 
   useEffect(() => {
     form.resetFields();
-  }, [form]);
+  }, [visible, form]);
 
   // FUNCTIONS
 
@@ -60,10 +60,10 @@ const Students = () => {
 
     formdata.append("faculty", values.faculty);
     formdata.append("department", values.department);
-    formdata.append("student", values.student);
-    formdata.append("degree", values.degree);
-    formdata.append("topic", values.topic);
-    formdata.append("year", values.year);
+    formdata.append("student_name", values.student);
+    formdata.append("student_degree", values.degree);
+    formdata.append("thesis_topic", values.topic);
+    formdata.append("year", values.year?.$y);
 
     axios({
       method: "POST",
@@ -124,7 +124,7 @@ const Students = () => {
                   wrapperCol={{ span: 16 }}
                   initialValues={{
                     faculty: user?.name,
-                    department: user?.dept,
+                    department: user?.department,
                   }}
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
@@ -201,7 +201,7 @@ const Students = () => {
                       { required: true, message: "Please input the year!" },
                     ]}
                   >
-                    <Input />
+                    <DatePicker style={{ width: "100%" }} format="YYYY" />
                   </Form.Item>
 
                   <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
