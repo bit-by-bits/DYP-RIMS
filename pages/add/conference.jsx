@@ -42,7 +42,9 @@ const Conferences = () => {
 
   // STATES
 
+  const { RangePicker } = DatePicker;
   const { Dragger } = Upload;
+
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(true);
 
@@ -71,16 +73,22 @@ const Conferences = () => {
   const onFinish = values => {
     const formdata = new FormData();
 
-    formdata.append("attendee", values.attendee);
+    formdata.append("faculty", values.faculty);
     formdata.append("department", values.department);
     formdata.append("conference_type", values.type);
     formdata.append("conference_name", values.conference);
     formdata.append("certificate_file", file);
     formdata.append("attended_as", values.attended_as);
-    formdata.append("start_date", values.start_date);
-    formdata.append("end_date", values.end_date);
-    formdata.append("location", values.location);
 
+    if (data?.start_date && data?.end_date) {
+      formdata.append("start_date", data?.start_date);
+      formdata.append("end_date", data?.end_date);
+    } else {
+      formdata.append("start_date", values.date[0]);
+      formdata.append("end_date", values.date[1]);
+    }
+
+    formdata.append("location", values.location);
     formdata.append("is_paper_presented", paper ? 1 : 0);
     formdata.append("is_poster_presented", poster ? 1 : 0);
 
@@ -220,7 +228,10 @@ const Conferences = () => {
                   )}
 
                   <div
-                    onClick={() => setStep(1)}
+                    onClick={() => {
+                      setStep(1);
+                      setData({});
+                    }}
                     className={styles2.upload_btn2}
                   >
                     Skip
@@ -240,14 +251,23 @@ const Conferences = () => {
                   style={{ width: "80vw", transform: "translateX(-10vw)" }}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
-                  initialValues={{
-                    attendee: user?.name,
-                    department: user?.department,
-                    conference: data?.conference_name,
-                    start_date: data?.start_date?.split(" ")?.shift(),
-                    end_date: data?.end_date?.split(" ")?.shift(),
-                    location: data?.location,
-                  }}
+                  initialValues={
+                    data?.start_date && data?.end_date
+                      ? {
+                          faculty: user?.name,
+                          department: user?.department,
+                          conference: data?.conference_name,
+                          start_date: data?.start_date?.split(" ")?.shift(),
+                          end_date: data?.end_date?.split(" ")?.shift(),
+                          location: data?.location,
+                        }
+                      : {
+                          faculty: user?.name,
+                          department: user?.department,
+                          conference: data?.conference_name,
+                          location: data?.location,
+                        }
+                  }
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
                   autoComplete="off"
@@ -345,45 +365,48 @@ const Conferences = () => {
                     />
                   </Form.Item>
 
-                  <Form.Item
-                    label="Conference Start"
-                    name="start_date"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter conference starting date!",
-                      },
-                    ]}
-                  >
-                    {data?.start_date ? (
-                      <Input placeholder="YYYY-MM-DD" />
-                    ) : (
-                      <DatePicker
-                        style={{ width: "100%" }}
-                        format="YYYY-MM-DD"
-                      />
-                    )}
-                  </Form.Item>
+                  {data?.start_date && data?.end_date ? (
+                    <>
+                      <Form.Item
+                        label="Conference Start"
+                        name="start_date"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter conference start date!",
+                          },
+                        ]}
+                      >
+                        <Input placeholder="YYYY-MM-DD" />
+                      </Form.Item>
 
-                  <Form.Item
-                    label="Conference End"
-                    name="end_date"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter conference end date!",
-                      },
-                    ]}
-                  >
-                    {data?.end_date ? (
-                      <Input placeholder="YYYY-MM-DD" />
-                    ) : (
-                      <DatePicker
-                        style={{ width: "100%" }}
-                        format="YYYY-MM-DD"
-                      />
-                    )}
-                  </Form.Item>
+                      <Form.Item
+                        label="Conference End"
+                        name="end_date"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter conference end date!",
+                          },
+                        ]}
+                      >
+                        <Input placeholder="YYYY-MM-DD" />
+                      </Form.Item>
+                    </>
+                  ) : (
+                    <Form.Item
+                      label="Conference Dates"
+                      name="date"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please enter conference dates!",
+                        },
+                      ]}
+                    >
+                      <RangePicker style={{ width: "100%" }} />
+                    </Form.Item>
+                  )}
 
                   <Form.Item
                     label="Location"

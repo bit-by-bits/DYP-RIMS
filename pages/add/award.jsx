@@ -41,6 +41,7 @@ const Awards = () => {
 
   // STATES
 
+  const { RangePicker } = DatePicker;
   const { Dragger } = Upload;
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(true);
@@ -48,10 +49,7 @@ const Awards = () => {
   const [step, setStep] = useState(0);
   const [searching, setSearching] = useState(false);
   const [data, setData] = useState({});
-
   const [file, setFile] = useState(null);
-  const [paper, setPaper] = useState(0);
-  const [poster, setPoster] = useState(0);
 
   // EFFECTS
 
@@ -72,11 +70,18 @@ const Awards = () => {
 
     formdata.append("faculty", values.faculty);
     formdata.append("department", values.department);
-    formdata.append("award", values.award);
     formdata.append("agency", values.agency);
+    formdata.append("award", values.title);
     formdata.append("type", values.type);
-    formdata.append("start_date", values.start_date);
-    formdata.append("end_date", values.end_date);
+
+    if (data?.start_date && data?.end_date) {
+      formdata.append("start_date", data?.start_date);
+      formdata.append("end_date", data?.end_date);
+    } else {
+      formdata.append("start_date", values.date[0]);
+      formdata.append("end_date", values.date[1]);
+    }
+
     formdata.append("location", values.location);
     formdata.append("file", file);
 
@@ -206,7 +211,10 @@ const Awards = () => {
                   )}
 
                   <div
-                    onClick={() => setStep(1)}
+                    onClick={() => {
+                      setStep(1);
+                      setData({});
+                    }}
                     className={styles2.upload_btn2}
                   >
                     Skip
@@ -226,14 +234,23 @@ const Awards = () => {
                   style={{ width: "80vw", transform: "translateX(-10vw)" }}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
-                  initialValues={{
-                    faculty: user?.name,
-                    department: user?.department,
-                    title: data?.award_name,
-                    start_date: data?.start_date?.split(" ")?.shift(),
-                    end_date: data?.end_date?.split(" ")?.shift(),
-                    location: data?.location,
-                  }}
+                  initialValues={
+                    data?.start_date && data?.end_date
+                      ? {
+                          faculty: user?.name,
+                          department: user?.department,
+                          title: data?.award_name,
+                          start_date: data?.start_date?.split(" ")?.shift(),
+                          end_date: data?.end_date?.split(" ")?.shift(),
+                          location: data?.location,
+                        }
+                      : {
+                          faculty: user?.name,
+                          department: user?.department,
+                          title: data?.award_name,
+                          location: data?.location,
+                        }
+                  }
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
                   autoComplete="off"
@@ -306,45 +323,48 @@ const Awards = () => {
                     />
                   </Form.Item>
 
-                  <Form.Item
-                    label="Start Date"
-                    name="start_date"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter recieving start date!",
-                      },
-                    ]}
-                  >
-                    {data?.start_date ? (
-                      <Input placeholder="YYYY-MM-DD" />
-                    ) : (
-                      <DatePicker
-                        style={{ width: "100%" }}
-                        format="YYYY-MM-DD"
-                      />
-                    )}
-                  </Form.Item>
+                  {data?.start_date && data?.end_date ? (
+                    <>
+                      <Form.Item
+                        label="Conference Start"
+                        name="start_date"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter conference start date!",
+                          },
+                        ]}
+                      >
+                        <Input placeholder="YYYY-MM-DD" />
+                      </Form.Item>
 
-                  <Form.Item
-                    label="End Date"
-                    name="end_date"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter recieving end date!",
-                      },
-                    ]}
-                  >
-                    {data?.end_date ? (
-                      <Input placeholder="YYYY-MM-DD" />
-                    ) : (
-                      <DatePicker
-                        style={{ width: "100%" }}
-                        format="YYYY-MM-DD"
-                      />
-                    )}
-                  </Form.Item>
+                      <Form.Item
+                        label="Conference End"
+                        name="end_date"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter conference end date!",
+                          },
+                        ]}
+                      >
+                        <Input placeholder="YYYY-MM-DD" />
+                      </Form.Item>
+                    </>
+                  ) : (
+                    <Form.Item
+                      label="Conference Dates"
+                      name="date"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please enter conference dates!",
+                        },
+                      ]}
+                    >
+                      <RangePicker style={{ width: "100%" }} />
+                    </Form.Item>
+                  )}
 
                   <Form.Item
                     label="Location"
@@ -372,11 +392,7 @@ const Awards = () => {
                       type="primary"
                       className={styles.secondary}
                       htmlType="reset"
-                      onClick={() => {
-                        setStep(0);
-                        setPaper(0);
-                        setPoster(0);
-                      }}
+                      onClick={() => setStep(0)}
                     >
                       RETURN BACK
                     </Button>
