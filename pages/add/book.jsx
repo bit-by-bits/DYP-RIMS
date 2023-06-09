@@ -49,7 +49,7 @@ const Books = () => {
 
   useEffect(() => {
     form.resetFields();
-  }, [form, data]);
+  }, [form, data, visible]);
 
   // FUNCTIONS
 
@@ -210,7 +210,10 @@ const Books = () => {
                   initialValues={{
                     faculty: user?.name,
                     department: user?.department,
-                    title: data?.title + " - " + data?.subtitle,
+                    title:
+                      (data?.title ?? "") +
+                      (data?.subtitle ? ": " : "") +
+                      (data?.subtitle ?? ""),
                     year: data?.publishedDate,
                     isbn: ISBN,
                   }}
@@ -225,7 +228,7 @@ const Books = () => {
                       { required: true, message: "Please input faculty name!" },
                     ]}
                   >
-                    <Input />
+                    <Input disabled />
                   </Form.Item>
 
                   <Form.Item
@@ -238,7 +241,7 @@ const Books = () => {
                       },
                     ]}
                   >
-                    <Input />
+                    <Input disabled />
                   </Form.Item>
 
                   <Form.Item
@@ -306,7 +309,7 @@ const Books = () => {
                       },
                     ]}
                   >
-                    <Input />
+                    {ISBN ? <Input disabled /> : <Input />}
                   </Form.Item>
 
                   <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

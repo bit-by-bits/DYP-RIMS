@@ -63,7 +63,7 @@ const Awards = () => {
 
   useEffect(() => {
     form.resetFields();
-  }, [form, data]);
+  }, [form, data, visible]);
 
   // FUNCTIONS
 
@@ -245,7 +245,7 @@ const Awards = () => {
                       { required: true, message: "Please input faculty name!" },
                     ]}
                   >
-                    <Input />
+                    <Input disabled />
                   </Form.Item>
 
                   <Form.Item
@@ -258,7 +258,7 @@ const Awards = () => {
                       },
                     ]}
                   >
-                    <Input />
+                    <Input disabled />
                   </Form.Item>
 
                   <Form.Item

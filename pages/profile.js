@@ -395,27 +395,28 @@ const Profile = () => {
           key: "key",
         },
         {
-          title: "Title",
+          title: t => titleMaker(t, "title", "Publication Title", "Title"),
           dataIndex: "title",
           key: "title",
+          width: "25%",
         },
         {
-          title: "Type",
+          title: t => titleMaker(t, "type", "Publication Type", "Type"),
           dataIndex: "type",
           key: "type",
         },
         {
-          title: "Book Name",
+          title: t => titleMaker(t, "book", "Book Name", "Book"),
           dataIndex: "book",
           key: "book",
         },
         {
-          title: "Publisher",
+          title: t => titleMaker(t, "publisher", "Publisher Name", "Publisher"),
           dataIndex: "publisher",
           key: "publisher",
         },
         {
-          title: "Published",
+          title: t => titleMaker(t, "published", "Published", "Year"),
           dataIndex: "published",
           key: "published",
         },
@@ -426,8 +427,27 @@ const Profile = () => {
         },
       ];
 
-      const BODY = [];
+      const BODY = data?.books?.map((e, i) => ({
+        key: `${i + 1}.`,
+        title: e.publication_title,
+        type: e.publication_type,
+        book: e.book_name,
+        publisher: "N/A",
+        published: date(e.year_published),
+        action: (
+          <Button
+            type="primary"
+            icon={<FileTextOutlined />}
+            style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
+            className={styles.tableButton}
+            onClick={() => router.push(`/book/${e.id}`)}
+          >
+            {innerWidth > 1400 ? "View More" : null}
+          </Button>
+        ),
+      }));
 
+      if (innerWidth < 1400) TITLE.shift();
       setBooks({ title: TITLE, body: BODY });
     }
 
@@ -550,10 +570,10 @@ const Profile = () => {
 
       const BODY = data?.awards?.map((e, i) => ({
         key: `${i + 1}.`,
+        name: e.title,
         agency: e.awarding_agency,
+        type: e.award_type,
         date: date(e.date_awarded),
-        name: e.name?.user?.first_name + " " + e.name?.user?.last_name,
-        department: e.department?.name,
         action: (
           <Button
             type="primary"
@@ -669,8 +689,26 @@ const Profile = () => {
         },
       ];
 
-      const BODY = [];
+      const BODY = data?.students_guided?.map((e, i) => ({
+        key: `${i + 1}.`,
+        name: e.student_name,
+        degree: e.student_degree,
+        thesis: e.thesis_topic,
+        year: e.year,
+        action: (
+          <Button
+            type="primary"
+            icon={<FileTextOutlined />}
+            style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
+            className={styles.tableButton}
+            onClick={() => router.push(`/student/${e.id}`)}
+          >
+            {innerWidth > 1400 ? "View More" : null}
+          </Button>
+        ),
+      }));
 
+      if (innerWidth < 1400) TITLE.shift();
       setStudents({ title: TITLE, body: BODY });
     }
 

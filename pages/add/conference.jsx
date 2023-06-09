@@ -64,7 +64,7 @@ const Conferences = () => {
 
   useEffect(() => {
     form.resetFields();
-  }, [form, data]);
+  }, [form, data, visible]);
 
   // FUNCTIONS
 
@@ -76,6 +76,7 @@ const Conferences = () => {
     formdata.append("conference_type", values.type);
     formdata.append("conference_name", values.conference);
     formdata.append("certificate_file", file);
+    formdata.append("attended_as", values.attended_as);
     formdata.append("start_date", values.start_date);
     formdata.append("end_date", values.end_date);
     formdata.append("location", values.location);
@@ -252,16 +253,13 @@ const Conferences = () => {
                   autoComplete="off"
                 >
                   <Form.Item
-                    label="Name Of Attendee"
-                    name="attendee"
+                    label="Name Of Faculty"
+                    name="faculty"
                     rules={[
-                      {
-                        required: true,
-                        message: "Please input attendee name!",
-                      },
+                      { required: true, message: "Please input faculty name!" },
                     ]}
                   >
-                    <Input />
+                    <Input disabled />
                   </Form.Item>
 
                   <Form.Item
@@ -274,7 +272,7 @@ const Conferences = () => {
                       },
                     ]}
                   >
-                    <Input />
+                    <Input disabled />
                   </Form.Item>
 
                   <Form.Item
@@ -308,6 +306,41 @@ const Conferences = () => {
                         { value: "state", label: "State" },
                         { value: "national", label: "National" },
                         { value: "international", label: "International" },
+                      ]}
+                    />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="Attended As"
+                    name="attended_as"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please select type of conference!",
+                      },
+                    ]}
+                  >
+                    <Select
+                      showSearch
+                      placeholder="Choose type of conference"
+                      allowClear
+                      options={[
+                        {
+                          value: "delegate",
+                          label: "Delegate",
+                        },
+                        {
+                          value: "chairperson",
+                          label: "Chairperson",
+                        },
+                        {
+                          value: "faculty",
+                          label: "Faculty",
+                        },
+                        {
+                          value: "judge",
+                          label: "Judge",
+                        },
                       ]}
                     />
                   </Form.Item>

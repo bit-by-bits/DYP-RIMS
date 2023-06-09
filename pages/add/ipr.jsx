@@ -143,7 +143,7 @@ const IPR = () => {
                       { required: true, message: "Please input faculty name!" },
                     ]}
                   >
-                    <Input />
+                    <Input disabled />
                   </Form.Item>
 
                   <Form.Item
@@ -156,7 +156,7 @@ const IPR = () => {
                       },
                     ]}
                   >
-                    <Input />
+                    <Input disabled />
                   </Form.Item>
 
                   <Form.Item

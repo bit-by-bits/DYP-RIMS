@@ -51,7 +51,7 @@ const Projects = () => {
 
   useEffect(() => {
     form.resetFields();
-  }, [form]);
+  }, [form, visible]);
 
   // FUNCTIONS
 
@@ -138,6 +138,10 @@ const Projects = () => {
                   name="project"
                   form={form}
                   style={{ width: "80vw", transform: "translateX(-10vw)" }}
+                  initialValues={{
+                    faculty: user?.name,
+                    department: user?.department,
+                  }}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   onFinish={onFinish}
@@ -145,29 +149,26 @@ const Projects = () => {
                   autoComplete="off"
                 >
                   <Form.Item
-                    label="Principal Investigator"
-                    name="investigator"
+                    label="Name Of Faculty"
+                    name="faculty"
                     rules={[
-                      {
-                        required: true,
-                        message: "Please input investigator name!",
-                      },
+                      { required: true, message: "Please input faculty name!" },
                     ]}
                   >
-                    <Input />
+                    <Input disabled />
                   </Form.Item>
 
                   <Form.Item
-                    label="Co-investigators"
-                    name="investigators"
+                    label="Department"
+                    name="department"
                     rules={[
                       {
                         required: true,
-                        message: "Please input co-investigators' names!",
+                        message: "Please input your department!",
                       },
                     ]}
                   >
-                    <Input />
+                    <Input disabled />
                   </Form.Item>
 
                   <Form.Item
@@ -236,6 +237,7 @@ const Projects = () => {
                     name="funds"
                     rules={[
                       {
+                        pattern: /^[1-9]\d*(\.\d+)?$/,
                         required: true,
                         message: "Please enter project funds!",
                       },
