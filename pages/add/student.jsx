@@ -31,7 +31,7 @@ const Students = () => {
   useEffect(() => {
     if (typeof window !== "undefined")
       user
-        ? Date.now() - user?.setUpTime > 3600000 &&
+        ? Date.now() - user?.setUpTime > 14400000 &&
           localStorage.removeItem("user")
         : router.push("/");
   }, [router, user]);
@@ -92,7 +92,7 @@ const Students = () => {
   return (
     <>
       <Head>
-        <title>Add Students Guided</title>
+        <title>DYPU RIMS | Add Students Guided</title>
         <link rel="icon" href="../logos/dpu-2.png" />
       </Head>
 

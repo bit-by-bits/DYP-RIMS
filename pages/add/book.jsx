@@ -24,7 +24,7 @@ const Books = () => {
   useEffect(() => {
     if (typeof window !== "undefined")
       user
-        ? Date.now() - user?.setUpTime > 3600000 &&
+        ? Date.now() - user?.setUpTime > 14400000 &&
           localStorage.removeItem("user")
         : router.push("/");
   }, [router, user]);
@@ -117,7 +117,7 @@ const Books = () => {
   return (
     <>
       <Head>
-        <title>Add Books/Chapters</title>
+        <title>DYPU RIMS | Add Books/Chapters</title>
         <link rel="icon" href="../logos/dpu-2.png" />
       </Head>
 

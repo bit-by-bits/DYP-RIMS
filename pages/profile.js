@@ -41,7 +41,7 @@ const Profile = () => {
   useEffect(() => {
     if (typeof window !== "undefined")
       user
-        ? Date.now() - user?.setUpTime > 3600000 &&
+        ? Date.now() - user?.setUpTime > 14400000 &&
           localStorage.removeItem("user")
         : router.push("/");
   }, [router, user]);
@@ -218,7 +218,7 @@ const Profile = () => {
           width: innerWidth > 1400 ? "5%" : "4%",
         },
         {
-          title: "Publication",
+          title: t => titleMaker(t, "title", "Publication Title", "Title"),
           dataIndex: "publication",
           key: "publication",
           width: innerWidth > 1400 ? "30%" : "30%",
@@ -230,7 +230,7 @@ const Profile = () => {
           sorter: (a, b) => a.impact_factor - b.impact_factor,
         },
         {
-          title: t => titleMaker(t, "sjr", "SJR", "SJR"),
+          title: "SJR",
           dataIndex: "sjr",
           key: "sjr",
           sorter: (a, b) => a.sjr.localeCompare(b.sjr),
@@ -272,7 +272,7 @@ const Profile = () => {
           onFilter: (value, record) => record.index.includes(value),
         },
         {
-          title: t => titleMaker(t, "citations", "Citations", "Citations"),
+          title: "Citations",
           dataIndex: "citations",
           key: "citations",
           sorter: (a, b) => a.citations[sortBy] - b.citations[sortBy],
@@ -301,7 +301,134 @@ const Profile = () => {
         },
       ];
 
-      const BODY = publicationsMaker(data?.publication);
+      const BODY = data?.publication?.map((e, i) => ({
+        key: `${i + 1}.`,
+        publication: (
+          <div className={styles.publication}>
+            <div
+              className={styles.publicationTitle}
+              dangerouslySetInnerHTML={{
+                __html: e?.publication_title ?? "- Not Available -",
+              }}
+            />
+            <Paragraph
+              className={styles.publicationAuthors}
+              ellipsis={{
+                rows: 3,
+                expandable: true,
+                symbol: "more",
+              }}
+            >
+              {e.actual_author.map((e, i) => (
+                <span key={i}>
+                  <span>{e?.given + " " + e?.family}</span>
+                  <sup>
+                    {e.sequence === "first"
+                      ? "1"
+                      : e.sequence === "corresponding"
+                      ? "*"
+                      : e.sequence === "firstncorr"
+                      ? "1*"
+                      : null}
+                  </sup>
+                  <span>, </span>
+                </span>
+              )) ?? "- Not Available -"}
+            </Paragraph>
+            <div className={styles.publicationJournal}>{e.journal_name}</div>
+            <div
+              className={styles.publicationStats}
+            >{`Volume: ${e.volume} • Issue: ${e.issue} • Pages: ${e.pages}`}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+              <Scite DOI={e.doi_id} type={1} />
+              <Altmetric DOI={e.doi_id} type={1} />
+            </div>
+          </div>
+        ),
+        impact_factor: check(e.impact_factor),
+        sjr: check(e.sjr_quartile),
+        h_index: check(e.h_index),
+        index: [
+          {
+            name: "PubMed",
+            bool: e.in_pubmed,
+          },
+          {
+            name: "Scopus",
+            bool: e.in_scopus,
+          },
+          {
+            name: "DOAJ",
+            bool: e.in_doaj,
+          },
+          {
+            name: "WOS",
+            bool: e.in_wos,
+          },
+          {
+            name: "Medline",
+            bool: e.in_medline,
+          },
+        ]
+          .filter(e => e.bool)
+          .map(e => e.name),
+        indexed_in: (
+          <div className={styles.publicationGrid}>
+            {[
+              {
+                name: "PubMed",
+                logo: pmc,
+                bool: e.in_pubmed,
+              },
+              {
+                name: "Scopus",
+                logo: scopus,
+                bool: e.in_scopus,
+              },
+              {
+                name: "DOAJ",
+                logo: doaj,
+                bool: e.in_doaj,
+              },
+              {
+                name: "WOS",
+                logo: wos,
+                bool: e.in_wos,
+              },
+              {
+                name: "Medline",
+                logo: medline,
+                bool: e.in_medline,
+              },
+            ]
+              .filter(e => e.bool)
+              .map(e => (
+                <Fragment key={e.name}>
+                  <Image src={e.logo} alt={e.name} height={30} width={30} />
+                  {e.name}
+                </Fragment>
+              )) ?? "- None -"}
+          </div>
+        ),
+        citations: {
+          total: e.citations_total,
+          crossref: e.citations_crossref,
+          scopus: e.citations_scopus,
+          wos: e.citations_wos,
+        },
+        published: check(e.year),
+        action: (
+          <Button
+            type="primary"
+            icon={<FileTextOutlined />}
+            style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
+            className={styles.tableButton}
+            onClick={() => router.push(`/file/${e.doi_id}`)}
+          >
+            {innerWidth > 1400 ? "View More" : null}
+          </Button>
+        ),
+      }));
 
       if (innerWidth < 1400) TITLE.shift();
       setPublications({ title: TITLE, body: BODY });
@@ -315,17 +442,17 @@ const Profile = () => {
           key: "key",
         },
         {
-          title: "Name",
+          title: t => titleMaker(t, "name", "Conference Name", "Name"),
           dataIndex: "name",
           key: "name",
         },
         {
-          title: "Attended As",
+          title: t => titleMaker(t, "attended_as", "Attended As", "As"),
           dataIndex: "attended_as",
           key: "attended_as",
         },
         {
-          title: t => titleMaker(t, "type", "Type", "Type"),
+          title: t => titleMaker(t, "type", "Conference Type", "Type"),
           dataIndex: "type",
           key: "type",
           sorter: (a, b) => a.type.localeCompare(b.type),
@@ -341,7 +468,7 @@ const Profile = () => {
           key: "poster",
         },
         {
-          title: "Date",
+          title: t => titleMaker(t, "date", "Conference Date", "Date"),
           dataIndex: "date",
           key: "date",
         },
@@ -416,7 +543,7 @@ const Profile = () => {
           key: "publisher",
         },
         {
-          title: t => titleMaker(t, "published", "Published", "Year"),
+          title: t => titleMaker(t, "published", "Published Year", "Year"),
           dataIndex: "published",
           key: "published",
         },
@@ -459,23 +586,12 @@ const Profile = () => {
           key: "key",
         },
         {
-          title: t =>
-            titleMaker(t, "pi", "Principal Investigator", "Principal"),
-          dataIndex: "pi",
-          key: "pi",
-        },
-        {
-          title: t => titleMaker(t, "ci", "Co-Investigator", "Co"),
-          dataIndex: "ci",
-          key: "ci",
-        },
-        {
           title: t => titleMaker(t, "agency", "Funding Agency", "Agency"),
           dataIndex: "agency",
           key: "agency",
         },
         {
-          title: "Country",
+          title: t => titleMaker(t, "country", "Agency Country", "Country"),
           dataIndex: "country",
           key: "country",
         },
@@ -485,17 +601,17 @@ const Profile = () => {
           key: "type",
         },
         {
-          title: "Amount",
+          title: t => titleMaker(t, "amount", "Funds", "Funds"),
           dataIndex: "amount",
           key: "amount",
         },
         {
-          title: "Start",
+          title: t => titleMaker(t, "start", "Start Date", "Start"),
           dataIndex: "start",
           key: "start",
         },
         {
-          title: "End",
+          title: t => titleMaker(t, "end", "End Date", "End"),
           dataIndex: "end",
           key: "end",
         },
@@ -508,8 +624,6 @@ const Profile = () => {
 
       const BODY = data?.research?.map((e, i) => ({
         key: `${i + 1}.`,
-        pi: e.principal_investigator,
-        ci: e.co_investigator,
         agency: e.funding_agency,
         country: e.country_funding_agency,
         type: e.type,
@@ -541,23 +655,23 @@ const Profile = () => {
           key: "key",
         },
         {
-          title: "Award Name",
+          title: t => titleMaker(t, "name", "Award Name", "Award"),
           dataIndex: "name",
           key: "name",
         },
         {
-          title: "Awarding Agency",
+          title: t => titleMaker(t, "agency", "Awarding Agency", "Agency"),
           dataIndex: "agency",
           key: "agency",
         },
         {
-          title: t => titleMaker(t, "type", "Type", "Type"),
+          title: t => titleMaker(t, "type", "Award Type", "Type"),
           dataIndex: "type",
           key: "type",
           sorter: (a, b) => a.type.localeCompare(b.type),
         },
         {
-          title: "Date",
+          title: t => titleMaker(t, "date", "Awarded Date", "Date"),
           dataIndex: "date",
           key: "date",
         },
@@ -596,7 +710,6 @@ const Profile = () => {
         {
           title: "No.",
           dataIndex: "key",
-
           key: "key",
         },
         {
@@ -605,22 +718,22 @@ const Profile = () => {
           key: "ipr",
         },
         {
-          title: "Title",
+          title: t => titleMaker(t, "title", "Title of IPR", "Title"),
           dataIndex: "title",
           key: "title",
         },
         {
-          title: "Status",
+          title: t => titleMaker(t, "status", "IPR Status", "Status"),
           dataIndex: "status",
           key: "status",
         },
         {
-          title: "Awarding Agency",
+          title: t => titleMaker(t, "agency", "Awarding Agency", "Agency"),
           dataIndex: "agency",
           key: "agency",
         },
         {
-          title: "Date",
+          title: t => titleMaker(t, "date", "Published Date", "Date"),
           dataIndex: "date",
           key: "date",
         },
@@ -663,22 +776,22 @@ const Profile = () => {
           key: "key",
         },
         {
-          title: "Student Name",
+          title: t => titleMaker(t, "name", "Student Name", "Name"),
           dataIndex: "name",
           key: "name",
         },
         {
-          title: "Degree",
+          title: t => titleMaker(t, "degree", "Student Degree", "Degree"),
           dataIndex: "degree",
           key: "degree",
         },
         {
-          title: "Thesis Topic",
+          title: t => titleMaker(t, "thesis", "Thesis Topic", "Thesis"),
           dataIndex: "thesis",
           key: "thesis",
         },
         {
-          title: "Year",
+          title: t => titleMaker(t, "year", "Guided Year", "Year"),
           dataIndex: "year",
           key: "year",
         },
@@ -726,6 +839,31 @@ const Profile = () => {
 
   const number = num => (num ? (isNaN(num) ? 0 : num) : 0);
 
+  const check = num => {
+    const checks = [
+      num,
+      "N/A",
+      "NA",
+      "Not Available",
+      "Not Applicable",
+      "-",
+      "",
+      0,
+      "0",
+      null,
+      undefined,
+      "null",
+      "undefined",
+      "NaN",
+      "nan",
+      "NAN",
+      "Nan",
+    ];
+
+    if (checks.includes(num)) return "N/A";
+    else return num;
+  };
+
   const titleMaker = (titleProps, name, title1, title2) => {
     const sortedColumn = titleProps.sortColumns?.find(
       ({ column }) => column.key === name
@@ -751,154 +889,10 @@ const Profile = () => {
     );
   };
 
-  const publicationsMaker = arr => {
-    const check = num => {
-      if (
-        num === null ||
-        num === undefined ||
-        num === 0 ||
-        num === "" ||
-        num === "null" ||
-        num === "undefined"
-      )
-        return "N/A";
-      else return num;
-    };
-
-    return arr?.map((e, i) => ({
-      key: `${i + 1}.`,
-      publication: (
-        <div className={styles.publication}>
-          <div
-            className={styles.publicationTitle}
-            dangerouslySetInnerHTML={{
-              __html: e?.publication_title ?? "- Not Available -",
-            }}
-          />
-          <Paragraph
-            className={styles.publicationAuthors}
-            ellipsis={{
-              rows: 3,
-              expandable: true,
-              symbol: "more",
-            }}
-          >
-            {e.actual_author.map((e, i) => (
-              <span key={i}>
-                <span>{e?.given + " " + e?.family}</span>
-                <sup>
-                  {e.sequence === "first"
-                    ? "1"
-                    : e.sequence === "corresponding"
-                    ? "*"
-                    : e.sequence === "firstncorr"
-                    ? "1*"
-                    : null}
-                </sup>
-                <span>, </span>
-              </span>
-            )) ?? "- Not Available -"}
-          </Paragraph>
-          <div className={styles.publicationJournal}>{e.journal_name}</div>
-          <div
-            className={styles.publicationStats}
-          >{`Volume: ${e.volume} • Issue: ${e.issue} • Pages: ${e.pages}`}</div>
-          <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-            <Scite DOI={e.doi_id} type={1} />
-            <Altmetric DOI={e.doi_id} type={1} />
-          </div>
-        </div>
-      ),
-      impact_factor: check(e.impact_factor),
-      sjr: check(e.sjr),
-      h_index: check(e.h_index),
-      index: [
-        {
-          name: "PubMed",
-          bool: e.in_pubmed,
-        },
-        {
-          name: "Scopus",
-          bool: e.in_scopus,
-        },
-        {
-          name: "DOAJ",
-          bool: e.in_doaj,
-        },
-        {
-          name: "WOS",
-          bool: e.in_wos,
-        },
-        {
-          name: "Medline",
-          bool: e.in_medline,
-        },
-      ]
-        .filter(e => e.bool)
-        .map(e => e.name),
-      indexed_in: (
-        <div className={styles.publicationGrid}>
-          {[
-            {
-              name: "PubMed",
-              logo: pmc,
-              bool: e.in_pubmed,
-            },
-            {
-              name: "Scopus",
-              logo: scopus,
-              bool: e.in_scopus,
-            },
-            {
-              name: "DOAJ",
-              logo: doaj,
-              bool: e.in_doaj,
-            },
-            {
-              name: "WOS",
-              logo: wos,
-              bool: e.in_wos,
-            },
-            {
-              name: "Medline",
-              logo: medline,
-              bool: e.in_medline,
-            },
-          ]
-            .filter(e => e.bool)
-            .map(e => (
-              <Fragment key={e.name}>
-                <Image src={e.logo} alt={e.name} height={30} width={30} />
-                {e.name}
-              </Fragment>
-            ))}
-        </div>
-      ),
-      citations: {
-        total: e.citations_total,
-        crossref: e.citations_crossref,
-        scopus: e.citations_scopus,
-        wos: e.citations_wos,
-      },
-      published: check(e.year),
-      action: (
-        <Button
-          type="primary"
-          icon={<FileTextOutlined />}
-          style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
-          className={styles.tableButton}
-          onClick={() => router.push(`/file/${e.doi_id}`)}
-        >
-          {innerWidth > 1400 ? "View More" : null}
-        </Button>
-      ),
-    }));
-  };
-
   return (
     <>
       <Head>
-        <title>Profile</title>
+        <title>DYPU RIMS | Profile</title>
         <link rel="icon" href="logos/dpu-2.png" />
       </Head>
 

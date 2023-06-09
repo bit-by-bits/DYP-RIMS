@@ -25,7 +25,7 @@ const Uploading = () => {
   useEffect(() => {
     if (typeof window !== "undefined")
       user
-        ? Date.now() - user?.setUpTime > 3600000 &&
+        ? Date.now() - user?.setUpTime > 14400000 &&
           localStorage.removeItem("user")
         : router.push("/");
   }, [router, user]);
@@ -54,7 +54,7 @@ const Uploading = () => {
   return (
     <>
       <Head>
-        <title>{pending ? "Confirm Upload" : "Uploaded"}</title>
+        <title>DYPU RIMS | {pending ? "Confirm Upload" : "Uploaded"}</title>
         <link rel="icon" href="../../logos/dpu-2.png" />
       </Head>
 

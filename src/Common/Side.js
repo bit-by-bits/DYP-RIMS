@@ -36,7 +36,7 @@ const Side = ({ sets = () => {} }) => {
   useEffect(() => {
     if (typeof window !== "undefined")
       user
-        ? Date.now() - user?.setUpTime > 3600000 &&
+        ? Date.now() - user?.setUpTime > 14400000 &&
           localStorage.removeItem("user")
         : router.push("/");
   }, [router, user]);
@@ -84,7 +84,7 @@ const Side = ({ sets = () => {} }) => {
           </div>
           <div>
             <span className={styles.sideCircle} />
-            <span>{user?.level?.slice(0, -1) ?? "N/A"}</span>
+            <span>{user?.department ?? "N/A"}</span>
           </div>
         </div>
         <Button className={styles.sideButton} onClick={edit} type="primary">

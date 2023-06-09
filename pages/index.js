@@ -18,7 +18,7 @@ export default function Home() {
     if (user) {
       const time = Date.now() - user?.setUpTime;
 
-      if (time < 3600000) router.push("/profile");
+      if (time < 14400000) router.push("/profile");
       else localStorage.removeItem("user");
     }
   }, [router]);
@@ -72,7 +72,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>DYPU / RIMS</title>
+        <title>DYPU RIMS | Login</title>
         {
           // eslint-disable-next-line @next/next/no-sync-scripts
           <script src="https://accounts.google.com/gsi/client" />

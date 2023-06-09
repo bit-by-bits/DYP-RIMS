@@ -26,7 +26,7 @@ const File = () => {
   useEffect(() => {
     if (typeof window !== "undefined")
       user
-        ? Date.now() - user?.setUpTime > 3600000 &&
+        ? Date.now() - user?.setUpTime > 14400000 &&
           localStorage.removeItem("user")
         : router.push("/");
   }, [router, user]);
@@ -77,7 +77,7 @@ const File = () => {
   return (
     <>
       <Head>
-        <title>File</title>
+        <title>DYPU RIMS | File</title>
         <link rel="icon" href="../../logos/dpu-2.png" />
       </Head>
 
