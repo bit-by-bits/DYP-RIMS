@@ -841,7 +841,6 @@ const Profile = () => {
 
   const check = num => {
     const checks = [
-      num,
       "N/A",
       "NA",
       "Not Available",
