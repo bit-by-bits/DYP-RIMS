@@ -282,6 +282,12 @@
   font-weight: 500;
 }
 
+.sideEmail {
+  font-size: 0.7rem;
+  color: rgba(256, 256, 256, 0.7);
+  margin-bottom: 5px;
+}
+
 .sideContent,
 .sideContent > div {
   display: flex;

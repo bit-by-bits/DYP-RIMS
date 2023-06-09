@@ -24,11 +24,9 @@ const Side = ({ sets = () => {} }) => {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    getUser();
-    setTimeout(() => {
-      getUser();
-      setTimeout(() => getUser(), 5000);
-    }, 5000);
+    setTimeout(() => getUser(), 1001);
+    setTimeout(() => getUser(), 5001);
+    setTimeout(() => getUser(), 9999);
   }, []);
 
   const getUser = () => {
@@ -68,18 +66,13 @@ const Side = ({ sets = () => {} }) => {
           width={100}
           height={100}
         />
+
         <div className={styles.sideName}>
           {user?.name?.toUpperCase() ?? "N/A"}
         </div>
-        <div
-          style={{
-            fontSize: "0.7rem",
-            color: "rgba(256, 256, 256, 0.7)",
-            marginBottom: 5,
-          }}
-        >
-          {user?.email}
-        </div>
+
+        <div className={styles.sideEmail}>{user?.email}</div>
+
         <div className={styles.sideContent}>
           <div>
             <span className={styles.sideCircle} />
@@ -87,9 +80,12 @@ const Side = ({ sets = () => {} }) => {
           </div>
           <div>
             <span className={styles.sideCircle} />
-            <span>{user?.department ?? "N/A"}</span>
+            <span>{user?.level?.slice(0, -1) ?? "N/A"}</span>
           </div>
         </div>
+
+        <div className={styles.sideEmail}>{user?.department}</div>
+
         <Button className={styles.sideButton} onClick={edit} type="primary">
           Edit Profile
         </Button>
