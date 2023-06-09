@@ -1,5 +1,6 @@
 import {
   Button,
+  DatePicker,
   FloatButton,
   Form,
   Input,
@@ -77,10 +78,11 @@ const Awards = () => {
     formdata.append("start_date", values.start_date);
     formdata.append("end_date", values.end_date);
     formdata.append("location", values.location);
+    formdata.append("file", file);
 
     axios({
       method: "POST",
-      url: `${URLObj.base}/research/award`,
+      url: `${URLObj.base}/research/award/`,
       headers: {
         "X-ACCESS-KEY": URLObj.key,
         "X-AUTH-TOKEN": user?.token,
@@ -228,8 +230,8 @@ const Awards = () => {
                     faculty: user?.name,
                     department: user?.department,
                     title: data?.award_name,
-                    start_date: data?.start_date,
-                    end_date: data?.end_date,
+                    start_date: data?.start_date?.split(" ")?.shift(),
+                    end_date: data?.end_date?.split(" ")?.shift(),
                     location: data?.location,
                   }}
                   onFinish={onFinish}
@@ -314,7 +316,14 @@ const Awards = () => {
                       },
                     ]}
                   >
-                    <Input />
+                    {data?.start_date ? (
+                      <Input placeholder="YYYY-MM-DD" />
+                    ) : (
+                      <DatePicker
+                        style={{ width: "100%" }}
+                        format="YYYY-MM-DD"
+                      />
+                    )}
                   </Form.Item>
 
                   <Form.Item
@@ -327,7 +336,14 @@ const Awards = () => {
                       },
                     ]}
                   >
-                    <Input />
+                    {data?.end_date ? (
+                      <Input placeholder="YYYY-MM-DD" />
+                    ) : (
+                      <DatePicker
+                        style={{ width: "100%" }}
+                        format="YYYY-MM-DD"
+                      />
+                    )}
                   </Form.Item>
 
                   <Form.Item

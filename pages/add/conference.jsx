@@ -1,5 +1,6 @@
 import {
   Button,
+  DatePicker,
   FloatButton,
   Form,
   Input,
@@ -68,28 +69,28 @@ const Conferences = () => {
   // FUNCTIONS
 
   const onFinish = values => {
-    const str = JSON.stringify({
-      attendee: values.attendee,
-      department: values.department,
-      conference_type: values.type,
-      conference_name: values.conference,
-      certificate_file: file,
-      start_date: values.start_date,
-      end_date: values.end_date,
-      location: values.location,
+    const formdata = new FormData();
 
-      is_paper_presented: paper ? true : false,
-      is_poster_presented: poster ? true : false,
+    formdata.append("attendee", values.attendee);
+    formdata.append("department", values.department);
+    formdata.append("conference_type", values.type);
+    formdata.append("conference_name", values.conference);
+    formdata.append("certificate_file", file);
+    formdata.append("start_date", values.start_date);
+    formdata.append("end_date", values.end_date);
+    formdata.append("location", values.location);
 
-      paper: new Array(paper).fill(0).map((e, i) => ({
-        title: values[`tpaper${i}`],
-        file: values[`paper${i}`]?.file,
-      })),
+    formdata.append("is_paper_presented", paper ? 1 : 0);
+    formdata.append("is_poster_presented", poster ? 1 : 0);
 
-      poster: new Array(poster).fill(0).map((e, i) => ({
-        title: values[`tposter${i}`],
-        file: values[`poster${i}`]?.file,
-      })),
+    new Array(paper).fill(0).forEach((e, i) => {
+      formdata.append(`paper${i}`, values[`paper${i}`]?.file);
+      formdata.append(`tpaper${i}`, values[`tpaper${i}`]);
+    });
+
+    new Array(poster).fill(0).forEach((e, i) => {
+      formdata.append(`poster${i}`, values[`poster${i}`]?.file);
+      formdata.append(`tposter${i}`, values[`tposter${i}`]);
     });
 
     axios({
@@ -99,7 +100,7 @@ const Conferences = () => {
         "X-ACCESS-KEY": URLObj.key,
         "X-AUTH-TOKEN": user?.token,
       },
-      data: str,
+      data: formdata,
     })
       .then(res => {
         message.success("Conference details added successfully");
@@ -242,8 +243,8 @@ const Conferences = () => {
                     attendee: user?.name,
                     department: user?.department,
                     conference: data?.conference_name,
-                    start_date: data?.start_date,
-                    end_date: data?.end_date,
+                    start_date: data?.start_date?.split(" ")?.shift(),
+                    end_date: data?.end_date?.split(" ")?.shift(),
                     location: data?.location,
                   }}
                   onFinish={onFinish}
@@ -321,7 +322,14 @@ const Conferences = () => {
                       },
                     ]}
                   >
-                    <Input placeholder="YYYY-MM-DD HH:MM:SS" />
+                    {data?.start_date ? (
+                      <Input placeholder="YYYY-MM-DD" />
+                    ) : (
+                      <DatePicker
+                        style={{ width: "100%" }}
+                        format="YYYY-MM-DD"
+                      />
+                    )}
                   </Form.Item>
 
                   <Form.Item
@@ -334,7 +342,14 @@ const Conferences = () => {
                       },
                     ]}
                   >
-                    <Input placeholder="YYYY-MM-DD HH:MM:SS" />
+                    {data?.end_date ? (
+                      <Input placeholder="YYYY-MM-DD" />
+                    ) : (
+                      <DatePicker
+                        style={{ width: "100%" }}
+                        format="YYYY-MM-DD"
+                      />
+                    )}
                   </Form.Item>
 
                   <Form.Item
