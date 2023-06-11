@@ -13,9 +13,11 @@ const ConferenceInfo = ({ user, setv, ID }) => {
   const { Dragger } = Upload;
 
   const [data, setData] = useState({});
+  const [fileData, setFileData] = useState({ modal: false, file: null });
+
+  const [authors, setAuthors] = useState([]);
   const [papers, setPapers] = useState([]);
   const [posters, setPosters] = useState([]);
-  const [fileData, setFileData] = useState({ modal: false, file: null });
 
   // EFFECTS
 
@@ -38,7 +40,7 @@ const ConferenceInfo = ({ user, setv, ID }) => {
           message.error("Could not fetch file data");
         });
     }
-  }, [user, ID]);
+  }, [user, setv, ID]);
 
   useEffect(() => {
     if (fileData?.file) {
@@ -63,14 +65,20 @@ const ConferenceInfo = ({ user, setv, ID }) => {
           message.error("Could not upload file");
         });
     }
-  }, [fileData]);
+  }, [fileData, user, ID]);
 
   useEffect(() => {
     getPapers();
     getPosters();
+    getAuthors();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   // FUNCTIONS
+
+  const capitalize = str =>
+    str ? str.charAt(0).toUpperCase() + str.slice(1) : "- Not Available -";
 
   const getPapers = () => {
     setPapers(
@@ -116,6 +124,39 @@ const ConferenceInfo = ({ user, setv, ID }) => {
         </Card>
       ))
     );
+  };
+
+  const getAuthors = () => {
+    setAuthors([
+      <Card
+        key={0}
+        hoverable
+        bodyStyle={{ padding: 15, minWidth: 250 }}
+        style={{ border: "1px solid #d9d9d9" }}
+      >
+        <Meta
+          title={
+            <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
+              {user?.name}
+            </div>
+          }
+          description={
+            <div style={{ fontSize: "0.8rem" }}>{`${user?.level?.slice(
+              0,
+              -1
+            )} · ${user?.department}`}</div>
+          }
+          avatar={
+            <Avatar
+              src={
+                user?.picture ??
+                "https://cdn.landesa.org/wp-content/uploads/default-user-image.png"
+              }
+            />
+          }
+        />
+      </Card>,
+    ]);
   };
 
   return (
@@ -188,7 +229,7 @@ const ConferenceInfo = ({ user, setv, ID }) => {
               <div className={styles.info}>
                 <span className={styles.info_head}>Date</span>
                 <span className={styles.info_body}>
-                  {data?.date ?? "- Not Available -"}
+                  {capitalize(data?.date)}
                 </span>
               </div>
 
@@ -197,17 +238,36 @@ const ConferenceInfo = ({ user, setv, ID }) => {
               <div className={styles.info}>
                 <span className={styles.info_head}>Location</span>
                 <span className={styles.info_body}>
-                  {data?.location ?? "- Not Available -"}
+                  {capitalize(data?.location)}
+                </span>
+              </div>
+
+              <span className={styles.middot}>&middot;</span>
+
+              <div className={styles.info}>
+                <span className={styles.info_head}>Type</span>
+                <span className={styles.info_body}>
+                  {capitalize(data?.type)}
                 </span>
               </div>
             </div>
 
-            {data?.is_paper_presented && (
+            <ListSection data={authors} head="Author" />
+
+            {data?.is_paper_presented ? (
               <ListSection data={papers} head="Papers" />
+            ) : (
+              <div style={{ fontSize: "0.9rem", fontWeight: "bold" }}>
+                No Papers Presented
+              </div>
             )}
 
-            {data?.is_poster_presented && (
+            {data?.is_poster_presented ? (
               <ListSection data={posters} head="Posters" />
+            ) : (
+              <div style={{ fontSize: "0.9rem", fontWeight: "bold" }}>
+                No Posters Presented
+              </div>
             )}
 
             {data?.imageLinks?.thumbnail && (

@@ -54,10 +54,6 @@ const FileInfo = ({ user, setp, setv, sett, DOI }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authors?.final]);
 
-  useEffect(() => {
-    console.log(authors?.final);
-  }, [authors?.final]);
-
   // FUNCTIONS
 
   const readFirst = arr => (arr?.length > 0 ? arr[0] : "- Not Available -");

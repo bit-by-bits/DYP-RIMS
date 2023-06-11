@@ -326,12 +326,12 @@ const Awards = () => {
                   {data?.start_date && data?.end_date ? (
                     <>
                       <Form.Item
-                        label="Conference Start"
+                        label="Award Start"
                         name="start_date"
                         rules={[
                           {
                             required: true,
-                            message: "Please enter conference start date!",
+                            message: "Please enter award start date!",
                           },
                         ]}
                       >
@@ -339,12 +339,12 @@ const Awards = () => {
                       </Form.Item>
 
                       <Form.Item
-                        label="Conference End"
+                        label="Award End"
                         name="end_date"
                         rules={[
                           {
                             required: true,
-                            message: "Please enter conference end date!",
+                            message: "Please enter award end date!",
                           },
                         ]}
                       >
@@ -353,12 +353,12 @@ const Awards = () => {
                     </>
                   ) : (
                     <Form.Item
-                      label="Conference Dates"
+                      label="Award Dates"
                       name="date"
                       rules={[
                         {
                           required: true,
-                          message: "Please enter conference dates!",
+                          message: "Please enter award dates!",
                         },
                       ]}
                     >

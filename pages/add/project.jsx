@@ -20,6 +20,7 @@ import URLObj from "../../src/baseURL";
 const Projects = () => {
   // BOILERPLATE
 
+  const { RangePicker } = DatePicker;
   const router = useRouter();
   const [user, setUser] = useState({});
 
@@ -58,30 +59,21 @@ const Projects = () => {
   const onFinish = values => {
     const formdata = new FormData();
 
-    formdata?.append("principal_investigator", values.investigator);
-    formdata?.append("co_investigator", values.investigators);
+    formdata?.append("faculty", values.faculty);
+    formdata?.append("department", values.department);
     formdata?.append("funding_agency", values.agency);
     formdata?.append("country_funding_agency", values.country);
     formdata?.append("type", values.type);
-
-    const sdate = values.sdate;
-    formdata?.append(
-      "starting_date",
-      `${sdate.year()}-${sdate.month() + 1}-${sdate.date()}`
-    );
-
-    const edate = values.edate;
-    formdata?.append(
-      "end_date",
-      `${edate.year()}-${edate.month() + 1}-${edate.date()}`
-    );
-
-    const duration = `${edate.year() - sdate.year()} years ${
-      edate.month() - sdate.month()
-    } months`;
-
-    formdata?.append("duration", duration);
+    formdata?.append("starting_date", values.date[0].format("YYYY-MM-DD"));
+    formdata?.append("end_date", values.date[1].format("YYYY-MM-DD"));
     formdata?.append("funds", values.funds);
+
+    formdata?.append(
+      "duration",
+      `${values.date[1].year() - values.date[0].year()} years ${
+        values.date[1].month() - values.date[0].month()
+      } months`
+    );
 
     axios({
       method: "POST",
@@ -210,26 +202,16 @@ const Projects = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Starting Date"
-                    name="sdate"
+                    label="Project Dates"
+                    name="date"
                     rules={[
                       {
                         required: true,
-                        message: "Please enter starting date!",
+                        message: "Please enter project dates!",
                       },
                     ]}
                   >
-                    <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Ending Date"
-                    name="edate"
-                    rules={[
-                      { required: true, message: "Please enter ending date!" },
-                    ]}
-                  >
-                    <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
+                    <RangePicker style={{ width: "100%" }} />
                   </Form.Item>
 
                   <Form.Item

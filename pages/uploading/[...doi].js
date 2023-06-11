@@ -75,13 +75,11 @@ const Uploading = () => {
 
             <div className={styles.uploading_wrapper}>
               <Top user={user} />
-
               <div className={styles.uploading_head}>
                 {pending
                   ? "Select Authors from Dr. D.Y. Patil Medical College, Pune"
                   : text}
               </div>
-
               {pending && (
                 <FileInfo
                   user={user}
@@ -91,6 +89,11 @@ const Uploading = () => {
                   DOI={DOI}
                 />
               )}
+
+              <div style={{ color: "#9a2827", fontWeight: "bold" }}>
+                If there is any error please contact your department clerk who
+                will make the necessary changes later after you add the article.
+              </div>
 
               <a
                 href="https://www.qtanea.com/"

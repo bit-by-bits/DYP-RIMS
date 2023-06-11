@@ -122,6 +122,7 @@ const FileInfo = ({ user, setv, DOI }) => {
           avatar={
             <Avatar
               src={
+                e.profile?.[0]?.profile_picture ??
                 "https://cdn.landesa.org/wp-content/uploads/default-user-image.png"
               }
             />
@@ -327,7 +328,7 @@ const FileInfo = ({ user, setv, DOI }) => {
       const str = JSON.stringify({
         doi: DOI,
         file: fileData?.file,
-        author: [],
+        author: data?.actual_author,
       });
 
       axios({

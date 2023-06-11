@@ -28,6 +28,7 @@ const Altmetric = ({ DOI, type }) => {
       ) : (
         <div
           data-doi={DOI}
+          style={{ marginLeft: 70 }}
           className="altmetric-embed"
           data-badge-type="medium-donut"
           data-badge-details="right"
