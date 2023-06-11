@@ -23,7 +23,7 @@ const Publications = () => {
   useEffect(() => {
     if (typeof window !== "undefined")
       user
-        ? Date.now() - user?.setUpTime > 14400000 &&
+        ? Date.now() - user?.setUpTime > 86400000 &&
           localStorage.removeItem("user")
         : router.push("/");
   }, [router, user]);
@@ -153,7 +153,6 @@ const Publications = () => {
                 <div className={styles.flex}>
                   <Input
                     className={styles.upload_input2}
-                    autoComplete={true}
                     placeholder="enter doi here"
                     onChange={e => setDOI(e.target.value)}
                     onPressEnter={searchDOI}

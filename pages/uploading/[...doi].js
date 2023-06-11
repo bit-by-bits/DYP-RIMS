@@ -25,7 +25,7 @@ const Uploading = () => {
   useEffect(() => {
     if (typeof window !== "undefined")
       user
-        ? Date.now() - user?.setUpTime > 14400000 &&
+        ? Date.now() - user?.setUpTime > 86400000 &&
           localStorage.removeItem("user")
         : router.push("/");
   }, [router, user]);
@@ -38,6 +38,7 @@ const Uploading = () => {
   // STATES
 
   const [visible, setVisible] = useState(true);
+  const [text, setText] = useState("");
   const [pending, ssetPending] = useState(true);
 
   // EFFECTS
@@ -78,7 +79,7 @@ const Uploading = () => {
               <div className={styles.uploading_head}>
                 {pending
                   ? "Select Authors from Dr. D.Y. Patil Medical College, Pune"
-                  : "Publication Uploaded Successfully!"}
+                  : text}
               </div>
 
               {pending && (
@@ -86,6 +87,7 @@ const Uploading = () => {
                   user={user}
                   setp={ssetPending}
                   setv={setVisible}
+                  sett={setText}
                   DOI={DOI}
                 />
               )}

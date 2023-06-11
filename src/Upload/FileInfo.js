@@ -5,7 +5,7 @@ import URLObj from "../baseURL";
 import { Button, Table, message } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 
-const FileInfo = ({ user, setp, setv, DOI }) => {
+const FileInfo = ({ user, setp, setv, sett, DOI }) => {
   // STATES
 
   const [data, setData] = useState({});
@@ -55,9 +55,7 @@ const FileInfo = ({ user, setp, setv, DOI }) => {
   }, [authors?.final]);
 
   useEffect(() => {
-    console.log(
-      authors?.final?.map(e => [e.given + " " + e.family, e.sequence])
-    );
+    console.log(authors?.final);
   }, [authors?.final]);
 
   // FUNCTIONS
@@ -85,7 +83,14 @@ const FileInfo = ({ user, setp, setv, DOI }) => {
         data: str,
       })
         .then(res => {
-          message.success("Publication Added");
+          sett(
+            res?.data?.message == "DOI Exists"
+              ? "File already exists"
+              : `Added publication with ${res?.data?.first_author} first, ${res?.data?.corresponding_author} corr and ${res?.data?.other_author} other authors.`
+          );
+
+          message.success("Redirecting you to the file page");
+
           setChecking(false);
           setp(false);
         })
@@ -132,6 +137,24 @@ const FileInfo = ({ user, setp, setv, DOI }) => {
           width: "15%",
         },
       ];
+
+      const FIRST = arr?.find(e => e.sequence == "first");
+
+      if (FIRST?.in_dyp == false) {
+        arr = arr?.map(e =>
+          e.sequence == "first" ? { ...e, sequence: "additional" } : e
+        );
+
+        const FIRST_DYP = arr?.find(e => e.in_dyp == true);
+
+        if (FIRST_DYP) {
+          arr = arr?.map(e =>
+            e.given + " " + e.family == FIRST_DYP.given + " " + FIRST_DYP.family
+              ? { ...e, sequence: "first" }
+              : e
+          );
+        }
+      }
 
       const BODY = arr
         .filter(e => e.in_dyp)
@@ -284,7 +307,7 @@ const FileInfo = ({ user, setp, setv, DOI }) => {
                       ? e.sequence == "first"
                         ? { ...e, sequence: "firstncorr" }
                         : { ...e, sequence: "corresponding" }
-                      : e.sequence == "first"
+                      : e.sequence == "first" || e.sequence == "firstncorr"
                       ? { ...e, sequence: "first" }
                       : { ...e, sequence: "additional" }
                   );

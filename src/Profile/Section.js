@@ -10,6 +10,7 @@ const Section = ({ str, data, sec, setSec }) => {
           <div id={str.toLowerCase()} className={styles.heading}>
             {str}
           </div>
+
           {sec == "all" ? (
             <Button
               type="primary"
@@ -30,7 +31,11 @@ const Section = ({ str, data, sec, setSec }) => {
         </div>
 
         <div className={styles.sectionBottom}>
-          <Table columns={data?.title} dataSource={data?.body} />
+          <Table
+            columns={data?.title}
+            dataSource={data?.body}
+            pagination={sec == "all" ? true : false}
+          />
         </div>
       </div>
     )

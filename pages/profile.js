@@ -41,7 +41,7 @@ const Profile = () => {
   useEffect(() => {
     if (typeof window !== "undefined")
       user
-        ? Date.now() - user?.setUpTime > 14400000 &&
+        ? Date.now() - user?.setUpTime > 86400000 &&
           localStorage.removeItem("user")
         : router.push("/");
   }, [router, user]);
@@ -213,8 +213,9 @@ const Profile = () => {
       const TITLE = [
         {
           title: "No.",
-          dataIndex: "key",
-          key: "key",
+          dataIndex: "no",
+          key: "no",
+          render: (id, record, index) => `${index + 1}.`,
           width: innerWidth > 1400 ? "5%" : "4%",
         },
         {
@@ -227,20 +228,20 @@ const Profile = () => {
           title: t => titleMaker(t, "impact_factor", "Impact Factor", "Impact"),
           dataIndex: "impact_factor",
           key: "impact_factor",
-          sorter: (a, b) => a.impact_factor - b.impact_factor,
+          sorter: (a, b, c) => sorter(a.impact_factor, b.impact_factor, 0, c),
         },
         {
           title: "SJR",
           dataIndex: "sjr",
           key: "sjr",
-          sorter: (a, b) => a.sjr.localeCompare(b.sjr),
+          sorter: (a, b, c) => sorter(a.sjr, b.sjr, 1, c),
           width: innerWidth > 1400 ? "5%" : "9%",
         },
         {
           title: t => titleMaker(t, "h_index", "H-Index", "HIndex"),
           dataIndex: "h_index",
           key: "h_index",
-          sorter: (a, b) => a.h_index - b.h_index,
+          sorter: (a, b, c) => sorter(a.h_index, b.h_index, 0, c),
         },
         {
           title: t => titleMaker(t, "index", "Indexed In", "Indexed"),
@@ -275,7 +276,8 @@ const Profile = () => {
           title: "Citations",
           dataIndex: "citations",
           key: "citations",
-          sorter: (a, b) => a.citations[sortBy] - b.citations[sortBy],
+          sorter: (a, b, c) =>
+            sorter(a.citations[sortBy], b.citations[sortBy], 0, c),
           render: e => (
             <div className={styles.publicationGrid}>
               <Image src={crossref} alt="Crossref" height={30} width={30} />
@@ -291,7 +293,7 @@ const Profile = () => {
           title: t => titleMaker(t, "published", "Published", "Year"),
           dataIndex: "published",
           key: "published",
-          sorter: (a, b) => a.published - b.published,
+          sorter: (a, b, c) => sorter(a.published, b.published, 0, c),
         },
         {
           title: "",
@@ -302,7 +304,7 @@ const Profile = () => {
       ];
 
       const BODY = data?.publication?.map((e, i) => ({
-        key: `${i + 1}.`,
+        key: i,
         publication: (
           <div className={styles.publication}>
             <div
@@ -339,7 +341,13 @@ const Profile = () => {
             <div
               className={styles.publicationStats}
             >{`Volume: ${e.volume} • Issue: ${e.issue} • Pages: ${e.pages}`}</div>
-            <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: innerWidth > 1400 ? 50 : 20,
+              }}
+            >
               <Scite DOI={e.doi_id} type={1} />
               <Altmetric DOI={e.doi_id} type={1} />
             </div>
@@ -430,6 +438,7 @@ const Profile = () => {
         ),
       }));
 
+      BODY.sort((a, b) => b.published - a.published);
       if (innerWidth < 1400) TITLE.shift();
       setPublications({ title: TITLE, body: BODY });
     }
@@ -438,8 +447,9 @@ const Profile = () => {
       const TITLE = [
         {
           title: "No.",
-          dataIndex: "key",
-          key: "key",
+          dataIndex: "no",
+          key: "no",
+          render: (id, record, index) => `${index + 1}.`,
         },
         {
           title: t => titleMaker(t, "name", "Conference Name", "Name"),
@@ -455,7 +465,7 @@ const Profile = () => {
           title: t => titleMaker(t, "type", "Conference Type", "Type"),
           dataIndex: "type",
           key: "type",
-          sorter: (a, b) => a.type.localeCompare(b.type),
+          sorter: (a, b, c) => sorter(a.type, b.type, 1, c),
         },
         {
           title: t => titleMaker(t, "paper", "Paper Presented", "Paper"),
@@ -485,7 +495,7 @@ const Profile = () => {
       ];
 
       const BODY = data?.conferences?.map((e, i) => ({
-        key: `${i + 1}.`,
+        key: i,
         name: e.conference_name,
         attended_as: e.attended_as,
         type: e.type,
@@ -510,6 +520,7 @@ const Profile = () => {
         ),
       }));
 
+      BODY.sort((a, b) => b.date - a.date);
       if (innerWidth < 1400) TITLE.shift();
       setConferences({ title: TITLE, body: BODY });
     }
@@ -518,8 +529,9 @@ const Profile = () => {
       const TITLE = [
         {
           title: "No.",
-          dataIndex: "key",
-          key: "key",
+          dataIndex: "no",
+          key: "no",
+          render: (id, record, index) => `${index + 1}.`,
         },
         {
           title: t => titleMaker(t, "title", "Publication Title", "Title"),
@@ -555,7 +567,7 @@ const Profile = () => {
       ];
 
       const BODY = data?.books?.map((e, i) => ({
-        key: `${i + 1}.`,
+        key: i,
         title: e.publication_title,
         type: e.publication_type,
         book: e.book_name,
@@ -574,6 +586,7 @@ const Profile = () => {
         ),
       }));
 
+      BODY.sort((a, b) => b.published - a.published);
       if (innerWidth < 1400) TITLE.shift();
       setBooks({ title: TITLE, body: BODY });
     }
@@ -582,8 +595,9 @@ const Profile = () => {
       const TITLE = [
         {
           title: "No.",
-          dataIndex: "key",
-          key: "key",
+          dataIndex: "no",
+          key: "no",
+          render: (id, record, index) => `${index + 1}.`,
         },
         {
           title: t => titleMaker(t, "agency", "Funding Agency", "Agency"),
@@ -623,7 +637,7 @@ const Profile = () => {
       ];
 
       const BODY = data?.research?.map((e, i) => ({
-        key: `${i + 1}.`,
+        key: i,
         agency: e.funding_agency,
         country: e.country_funding_agency,
         type: e.type,
@@ -643,6 +657,7 @@ const Profile = () => {
         ),
       }));
 
+      BODY.sort((a, b) => b.start - a.start);
       if (innerWidth < 1400) TITLE.shift();
       setProjects({ title: TITLE, body: BODY });
     }
@@ -651,8 +666,9 @@ const Profile = () => {
       const TITLE = [
         {
           title: "No.",
-          dataIndex: "key",
-          key: "key",
+          dataIndex: "no",
+          key: "no",
+          render: (id, record, index) => `${index + 1}.`,
         },
         {
           title: t => titleMaker(t, "name", "Award Name", "Award"),
@@ -668,7 +684,7 @@ const Profile = () => {
           title: t => titleMaker(t, "type", "Award Type", "Type"),
           dataIndex: "type",
           key: "type",
-          sorter: (a, b) => a.type.localeCompare(b.type),
+          sorter: (a, b, c) => sorter(a.type, b.type, 1, c),
         },
         {
           title: t => titleMaker(t, "date", "Awarded Date", "Date"),
@@ -683,7 +699,7 @@ const Profile = () => {
       ];
 
       const BODY = data?.awards?.map((e, i) => ({
-        key: `${i + 1}.`,
+        key: i,
         name: e.title,
         agency: e.awarding_agency,
         type: e.award_type,
@@ -701,6 +717,7 @@ const Profile = () => {
         ),
       }));
 
+      BODY.sort((a, b) => b.date - a.date);
       if (innerWidth < 1400) TITLE.shift();
       setAwards({ title: TITLE, body: BODY });
     }
@@ -709,8 +726,9 @@ const Profile = () => {
       const TITLE = [
         {
           title: "No.",
-          dataIndex: "key",
-          key: "key",
+          dataIndex: "no",
+          key: "no",
+          render: (id, record, index) => `${index + 1}.`,
         },
         {
           title: t => titleMaker(t, "ipr", "IPR Awarded", "IPR"),
@@ -745,7 +763,7 @@ const Profile = () => {
       ];
 
       const BODY = data?.IPR?.map((e, i) => ({
-        key: `${i + 1}.`,
+        key: i,
         ipr: e.IPR_awarded,
         title: e.title_of_ipr,
         status: e.status,
@@ -764,6 +782,7 @@ const Profile = () => {
         ),
       }));
 
+      BODY.sort((a, b) => b.date - a.date);
       if (innerWidth < 1400) TITLE.shift();
       setIpr({ title: TITLE, body: BODY });
     }
@@ -772,8 +791,9 @@ const Profile = () => {
       const TITLE = [
         {
           title: "No.",
-          dataIndex: "key",
-          key: "key",
+          dataIndex: "no",
+          key: "no",
+          render: (id, record, index) => `${index + 1}.`,
         },
         {
           title: t => titleMaker(t, "name", "Student Name", "Name"),
@@ -803,7 +823,7 @@ const Profile = () => {
       ];
 
       const BODY = data?.students_guided?.map((e, i) => ({
-        key: `${i + 1}.`,
+        key: i,
         name: e.student_name,
         degree: e.student_degree,
         thesis: e.thesis_topic,
@@ -821,6 +841,7 @@ const Profile = () => {
         ),
       }));
 
+      BODY.sort((a, b) => b.year - a.year);
       if (innerWidth < 1400) TITLE.shift();
       setStudents({ title: TITLE, body: BODY });
     }
@@ -830,35 +851,48 @@ const Profile = () => {
 
   // FUNCTIONS
 
-  const date = d =>
-    new Date(d).toLocaleString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }) ?? d;
+  const checks = [
+    0,
+    "0",
+    "N/A",
+    "NA",
+    "Not Available",
+    "Not Applicable",
+    "-",
+    "",
+    null,
+    undefined,
+    "null",
+    "undefined",
+    "NaN",
+    "nan",
+    "NAN",
+    "Nan",
+  ];
+
+  const date = d => {
+    return (
+      new Date(d).toLocaleString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }) ?? d
+    );
+  };
 
   const number = num => (num ? (isNaN(num) ? 0 : num) : 0);
 
-  const check = num => {
-    const checks = [
-      "N/A",
-      "NA",
-      "Not Available",
-      "Not Applicable",
-      "-",
-      "",
-      0,
-      "0",
-      null,
-      undefined,
-      "null",
-      "undefined",
-      "NaN",
-      "nan",
-      "NAN",
-      "Nan",
-    ];
+  const sorter = (first, second, type, mode) => {
+    const newChecks = checks.slice(2);
 
+    if (newChecks.includes(first)) return mode === "ascend" ? 1 : -1;
+    if (newChecks.includes(second)) return mode === "ascend" ? -1 : 1;
+
+    if (type == 0) return first - second;
+    else return first.localeCompare(second);
+  };
+
+  const check = num => {
     if (checks.includes(num)) return "N/A";
     else return num;
   };
@@ -970,6 +1004,7 @@ const Profile = () => {
                   </div>
                   <div className={styles.sectionBottom}>
                     <Table
+                      pagination={sections == "all" ? true : false}
                       columns={publications?.title}
                       dataSource={publications?.body}
                     />

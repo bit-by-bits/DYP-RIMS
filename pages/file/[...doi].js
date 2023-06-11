@@ -26,7 +26,7 @@ const File = () => {
   useEffect(() => {
     if (typeof window !== "undefined")
       user
-        ? Date.now() - user?.setUpTime > 14400000 &&
+        ? Date.now() - user?.setUpTime > 86400000 &&
           localStorage.removeItem("user")
         : router.push("/");
   }, [router, user]);

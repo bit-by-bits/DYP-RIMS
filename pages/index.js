@@ -18,7 +18,7 @@ export default function Home() {
     if (user) {
       const time = Date.now() - user?.setUpTime;
 
-      if (time < 14400000) router.push("/profile");
+      if (time < 86400000) router.push("/profile");
       else localStorage.removeItem("user");
     }
   }, [router]);
