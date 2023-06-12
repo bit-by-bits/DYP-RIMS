@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, useMemo } from "react";
 import styles from "../styles/profile.module.css";
 import { Table, Modal, Upload, message } from "antd";
 import { Spin, Button, Typography, FloatButton } from "antd";
@@ -71,9 +71,6 @@ const Profile = () => {
   const [awards, setAwards] = useState({ title: [], body: [] });
   const [ipr, setIpr] = useState({ title: [], body: [] });
   const [students, setStudents] = useState({ title: [], body: [] });
-
-  const [sortBy, setSortBy] = useState("scopus");
-  const [sections, setSections] = useState("all");
   const [extra, setExtra] = useState({
     citations: {},
     impact: {},
@@ -83,6 +80,10 @@ const Profile = () => {
     papers: 0,
     posters: 0,
   });
+
+  const [sortBy, setSortBy] = useState("scopus");
+  const [sections, setSections] = useState("all");
+  const [selectedFilters, setSelectedFilters] = useState([]);
 
   // EFFECTS
 
@@ -260,10 +261,6 @@ const Profile = () => {
             e => ({ text: e, value: e })
           ),
           filterSearch: true,
-          onFilter: (value, record) =>
-            value == "None"
-              ? !record.index.length
-              : record.index.includes(value),
         },
         {
           title: "Citations",
@@ -400,7 +397,7 @@ const Profile = () => {
           impact_factor: check(e.impact_factor),
           sjr: check(e.sjr_quartile),
           h_index: check(e.h_index),
-          index: arr.map(e => e.name),
+          index: [...arr?.map(e => e.name), "None"],
           indexed_in: (
             <div className={styles.publicationGrid}>
               {arr.length > 0
@@ -436,7 +433,7 @@ const Profile = () => {
 
       BODY.sort((a, b) => b.published - a.published);
       if (innerWidth < 1400) TITLE.shift();
-      setPublications({ title: TITLE, body: BODY });
+      setPublications({ title: TITLE, body: BODY, pubs: BODY });
     }
 
     if (data?.conferences) {
@@ -492,7 +489,7 @@ const Profile = () => {
 
       const BODY = data?.conferences?.map((e, i) => ({
         key: i,
-        name: e.conference_name,
+        name: capitalize(e.conference_name),
         attended_as: capitalize(e.attended_as),
         type: capitalize(e.type),
         paper: e.is_paper_presented
@@ -909,7 +906,7 @@ const Profile = () => {
 
   const date = d => {
     return (
-      new Date(d).toLocaleString("en-US", {
+      new Date(d)?.toLocaleString("en-US", {
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -961,6 +958,30 @@ const Profile = () => {
       </div>
     );
   };
+
+  const handleFilterChange = (pagination, filters) =>
+    setSelectedFilters(filters?.indexed_in?.map(filter => filter) ?? []);
+
+  // MEMOS
+
+  useMemo(() => {
+    if (selectedFilters?.length === 0)
+      setPublications({ ...publications, body: publications?.pubs });
+    else
+      setPublications({
+        ...publications,
+        body:
+          selectedFilters?.length == 1 && selectedFilters[0] == "None"
+            ? publications?.pubs?.filter(
+                item => item.index?.length == 1 && item.index[0] == "None"
+              )
+            : publications?.pubs?.filter(item =>
+                selectedFilters?.every(filter => item.index.includes(filter))
+              ),
+      });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedFilters]);
 
   return (
     <>
@@ -1047,6 +1068,7 @@ const Profile = () => {
                       pagination={sections == "all" ? true : false}
                       columns={publications?.title}
                       dataSource={publications?.body}
+                      onChange={handleFilterChange}
                     />
                   </div>
                 </div>
