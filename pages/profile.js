@@ -698,7 +698,7 @@ const Profile = () => {
 
       const BODY = data?.awards?.map((e, i) => ({
         key: i,
-        name: capitalize(e.award_name),
+        name: capitalize(e.title),
         agency: capitalize(e.awarding_agency),
         type: capitalize(e.award_type),
         date: date(e.date_awarded),
