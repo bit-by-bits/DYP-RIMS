@@ -49,7 +49,7 @@ const Side = ({ sets = () => {} }) => {
   // FUNCTIONS
 
   const edit = () => {
-    message.error("This feature is not available yet");
+    router.push("/profile/edit");
   };
 
   return (
