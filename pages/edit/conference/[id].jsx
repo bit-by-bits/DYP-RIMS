@@ -9,18 +9,19 @@ import {
   Upload,
   message,
 } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 import styles from "../../styles/add.module.css";
 import styles2 from "../../styles/upload.module.css";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import Side from "../../src/Common/Side";
+import Side from "../../../src/Common/Side";
 import { useRouter } from "next/router";
-import Top from "../../src/Common/Top";
+import Top from "../../../src/Common/Top";
 import Image from "next/image";
 import axios from "axios";
-import URLObj from "../../src/baseURL";
+import URLObj from "../../../src/baseURL";
 
-const Awards = () => {
+const Conferences = () => {
   // BOILERPLATE
 
   const router = useRouter();
@@ -41,14 +42,19 @@ const Awards = () => {
 
   // STATES
 
+  const { RangePicker } = DatePicker;
   const { Dragger } = Upload;
+
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(true);
 
   const [step, setStep] = useState(0);
   const [searching, setSearching] = useState(false);
   const [data, setData] = useState({});
+
   const [file, setFile] = useState(null);
+  const [paper, setPaper] = useState(0);
+  const [poster, setPoster] = useState(0);
 
   // EFFECTS
 
@@ -69,23 +75,36 @@ const Awards = () => {
 
     formdata.append("faculty", values.faculty);
     formdata.append("department", values.department);
-    formdata.append("agency", values.agency);
-    formdata.append("award", values.title);
-    formdata.append("type", values.type);
-    formdata.append(
-      "date",
-      data?.start_date
-        ? values.date
-        : `${values.date.year()}-${
-            values.date.month() + 1
-          }-${values.date.date()}`
-    );
+    formdata.append("conference_type", values.type);
+    formdata.append("conference_name", values.conference);
+    formdata.append("certificate_file", file);
+    formdata.append("attended_as", values.attended_as);
+
+    if (data?.start_date && data?.end_date) {
+      formdata.append("start_date", values.start_date);
+      formdata.append("end_date", values.end_date);
+    } else {
+      formdata.append("start_date", values.date[0]);
+      formdata.append("end_date", values.date[1]);
+    }
+
     formdata.append("location", values.location);
-    formdata.append("file", file);
+    formdata.append("is_paper_presented", paper ? 1 : 0);
+    formdata.append("is_poster_presented", poster ? 1 : 0);
+
+    new Array(paper).fill(0).forEach((e, i) => {
+      formdata.append(`paper${i}`, values[`paper${i}`]?.file);
+      formdata.append(`tpaper${i}`, values[`tpaper${i}`]);
+    });
+
+    new Array(poster).fill(0).forEach((e, i) => {
+      formdata.append(`poster${i}`, values[`poster${i}`]?.file);
+      formdata.append(`tposter${i}`, values[`tposter${i}`]);
+    });
 
     axios({
       method: "POST",
-      url: `${URLObj.base}/research/award/`,
+      url: `${URLObj.base}/research/conference/`,
       headers: {
         "X-ACCESS-KEY": URLObj.key,
         "X-AUTH-TOKEN": user?.token,
@@ -93,7 +112,7 @@ const Awards = () => {
       data: formdata,
     })
       .then(res => {
-        message.success("Award added successfully");
+        message.success("Conference details added successfully");
         router.push("/profile");
         form.resetFields();
       })
@@ -119,7 +138,7 @@ const Awards = () => {
 
     const formData = new FormData();
     formData?.append("file", file);
-    formData?.append("type", "award");
+    formData?.append("type", "conference");
 
     axios({
       method: "POST",
@@ -131,7 +150,7 @@ const Awards = () => {
       data: formData,
     })
       .then(res => {
-        message.success("Award details fetched successfully");
+        message.success("Conference details fetched successfully");
         setSearching(false);
 
         setStep(1);
@@ -146,7 +165,7 @@ const Awards = () => {
   return (
     <>
       <Head>
-        <title>DYPU RIMS | Add Awards</title>
+        <title>DYPU RIMS | Add Conferences</title>
         <link rel="icon" href="../logos/dpu-2.png" />
       </Head>
 
@@ -224,27 +243,28 @@ const Awards = () => {
                 className={styles.formContainer}
                 style={step ? {} : { display: "none" }}
               >
-                <h1 className={styles.heading}>Add Awards</h1>
+                <h1 className={styles.heading}>Add Conferences</h1>
 
                 <Form
                   form={form}
-                  name="award"
+                  name="conference"
                   style={{ width: "80vw", transform: "translateX(-10vw)" }}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   initialValues={
-                    data?.start_date
+                    data?.start_date && data?.end_date
                       ? {
                           faculty: user?.name,
                           department: user?.department,
-                          title: data?.award_name,
-                          date: data?.start_date?.split(" ")?.shift(),
+                          conference: data?.conference_name,
+                          start_date: data?.start_date?.split(" ")?.shift(),
+                          end_date: data?.end_date?.split(" ")?.shift(),
                           location: data?.location,
                         }
                       : {
                           faculty: user?.name,
                           department: user?.department,
-                          title: data?.award_name,
+                          conference: data?.conference_name,
                           location: data?.location,
                         }
                   }
@@ -276,22 +296,12 @@ const Awards = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Awarding Agency"
-                    name="agency"
-                    rules={[
-                      { required: true, message: "Please input agency name!" },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Title Of Award"
-                    name="title"
+                    label="Conference Name"
+                    name="conference"
                     rules={[
                       {
                         required: true,
-                        message: "Please input title of award!",
+                        message: "Please input conference name!",
                       },
                     ]}
                   >
@@ -299,18 +309,18 @@ const Awards = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Type Of Award"
+                    label="Type Of Conference"
                     name="type"
                     rules={[
                       {
                         required: true,
-                        message: "Please select type of award!",
+                        message: "Please select type of conference!",
                       },
                     ]}
                   >
                     <Select
                       showSearch
-                      placeholder="Choose type of award"
+                      placeholder="Choose type of conference"
                       allowClear
                       options={[
                         { value: "state", label: "State" },
@@ -320,34 +330,81 @@ const Awards = () => {
                     />
                   </Form.Item>
 
-                  {data?.start_date ? (
-                    <Form.Item
-                      label="Date"
-                      name="date"
-                      rules={[
+                  <Form.Item
+                    label="Attended As"
+                    name="attended_as"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please select type of conference!",
+                      },
+                    ]}
+                  >
+                    <Select
+                      showSearch
+                      placeholder="Choose type of conference"
+                      allowClear
+                      options={[
                         {
-                          required: true,
-                          message: "Please input award date!",
+                          value: "delegate",
+                          label: "Delegate",
+                        },
+                        {
+                          value: "chairperson",
+                          label: "Chairperson",
+                        },
+                        {
+                          value: "faculty",
+                          label: "Faculty",
+                        },
+                        {
+                          value: "judge",
+                          label: "Judge",
                         },
                       ]}
-                    >
-                      <Input disabled />
-                    </Form.Item>
+                    />
+                  </Form.Item>
+
+                  {data?.start_date && data?.end_date ? (
+                    <>
+                      <Form.Item
+                        label="Conference Start"
+                        name="start_date"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter conference start date!",
+                          },
+                        ]}
+                      >
+                        <Input placeholder="YYYY-MM-DD" />
+                      </Form.Item>
+
+                      <Form.Item
+                        label="Conference End"
+                        name="end_date"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter conference end date!",
+                          },
+                        ]}
+                      >
+                        <Input placeholder="YYYY-MM-DD" />
+                      </Form.Item>
+                    </>
                   ) : (
                     <Form.Item
-                      label="Date"
+                      label="Conference Dates"
                       name="date"
                       rules={[
                         {
                           required: true,
-                          message: "Please input award date!",
+                          message: "Please enter conference dates!",
                         },
                       ]}
                     >
-                      <DatePicker
-                        format="YYYY-MM-DD"
-                        style={{ width: "100%" }}
-                      />
+                      <RangePicker style={{ width: "100%" }} />
                     </Form.Item>
                   )}
 
@@ -357,12 +414,86 @@ const Awards = () => {
                     rules={[
                       {
                         required: true,
-                        message: "Please input award location!",
+                        message: "Please input conference location!",
                       },
                     ]}
                   >
                     <Input />
                   </Form.Item>
+
+                  <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                    <Button
+                      onClick={() => setPaper(paper + 1)}
+                      type="primary"
+                      className={styles.primary}
+                    >
+                      Add Paper Presentation
+                    </Button>
+
+                    <Button
+                      onClick={() => setPoster(poster + 1)}
+                      type="primary"
+                      className={styles.secondary}
+                    >
+                      Add Poster Presentation
+                    </Button>
+                  </Form.Item>
+
+                  {new Array(poster).fill(0).map((e, i) => (
+                    <div key={i}>
+                      <Form.Item label="Poster Title" name={`tposter${i}`}>
+                        <Input />
+                      </Form.Item>
+
+                      <Form.Item label="Upload Poster" name={`poster${i}`}>
+                        <Upload
+                          onValuesChange={info => {
+                            if (info.file.status === "done") {
+                              message.success(
+                                `${info.file.name} file uploaded successfully`
+                              );
+                            } else if (info.file.status === "error") {
+                              message.error(
+                                `${info.file.name} file upload failed.`
+                              );
+                            }
+                          }}
+                        >
+                          <Button icon={<UploadOutlined />}>
+                            Click to Upload
+                          </Button>
+                        </Upload>
+                      </Form.Item>
+                    </div>
+                  ))}
+
+                  {new Array(paper).fill(0).map((e, i) => (
+                    <div key={i}>
+                      <Form.Item label="Paper Title" name={`tpaper${i}`}>
+                        <Input />
+                      </Form.Item>
+
+                      <Form.Item label="Upload Paper" name={`paper${i}`}>
+                        <Upload
+                          onValuesChange={info => {
+                            if (info.file.status === "done") {
+                              message.success(
+                                `${info.file.name} file uploaded successfully`
+                              );
+                            } else if (info.file.status === "error") {
+                              message.error(
+                                `${info.file.name} file upload failed.`
+                              );
+                            }
+                          }}
+                        >
+                          <Button icon={<UploadOutlined />}>
+                            Click to Upload
+                          </Button>
+                        </Upload>
+                      </Form.Item>
+                    </div>
+                  ))}
 
                   <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                     <Button
@@ -377,7 +508,11 @@ const Awards = () => {
                       type="primary"
                       className={styles.secondary}
                       htmlType="reset"
-                      onClick={() => setStep(0)}
+                      onClick={() => {
+                        setStep(0);
+                        setPaper(0);
+                        setPoster(0);
+                      }}
                     >
                       RETURN BACK
                     </Button>
@@ -391,5 +526,4 @@ const Awards = () => {
     </>
   );
 };
-
-export default Awards;
+export default Conferences;

@@ -68,9 +68,8 @@ const Students = () => {
       data: formdata,
     })
       .then(res => {
-        message.success("Profile edited successfully");
         form.resetFields();
-
+        message.success("Profile edited successfully");
         setTimeout(() => router.push("/profile"), 1200);
       })
       .catch(err => {

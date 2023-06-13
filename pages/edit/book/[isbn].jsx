@@ -1,26 +1,16 @@
-import {
-  Button,
-  DatePicker,
-  FloatButton,
-  Form,
-  Input,
-  Select,
-  Spin,
-  Upload,
-  message,
-} from "antd";
+import { Button, FloatButton, Form, Input, Select, Spin, message } from "antd";
 import styles from "../../styles/add.module.css";
 import styles2 from "../../styles/upload.module.css";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import Side from "../../src/Common/Side";
+import Side from "../../../src/Common/Side";
 import { useRouter } from "next/router";
-import Top from "../../src/Common/Top";
+import Top from "../../../src/Common/Top";
 import Image from "next/image";
 import axios from "axios";
-import URLObj from "../../src/baseURL";
+import URLObj from "../../../src/baseURL";
 
-const Awards = () => {
+const Books = () => {
   // BOILERPLATE
 
   const router = useRouter();
@@ -41,14 +31,13 @@ const Awards = () => {
 
   // STATES
 
-  const { Dragger } = Upload;
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(true);
 
   const [step, setStep] = useState(0);
+  const [ISBN, setISBN] = useState("");
   const [searching, setSearching] = useState(false);
   const [data, setData] = useState({});
-  const [file, setFile] = useState(null);
 
   // EFFECTS
 
@@ -66,26 +55,17 @@ const Awards = () => {
 
   const onFinish = values => {
     const formdata = new FormData();
-
-    formdata.append("faculty", values.faculty);
-    formdata.append("department", values.department);
-    formdata.append("agency", values.agency);
-    formdata.append("award", values.title);
-    formdata.append("type", values.type);
-    formdata.append(
-      "date",
-      data?.start_date
-        ? values.date
-        : `${values.date.year()}-${
-            values.date.month() + 1
-          }-${values.date.date()}`
-    );
-    formdata.append("location", values.location);
-    formdata.append("file", file);
+    formdata?.append("faculty", values.faculty);
+    formdata?.append("department", values.department);
+    formdata?.append("type", values.type);
+    formdata?.append("title", values.title);
+    formdata?.append("book", values.book);
+    formdata?.append("year", values.year);
+    formdata?.append("isbn", values.isbn);
 
     axios({
       method: "POST",
-      url: `${URLObj.base}/research/award/`,
+      url: `${URLObj.base}/books/`,
       headers: {
         "X-ACCESS-KEY": URLObj.key,
         "X-AUTH-TOKEN": user?.token,
@@ -93,13 +73,12 @@ const Awards = () => {
       data: formdata,
     })
       .then(res => {
-        message.success("Award added successfully");
-        router.push("/profile");
+        message.success("Book added successfully");
+        router.push(`/book/${ISBN}`);
         form.resetFields();
       })
       .catch(err => {
         message.error("Something went wrong");
-        console.log(err);
       });
   };
 
@@ -111,42 +90,34 @@ const Awards = () => {
   const add = () => {
     setSearching(true);
 
-    if (!file) {
-      setSearching(false);
-      message.error("Select a file first");
-      return;
-    }
-
-    const formData = new FormData();
-    formData?.append("file", file);
-    formData?.append("type", "award");
+    const formdata = new FormData();
+    formdata?.append("isbn", ISBN);
 
     axios({
-      method: "POST",
-      url: URLObj.ai,
+      method: "GET",
+      url: `${URLObj.base}/books/?isbn=${ISBN}`,
       headers: {
-        Authorization: `Bearer ${user?.token}`,
-        "Content-Type": "multipart/form-data",
+        "X-ACCESS-KEY": URLObj.key,
+        "X-AUTH-TOKEN": user?.token,
       },
-      data: formData,
     })
       .then(res => {
-        message.success("Award details fetched successfully");
+        message.success("Book found");
         setSearching(false);
 
         setStep(1);
-        setData(res.data?.response);
+        setData(res?.data?.volumeInfo);
       })
       .catch(err => {
-        message.error("Something went wrong while fetching details");
         setSearching(false);
+        message.error("Enter a valid ISBN number");
       });
   };
 
   return (
     <>
       <Head>
-        <title>DYPU RIMS | Add Awards</title>
+        <title>DYPU RIMS | Add Books/Chapters</title>
         <link rel="icon" href="../logos/dpu-2.png" />
       </Head>
 
@@ -175,13 +146,7 @@ const Awards = () => {
                   style={{ width: "65vw", minHeight: "0" }}
                   className={styles2.upload_wrapper}
                 >
-                  <Dragger
-                    name="file"
-                    multiple={false}
-                    style={{ border: "none" }}
-                    className={styles2.upload_left}
-                    beforeUpload={file => setFile(file)}
-                  >
+                  <div className={styles2.upload_left}>
                     <Image
                       width={60}
                       height={60}
@@ -192,30 +157,40 @@ const Awards = () => {
                     <div className={styles2.upload_title}>Add a file</div>
 
                     <div className={styles2.upload_msg}>
-                      Click or drag file to this area to upload
+                      Kindly enter the ISBN number of the book you want to add
                     </div>
-                  </Dragger>
-                </div>
 
-                <div style={{ display: "flex", gap: "1rem" }}>
-                  {searching ? (
-                    <div className={styles2.upload_btn}>
-                      <div className={styles2.dots} />
-                    </div>
-                  ) : (
-                    <div onClick={add} className={styles2.upload_btn}>
-                      Add File
-                    </div>
-                  )}
+                    <Input
+                      style={{ width: "40vw", margin: "20px 0 10px 0" }}
+                      autoComplete={true}
+                      placeholder="enter isbn here"
+                      onChange={e => setISBN(e.target.value)}
+                      onPressEnter={add}
+                    />
 
-                  <div
-                    onClick={() => {
-                      setStep(1);
-                      setData({});
-                    }}
-                    className={styles2.upload_btn2}
-                  >
-                    Skip
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "1rem",
+                      }}
+                    >
+                      {searching ? (
+                        <div className={styles2.upload_btn}>
+                          <div className={styles2.dots} />
+                        </div>
+                      ) : (
+                        <div onClick={add} className={styles2.upload_btn}>
+                          Add File
+                        </div>
+                      )}
+
+                      <div
+                        onClick={() => setStep(1)}
+                        className={styles2.upload_btn2}
+                      >
+                        Skip
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -224,30 +199,24 @@ const Awards = () => {
                 className={styles.formContainer}
                 style={step ? {} : { display: "none" }}
               >
-                <h1 className={styles.heading}>Add Awards</h1>
+                <h1 className={styles.heading}>Add Books/Chapters</h1>
 
                 <Form
+                  name="book"
                   form={form}
-                  name="award"
                   style={{ width: "80vw", transform: "translateX(-10vw)" }}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
-                  initialValues={
-                    data?.start_date
-                      ? {
-                          faculty: user?.name,
-                          department: user?.department,
-                          title: data?.award_name,
-                          date: data?.start_date?.split(" ")?.shift(),
-                          location: data?.location,
-                        }
-                      : {
-                          faculty: user?.name,
-                          department: user?.department,
-                          title: data?.award_name,
-                          location: data?.location,
-                        }
-                  }
+                  initialValues={{
+                    faculty: user?.name,
+                    department: user?.department,
+                    title:
+                      (data?.title ?? "") +
+                      (data?.subtitle ? ": " : "") +
+                      (data?.subtitle ?? ""),
+                    year: data?.publishedDate,
+                    isbn: ISBN,
+                  }}
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
                   autoComplete="off"
@@ -276,108 +245,86 @@ const Awards = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Awarding Agency"
-                    name="agency"
-                    rules={[
-                      { required: true, message: "Please input agency name!" },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Title Of Award"
-                    name="title"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input title of award!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Type Of Award"
+                    label="Publication Type"
                     name="type"
                     rules={[
                       {
                         required: true,
-                        message: "Please select type of award!",
+                        message: "Please input publication type!",
                       },
                     ]}
                   >
-                    <Select
-                      showSearch
-                      placeholder="Choose type of award"
-                      allowClear
-                      options={[
-                        { value: "state", label: "State" },
-                        { value: "national", label: "National" },
-                        { value: "international", label: "International" },
-                      ]}
-                    />
+                    <Select showSearch placeholder="Select a type" allowClear>
+                      <Select.Option value="book">Book</Select.Option>
+                      <Select.Option value="chapter">Chapter</Select.Option>
+                    </Select>
                   </Form.Item>
 
-                  {data?.start_date ? (
-                    <Form.Item
-                      label="Date"
-                      name="date"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input award date!",
-                        },
-                      ]}
-                    >
-                      <Input disabled />
-                    </Form.Item>
-                  ) : (
-                    <Form.Item
-                      label="Date"
-                      name="date"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input award date!",
-                        },
-                      ]}
-                    >
-                      <DatePicker
-                        format="YYYY-MM-DD"
-                        style={{ width: "100%" }}
-                      />
-                    </Form.Item>
-                  )}
-
                   <Form.Item
-                    label="Location"
-                    name="location"
+                    label="Publication Title"
+                    name="title"
                     rules={[
                       {
                         required: true,
-                        message: "Please input award location!",
+                        message: "Please input publication title!",
                       },
                     ]}
                   >
                     <Input />
                   </Form.Item>
 
+                  <Form.Item
+                    label="Book Name"
+                    name="book"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input the book name!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="Year Published"
+                    name="year"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter publishing year!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="ISBN Number"
+                    name="isbn"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input ISBN number!",
+                      },
+                    ]}
+                  >
+                    {ISBN ? <Input disabled /> : <Input />}
+                  </Form.Item>
+
                   <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                     <Button
-                      className={styles.primary}
                       type="primary"
+                      className={styles.secondary}
                       htmlType="submit"
                     >
                       SUBMIT
                     </Button>
-
                     <Button
-                      type="primary"
-                      className={styles.secondary}
-                      htmlType="reset"
                       onClick={() => setStep(0)}
+                      className={styles.primary}
+                      type="primary"
+                      htmlType="reset"
                     >
                       RETURN BACK
                     </Button>
@@ -391,5 +338,4 @@ const Awards = () => {
     </>
   );
 };
-
-export default Awards;
+export default Books;

@@ -13,12 +13,12 @@ import styles from "../../styles/add.module.css";
 import styles2 from "../../styles/upload.module.css";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import Side from "../../src/Common/Side";
+import Side from "../../../src/Common/Side";
 import { useRouter } from "next/router";
-import Top from "../../src/Common/Top";
+import Top from "../../../src/Common/Top";
 import Image from "next/image";
 import axios from "axios";
-import URLObj from "../../src/baseURL";
+import URLObj from "../../../src/baseURL";
 
 const Awards = () => {
   // BOILERPLATE
@@ -41,6 +41,7 @@ const Awards = () => {
 
   // STATES
 
+  const { RangePicker } = DatePicker;
   const { Dragger } = Upload;
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(true);
@@ -72,14 +73,15 @@ const Awards = () => {
     formdata.append("agency", values.agency);
     formdata.append("award", values.title);
     formdata.append("type", values.type);
-    formdata.append(
-      "date",
-      data?.start_date
-        ? values.date
-        : `${values.date.year()}-${
-            values.date.month() + 1
-          }-${values.date.date()}`
-    );
+
+    if (data?.start_date && data?.end_date) {
+      formdata.append("start_date", values.start_date);
+      formdata.append("end_date", values.end_date);
+    } else {
+      formdata.append("start_date", values.date[0]);
+      formdata.append("end_date", values.date[1]);
+    }
+
     formdata.append("location", values.location);
     formdata.append("file", file);
 
@@ -233,12 +235,13 @@ const Awards = () => {
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   initialValues={
-                    data?.start_date
+                    data?.start_date && data?.end_date
                       ? {
                           faculty: user?.name,
                           department: user?.department,
                           title: data?.award_name,
-                          date: data?.start_date?.split(" ")?.shift(),
+                          start_date: data?.start_date?.split(" ")?.shift(),
+                          end_date: data?.end_date?.split(" ")?.shift(),
                           location: data?.location,
                         }
                       : {
@@ -320,34 +323,46 @@ const Awards = () => {
                     />
                   </Form.Item>
 
-                  {data?.start_date ? (
-                    <Form.Item
-                      label="Date"
-                      name="date"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input award date!",
-                        },
-                      ]}
-                    >
-                      <Input disabled />
-                    </Form.Item>
+                  {data?.start_date && data?.end_date ? (
+                    <>
+                      <Form.Item
+                        label="Award Start"
+                        name="start_date"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter award start date!",
+                          },
+                        ]}
+                      >
+                        <Input placeholder="YYYY-MM-DD" />
+                      </Form.Item>
+
+                      <Form.Item
+                        label="Award End"
+                        name="end_date"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter award end date!",
+                          },
+                        ]}
+                      >
+                        <Input placeholder="YYYY-MM-DD" />
+                      </Form.Item>
+                    </>
                   ) : (
                     <Form.Item
-                      label="Date"
+                      label="Award Dates"
                       name="date"
                       rules={[
                         {
                           required: true,
-                          message: "Please input award date!",
+                          message: "Please enter award dates!",
                         },
                       ]}
                     >
-                      <DatePicker
-                        format="YYYY-MM-DD"
-                        style={{ width: "100%" }}
-                      />
+                      <RangePicker style={{ width: "100%" }} />
                     </Form.Item>
                   )}
 

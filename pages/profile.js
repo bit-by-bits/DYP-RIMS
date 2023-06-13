@@ -76,6 +76,7 @@ const Profile = () => {
     impact: {},
     access: {},
     index: {},
+
     funds: 0,
     papers: 0,
     posters: 0,

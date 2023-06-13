@@ -5,9 +5,9 @@ import React, { useState, useEffect } from "react";
 import { FloatButton, Spin, message } from "antd";
 import Side from "../../src/Common/Side";
 import Top from "../../src/Common/Top";
-import AwardInfo from "../../src/Add/AwardInfo";
+import StudentInfo from "../../src/Add/StudentInfo";
 
-const Award = () => {
+const Student = () => {
   // BOILERPLATE
 
   const router = useRouter();
@@ -41,22 +41,22 @@ const Award = () => {
 
   // FUNCTIONS
 
-  const downloadAward = () => {
+  const downloadStudent = () => {
     message.error("Download functionality unavailable!");
   };
 
-  const deleteAward = () => {
+  const deleteStudent = () => {
     message.error("Delete functionality unavailable!");
   };
 
-  const editAward = () => {
-    router.push(`/add/award?id=${ID}`);
+  const editStudent = () => {
+    router.push(`/edit/student/${ID}`);
   };
 
   return (
     <>
       <Head>
-        <title>DYPU RIMS | Award</title>
+        <title>DYPU RIMS | Student</title>
         <link rel="icon" href="../../logos/dpu-2.png" />
       </Head>
 
@@ -78,23 +78,23 @@ const Award = () => {
               <Top user={user} />
 
               <div>
-                <AwardInfo user={user} setv={setVisible} ID={ID} />
+                <StudentInfo user={user} setv={setVisible} ID={ID} />
 
                 <div className={styles.file_btns}>
                   {[
                     {
                       name: "Delete",
-                      function: deleteAward,
+                      function: deleteStudent,
                       class: styles.file_btn2,
                     },
                     {
                       name: "Edit Info",
-                      function: editAward,
+                      function: editStudent,
                       class: styles.file_btn1,
                     },
                     {
                       name: "Download",
-                      function: downloadAward,
+                      function: downloadStudent,
                       class: styles.file_btn2,
                     },
                   ].map(btn => (
@@ -116,4 +116,4 @@ const Award = () => {
   );
 };
 
-export default Award;
+export default Student;
