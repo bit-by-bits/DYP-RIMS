@@ -40,6 +40,8 @@ const Overview = ({ data, stats, extra, size }) => {
       posters: check("Posters Presented", "Posters"),
       books: check("Books/Chapters", "Books"),
       projects: check("Research Projects", "Projects"),
+      funds: check("Lakhs Received", "Lakhs"),
+      students: check("Students Guided", "Students"),
     });
   }, [size]);
 
@@ -260,8 +262,8 @@ const Overview = ({ data, stats, extra, size }) => {
               logo: ProjectOutlined,
             },
             {
-              label1: "Funds Recieved",
-              label2: number(extra?.funds),
+              label1: strings.funds,
+              label2: parseFloat(number(extra?.funds)),
               logo: DollarCircleOutlined,
             },
             {
@@ -270,7 +272,7 @@ const Overview = ({ data, stats, extra, size }) => {
               logo: TrophyOutlined,
             },
             {
-              label1: "Students Guided",
+              label1: strings.students,
               label2: number(data?.students_guided?.length),
               logo: UsergroupAddOutlined,
             },

@@ -75,8 +75,8 @@ const Awards = () => {
     formdata.append("type", values.type);
 
     if (data?.start_date && data?.end_date) {
-      formdata.append("start_date", data?.start_date);
-      formdata.append("end_date", data?.end_date);
+      formdata.append("start_date", values.start_date);
+      formdata.append("end_date", values.end_date);
     } else {
       formdata.append("start_date", values.date[0]);
       formdata.append("end_date", values.date[1]);

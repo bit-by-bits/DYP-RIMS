@@ -94,6 +94,7 @@ const Side = ({ sets = () => {} }) => {
       <Menu
         mode="inline"
         className="sideMenu"
+        selectable={false}
         onClick={() => sets("all")}
         items={[
           { link: "/profile", icon: HomeOutlined, label: "Home" },

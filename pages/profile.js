@@ -195,9 +195,7 @@ const Profile = () => {
             if (e.is_poster_presented) POSTERS += e.posters?.length;
           });
 
-          res.data?.data?.research?.forEach(e => {
-            FUNDS += e.funds;
-          });
+          res.data?.data?.research?.forEach(e => (FUNDS += number(e.funds)));
 
           setExtra({
             citations: CITATIONS,
@@ -471,12 +469,18 @@ const Profile = () => {
           key: "poster",
         },
         {
-          title: t => titleMaker(t, "date", "Conference Date", "Date"),
-          dataIndex: "date",
-          key: "date",
+          title: t => titleMaker(t, "start", "Start Date", "Start"),
+          dataIndex: "start",
+          key: "start",
         },
         {
-          title: "Location",
+          title: t => titleMaker(t, "end", "End Date", "End"),
+          dataIndex: "end",
+          key: "end",
+        },
+        {
+          title: t =>
+            titleMaker(t, "location", "Conference Location", "Location"),
           dataIndex: "location",
           key: "location",
         },
@@ -498,7 +502,8 @@ const Profile = () => {
         poster: e.is_poster_presented
           ? e.posters?.map(e => e.title).join(", ")
           : "N/A",
-        date: date(e.date),
+        start: date(e.start_date),
+        end: date(e.end_date),
         location: capitalize(e.location),
         action: (
           <Button
@@ -513,7 +518,7 @@ const Profile = () => {
         ),
       }));
 
-      BODY.sort((a, b) => b.date - a.date);
+      BODY.sort((a, b) => b.start - a.start);
       if (innerWidth < 1400) TITLE.shift();
       setConferences({ title: TITLE, body: BODY });
     }
@@ -631,7 +636,7 @@ const Profile = () => {
 
       const BODY = data?.research?.map((e, i) => ({
         key: i,
-        agency: e.funding_agency,
+        agency: capitalize(e.funding_agency),
         country: capitalize(e.country_funding_agency),
         type: capitalize(e.type),
         amount: number(e.funds) + " Lakhs",
@@ -757,8 +762,8 @@ const Profile = () => {
 
       const BODY = data?.IPR?.map((e, i) => ({
         key: i,
-        ipr: e.IPR_awarded,
-        title: e.title_of_ipr,
+        ipr: capitalize(e.IPR_awarded),
+        title: capitalize(e.title_of_ipr),
         status: capitalize(e.status),
         agency: capitalize(e.awarding_agency),
         date: date(e.date_of_publication),
@@ -905,13 +910,15 @@ const Profile = () => {
   };
 
   const date = d => {
-    return (
-      new Date(d)?.toLocaleString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }) ?? d
-    );
+    return d
+      ? new Date(d)
+        ? new Date(d).toLocaleString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        : d
+      : "N/A";
   };
 
   const number = num => (num ? (isNaN(num) ? 0 : num) : 0);
