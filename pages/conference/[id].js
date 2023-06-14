@@ -5,7 +5,6 @@ import React, { useState, useEffect } from "react";
 import { FloatButton, Spin, message } from "antd";
 import Side from "../../src/Common/Side";
 import Top from "../../src/Common/Top";
-import BookInfo from "../../src/Add/BookInfo";
 import ConferenceInfo from "../../src/Add/ConferenceInfo";
 
 const Book = () => {
@@ -42,22 +41,22 @@ const Book = () => {
 
   // FUNCTIONS
 
-  const downloadPub = () => {
+  const downloadConf = () => {
     message.error("Download functionality unavailable!");
   };
 
-  const deletePub = () => {
+  const deleteConf = () => {
     message.error("Delete functionality unavailable!");
   };
 
-  const editPub = () => {
-    router.push("/add/books");
+  const editConf = () => {
+    router.push(`/edit/conference/${ID}`);
   };
 
   return (
     <>
       <Head>
-        <title>DYPU RIMS | Book</title>
+        <title>DYPU RIMS | Conference</title>
         <link rel="icon" href="../../logos/dpu-2.png" />
       </Head>
 
@@ -85,17 +84,17 @@ const Book = () => {
                   {[
                     {
                       name: "Delete",
-                      function: deletePub,
+                      function: deleteConf,
                       class: styles.file_btn2,
                     },
                     {
                       name: "Edit Info",
-                      function: editPub,
+                      function: editConf,
                       class: styles.file_btn1,
                     },
                     {
                       name: "Download",
-                      function: downloadPub,
+                      function: downloadConf,
                       class: styles.file_btn2,
                     },
                   ].map(btn => (

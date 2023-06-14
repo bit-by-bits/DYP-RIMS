@@ -41,16 +41,16 @@ const Book = () => {
 
   // FUNCTIONS
 
-  const downloadPub = () => {
+  const downloadBook = () => {
     message.error("Download functionality unavailable!");
   };
 
-  const deletePub = () => {
+  const deleteBook = () => {
     message.error("Delete functionality unavailable!");
   };
 
-  const editPub = () => {
-    router.push("/add/books");
+  const editBook = () => {
+    router.push(`/edit/book/${ISBN}`);
   };
 
   return (
@@ -84,17 +84,17 @@ const Book = () => {
                   {[
                     {
                       name: "Delete",
-                      function: deletePub,
+                      function: deleteBook,
                       class: styles.file_btn2,
                     },
                     {
                       name: "Edit Info",
-                      function: editPub,
+                      function: editBook,
                       class: styles.file_btn1,
                     },
                     {
                       name: "Download",
-                      function: downloadPub,
+                      function: downloadBook,
                       class: styles.file_btn2,
                     },
                   ].map(btn => (

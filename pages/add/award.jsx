@@ -67,12 +67,12 @@ const Awards = () => {
   const onFinish = values => {
     const formdata = new FormData();
 
-    formdata.append("faculty", values.faculty);
-    formdata.append("department", values.department);
-    formdata.append("agency", values.agency);
-    formdata.append("award", values.title);
-    formdata.append("type", values.type);
-    formdata.append(
+    formdata?.append("faculty", values.faculty);
+    formdata?.append("department", values.department);
+    formdata?.append("agency", values.agency);
+    formdata?.append("award", values.title);
+    formdata?.append("type", values.type);
+    formdata?.append(
       "date",
       data?.start_date
         ? values.date
@@ -80,8 +80,8 @@ const Awards = () => {
             values.date.month() + 1
           }-${values.date.date()}`
     );
-    formdata.append("location", values.location);
-    formdata.append("file", file);
+    formdata?.append("location", values.location);
+    formdata?.append("file", file);
 
     axios({
       method: "POST",

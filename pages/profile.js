@@ -473,11 +473,15 @@ const Profile = () => {
           title: t => titleMaker(t, "start", "Start Date", "Start"),
           dataIndex: "start",
           key: "start",
+          render: e => date(e),
+          sorter: (a, b, c) => sorter(a.start, b.start, 1, c),
         },
         {
           title: t => titleMaker(t, "end", "End Date", "End"),
           dataIndex: "end",
           key: "end",
+          render: e => date(e),
+          sorter: (a, b, c) => sorter(a.end, b.end, 1, c),
         },
         {
           title: t =>
@@ -503,8 +507,8 @@ const Profile = () => {
         poster: e.is_poster_presented
           ? e.posters?.map(e => e.title).join(", ")
           : "N/A",
-        start: date(e.start_date),
-        end: date(e.end_date),
+        start: e.start_date,
+        end: e.end_date,
         location: capitalize(e.location),
         action: (
           <Button
@@ -557,6 +561,8 @@ const Profile = () => {
           title: t => titleMaker(t, "published", "Published Year", "Year"),
           dataIndex: "published",
           key: "published",
+          render: e => date(e),
+          sorter: (a, b, c) => sorter(a.published, b.published, 1, c),
         },
         {
           title: "",
@@ -571,14 +577,14 @@ const Profile = () => {
         type: e.publication_type,
         book: e.book_name,
         publisher: "N/A",
-        published: date(e.year_published),
+        published: e.year_published,
         action: (
           <Button
             type="primary"
             icon={<FileTextOutlined />}
             style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
             className={styles.tableButton}
-            onClick={() => router.push(`/book/${e.id}`)}
+            onClick={() => router.push(`/book/${e.isbn}`)}
           >
             {innerWidth > 1400 ? "View More" : null}
           </Button>
@@ -617,16 +623,22 @@ const Profile = () => {
           title: t => titleMaker(t, "amount", "Funds", "Funds"),
           dataIndex: "amount",
           key: "amount",
+          render: e => `₹${number(e)} Lakhs`,
+          sorter: (a, b, c) => sorter(a.amount, b.amount, 0, c),
         },
         {
           title: t => titleMaker(t, "start", "Start Date", "Start"),
           dataIndex: "start",
           key: "start",
+          render: e => date(e),
+          sorter: (a, b, c) => sorter(a.start, b.start, 1, c),
         },
         {
           title: t => titleMaker(t, "end", "End Date", "End"),
           dataIndex: "end",
           key: "end",
+          render: e => date(e),
+          sorter: (a, b, c) => sorter(a.end, b.end, 1, c),
         },
         {
           title: "",
@@ -640,9 +652,9 @@ const Profile = () => {
         agency: capitalize(e.funding_agency),
         country: capitalize(e.country_funding_agency),
         type: capitalize(e.type),
-        amount: number(e.funds) + " Lakhs",
-        start: date(e.starting_date),
-        end: date(e.end_date),
+        amount: number(e.funds),
+        start: e.starting_date,
+        end: e.end_date,
         action: (
           <Button
             type="primary"
@@ -689,6 +701,8 @@ const Profile = () => {
           title: t => titleMaker(t, "date", "Awarded Date", "Date"),
           dataIndex: "date",
           key: "date",
+          render: e => date(e),
+          sorter: (a, b, c) => sorter(a.date, b.date, 1, c),
         },
         {
           title: "",
@@ -702,7 +716,7 @@ const Profile = () => {
         name: capitalize(e.title),
         agency: capitalize(e.awarding_agency),
         type: capitalize(e.award_type),
-        date: date(e.date_awarded),
+        date: e.date_awarded,
         action: (
           <Button
             type="primary"
@@ -730,14 +744,14 @@ const Profile = () => {
           render: (id, record, index) => `${index + 1}.`,
         },
         {
-          title: t => titleMaker(t, "ipr", "IPR Awarded", "IPR"),
-          dataIndex: "ipr",
-          key: "ipr",
-        },
-        {
           title: t => titleMaker(t, "title", "Title of IPR", "Title"),
           dataIndex: "title",
           key: "title",
+        },
+        {
+          title: t => titleMaker(t, "ipr", "IPR Awarded", "IPR"),
+          dataIndex: "ipr",
+          key: "ipr",
         },
         {
           title: t => titleMaker(t, "status", "IPR Status", "Status"),
@@ -753,6 +767,13 @@ const Profile = () => {
           title: t => titleMaker(t, "date", "Published Date", "Date"),
           dataIndex: "date",
           key: "date",
+          render: e => date(e),
+          sorter: (a, b, c) => sorter(a.date, b.date, 1, c),
+        },
+        {
+          title: t => titleMaker(t, "year", "IPR Number", "Number"),
+          dataIndex: "ipr_number",
+          key: "ipr_number",
         },
         {
           title: "",
@@ -763,11 +784,12 @@ const Profile = () => {
 
       const BODY = data?.IPR?.map((e, i) => ({
         key: i,
-        ipr: capitalize(e.IPR_awarded),
         title: capitalize(e.title_of_ipr),
+        ipr: capitalize(e.IPR_awarded),
         status: capitalize(e.status),
         agency: capitalize(e.awarding_agency),
-        date: date(e.date_of_publication),
+        date: e.date_of_publication,
+        ipr_number: capitalize(e.ipr_number),
         action: (
           <Button
             type="primary"
@@ -846,7 +868,18 @@ const Profile = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, sortBy, innerWidth]);
+  }, [
+    data,
+    sortBy,
+    innerWidth,
+    publications,
+    conferences,
+    books,
+    projects,
+    awards,
+    ipr,
+    students,
+  ]);
 
   // FUNCTIONS
 

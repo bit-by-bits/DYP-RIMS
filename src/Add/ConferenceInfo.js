@@ -2,9 +2,9 @@ import styles from "../../styles/file.module.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import URLObj from "../baseURL";
-import { Avatar, Card, Image, Modal, Upload, message } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import ListSection from "../Common/ListSection";
+import { Avatar, Card, Modal, Upload, message } from "antd";
 
 const ConferenceInfo = ({ user, setv, ID }) => {
   // STATES
@@ -22,7 +22,7 @@ const ConferenceInfo = ({ user, setv, ID }) => {
   // EFFECTS
 
   useEffect(() => {
-    if (ID) {
+    if (ID && user?.token) {
       axios({
         method: "GET",
         url: `${URLObj.base}/research/conference/?id=${ID}`,
@@ -40,12 +40,12 @@ const ConferenceInfo = ({ user, setv, ID }) => {
           message.error("Could not fetch file data");
         });
     }
-  }, [user, setv, ID]);
+  }, [ID, setv, user]);
 
   useEffect(() => {
     if (fileData?.file) {
       const formData = new FormData();
-      formData.append("file", fileData?.file);
+      formData?.append("file", fileData?.file);
 
       axios({
         method: "POST",
@@ -229,7 +229,7 @@ const ConferenceInfo = ({ user, setv, ID }) => {
               <div className={styles.info}>
                 <span className={styles.info_head}>Date</span>
                 <span className={styles.info_body}>
-                  {capitalize(data?.date)}
+                  {`${data?.start_date} to ${data?.end_date}`}
                 </span>
               </div>
 
@@ -270,12 +270,18 @@ const ConferenceInfo = ({ user, setv, ID }) => {
               </div>
             )}
 
-            {data?.imageLinks?.thumbnail && (
-              <Image
-                style={{ margin: "10px 0", maxHeight: 400 }}
-                alt={data?.title ?? "- Not Available -"}
-                src={data?.imageLinks?.thumbnail}
-              />
+            {data?.certificate && (
+              <object
+                data={data?.certificate}
+                type="application/pdf"
+                width="100%"
+                height="500px"
+              >
+                <p>
+                  Unable to display PDF file.{" "}
+                  <a href={data?.certificate}>Download</a> instead.
+                </p>
+              </object>
             )}
           </div>
         </div>

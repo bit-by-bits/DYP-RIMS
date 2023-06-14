@@ -1,31 +1,23 @@
-import {
-  Button,
-  DatePicker,
-  FloatButton,
-  Form,
-  Input,
-  Select,
-  Spin,
-  Upload,
-  message,
-} from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import styles from "../../styles/add.module.css";
-import styles2 from "../../styles/upload.module.css";
+import axios from "axios";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import Side from "../../../src/Common/Side";
 import { useRouter } from "next/router";
+import styles from "../../../styles/add.module.css";
+import Side from "../../../src/Common/Side";
 import Top from "../../../src/Common/Top";
-import Image from "next/image";
-import axios from "axios";
 import URLObj from "../../../src/baseURL";
+import { UploadOutlined } from "@ant-design/icons";
+import { Button, DatePicker, FloatButton } from "antd";
+import { Spin, Upload, message, Form, Input, Select } from "antd";
 
 const Conferences = () => {
   // BOILERPLATE
 
   const router = useRouter();
   const [user, setUser] = useState({});
+
+  const { id } = router.query;
+  const [ID, setID] = useState("");
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -40,70 +32,108 @@ const Conferences = () => {
         : router.push("/");
   }, [router, user]);
 
+  useEffect(() => {
+    if (router.isReady) setID(id);
+  }, [router, id]);
+
   // STATES
 
-  const { RangePicker } = DatePicker;
-  const { Dragger } = Upload;
-
   const [form] = Form.useForm();
+  const { RangePicker } = DatePicker;
   const [visible, setVisible] = useState(true);
 
-  const [step, setStep] = useState(0);
-  const [searching, setSearching] = useState(false);
-  const [data, setData] = useState({});
-
-  const [file, setFile] = useState(null);
   const [paper, setPaper] = useState(0);
   const [poster, setPoster] = useState(0);
+  const [initialValues, setInitialValues] = useState({});
 
   // EFFECTS
 
   useEffect(() => {
-    setTimeout(() => {
-      setVisible(false);
-    }, 1200);
-  }, []);
+    if (ID && user?.token) {
+      axios({
+        method: "GET",
+        url: `${URLObj.base}/research/conference/?id=${ID}`,
+        headers: {
+          "X-ACCESS-KEY": URLObj.key,
+          "X-AUTH-TOKEN": user?.token,
+        },
+      }).then(res => {
+        const DATA = res?.data?.data?.[0];
+        setVisible(false);
+        setInitialValues({
+          faculty: user?.name,
+          department: user?.department,
+          conference: DATA?.conference_name,
+          type: DATA?.conference_type,
+          file: DATA?.certificate_file,
+          attended_as: DATA?.attended_as,
+          location: DATA?.location,
+        });
+
+        DATA?.is_paper_presented &&
+          DATA?.papers?.forEach((e, i) =>
+            setInitialValues({
+              ...initialValues,
+              [`tpaper${i}`]: e.title,
+              [`paper${i}`]: e.file,
+            })
+          );
+
+        DATA?.is_poster_presented &&
+          DATA?.posters?.forEach((e, i) =>
+            setInitialValues({
+              ...initialValues,
+              [`tposter${i}`]: e.title,
+              [`poster${i}`]: e.file,
+            })
+          );
+
+        setPaper(DATA?.papers?.length);
+        setPoster(DATA?.posters?.length);
+      });
+    }
+  }, [ID, user]);
 
   useEffect(() => {
     form.resetFields();
-  }, [form, data, visible]);
+  }, [form, initialValues]);
 
   // FUNCTIONS
 
   const onFinish = values => {
     const formdata = new FormData();
 
-    formdata.append("faculty", values.faculty);
-    formdata.append("department", values.department);
-    formdata.append("conference_type", values.type);
-    formdata.append("conference_name", values.conference);
-    formdata.append("certificate_file", file);
-    formdata.append("attended_as", values.attended_as);
-
-    if (data?.start_date && data?.end_date) {
-      formdata.append("start_date", values.start_date);
-      formdata.append("end_date", values.end_date);
-    } else {
-      formdata.append("start_date", values.date[0]);
-      formdata.append("end_date", values.date[1]);
-    }
-
-    formdata.append("location", values.location);
-    formdata.append("is_paper_presented", paper ? 1 : 0);
-    formdata.append("is_poster_presented", poster ? 1 : 0);
+    formdata?.append("id", ID);
+    formdata?.append("faculty", values.faculty);
+    formdata?.append("department", values.department);
+    formdata?.append("conference_name", values.conference);
+    formdata?.append("conference_type", values.type);
+    formdata?.append("certificate_file", initialValues?.file);
+    formdata?.append("attended_as", values.attended_as);
+    formdata?.append(
+      "start_date",
+      `${values.date[0]?.$y}-${values.date[0]?.$M + 1}-${values.date[0]?.$D}`
+    );
+    formdata?.append(
+      "end_date",
+      `${values.date[1]?.$y}-${values.date[1]?.$M + 1}-${values.date[1]?.$D}`
+    );
+    formdata?.append("location", values.location);
+    formdata?.append("is_paper_presented", paper ? 1 : 0);
+    formdata?.append("is_poster_presented", poster ? 1 : 0);
 
     new Array(paper).fill(0).forEach((e, i) => {
-      formdata.append(`paper${i}`, values[`paper${i}`]?.file);
-      formdata.append(`tpaper${i}`, values[`tpaper${i}`]);
+      formdata?.append(`paper${i}`, values[`paper${i}`]?.file);
+      formdata?.append(`tpaper${i}`, values[`tpaper${i}`]);
     });
 
     new Array(poster).fill(0).forEach((e, i) => {
-      formdata.append(`poster${i}`, values[`poster${i}`]?.file);
-      formdata.append(`tposter${i}`, values[`tposter${i}`]);
+      formdata?.append(`poster${i}`, values[`poster${i}`]?.file);
+      formdata?.append(`tposter${i}`, values[`tposter${i}`]);
     });
 
     axios({
-      method: "POST",
+      method: "PATCH",
       url: `${URLObj.base}/research/conference/`,
       headers: {
         "X-ACCESS-KEY": URLObj.key,
@@ -112,8 +142,8 @@ const Conferences = () => {
       data: formdata,
     })
       .then(res => {
-        message.success("Conference details added successfully");
-        router.push("/profile");
+        message.success("Conference details edited successfully");
+        router.push(`/conference/${ID}`);
         form.resetFields();
       })
       .catch(err => {
@@ -127,45 +157,10 @@ const Conferences = () => {
     console.log("Failed:", errorInfo);
   };
 
-  const add = () => {
-    setSearching(true);
-
-    if (!file) {
-      setSearching(false);
-      message.error("Select a file first");
-      return;
-    }
-
-    const formData = new FormData();
-    formData?.append("file", file);
-    formData?.append("type", "conference");
-
-    axios({
-      method: "POST",
-      url: URLObj.ai,
-      headers: {
-        Authorization: `Bearer ${user?.token}`,
-        "Content-Type": "multipart/form-data",
-      },
-      data: formData,
-    })
-      .then(res => {
-        message.success("Conference details fetched successfully");
-        setSearching(false);
-
-        setStep(1);
-        setData(res.data?.response);
-      })
-      .catch(err => {
-        message.error("Something went wrong while fetching details");
-        setSearching(false);
-      });
-  };
-
   return (
     <>
       <Head>
-        <title>DYPU RIMS | Add Conferences</title>
+        <title>DYPU RIMS | Edit Conferences</title>
         <link rel="icon" href="../logos/dpu-2.png" />
       </Head>
 
@@ -186,64 +181,8 @@ const Conferences = () => {
             <div className={styles.container}>
               <Top user={user} />
 
-              <div
-                style={step ? { display: "none" } : { height: "max-content" }}
-                className={styles2.wrapper}
-              >
-                <div
-                  style={{ width: "65vw", minHeight: "0" }}
-                  className={styles2.upload_wrapper}
-                >
-                  <Dragger
-                    name="file"
-                    multiple={false}
-                    style={{ border: "none" }}
-                    className={styles2.upload_left}
-                    beforeUpload={file => setFile(file)}
-                  >
-                    <Image
-                      width={60}
-                      height={60}
-                      alt="ADD"
-                      src="/upload/upload.png"
-                      className={styles2.upload_img}
-                    />
-                    <div className={styles2.upload_title}>Add a file</div>
-
-                    <div className={styles2.upload_msg}>
-                      Click or drag file to this area to upload
-                    </div>
-                  </Dragger>
-                </div>
-
-                <div style={{ display: "flex", gap: "1rem" }}>
-                  {searching ? (
-                    <div className={styles2.upload_btn}>
-                      <div className={styles2.dots} />
-                    </div>
-                  ) : (
-                    <div onClick={add} className={styles2.upload_btn}>
-                      Add File
-                    </div>
-                  )}
-
-                  <div
-                    onClick={() => {
-                      setStep(1);
-                      setData({});
-                    }}
-                    className={styles2.upload_btn2}
-                  >
-                    Skip
-                  </div>
-                </div>
-              </div>
-
-              <div
-                className={styles.formContainer}
-                style={step ? {} : { display: "none" }}
-              >
-                <h1 className={styles.heading}>Add Conferences</h1>
+              <div className={styles.formContainer}>
+                <h1 className={styles.heading}>Edit Conferences</h1>
 
                 <Form
                   form={form}
@@ -252,21 +191,10 @@ const Conferences = () => {
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   initialValues={
-                    data?.start_date && data?.end_date
-                      ? {
-                          faculty: user?.name,
-                          department: user?.department,
-                          conference: data?.conference_name,
-                          start_date: data?.start_date?.split(" ")?.shift(),
-                          end_date: data?.end_date?.split(" ")?.shift(),
-                          location: data?.location,
-                        }
-                      : {
-                          faculty: user?.name,
-                          department: user?.department,
-                          conference: data?.conference_name,
-                          location: data?.location,
-                        }
+                    initialValues ?? {
+                      faculty: user?.name,
+                      department: user?.department,
+                    }
                   }
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
@@ -365,48 +293,18 @@ const Conferences = () => {
                     />
                   </Form.Item>
 
-                  {data?.start_date && data?.end_date ? (
-                    <>
-                      <Form.Item
-                        label="Conference Start"
-                        name="start_date"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please enter conference start date!",
-                          },
-                        ]}
-                      >
-                        <Input placeholder="YYYY-MM-DD" />
-                      </Form.Item>
-
-                      <Form.Item
-                        label="Conference End"
-                        name="end_date"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please enter conference end date!",
-                          },
-                        ]}
-                      >
-                        <Input placeholder="YYYY-MM-DD" />
-                      </Form.Item>
-                    </>
-                  ) : (
-                    <Form.Item
-                      label="Conference Dates"
-                      name="date"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please enter conference dates!",
-                        },
-                      ]}
-                    >
-                      <RangePicker style={{ width: "100%" }} />
-                    </Form.Item>
-                  )}
+                  <Form.Item
+                    label="Conference Dates"
+                    name="date"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter conference dates!",
+                      },
+                    ]}
+                  >
+                    <RangePicker style={{ width: "100%" }} />
+                  </Form.Item>
 
                   <Form.Item
                     label="Location"
@@ -502,19 +400,6 @@ const Conferences = () => {
                       htmlType="submit"
                     >
                       SUBMIT
-                    </Button>
-
-                    <Button
-                      type="primary"
-                      className={styles.secondary}
-                      htmlType="reset"
-                      onClick={() => {
-                        setStep(0);
-                        setPaper(0);
-                        setPoster(0);
-                      }}
-                    >
-                      RETURN BACK
                     </Button>
                   </Form.Item>
                 </Form>

@@ -61,6 +61,7 @@ const Projects = () => {
 
     formdata?.append("faculty", values.faculty);
     formdata?.append("department", values.department);
+    formdata?.append("project_title", values.project_title);
     formdata?.append("funding_agency", values.agency);
     formdata?.append("country_funding_agency", values.country);
     formdata?.append("type", values.type);
@@ -164,6 +165,19 @@ const Projects = () => {
                   </Form.Item>
 
                   <Form.Item
+                    label="Title of Project"
+                    name="project_title"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input project title!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+
+                  <Form.Item
                     label="Funding Agency"
                     name="agency"
                     rules={[
@@ -246,4 +260,5 @@ const Projects = () => {
     </>
   );
 };
+
 export default Projects;

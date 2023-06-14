@@ -73,33 +73,33 @@ const Conferences = () => {
   const onFinish = values => {
     const formdata = new FormData();
 
-    formdata.append("faculty", values.faculty);
-    formdata.append("department", values.department);
-    formdata.append("conference_type", values.type);
-    formdata.append("conference_name", values.conference);
-    formdata.append("certificate_file", file);
-    formdata.append("attended_as", values.attended_as);
+    formdata?.append("faculty", values.faculty);
+    formdata?.append("department", values.department);
+    formdata?.append("conference_type", values.type);
+    formdata?.append("conference_name", values.conference);
+    formdata?.append("certificate_file", file);
+    formdata?.append("attended_as", values.attended_as);
 
     if (data?.start_date && data?.end_date) {
-      formdata.append("start_date", values.start_date);
-      formdata.append("end_date", values.end_date);
+      formdata?.append("start_date", values.start_date);
+      formdata?.append("end_date", values.end_date);
     } else {
-      formdata.append("start_date", values.date[0]);
-      formdata.append("end_date", values.date[1]);
+      formdata?.append("start_date", values.date[0]);
+      formdata?.append("end_date", values.date[1]);
     }
 
-    formdata.append("location", values.location);
-    formdata.append("is_paper_presented", paper ? 1 : 0);
-    formdata.append("is_poster_presented", poster ? 1 : 0);
+    formdata?.append("location", values.location);
+    formdata?.append("is_paper_presented", paper ? 1 : 0);
+    formdata?.append("is_poster_presented", poster ? 1 : 0);
 
     new Array(paper).fill(0).forEach((e, i) => {
-      formdata.append(`paper${i}`, values[`paper${i}`]?.file);
-      formdata.append(`tpaper${i}`, values[`tpaper${i}`]);
+      formdata?.append(`paper${i}`, values[`paper${i}`]?.file);
+      formdata?.append(`tpaper${i}`, values[`tpaper${i}`]);
     });
 
     new Array(poster).fill(0).forEach((e, i) => {
-      formdata.append(`poster${i}`, values[`poster${i}`]?.file);
-      formdata.append(`tposter${i}`, values[`tposter${i}`]);
+      formdata?.append(`poster${i}`, values[`poster${i}`]?.file);
+      formdata?.append(`tposter${i}`, values[`tposter${i}`]);
     });
 
     axios({

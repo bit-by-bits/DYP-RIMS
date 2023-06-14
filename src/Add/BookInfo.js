@@ -12,9 +12,9 @@ const BookInfo = ({ user, setv, ISBN }) => {
   // EFFECTS
 
   useEffect(() => {
-    if (ISBN) {
+    if (ISBN && user?.token) {
       axios({
-        method: "GET",
+        method: "PUT",
         url: `${URLObj.base}/books/?isbn=${ISBN}`,
         headers: {
           "X-ACCESS-KEY": URLObj.key,
@@ -44,8 +44,8 @@ const BookInfo = ({ user, setv, ISBN }) => {
 
           <div className={styles.file_tag2}>
             {data?.imageLinks?.thumbnail
-              ? "PDF Available"
-              : "PDF Not Available"}
+              ? "Image Available"
+              : "Image Not Available"}
           </div>
         </div>
 
@@ -56,12 +56,14 @@ const BookInfo = ({ user, setv, ISBN }) => {
           }}
         />
 
-        <div
-          className={styles.file_subtitle}
-          dangerouslySetInnerHTML={{
-            __html: data?.subtitle ?? "- Not Available -",
-          }}
-        />
+        {data?.subtitle && (
+          <div
+            className={styles.file_subtitle}
+            dangerouslySetInnerHTML={{
+              __html: data?.subtitle ?? "- Not Available -",
+            }}
+          />
+        )}
 
         <div className={styles.file_info}>
           <div className={styles.file_info_box}>

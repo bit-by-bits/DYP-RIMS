@@ -18,7 +18,7 @@ const AwardInfo = ({ user, setv, ID }) => {
   // EFFECTS
 
   useEffect(() => {
-    if (ID) {
+    if (ID && user?.token) {
       axios({
         method: "GET",
         url: `${URLObj.base}/research/award/?id=${ID}`,
@@ -39,9 +39,9 @@ const AwardInfo = ({ user, setv, ID }) => {
   }, [ID, user, setv]);
 
   useEffect(() => {
-    if (fileData?.file) {
+    if (fileData?.file && fileData?.modal) {
       const formData = new FormData();
-      formData.append("file", fileData?.file);
+      formData?.append("file", fileData?.file);
 
       axios({
         method: "POST",

@@ -58,7 +58,7 @@ const Books = () => {
     formdata?.append("faculty", values.faculty);
     formdata?.append("department", values.department);
     formdata?.append("type", values.type);
-    formdata?.append("title", values.title);
+    formdata?.append("title", values.title ?? "-");
     formdata?.append("book", values.book);
     formdata?.append("year", values.year);
     formdata?.append("isbn", values.isbn);
@@ -210,7 +210,7 @@ const Books = () => {
                   initialValues={{
                     faculty: user?.name,
                     department: user?.department,
-                    title:
+                    book:
                       (data?.title ?? "") +
                       (data?.subtitle ? ": " : "") +
                       (data?.subtitle ?? ""),
@@ -260,21 +260,12 @@ const Books = () => {
                     </Select>
                   </Form.Item>
 
-                  <Form.Item
-                    label="Publication Title"
-                    name="title"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input publication title!",
-                      },
-                    ]}
-                  >
+                  <Form.Item label="Chapter Title" name="title">
                     <Input />
                   </Form.Item>
 
                   <Form.Item
-                    label="Book Name"
+                    label="Book Title"
                     name="book"
                     rules={[
                       {

@@ -50,7 +50,7 @@ const Award = () => {
   };
 
   const editAward = () => {
-    router.push(`/add/award?id=${ID}`);
+    router.push(`/edit/award/${ID}`);
   };
 
   return (

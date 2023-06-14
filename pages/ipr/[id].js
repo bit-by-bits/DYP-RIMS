@@ -5,9 +5,9 @@ import React, { useState, useEffect } from "react";
 import { FloatButton, Spin, message } from "antd";
 import Side from "../../src/Common/Side";
 import Top from "../../src/Common/Top";
-import ProjectInfo from "../../src/Add/ProjectInfo";
+import IPRInfo from "../../src/Add/IPRInfo";
 
-const Project = () => {
+const IPR = () => {
   // BOILERPLATE
 
   const router = useRouter();
@@ -41,22 +41,22 @@ const Project = () => {
 
   // FUNCTIONS
 
-  const downloadProj = () => {
+  const downloadIPR = () => {
     message.error("Download functionality unavailable!");
   };
 
-  const deleteProj = () => {
+  const deleteIPR = () => {
     message.error("Delete functionality unavailable!");
   };
 
-  const editProj = () => {
-    router.push(`/edit/project/${ID}`);
+  const editIPR = () => {
+    router.push(`/edit/ipr/${ID}`);
   };
 
   return (
     <>
       <Head>
-        <title>DYPU RIMS | Project</title>
+        <title>DYPU RIMS | IPR</title>
         <link rel="icon" href="../../logos/dpu-2.png" />
       </Head>
 
@@ -78,23 +78,23 @@ const Project = () => {
               <Top user={user} />
 
               <div>
-                <ProjectInfo user={user} setv={setVisible} ID={ID} />
+                <IPRInfo user={user} setv={setVisible} ID={ID} />
 
                 <div className={styles.file_btns}>
                   {[
                     {
                       name: "Delete",
-                      function: deleteProj,
+                      function: deleteIPR,
                       class: styles.file_btn2,
                     },
                     {
                       name: "Edit Info",
-                      function: editProj,
+                      function: editIPR,
                       class: styles.file_btn1,
                     },
                     {
                       name: "Download",
-                      function: downloadProj,
+                      function: downloadIPR,
                       class: styles.file_btn2,
                     },
                   ].map(btn => (
@@ -116,4 +116,4 @@ const Project = () => {
   );
 };
 
-export default Project;
+export default IPR;

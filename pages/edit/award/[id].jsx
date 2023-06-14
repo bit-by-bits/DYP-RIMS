@@ -1,30 +1,22 @@
-import {
-  Button,
-  DatePicker,
-  FloatButton,
-  Form,
-  Input,
-  Select,
-  Spin,
-  Upload,
-  message,
-} from "antd";
-import styles from "../../styles/add.module.css";
-import styles2 from "../../styles/upload.module.css";
+import axios from "axios";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import Side from "../../../src/Common/Side";
 import { useRouter } from "next/router";
+import styles from "../../../styles/add.module.css";
+import Side from "../../../src/Common/Side";
 import Top from "../../../src/Common/Top";
-import Image from "next/image";
-import axios from "axios";
 import URLObj from "../../../src/baseURL";
+import { Button, DatePicker, FloatButton } from "antd";
+import { Spin, message, Form, Input, Select } from "antd";
 
 const Awards = () => {
   // BOILERPLATE
 
   const router = useRouter();
   const [user, setUser] = useState({});
+
+  const { id } = router.query;
+  const [ID, setID] = useState("");
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -39,54 +31,62 @@ const Awards = () => {
         : router.push("/");
   }, [router, user]);
 
+  useEffect(() => {
+    if (router.isReady) setID(id);
+  }, [router, id]);
+
   // STATES
 
-  const { RangePicker } = DatePicker;
-  const { Dragger } = Upload;
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(true);
-
-  const [step, setStep] = useState(0);
-  const [searching, setSearching] = useState(false);
-  const [data, setData] = useState({});
-  const [file, setFile] = useState(null);
+  const [initialValues, setInitialValues] = useState({});
 
   // EFFECTS
 
   useEffect(() => {
-    setTimeout(() => {
-      setVisible(false);
-    }, 1200);
-  }, []);
+    if (ID && user?.token) {
+      axios({
+        method: "GET",
+        url: `${URLObj.base}/research/award/?id=${ID}`,
+        headers: {
+          "X-ACCESS-KEY": URLObj.key,
+          "X-AUTH-TOKEN": user?.token,
+        },
+      }).then(res => {
+        const DATA = res?.data?.data?.[0];
+        setVisible(false);
+        setInitialValues({
+          faculty: user?.name,
+          department: user?.department,
+          agency: DATA?.awarding_agency,
+          title: DATA?.title,
+          type: DATA?.award_type,
+          location: DATA?.location,
+        });
+      });
+    }
+  }, [ID, user]);
 
   useEffect(() => {
     form.resetFields();
-  }, [form, data, visible]);
+  }, [form, initialValues]);
 
   // FUNCTIONS
 
   const onFinish = values => {
     const formdata = new FormData();
+    console.log(values.date);
 
-    formdata.append("faculty", values.faculty);
-    formdata.append("department", values.department);
-    formdata.append("agency", values.agency);
-    formdata.append("award", values.title);
-    formdata.append("type", values.type);
-
-    if (data?.start_date && data?.end_date) {
-      formdata.append("start_date", values.start_date);
-      formdata.append("end_date", values.end_date);
-    } else {
-      formdata.append("start_date", values.date[0]);
-      formdata.append("end_date", values.date[1]);
-    }
-
-    formdata.append("location", values.location);
-    formdata.append("file", file);
+    formdata?.append("faculty", values.faculty);
+    formdata?.append("department", values.department);
+    formdata?.append("agency", values.agency);
+    formdata?.append("title", values.title);
+    formdata?.append("type", values.type);
+    formdata?.append("date", `${values.date?.format("YYYY-MM-DD")}`);
+    formdata?.append("location", values.location);
 
     axios({
-      method: "POST",
+      method: "PATCH",
       url: `${URLObj.base}/research/award/`,
       headers: {
         "X-ACCESS-KEY": URLObj.key,
@@ -96,7 +96,7 @@ const Awards = () => {
     })
       .then(res => {
         message.success("Award added successfully");
-        router.push("/profile");
+        router.push(`/award/${ID}`);
         form.resetFields();
       })
       .catch(err => {
@@ -110,46 +110,11 @@ const Awards = () => {
     console.log("Failed:", errorInfo);
   };
 
-  const add = () => {
-    setSearching(true);
-
-    if (!file) {
-      setSearching(false);
-      message.error("Select a file first");
-      return;
-    }
-
-    const formData = new FormData();
-    formData?.append("file", file);
-    formData?.append("type", "award");
-
-    axios({
-      method: "POST",
-      url: URLObj.ai,
-      headers: {
-        Authorization: `Bearer ${user?.token}`,
-        "Content-Type": "multipart/form-data",
-      },
-      data: formData,
-    })
-      .then(res => {
-        message.success("Award details fetched successfully");
-        setSearching(false);
-
-        setStep(1);
-        setData(res.data?.response);
-      })
-      .catch(err => {
-        message.error("Something went wrong while fetching details");
-        setSearching(false);
-      });
-  };
-
   return (
     <>
       <Head>
-        <title>DYPU RIMS | Add Awards</title>
-        <link rel="icon" href="../logos/dpu-2.png" />
+        <title>DYPU RIMS | Edit Awards</title>
+        <link rel="icon" href="../../logos/dpu-2.png" />
       </Head>
 
       <div className={styles.wrapper}>
@@ -169,64 +134,8 @@ const Awards = () => {
             <div className={styles.container}>
               <Top user={user} />
 
-              <div
-                style={step ? { display: "none" } : { height: "max-content" }}
-                className={styles2.wrapper}
-              >
-                <div
-                  style={{ width: "65vw", minHeight: "0" }}
-                  className={styles2.upload_wrapper}
-                >
-                  <Dragger
-                    name="file"
-                    multiple={false}
-                    style={{ border: "none" }}
-                    className={styles2.upload_left}
-                    beforeUpload={file => setFile(file)}
-                  >
-                    <Image
-                      width={60}
-                      height={60}
-                      alt="ADD"
-                      src="/upload/upload.png"
-                      className={styles2.upload_img}
-                    />
-                    <div className={styles2.upload_title}>Add a file</div>
-
-                    <div className={styles2.upload_msg}>
-                      Click or drag file to this area to upload
-                    </div>
-                  </Dragger>
-                </div>
-
-                <div style={{ display: "flex", gap: "1rem" }}>
-                  {searching ? (
-                    <div className={styles2.upload_btn}>
-                      <div className={styles2.dots} />
-                    </div>
-                  ) : (
-                    <div onClick={add} className={styles2.upload_btn}>
-                      Add File
-                    </div>
-                  )}
-
-                  <div
-                    onClick={() => {
-                      setStep(1);
-                      setData({});
-                    }}
-                    className={styles2.upload_btn2}
-                  >
-                    Skip
-                  </div>
-                </div>
-              </div>
-
-              <div
-                className={styles.formContainer}
-                style={step ? {} : { display: "none" }}
-              >
-                <h1 className={styles.heading}>Add Awards</h1>
+              <div className={styles.formContainer}>
+                <h1 className={styles.heading}>Edit Awards</h1>
 
                 <Form
                   form={form}
@@ -235,21 +144,10 @@ const Awards = () => {
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   initialValues={
-                    data?.start_date && data?.end_date
-                      ? {
-                          faculty: user?.name,
-                          department: user?.department,
-                          title: data?.award_name,
-                          start_date: data?.start_date?.split(" ")?.shift(),
-                          end_date: data?.end_date?.split(" ")?.shift(),
-                          location: data?.location,
-                        }
-                      : {
-                          faculty: user?.name,
-                          department: user?.department,
-                          title: data?.award_name,
-                          location: data?.location,
-                        }
+                    initialValues ?? {
+                      faculty: user?.name,
+                      department: user?.department,
+                    }
                   }
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
@@ -323,48 +221,18 @@ const Awards = () => {
                     />
                   </Form.Item>
 
-                  {data?.start_date && data?.end_date ? (
-                    <>
-                      <Form.Item
-                        label="Award Start"
-                        name="start_date"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please enter award start date!",
-                          },
-                        ]}
-                      >
-                        <Input placeholder="YYYY-MM-DD" />
-                      </Form.Item>
-
-                      <Form.Item
-                        label="Award End"
-                        name="end_date"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please enter award end date!",
-                          },
-                        ]}
-                      >
-                        <Input placeholder="YYYY-MM-DD" />
-                      </Form.Item>
-                    </>
-                  ) : (
-                    <Form.Item
-                      label="Award Dates"
-                      name="date"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please enter award dates!",
-                        },
-                      ]}
-                    >
-                      <RangePicker style={{ width: "100%" }} />
-                    </Form.Item>
-                  )}
+                  <Form.Item
+                    label="Award Dates"
+                    name="date"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter award dates!",
+                      },
+                    ]}
+                  >
+                    <DatePicker style={{ width: "100%" }} format="YYYY-MM-DD" />
+                  </Form.Item>
 
                   <Form.Item
                     label="Location"

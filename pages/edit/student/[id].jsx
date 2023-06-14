@@ -43,10 +43,10 @@ const Student = () => {
   // EFFECTS
 
   useEffect(() => {
-    if (id && user) {
+    if (ID && user?.token) {
       axios({
         method: "GET",
-        url: `${URLObj.base}/research/student/?id=${id}`,
+        url: `${URLObj.base}/research/student/?id=${ID}`,
         headers: {
           "X-ACCESS-KEY": URLObj.key,
           "X-AUTH-TOKEN": user?.token,
@@ -57,31 +57,31 @@ const Student = () => {
         setInitialValues({
           faculty: user?.name,
           department: user?.department,
-          student: DATA.student_name,
-          degree: DATA.student_degree,
-          topic: DATA.thesis_topic,
-          year: DATA.year,
+          student: DATA?.student_name,
+          degree: DATA?.student_degree,
+          topic: DATA?.thesis_topic,
+          year: DATA?.year,
         });
       });
     }
-  }, [id, user]);
+  }, [ID, user]);
 
   useEffect(() => {
     form.resetFields();
-  }, [visible, form]);
+  }, [form, initialValues]);
 
   // FUNCTIONS
 
   const onFinish = values => {
     const formdata = new FormData();
 
-    formdata.append("faculty", values.faculty);
-    formdata.append("department", values.department);
-    formdata.append("student_name", values.student);
-    formdata.append("student_degree", values.degree);
-    formdata.append("thesis_topic", values.topic);
-    formdata.append("year", values.year);
-    formdata.append("id", ID);
+    formdata?.append("faculty", values.faculty);
+    formdata?.append("department", values.department);
+    formdata?.append("student_name", values.student);
+    formdata?.append("student_degree", values.degree);
+    formdata?.append("thesis_topic", values.topic);
+    formdata?.append("year", values.year);
+    formdata?.append("id", ID);
 
     axios({
       method: "PATCH",

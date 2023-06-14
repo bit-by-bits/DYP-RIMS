@@ -1,13 +1,13 @@
-import { Button, FloatButton, Input, Radio } from "antd";
-import { Select, Spin, Upload, Form, message } from "antd";
-import styles from "../../styles/add.module.css";
 import Head from "next/head";
-import { useEffect, useState } from "react";
-import Side from "../../src/Common/Side";
-import { useRouter } from "next/router";
-import Top from "../../src/Common/Top";
 import axios from "axios";
 import URLObj from "../../src/baseURL";
+import Side from "../../src/Common/Side";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import Top from "../../src/Common/Top";
+import styles from "../../styles/add.module.css";
+import { Button, DatePicker, FloatButton, Input, Radio } from "antd";
+import { Select, Spin, Upload, Form, message } from "antd";
 
 const Students = () => {
   // BOILERPLATE
@@ -51,12 +51,18 @@ const Students = () => {
   const onFinish = values => {
     const formdata = new FormData();
 
-    formdata.append("first_name", values.first_name);
-    formdata.append("last_name", values.last_name);
-    formdata.append("age", values.age);
-    formdata.append("gender", values.gender);
-    formdata.append("position", values.position);
-    formdata.append("profile_picture", file);
+    formdata?.append("first_name", values.first_name);
+    formdata?.append("last_name", values.last_name);
+    formdata?.append(
+      "age",
+      Math.max(
+        Math.floor((new Date() - new Date(values.age).getTime()) / 3.15576e10),
+        0
+      )
+    );
+    formdata?.append("gender", values.gender);
+    formdata?.append("position", values.position);
+    formdata?.append("profile_picture", file);
 
     axios({
       method: "PATCH",
@@ -115,7 +121,7 @@ const Students = () => {
                   style={{ width: "80vw", transform: "translateX(-10vw)" }}
                   initialValues={{
                     first_name: user?.name?.split(" ")[0],
-                    last_name: user?.name?.split(" ")[1],
+                    last_name: user?.name?.split(" ")?.slice(-1),
                     department: user?.department,
                     level: user?.level?.slice(0, -1),
                   }}
@@ -138,6 +144,10 @@ const Students = () => {
                     <Input />
                   </Form.Item>
 
+                  <Form.Item label="Middle Name" name="middle_name">
+                    <Input />
+                  </Form.Item>
+
                   <Form.Item
                     label="Last Name"
                     name="last_name"
@@ -145,20 +155,6 @@ const Students = () => {
                       {
                         required: true,
                         message: "Please input your last name!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Current Age"
-                    name="age"
-                    rules={[
-                      {
-                        required: true,
-                        pattern: /^[0-9]+$/,
-                        message: "Please input your age!",
                       },
                     ]}
                   >
@@ -180,6 +176,19 @@ const Students = () => {
                       <Radio value="Female">Female</Radio>
                       <Radio value="Non-binary">Non-binary</Radio>
                     </Radio.Group>
+                  </Form.Item>
+
+                  <Form.Item
+                    label="Current Age"
+                    name="age"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your age!",
+                      },
+                    ]}
+                  >
+                    <DatePicker style={{ width: "100%" }} format="YYYY-MM-DD" />
                   </Form.Item>
 
                   <Form.Item

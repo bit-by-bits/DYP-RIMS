@@ -58,12 +58,12 @@ const Students = () => {
   const onFinish = values => {
     const formdata = new FormData();
 
-    formdata.append("faculty", values.faculty);
-    formdata.append("department", values.department);
-    formdata.append("student_name", values.student);
-    formdata.append("student_degree", values.degree);
-    formdata.append("thesis_topic", values.topic);
-    formdata.append("year", values.year?.$y);
+    formdata?.append("faculty", values.faculty);
+    formdata?.append("department", values.department);
+    formdata?.append("student_name", values.student);
+    formdata?.append("student_degree", values.degree);
+    formdata?.append("thesis_topic", values.topic);
+    formdata?.append("year", values.year?.$y);
 
     axios({
       method: "POST",
@@ -201,7 +201,7 @@ const Students = () => {
                       { required: true, message: "Please input the year!" },
                     ]}
                   >
-                    <DatePicker style={{ width: "100%" }} format="YYYY" />
+                    <DatePicker style={{ width: "100%" }} picker="year" />
                   </Form.Item>
 
                   <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

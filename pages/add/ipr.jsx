@@ -64,12 +64,8 @@ const IPR = () => {
     formdata?.append("ipr_title", values.title);
     formdata?.append("status", values.status);
     formdata?.append("awarding_agency", values.agency);
-
-    const date = values.date;
-    formdata?.append(
-      "date",
-      `${date.year()}-${date.month() + 1}-${date.date()}`
-    );
+    formdata?.append("date", values.date.format("YYYY-MM-DD"));
+    formdata?.append("ipr_number", values.ipr_number);
 
     axios({
       method: "POST",
@@ -231,6 +227,19 @@ const IPR = () => {
                     ]}
                   >
                     <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="IPR Number"
+                    name="ipr_number"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input IPR number!",
+                      },
+                    ]}
+                  >
+                    <Input />
                   </Form.Item>
 
                   <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

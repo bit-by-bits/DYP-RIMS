@@ -1,27 +1,22 @@
-import {
-  Button,
-  DatePicker,
-  FloatButton,
-  Form,
-  Input,
-  Select,
-  Spin,
-  message,
-} from "antd";
-import styles from "../../styles/add.module.css";
+import axios from "axios";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import Side from "../../../src/Common/Side";
 import { useRouter } from "next/router";
+import styles from "../../../styles/add.module.css";
+import Side from "../../../src/Common/Side";
 import Top from "../../../src/Common/Top";
-import axios from "axios";
 import URLObj from "../../../src/baseURL";
+import { Button, DatePicker, FloatButton } from "antd";
+import { Spin, message, Form, Input, Select } from "antd";
 
 const IPR = () => {
   // BOILERPLATE
 
   const router = useRouter();
   const [user, setUser] = useState({});
+
+  const { id } = router.query;
+  const [ID, setID] = useState("");
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -36,43 +31,64 @@ const IPR = () => {
         : router.push("/");
   }, [router, user]);
 
+  useEffect(() => {
+    if (router.isReady) setID(id);
+  }, [router, id]);
+
   // STATES
 
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(true);
+  const [initialValues, setInitialValues] = useState({});
 
   // EFFECTS
 
   useEffect(() => {
-    setTimeout(() => {
-      setVisible(false);
-    }, 1200);
-  }, []);
+    if (ID && user?.token) {
+      axios({
+        method: "GET",
+        url: `${URLObj.base}/research/IPR/?id=${ID}`,
+        headers: {
+          "X-ACCESS-KEY": URLObj.key,
+          "X-AUTH-TOKEN": user?.token,
+        },
+      }).then(res => {
+        const DATA = res?.data?.data?.[0];
+        setVisible(false);
+        setInitialValues({
+          faculty: user?.name,
+          department: user?.department,
+          title: DATA?.title_of_ipr,
+          ipr: DATA?.IPR_awarded,
+          status: DATA?.status,
+          agency: DATA?.awarding_agency,
+          ipr_number: DATA?.ipr_number,
+        });
+      });
+    }
+  }, [ID, user]);
 
   useEffect(() => {
     form.resetFields();
-  }, [form, visible]);
+  }, [form, initialValues]);
 
   // FUNCTIONS
 
   const onFinish = values => {
     const formdata = new FormData();
 
+    formdata?.append("id", ID);
     formdata?.append("faculty", values.faculty);
     formdata?.append("department", values.department);
     formdata?.append("ipr_awarded", values.ipr);
     formdata?.append("ipr_title", values.title);
     formdata?.append("status", values.status);
     formdata?.append("awarding_agency", values.agency);
-
-    const date = values.date;
-    formdata?.append(
-      "date",
-      `${date.year()}-${date.month() + 1}-${date.date()}`
-    );
+    formdata?.append("date", values.date.format("YYYY-MM-DD"));
+    formdata?.append("ipr_number", values.ipr_number);
 
     axios({
-      method: "POST",
+      method: "PATCH",
       url: `${URLObj.base}/research/IPR/`,
       headers: {
         "X-ACCESS-KEY": URLObj.key,
@@ -81,8 +97,8 @@ const IPR = () => {
       data: formdata,
     })
       .then(res => {
-        message.success("IPR added successfully");
-        router.push("/profile");
+        message.success("IPR edited successfully");
+        router.push(`/ipr/${ID}`);
         form.resetFields();
       })
       .catch(err => {
@@ -98,8 +114,8 @@ const IPR = () => {
   return (
     <>
       <Head>
-        <title>DYPU RIMS | Add IPR</title>
-        <link rel="icon" href="../logos/dpu-2.png" />
+        <title>DYPU RIMS | Edit IPR</title>
+        <link rel="icon" href="../../logos/dpu-2.png" />
       </Head>
 
       <div className={styles.wrapper}>
@@ -120,7 +136,7 @@ const IPR = () => {
               <Top user={user} />
 
               <div className={styles.formContainer}>
-                <h1 className={styles.heading}>Add IPR</h1>
+                <h1 className={styles.heading}>Edit IPR</h1>
 
                 <Form
                   name="ipr"
@@ -128,10 +144,12 @@ const IPR = () => {
                   style={{ width: "80vw", transform: "translateX(-10vw)" }}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
-                  initialValues={{
-                    faculty: user?.name,
-                    department: user?.department,
-                  }}
+                  initialValues={
+                    initialValues ?? {
+                      faculty: user?.name,
+                      department: user?.department,
+                    }
+                  }
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
                   autoComplete="off"
@@ -231,6 +249,19 @@ const IPR = () => {
                     ]}
                   >
                     <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="IPR Number"
+                    name="ipr_number"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input IPR number!",
+                      },
+                    ]}
+                  >
+                    <Input />
                   </Form.Item>
 
                   <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

@@ -1,28 +1,22 @@
-import {
-  Button,
-  DatePicker,
-  FloatButton,
-  Form,
-  Input,
-  Select,
-  Spin,
-  message,
-} from "antd";
-import styles from "../../styles/add.module.css";
+import axios from "axios";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import Side from "../../../src/Common/Side";
 import { useRouter } from "next/router";
+import styles from "../../../styles/add.module.css";
+import Side from "../../../src/Common/Side";
 import Top from "../../../src/Common/Top";
-import axios from "axios";
 import URLObj from "../../../src/baseURL";
+import { Button, DatePicker, FloatButton } from "antd";
+import { Spin, message, Form, Input, Select } from "antd";
 
 const Projects = () => {
   // BOILERPLATE
 
-  const { RangePicker } = DatePicker;
   const router = useRouter();
   const [user, setUser] = useState({});
+
+  const { id } = router.query;
+  const [ID, setID] = useState("");
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -37,30 +31,58 @@ const Projects = () => {
         : router.push("/");
   }, [router, user]);
 
+  useEffect(() => {
+    if (router.isReady) setID(id);
+  }, [router, id]);
+
   // STATES
 
   const [form] = Form.useForm();
+  const { RangePicker } = DatePicker;
+
   const [visible, setVisible] = useState(true);
+  const [initialValues, setInitialValues] = useState({});
 
   // EFFECTS
 
   useEffect(() => {
-    setTimeout(() => {
-      setVisible(false);
-    }, 1200);
-  }, []);
+    if (ID && user?.token) {
+      axios({
+        method: "GET",
+        url: `${URLObj.base}/research/project/?id=${ID}`,
+        headers: {
+          "X-ACCESS-KEY": URLObj.key,
+          "X-AUTH-TOKEN": user?.token,
+        },
+      }).then(res => {
+        const DATA = res?.data?.data?.[0];
+        setVisible(false);
+        setInitialValues({
+          faculty: user?.name,
+          department: user?.department,
+          project_title: DATA?.project_title,
+          agency: DATA?.funding_agency,
+          country: DATA?.country_funding_agency,
+          type: DATA?.type,
+          funds: DATA?.funds,
+        });
+      });
+    }
+  }, [ID, user]);
 
   useEffect(() => {
     form.resetFields();
-  }, [form, visible]);
+  }, [form, initialValues]);
 
   // FUNCTIONS
 
   const onFinish = values => {
     const formdata = new FormData();
 
+    formdata?.append("id", ID);
     formdata?.append("faculty", values.faculty);
     formdata?.append("department", values.department);
+    formdata?.append("project_title", values.project_title);
     formdata?.append("funding_agency", values.agency);
     formdata?.append("country_funding_agency", values.country);
     formdata?.append("type", values.type);
@@ -76,7 +98,7 @@ const Projects = () => {
     );
 
     axios({
-      method: "POST",
+      method: "PATCH",
       url: `${URLObj.base}/research/project/`,
       headers: {
         "X-ACCESS-KEY": URLObj.key,
@@ -85,8 +107,8 @@ const Projects = () => {
       data: formdata,
     })
       .then(res => {
-        message.success("Project added successfully");
-        router.push("/profile");
+        message.success("Project edited successfully");
+        router.push(`/project/${ID}`);
         form.resetFields();
       })
       .catch(err => {
@@ -130,10 +152,12 @@ const Projects = () => {
                   name="project"
                   form={form}
                   style={{ width: "80vw", transform: "translateX(-10vw)" }}
-                  initialValues={{
-                    faculty: user?.name,
-                    department: user?.department,
-                  }}
+                  initialValues={
+                    initialValues ?? {
+                      faculty: user?.name,
+                      department: user?.department,
+                    }
+                  }
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   onFinish={onFinish}
@@ -161,6 +185,19 @@ const Projects = () => {
                     ]}
                   >
                     <Input disabled />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="Title of Project"
+                    name="project_title"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input project title!",
+                      },
+                    ]}
+                  >
+                    <Input />
                   </Form.Item>
 
                   <Form.Item
@@ -246,4 +283,5 @@ const Projects = () => {
     </>
   );
 };
+
 export default Projects;
