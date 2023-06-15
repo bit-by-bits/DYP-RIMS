@@ -1,23 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import Head from "next/head";
-import Navbar from "../../src/Common/Navbar";
-import Loader from "../../src/Common/Loader";
-import Status from "../../src/Upload/Status";
-import Details from "../../src/Upload/Details";
 import styles from "../../styles/uploading.module.css";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { FloatButton, Spin } from "antd";
 import Side from "../../src/Common/Side";
+import Top from "../../src/Common/Top";
+import FileInfo from "../../src/Upload/FileInfo";
 
 const Uploading = () => {
+  // BOILERPLATE
+
   const router = useRouter();
-  const { doi } = router.query;
-
-  const [finished, setFinished] = useState(false);
-  const [visible, setVisible] = useState(true);
-
-  const [DOI, setDOI] = useState("");
   const [user, setUser] = useState({});
+
+  const { doi } = router.query;
+  const [DOI, setDOI] = useState("");
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -25,7 +23,11 @@ const Uploading = () => {
   }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && user.token === "") router.push("/");
+    if (typeof window !== "undefined")
+      user
+        ? Date.now() - user?.setUpTime > 86400000 &&
+          localStorage.removeItem("user")
+        : router.push("/");
   }, [router, user]);
 
   useEffect(() => {
@@ -33,52 +35,83 @@ const Uploading = () => {
     setDOI(doi.join("/").replace("dx.doi.org/", ""));
   }, [doi, router]);
 
+  // STATES
+
+  const [visible, setVisible] = useState(true);
+  const [text, setText] = useState("");
+  const [pending, ssetPending] = useState(true);
+
+  // EFFECTS
+
   useEffect(() => {
-    if (finished) setTimeout(() => router.push("/profile"), 1999);
-  }, [finished, router]);
+    if (!pending)
+      setTimeout(() => {
+        router.push(`/file/${DOI}`);
+      }, 2000);
+  }, [DOI, pending, router]);
+
+  // FUNCTIONS
 
   return (
     <>
       <Head>
-        <title>{!finished ? "Confirm Upload" : "Uploaded"}</title>
-        <link rel="icon" href="../logos/dpu-2.png" />
+        <title>DYPU RIMS | {pending ? "Confirm Upload" : "Uploaded"}</title>
+        <link rel="icon" href="../../logos/dpu-2.png" />
       </Head>
 
       <div className={styles.wrapper}>
-        <Navbar />
-        <Side />
-
-        <Loader visible={visible} />
-
-        <div className={styles.uploading_wrapper}>
-          <Status
-            img={!finished ? "/upload/uploading.png" : "/upload/uploaded.png"}
-            top={
-              !finished
-                ? "Your file is being uploaded to RIMS."
-                : "Your file has been successfully uploaded to RIMS."
-            }
-            bottom={
-              !finished
-                ? "Kindly confirm and edit the following details."
-                : "Wait while we redirect you to the home page..."
-            }
+        <Spin
+          className="spinner"
+          spinning={visible}
+          size="large"
+          tip="Please wait as page loads"
+        >
+          <FloatButton.BackTop
+            style={{ left: 30, bottom: 30, borderRadius: "50%" }}
           />
 
-          {!finished && (
-            <Details setv={setVisible} setf={setFinished} doi={DOI} />
-          )}
-        </div>
+          <div style={{ paddingLeft: "18vw" }}>
+            <Side />
 
-        <a href="https://www.qtanea.com/" rel="noreferrer" target="_blank">
-          <Image
-            alt="Q"
-            width={60}
-            height={60}
-            className={styles.foot}
-            src="/logos/qtanea-colour.png"
-          />
-        </a>
+            <div className={styles.uploading_wrapper}>
+              <Top user={user} />
+
+              <div className={styles.uploading_head}>
+                {pending
+                  ? "Select Authors from Dr. D.Y. Patil Medical College, Pune"
+                  : text}
+              </div>
+
+              {pending && (
+                <FileInfo
+                  user={user}
+                  setp={ssetPending}
+                  setv={setVisible}
+                  sett={setText}
+                  DOI={DOI}
+                />
+              )}
+
+              <div style={{ color: "#9a2827", fontWeight: "bold" }}>
+                If there is any error please contact your department clerk who
+                will make the necessary changes later after you add the article.
+              </div>
+
+              <a
+                href="https://www.qtanea.com/"
+                rel="noreferrer"
+                target="_blank"
+              >
+                <Image
+                  alt="Q"
+                  width={60}
+                  height={60}
+                  src="/logos/qtanea-colour.png"
+                />
+              </a>
+            </div>
+          </div>
+        </Spin>
       </div>
     </>
   );

@@ -1,114 +1,205 @@
+import { Button, Menu, message } from "antd";
+import React, { useState, useEffect, createElement } from "react";
 import {
+  HomeOutlined,
+  ProjectOutlined,
+  DownloadOutlined,
+  TrophyOutlined,
+  GroupOutlined,
   BookOutlined,
   BulbOutlined,
-  CommentOutlined,
-  FileDoneOutlined,
-  ProfileOutlined,
-  ProjectOutlined,
-  SafetyCertificateOutlined,
-  TrophyOutlined,
-  UploadOutlined,
   UserAddOutlined,
-  UserOutlined,
+  FileTextOutlined,
+  FileAddOutlined,
 } from "@ant-design/icons";
-import { Menu } from "antd";
 import Link from "next/link";
-import { useState } from "react";
+import Image from "next/image";
+import styles from "../../styles/profile.module.css";
+import { useRouter } from "next/router";
 
-function getItem(label, key, icon, children) {
-  return {
-    key,
-    icon,
-    children,
-    label,
+const Side = ({ sets = () => {} }) => {
+  // BOILERPLATE
+
+  const router = useRouter();
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    setTimeout(() => getUser(), 1001);
+    setTimeout(() => getUser(), 5001);
+    setTimeout(() => getUser(), 9999);
+  }, []);
+
+  const getUser = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
   };
-}
 
-const ITEMS = [
-  getItem("Profile", "1", <ProfileOutlined />, [
-    getItem(<Link href="/profile">User Profile</Link>, "1.1", <UserOutlined />),
-    getItem(
-      <Link href="/profile#awards">Awards</Link>,
-      "1.2",
-      <TrophyOutlined />
-    ),
-    getItem(
-      <Link href="/profile#patents">Patents</Link>,
-      "1.3",
-      <SafetyCertificateOutlined />
-    ),
-    getItem(
-      <Link href="/profile#publications">Publications</Link>,
-      "1.4",
-      <FileDoneOutlined />
-    ),
-    getItem(
-      <Link href="/profile#conferences">Conferences</Link>,
-      "1.5",
-      <CommentOutlined />
-    ),
-  ]),
-  {
-    type: "divider",
-  },
-  getItem("Add More", "2", <UploadOutlined />, [
-    getItem(
-      <Link href="/upload">Publication</Link>,
-      "2.1",
-      <FileDoneOutlined />
-    ),
-    getItem(<Link href="/add/award">Award</Link>, "2.2", <TrophyOutlined />),
-    getItem(<Link href="/add/ipr">IPR</Link>, "2.3", <BulbOutlined />),
-    getItem(
-      <Link href="/add/conference">Conference</Link>,
-      "2.4",
-      <CommentOutlined />
-    ),
-    getItem(
-      <Link href="/add/project">Research Project</Link>,
-      "2.5",
-      <ProjectOutlined />
-    ),
-    getItem(
-      <Link href="/add/book">Book/Chapter</Link>,
-      "2.6",
-      <BookOutlined />
-    ),
-    getItem(
-      <Link href="/add/student">Student Guided</Link>,
-      "2.7",
-      <UserAddOutlined />
-    ),
-  ]),
-];
+  useEffect(() => {
+    if (typeof window !== "undefined")
+      user
+        ? Date.now() - user?.setUpTime > 86400000 &&
+          localStorage.removeItem("user")
+        : router.push("/");
+  }, [router, user]);
 
-const Side = () => {
-  const KEYS = ["1", "2"];
-  const [openKeys, setOpenKeys] = useState([]);
+  // STATES
 
-  const change = keys => {
-    const lastKey = keys.find(key => openKeys.indexOf(key) === -1);
+  // EFFECTS
 
-    if (KEYS.indexOf(lastKey) === -1) setOpenKeys(keys);
-    else setOpenKeys(lastKey ? [lastKey] : []);
+  // FUNCTIONS
+
+  const edit = () => {
+    router.push("/profile/edit");
   };
 
   return (
-    <Menu
-      mode="inline"
-      openKeys={openKeys}
-      onOpenChange={change}
-      items={ITEMS}
-      style={{
-        width: 200,
-        position: "fixed",
-        border: "1px solid #9a2827",
-        borderRadius: 5,
-        bottom: 10,
-        left: 10,
-        zIndex: 3,
-      }}
-    />
+    <div className={styles.sideWrapper}>
+      <div className={styles.sideProfile}>
+        <Image
+          priority={true}
+          className={styles.sideImage}
+          alt={user?.userame ?? "user"}
+          src={
+            user?.picture ??
+            "https://dreamvilla.life/wp-content/uploads/2017/07/dummy-profile-pic.png"
+          }
+          width={100}
+          height={100}
+        />
+
+        <div className={styles.sideName}>
+          {user?.name?.toUpperCase() ?? "N/A"}
+        </div>
+
+        <div className={styles.sideEmail}>{user?.email}</div>
+
+        <div className={styles.sideContent}>
+          <div>
+            <span className={styles.sideCircle} />
+            <span>{user?.designation ?? "N/A"}</span>
+          </div>
+          <div>
+            <span className={styles.sideCircle} />
+            <span>{user?.level?.slice(0, -1) ?? "N/A"}</span>
+          </div>
+        </div>
+
+        <div className={styles.sideEmail}>{user?.department}</div>
+
+        <Button className={styles.sideButton} onClick={edit} type="primary">
+          Edit Profile
+        </Button>
+      </div>
+
+      <Menu
+        mode="inline"
+        className="sideMenu"
+        selectable={false}
+        onClick={() => sets("all")}
+        items={[
+          { link: "/profile", icon: HomeOutlined, label: "Home" },
+          { link: null, icon: FileAddOutlined, label: "Add Research" },
+          { link: "/downloads", icon: DownloadOutlined, label: "Downloads" },
+        ].map((item, index) => ({
+          key: String(index + 1),
+          icon: createElement(item.icon),
+          children:
+            index != "1"
+              ? null
+              : [
+                  {
+                    key: "1.1",
+                    icon: createElement(FileTextOutlined),
+                    label: <Link href="/upload">Add Publication</Link>,
+                  },
+                  {
+                    key: "1.2",
+                    icon: createElement(GroupOutlined),
+                    label: <Link href="/add/conference">Add Conference</Link>,
+                  },
+                  {
+                    key: "1.3",
+                    icon: createElement(BookOutlined),
+                    label: <Link href="/add/book">Add Book/Chapter</Link>,
+                  },
+                  {
+                    key: "1.4",
+                    icon: createElement(ProjectOutlined),
+                    label: <Link href="/add/project">Add Project</Link>,
+                  },
+                  {
+                    key: "1.5",
+                    icon: createElement(TrophyOutlined),
+                    label: <Link href="/add/award">Add Award</Link>,
+                  },
+                  {
+                    key: "1.6",
+                    icon: createElement(BulbOutlined),
+                    label: <Link href="/add/ipr">Add IPR</Link>,
+                  },
+                  {
+                    key: "1.7",
+                    icon: createElement(UserAddOutlined),
+                    label: <Link href="/add/student">Add Student</Link>,
+                  },
+                ],
+
+          label: item.link ? (
+            <Link href={item.link}>{item.label}</Link>
+          ) : (
+            item.label
+          ),
+        }))}
+      />
+
+      <Menu
+        mode="inline"
+        className="sideMenu"
+        selectable={false}
+        onClick={() => sets("all")}
+        items={[
+          {
+            link: "/profile#publications",
+            icon: FileTextOutlined,
+            label: "Publications",
+          },
+          {
+            link: "/profile#conferences",
+            icon: GroupOutlined,
+            label: "Conferences",
+          },
+          {
+            link: "/profile#books",
+            icon: BookOutlined,
+            label: "Books/Chapters",
+          },
+          {
+            link: "/profile#projects",
+            icon: ProjectOutlined,
+            label: "Research Projects",
+          },
+          {
+            link: "/profile#awards",
+            icon: TrophyOutlined,
+            label: "Awards",
+          },
+          {
+            link: "/profile#ipr",
+            icon: BulbOutlined,
+            label: "IPR",
+          },
+          {
+            link: "/profile#students",
+            icon: UserAddOutlined,
+            label: "Students Guided",
+          },
+        ].map((item, index) => ({
+          key: String(index + 1),
+          icon: createElement(item.icon),
+          label: <Link href={item.link}>{item.label}</Link>,
+        }))}
+      />
+    </div>
   );
 };
 

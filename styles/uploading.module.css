@@ -11,12 +11,20 @@
 
 .wrapper .uploading_wrapper {
   gap: 1.5rem;
-  margin: 6rem 10vw 2rem 10vw;
+  padding: 1rem 2rem;
+}
+
+.status {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem 0;
 }
 
 .wrapper .uploading_wrapper .uploading_head {
-  color: #9a2827;
-  font-weight: 700;
+  font-weight: 900;
   font-size: 1.5rem;
   text-align: center;
 }

@@ -1,5 +1,3 @@
-/* FORM CSS */
-
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -7,70 +5,17 @@
   align-items: center;
 }
 
-.wrapper .file_wrapper,
-.form_wrapper {
+.file_wrapper {
   min-height: 100vh;
   gap: 2rem;
   display: flex;
+  flex-direction: column;
   position: relative;
   align-items: flex-start;
-  padding: 6rem 10vw;
+  padding: 1rem 2rem;
 }
 
-.form_wrapper {
-  gap: 1.4rem 2rem;
-  padding-top: 0;
-  display: grid;
-  min-height: 80vh;
-  grid-template-columns: 1fr 1fr;
-}
-
-.form_wrapper > label {
-  justify-content: space-between;
-  align-items: center;
-  display: flex;
-  position: relative;
-  height: max-content;
-}
-
-.form_wrapper input {
-  text-overflow: ellipsis;
-  border: 1px solid #d4d4d4;
-  width: 30vw;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  color: black;
-  font-weight: 400;
-  font-size: 0.9rem;
-}
-
-.label_text {
-  color: #9a2827;
-  font-weight: 700;
-  text-align: right;
-  margin-right: 1rem;
-  width: 8vw;
-}
-
-.error_text {
-  color: red;
-  font-weight: 500;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 1rem;
-  position: absolute;
-}
-
-.form_btn {
-  max-width: 15vw !important;
-  padding: 0.6rem !important;
-  margin-top: 1rem;
-  justify-self: center;
-}
-
-/* FILE CSS */
-
-.wrapper .file_wrapper .file_text {
+.file_text {
   display: flex;
   min-width: 60vw;
   flex-direction: column;
@@ -80,15 +25,25 @@
   align-items: flex-start;
 }
 
-.wrapper .file_wrapper .file_text .file_title {
-  color: #9a2827;
+.file_text .file_title {
+  color: var(--primary);
   font-weight: 700;
   font-size: 1.4rem;
 }
 
-.file_tags {
+.file_text .file_subtitle {
+  color: black;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-top: -10px;
+}
+
+.file_tags,
+.file_keywords,
+.file_keywords2 {
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .file_tag1,
@@ -98,13 +53,36 @@
   font-weight: 600;
   font-size: 0.8rem;
   border: 2px solid #ef5d5b;
+  color: white;
+  background-color: #f37775;
+}
+
+.file_tag2 {
+  background-color: #52c41a;
+  border-color: #3ca109;
+}
+
+.file_keyword,
+.file_keyword2 {
+  padding: 0.3rem 0.5rem;
+  text-transform: capitalize;
+  font-weight: 600;
+  font-size: 0.8rem;
+  border: 2px solid #ef5d5b;
   color: #ef5d5b;
   background-color: white;
 }
 
-.file_tag1 {
+.file_keyword2 {
+  border-color: var(--primary);
+  color: var(--primary);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.file_keyword2:hover {
+  background-color: var(--primary);
   color: white;
-  background-color: #f37775;
 }
 
 .file_info {
@@ -132,25 +110,38 @@
   gap: 0.4rem;
 }
 
-.info {
-  align-items: flex-start;
-}
-
 .info_head {
-  color: #9a2827;
+  color: var(--primary);
   font-weight: 700;
   font-size: 1rem;
+  width: max-content;
 }
 
 .info_body {
   font-size: 0.9rem;
+  width: max-content;
 }
 
-.wrapper .file_wrapper .file_text .file_grid {
+.file_text .file_grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 2rem;
   width: 100%;
+}
+
+.down,
+.abstract {
+  display: flex !important;
+  flex-direction: column;
+}
+
+.down .file_body,
+.abstract .file_body {
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding: 0 10px;
+  gap: 2rem !important;
 }
 
 .smooth {
@@ -174,6 +165,8 @@
 .authors {
   display: flex;
   flex-direction: column;
+  align-items: flex-start !important;
+  margin-top: 10px;
   gap: 0.4rem;
 }
 
@@ -185,24 +178,19 @@
 
 .abstract {
   width: 100%;
-  border-radius: 0;
-  border-top: 1px solid rgba(243, 119, 117, 0.3);
-  border-bottom: 1px solid rgba(243, 119, 117, 0.3);
-  padding: 1rem 0 !important;
-  margin-top: -0.5rem;
-  margin-bottom: 1rem;
+  padding: 1rem 0;
   gap: 0.6rem;
-  box-shadow: none !important;
 }
 
-.wrapper .file_wrapper .file_text .file_grid .file_head,
-.smooth .file_head {
-  color: #9a2827;
+.file_text .file_grid .file_head,
+.smooth .file_head,
+.abstract .file_head {
+  color: var(--primary);
   font-weight: 700;
   font-size: 1rem;
 }
 
-.wrapper .file_wrapper .file_text .file_grid .file_body {
+.file_text .file_grid .file_body {
   color: black;
   font-weight: 400;
   font-size: 1rem;
@@ -219,7 +207,7 @@
   font-size: 0.9rem;
 }
 
-.wrapper .file_wrapper .file_text .file_grid .file_body .file_bodygrid {
+.file_text .file_grid .file_body .file_bodygrid {
   display: grid;
   text-transform: capitalize;
   width: 100%;
@@ -231,46 +219,66 @@
   grid-template-columns: auto auto !important;
 }
 
-.wrapper .file_wrapper .file_text .file_grid .file_body .file_bodybold {
+.file_text .file_grid .file_body .file_bodybold {
   color: black;
   font-weight: 700;
   font-size: 0.9rem;
   margin-bottom: 0.4rem;
 }
 
-.wrapper .file_wrapper .file_btns {
-  align-items: flex-start;
+.file_btns {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
   gap: 1rem;
+  margin-top: 2rem;
+  padding: 10px;
+  align-items: center;
 }
 
 .file_btn1,
 .file_btn2 {
-  color: #9a2827 !important;
-  font-weight: 700 !important;
-  font-size: 1rem !important;
-  width: 100% !important;
+  color: var(--primary) !important;
+  font-weight: 900 !important;
   cursor: pointer !important;
   text-align: center !important;
-  border: 2px solid #9a2827 !important;
+  border: 3px solid var(--primary) !important;
   border-radius: 8px !important;
-  padding: 0.8rem 1.7rem !important;
+  padding: 8px 15px !important;
 }
 
+.uploadTableButton {
+  border: none !important;
+}
+
+.uploadTableButton,
 .file_btn1 {
   color: white !important;
-  background-color: #9a2827 !important;
+  background-color: var(--primary) !important;
 }
 
+.uploadTableButton:hover,
 .file_btn1:hover {
   background-color: #7e1918 !important;
 }
 
 .file_btn2:hover {
   background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.dots {
+  z-index: 0;
+  height: 6px;
+  margin: 0.43rem;
+  aspect-ratio: 4;
+  background: radial-gradient(circle closest-side, #fff 90%, #0000) 0 /
+    calc(100% / 3) 100% space;
+  clip-path: inset(0 100% 0 0);
+  animation: dotLoader 1s steps(4) infinite;
+}
+
+@keyframes dotLoader {
+  to {
+    clip-path: inset(0 -34% 0 0);
+  }
 }
 
 @media screen and (min-width: 1400px) {

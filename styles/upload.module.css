@@ -1,19 +1,25 @@
+.wrapper {
+  height: 100vh;
+}
+
 .wrapper .upload_wrapper {
-  margin: 6rem 10vw 2rem 10vw;
+  gap: 2rem;
+  padding: 1rem 2rem;
   display: flex;
-  flex-direction: "row";
-  justify-content: space-between;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: flex-start;
   align-items: center;
 }
 
 .wrapper .upload_wrapper .upload_left {
-  border: 1px dashed #9a2827;
-  padding: 2.2rem 0;
   gap: 1rem;
-  width: 100vw;
-  border-radius: 32px;
-  display: flex;
+  width: 100%;
+  padding: 3rem;
   flex-direction: column;
+  border-radius: 32px;
+  border: 1px dashed #9a2827;
+  display: flex;
   justify-content: space-between;
   align-items: center;
 }
@@ -222,7 +228,11 @@
 
 .flex .upload_btn {
   padding: 0.5rem 0.8rem;
-  display: inline;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 110px;
 }
 
 .dots {
@@ -269,10 +279,6 @@
 }
 
 @media screen and (min-width: 1400px) {
-  .wrapper {
-    margin-top: 8rem;
-  }
-
   .wrapper .upload_left {
     gap: 2rem !important;
     padding: 3rem !important;

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Helmet } from "react-helmet";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 const Altmetric = ({ DOI, type }) => {
   useEffect(() => {
@@ -13,7 +13,9 @@ const Altmetric = ({ DOI, type }) => {
 
   return (
     <>
-      <Helmet />
+      <HelmetProvider>
+        <Helmet />
+      </HelmetProvider>
 
       {type ? (
         <div
@@ -26,6 +28,7 @@ const Altmetric = ({ DOI, type }) => {
       ) : (
         <div
           data-doi={DOI}
+          style={{ marginLeft: 70 }}
           className="altmetric-embed"
           data-badge-type="medium-donut"
           data-badge-details="right"
