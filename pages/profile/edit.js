@@ -9,7 +9,7 @@ import styles from "../../styles/add.module.css";
 import { Button, DatePicker, FloatButton, Input, Radio } from "antd";
 import { Select, Spin, Upload, Form, message } from "antd";
 
-const Students = () => {
+const Edit = () => {
   // BOILERPLATE
 
   const router = useRouter();
@@ -92,7 +92,7 @@ const Students = () => {
     <>
       <Head>
         <title>DYPU RIMS | Edit Profile</title>
-        <link rel="icon" href="../logos/dpu-2.png" />
+        <link rel="icon" href="../../logos/dpu-2.png" />
       </Head>
 
       <div className={styles.wrapper}>
@@ -116,7 +116,7 @@ const Students = () => {
                 <h1 className={styles.heading}>Edit Profile</h1>
 
                 <Form
-                  name="students"
+                  name="edit"
                   form={form}
                   style={{ width: "80vw", transform: "translateX(-10vw)" }}
                   initialValues={{
@@ -179,7 +179,7 @@ const Students = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Current Age"
+                    label="Date of Birth"
                     name="age"
                     rules={[
                       {
@@ -277,4 +277,4 @@ const Students = () => {
   );
 };
 
-export default Students;
+export default Edit;

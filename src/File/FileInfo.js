@@ -363,7 +363,7 @@ const FileInfo = ({ user, setv, DOI }) => {
           </div>
 
           {data?.file ? (
-            <div className={styles.file_tag2}>PDF Available</div>
+            <div className={styles.file_tag1}>PDF Available</div>
           ) : (
             <>
               <div

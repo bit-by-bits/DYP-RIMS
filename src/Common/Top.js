@@ -58,6 +58,8 @@ const Top = ({ main = {}, user }) => {
           console.log(err);
         });
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   // FUNCTIONS
@@ -303,27 +305,29 @@ const Top = ({ main = {}, user }) => {
       >
         Add Publications
       </Button>
-      <Button
-        type="primary"
-        className={[`${styles.topButtonCircle} ${styles.topButton}`]}
-        onClick={logoutUser}
-      >
-        {createElement(LogoutOutlined)}
-      </Button>
-      <Button
-        type="primary"
-        className={[`${styles.topButtonCircle} ${styles.topButton}`]}
-        onClick={openNotifications}
-      >
-        {createElement(BellOutlined)}
-      </Button>
-      <Button
-        type="primary"
-        className={[`${styles.topButtonCircle} ${styles.topButton}`]}
-        onClick={openSettings}
-      >
-        {createElement(SettingOutlined)}
-      </Button>
+      {[
+        {
+          fxn: logoutUser,
+          icon: LogoutOutlined,
+        },
+        {
+          fxn: openNotifications,
+          icon: BellOutlined,
+        },
+        {
+          fxn: openSettings,
+          icon: SettingOutlined,
+        },
+      ].map((e, i) => (
+        <Button
+          key={i}
+          type="primary"
+          className={`${styles.topButtonCircle} ${styles.topButton}`}
+          onClick={e.fxn}
+        >
+          {createElement(e.icon)}
+        </Button>
+      ))}
     </div>
   );
 };

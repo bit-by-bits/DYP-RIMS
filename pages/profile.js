@@ -868,18 +868,7 @@ const Profile = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    data,
-    sortBy,
-    innerWidth,
-    publications,
-    conferences,
-    books,
-    projects,
-    awards,
-    ipr,
-    students,
-  ]);
+  }, [data, sortBy, innerWidth]);
 
   // FUNCTIONS
 
