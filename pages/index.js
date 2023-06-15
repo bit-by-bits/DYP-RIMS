@@ -102,11 +102,15 @@ export default function Home() {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src="logos/dpu-1.png" alt="DPU" className={styles.logo} />
               }
+
               <div className={styles.login_top}>Login to RIMS</div>
+
               <div className={styles.login_middle}>
                 Kindly login with your authorized Institute's credentials
               </div>
-              <div className={styles.button} id="signInDiv"></div>
+
+              <div className={styles.button} id="signInDiv" />
+
               <div className={styles.login_bottom}>
                 Having trouble logging in?
                 <a href="mailto:rims@dpu.edu.in?cc=naac.medical@dpu.edu.in&subject=Login not working&body=I am unable to login RIMS with my email id // specify your email here //.">
