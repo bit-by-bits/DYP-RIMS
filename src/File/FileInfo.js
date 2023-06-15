@@ -90,9 +90,13 @@ const FileInfo = ({ user, setv, DOI }) => {
                 {e.given + " " + e.family}
               </div>
             }
-            description={`DPU · ${
-              e.profile?.[0]?.department?.name ?? "- Not Available -"
-            }`}
+            description={
+              e.in_dyp
+                ? `DPU · ${
+                    e.profile?.[0]?.department?.name ?? "- Not Available -"
+                  }`
+                : ""
+            }
             avatar={
               <Avatar
                 src={
@@ -118,6 +122,13 @@ const FileInfo = ({ user, setv, DOI }) => {
             <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
               {e.given + " " + e.family}
             </div>
+          }
+          description={
+            e.in_dyp
+              ? `DPU · ${
+                  e.profile?.[0]?.department?.name ?? "- Not Available -"
+                }`
+              : ""
           }
           avatar={
             <Avatar

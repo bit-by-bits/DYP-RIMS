@@ -132,7 +132,7 @@ const Student = () => {
               <Top user={user} />
 
               <div className={styles.formContainer}>
-                <h1 className={styles.heading}>Add Students Guided</h1>
+                <h1 className={styles.heading}>Edit Students Guided</h1>
 
                 <Form
                   name="students"

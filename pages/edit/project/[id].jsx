@@ -124,7 +124,7 @@ const Projects = () => {
   return (
     <>
       <Head>
-        <title>DYPU RIMS | Add Projects</title>
+        <title>DYPU RIMS | Edit Projects</title>
         <link rel="icon" href="../logos/dpu-2.png" />
       </Head>
 
@@ -146,7 +146,7 @@ const Projects = () => {
               <Top user={user} />
 
               <div className={styles.formContainer}>
-                <h1 className={styles.heading}>Add Projects</h1>
+                <h1 className={styles.heading}>Edit Projects</h1>
 
                 <Form
                   name="project"

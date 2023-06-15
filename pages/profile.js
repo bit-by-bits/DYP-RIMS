@@ -584,7 +584,7 @@ const Profile = () => {
             icon={<FileTextOutlined />}
             style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
             className={styles.tableButton}
-            onClick={() => router.push(`/book/${e.isbn}`)}
+            onClick={() => router.push(`/book/${e.id}`)}
           >
             {innerWidth > 1400 ? "View More" : null}
           </Button>

@@ -75,11 +75,13 @@ const Uploading = () => {
 
             <div className={styles.uploading_wrapper}>
               <Top user={user} />
+
               <div className={styles.uploading_head}>
                 {pending
                   ? "Select Authors from Dr. D.Y. Patil Medical College, Pune"
                   : text}
               </div>
+
               {pending && (
                 <FileInfo
                   user={user}

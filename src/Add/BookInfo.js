@@ -4,7 +4,7 @@ import axios from "axios";
 import URLObj from "../baseURL";
 import { Image, message } from "antd";
 
-const BookInfo = ({ user, setv, ISBN }) => {
+const BookInfo = ({ user, setv, ID }) => {
   // STATES
 
   const [data, setData] = useState({});
@@ -12,14 +12,21 @@ const BookInfo = ({ user, setv, ISBN }) => {
   // EFFECTS
 
   useEffect(() => {
-    if (ISBN && user?.token) {
+    if (ID && user?.token) {
+      const formdata = new FormData();
+      formdata?.append("id", ID);
+
+      console.log(ID);
+
       axios({
-        method: "PUT",
-        url: `${URLObj.base}/books/?isbn=${ISBN}`,
+        method: "GET",
+        url: `${URLObj.base}/books/`,
         headers: {
+          "Content-Type": `multipart/form-data; boundary=${formdata.boundary}`,
           "X-ACCESS-KEY": URLObj.key,
           "X-AUTH-TOKEN": user?.token,
         },
+        data: formdata,
       })
         .then(res => {
           setv(false);
@@ -30,7 +37,7 @@ const BookInfo = ({ user, setv, ISBN }) => {
           message.error("Could not fetch file data");
         });
     }
-  }, [ISBN, setv]);
+  }, [ID, user, setv]);
 
   // FUNCTIONS
 
@@ -69,9 +76,9 @@ const BookInfo = ({ user, setv, ISBN }) => {
           <div className={styles.file_info_box}>
             <div>
               <div className={styles.info}>
-                <span className={styles.info_head}>ISBN</span>
+                <span className={styles.info_head}>ID</span>
                 <span className={styles.info_body}>
-                  {ISBN ?? "- Not Available -"}
+                  {ID ?? "- Not Available -"}
                 </span>
               </div>
 

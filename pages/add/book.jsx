@@ -94,7 +94,7 @@ const Books = () => {
     formdata?.append("isbn", ISBN);
 
     axios({
-      method: "GET",
+      method: "PUT",
       url: `${URLObj.base}/books/?isbn=${ISBN}`,
       headers: {
         "X-ACCESS-KEY": URLObj.key,

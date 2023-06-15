@@ -13,8 +13,8 @@ const Book = () => {
   const router = useRouter();
   const [user, setUser] = useState({});
 
-  const { isbn } = router.query;
-  const [ISBN, setISBN] = useState("");
+  const { id } = router.query;
+  const [ID, setID] = useState("");
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -30,8 +30,8 @@ const Book = () => {
   }, [router, user]);
 
   useEffect(() => {
-    if (router.isReady) setISBN(isbn);
-  }, [router, isbn]);
+    if (router.isReady) setID(id);
+  }, [router, id]);
 
   // STATES
 
@@ -50,7 +50,7 @@ const Book = () => {
   };
 
   const editBook = () => {
-    router.push(`/edit/book/${ISBN}`);
+    router.push(`/edit/book/${ID}`);
   };
 
   return (
@@ -78,7 +78,7 @@ const Book = () => {
               <Top user={user} />
 
               <div>
-                <BookInfo user={user} setv={setVisible} ISBN={ISBN} />
+                <BookInfo user={user} setv={setVisible} ID={ID} />
 
                 <div className={styles.file_btns}>
                   {[
