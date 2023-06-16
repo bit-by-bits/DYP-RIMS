@@ -573,10 +573,10 @@ const Profile = () => {
 
       const BODY = data?.books?.map((e, i) => ({
         key: i,
-        title: e.publication_title,
-        type: e.publication_type,
-        book: e.book_name,
-        publisher: "N/A",
+        title: capitalize(e.publication_title),
+        type: capitalize(e.publication_type),
+        book: capitalize(e.book_name),
+        publisher: capitalize(e.publisher),
         published: e.year_published,
         action: (
           <Button

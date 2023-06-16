@@ -5,6 +5,7 @@ import URLObj from "../baseURL";
 import { InboxOutlined } from "@ant-design/icons";
 import ListSection from "../Common/ListSection";
 import { Avatar, Card, Modal, Upload, message } from "antd";
+import PDFViewer from "../Common/PDFViewer";
 
 const ConferenceInfo = ({ user, setv, ID }) => {
   // STATES
@@ -15,7 +16,6 @@ const ConferenceInfo = ({ user, setv, ID }) => {
   const [data, setData] = useState({});
   const [fileData, setFileData] = useState({ modal: false, file: null });
 
-  const [authors, setAuthors] = useState([]);
   const [papers, setPapers] = useState([]);
   const [posters, setPosters] = useState([]);
 
@@ -70,7 +70,6 @@ const ConferenceInfo = ({ user, setv, ID }) => {
   useEffect(() => {
     getPapers();
     getPosters();
-    getAuthors();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
@@ -126,39 +125,6 @@ const ConferenceInfo = ({ user, setv, ID }) => {
     );
   };
 
-  const getAuthors = () => {
-    setAuthors([
-      <Card
-        key={0}
-        hoverable
-        bodyStyle={{ padding: 15, minWidth: 250 }}
-        style={{ border: "1px solid #d9d9d9" }}
-      >
-        <Meta
-          title={
-            <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
-              {user?.name}
-            </div>
-          }
-          description={
-            <div style={{ fontSize: "0.8rem" }}>{`${user?.level?.slice(
-              0,
-              -1
-            )} · ${user?.department}`}</div>
-          }
-          avatar={
-            <Avatar
-              src={
-                user?.picture ??
-                "https://cdn.landesa.org/wp-content/uploads/default-user-image.png"
-              }
-            />
-          }
-        />
-      </Card>,
-    ]);
-  };
-
   return (
     <>
       <div className={styles.file_text}>
@@ -170,7 +136,11 @@ const ConferenceInfo = ({ user, setv, ID }) => {
           ) : (
             <>
               <div
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  backgroundColor: "#f5222d",
+                  borderColor: "#d80b16",
+                }}
                 onClick={() => setFileData({ ...fileData, modal: true })}
                 className={styles.file_tag2}
               >
@@ -241,6 +211,15 @@ const ConferenceInfo = ({ user, setv, ID }) => {
                   {capitalize(data?.location)}
                 </span>
               </div>
+            </div>
+
+            <div>
+              <div className={styles.info}>
+                <span className={styles.info_head}>Attended As</span>
+                <span className={styles.info_body}>
+                  {capitalize(data?.attended_as)}
+                </span>
+              </div>
 
               <span className={styles.middot}>&middot;</span>
 
@@ -252,37 +231,33 @@ const ConferenceInfo = ({ user, setv, ID }) => {
               </div>
             </div>
 
-            <ListSection data={authors} head="Author" />
+            {
+              <>
+                <br />
+                {data?.is_paper_presented ? (
+                  <ListSection data={papers} head="Papers" />
+                ) : (
+                  <div style={{ fontSize: "0.9rem", fontWeight: "bold" }}>
+                    No Papers Presented
+                  </div>
+                )}
+              </>
+            }
 
-            {data?.is_paper_presented ? (
-              <ListSection data={papers} head="Papers" />
-            ) : (
-              <div style={{ fontSize: "0.9rem", fontWeight: "bold" }}>
-                No Papers Presented
-              </div>
-            )}
+            {
+              <>
+                {data?.is_poster_presented ? (
+                  <ListSection data={posters} head="Posters" />
+                ) : (
+                  <div style={{ fontSize: "0.9rem", fontWeight: "bold" }}>
+                    No Posters Presented
+                  </div>
+                )}
+                <br />
+              </>
+            }
 
-            {data?.is_poster_presented ? (
-              <ListSection data={posters} head="Posters" />
-            ) : (
-              <div style={{ fontSize: "0.9rem", fontWeight: "bold" }}>
-                No Posters Presented
-              </div>
-            )}
-
-            {data?.certificate && (
-              <object
-                data={data?.certificate}
-                type="application/pdf"
-                width="100%"
-                height="500px"
-              >
-                <p>
-                  Unable to display PDF file.{" "}
-                  <a href={data?.certificate}>Download</a> instead.
-                </p>
-              </object>
-            )}
+            <PDFViewer file={data?.certificate} />
           </div>
         </div>
       </div>

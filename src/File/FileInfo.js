@@ -55,11 +55,13 @@ const FileInfo = ({ user, setv, DOI }) => {
   }, [user, setv, DOI]);
 
   useEffect(() => {
-    if (data) getAll();
+    data && getAll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {
-    if (fileData?.file) uploadFile();
+    fileData?.file && uploadFile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileData]);
 
   // FUNCTIONS

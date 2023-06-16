@@ -13,20 +13,13 @@ const BookInfo = ({ user, setv, ID }) => {
 
   useEffect(() => {
     if (ID && user?.token) {
-      const formdata = new FormData();
-      formdata?.append("id", ID);
-
-      console.log(ID);
-
       axios({
         method: "GET",
-        url: `${URLObj.base}/books/`,
+        url: `${URLObj.base}/books/?id=${ID}`,
         headers: {
-          "Content-Type": `multipart/form-data; boundary=${formdata.boundary}`,
           "X-ACCESS-KEY": URLObj.key,
           "X-AUTH-TOKEN": user?.token,
         },
-        data: formdata,
       })
         .then(res => {
           setv(false);
@@ -49,11 +42,20 @@ const BookInfo = ({ user, setv, ID }) => {
             {data?.printType ?? "Unknown Type"}
           </div>
 
-          <div className={styles.file_tag2}>
-            {data?.imageLinks?.thumbnail
-              ? "Image Available"
-              : "Image Not Available"}
-          </div>
+          {data?.imageLinks?.thumbnail ? (
+            <div className={styles.file_tag2}>Image Available</div>
+          ) : (
+            <div
+              className={styles.file_tag2}
+              style={{
+                cursor: "pointer",
+                backgroundColor: "#f5222d",
+                borderColor: "#d80b16",
+              }}
+            >
+              Image Not Available
+            </div>
+          )}
         </div>
 
         <div
