@@ -6,6 +6,8 @@ import { FloatButton, Spin, message } from "antd";
 import Side from "../../src/Common/Side";
 import Top from "../../src/Common/Top";
 import StudentInfo from "../../src/Add/StudentInfo";
+import axios from "axios";
+import URLObj from "../../src/baseURL";
 
 const Student = () => {
   // BOILERPLATE
@@ -46,7 +48,25 @@ const Student = () => {
   };
 
   const deleteStudent = () => {
-    message.error("Delete functionality unavailable!");
+    const formdata = new FormData();
+    formdata?.append("id", ID);
+
+    axios({
+      method: "DELETE",
+      url: `${URLObj.base}/research/student/`,
+      headers: {
+        "X-ACCESS-KEY": URLObj.key,
+        "X-AUTH-TOKEN": user?.token,
+      },
+      data: formdata,
+    })
+      .then(res => {
+        message.success("Student deleted successfully!");
+        router.push("/profile");
+      })
+      .catch(err => {
+        message.error("Student deletion failed!");
+      });
   };
 
   const editStudent = () => {

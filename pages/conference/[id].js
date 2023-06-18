@@ -6,8 +6,10 @@ import { FloatButton, Spin, message } from "antd";
 import Side from "../../src/Common/Side";
 import Top from "../../src/Common/Top";
 import ConferenceInfo from "../../src/Add/ConferenceInfo";
+import URLObj from "../../src/baseURL";
+import axios from "axios";
 
-const Book = () => {
+const Conference = () => {
   // BOILERPLATE
 
   const router = useRouter();
@@ -46,7 +48,25 @@ const Book = () => {
   };
 
   const deleteConf = () => {
-    message.error("Delete functionality unavailable!");
+    const formdata = new FormData();
+    formdata?.append("id", ID);
+
+    axios({
+      method: "DELETE",
+      url: `${URLObj.base}/research/conference/`,
+      headers: {
+        "X-ACCESS-KEY": URLObj.key,
+        "X-AUTH-TOKEN": user?.token,
+      },
+      data: formdata,
+    })
+      .then(res => {
+        message.success("Conference deleted successfully!");
+        router.push("/profile");
+      })
+      .catch(err => {
+        message.error("Conference deletion failed!");
+      });
   };
 
   const editConf = () => {
@@ -116,4 +136,4 @@ const Book = () => {
   );
 };
 
-export default Book;
+export default Conference;

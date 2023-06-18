@@ -323,6 +323,27 @@ const Profile = () => {
           },
         ].filter(e => e.bool);
 
+        let array = e?.actual_author;
+
+        const FIRST = array?.find(e => e.sequence == "first");
+
+        if (FIRST?.in_dyp == false) {
+          array = array?.map(e =>
+            e.sequence == "first" ? { ...e, sequence: "additional" } : e
+          );
+
+          const FIRST_DYP = array?.find(e => e.in_dyp == true);
+
+          if (FIRST_DYP) {
+            array = array?.map(e =>
+              e.given + " " + e.family ==
+              FIRST_DYP.given + " " + FIRST_DYP.family
+                ? { ...e, sequence: "first" }
+                : e
+            );
+          }
+        }
+
         return {
           key: i,
           publication: (
@@ -338,7 +359,7 @@ const Profile = () => {
                 className={styles.publicationAuthors}
                 ellipsis={{ rows: 3, expandable: true, symbol: "more" }}
               >
-                {e.actual_author.map((e, i) => (
+                {array?.map((e, i) => (
                   <span key={i}>
                     <span>{e?.given + " " + e?.family}</span>
                     <sup>

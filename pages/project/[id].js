@@ -6,6 +6,8 @@ import { FloatButton, Spin, message } from "antd";
 import Side from "../../src/Common/Side";
 import Top from "../../src/Common/Top";
 import ProjectInfo from "../../src/Add/ProjectInfo";
+import URLObj from "../../src/baseURL";
+import axios from "axios";
 
 const Project = () => {
   // BOILERPLATE
@@ -46,7 +48,25 @@ const Project = () => {
   };
 
   const deleteProj = () => {
-    message.error("Delete functionality unavailable!");
+    const formdata = new FormData();
+    formdata?.append("id", ID);
+
+    axios({
+      method: "DELETE",
+      url: `${URLObj.base}/research/project/`,
+      headers: {
+        "X-ACCESS-KEY": URLObj.key,
+        "X-AUTH-TOKEN": user?.token,
+      },
+      data: formdata,
+    })
+      .then(res => {
+        message.success("Project deleted successfully!");
+        router.push("/profile");
+      })
+      .catch(err => {
+        message.error("Project deletion failed!");
+      });
   };
 
   const editProj = () => {

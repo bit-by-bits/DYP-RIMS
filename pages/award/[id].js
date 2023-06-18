@@ -6,6 +6,8 @@ import { FloatButton, Spin, message } from "antd";
 import Side from "../../src/Common/Side";
 import Top from "../../src/Common/Top";
 import AwardInfo from "../../src/Add/AwardInfo";
+import URLObj from "../../src/baseURL";
+import axios from "axios";
 
 const Award = () => {
   // BOILERPLATE
@@ -46,7 +48,25 @@ const Award = () => {
   };
 
   const deleteAward = () => {
-    message.error("Delete functionality unavailable!");
+    const formdata = new FormData();
+    formdata?.append("id", ID);
+
+    axios({
+      method: "DELETE",
+      url: `${URLObj.base}/research/award/`,
+      headers: {
+        "X-ACCESS-KEY": URLObj.key,
+        "X-AUTH-TOKEN": user?.token,
+      },
+      data: formdata,
+    })
+      .then(res => {
+        message.success("Award deleted successfully!");
+        router.push("/profile");
+      })
+      .catch(err => {
+        message.error("Award deletion failed!");
+      });
   };
 
   const editAward = () => {

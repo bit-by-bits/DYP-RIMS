@@ -144,8 +144,28 @@ const FileInfo = ({ user, setv, DOI }) => {
       </Card>
     );
 
+    let AUTHORS = data?.actual_author;
+
+    const FIRST = AUTHORS?.find(e => e.sequence == "first");
+
+    if (FIRST?.in_dyp == false) {
+      AUTHORS = AUTHORS?.map(e =>
+        e.sequence == "first" ? { ...e, sequence: "additional" } : e
+      );
+
+      const FIRST_DYP = AUTHORS?.find(e => e.in_dyp == true);
+
+      if (FIRST_DYP) {
+        AUTHORS = AUTHORS?.map(e =>
+          e.given + " " + e.family == FIRST_DYP.given + " " + FIRST_DYP.family
+            ? { ...e, sequence: "first" }
+            : e
+        );
+      }
+    }
+
     setAuthors(
-      data?.actual_author?.map((e, i) =>
+      AUTHORS?.map((e, i) =>
         e.sequence == "first" ||
         e.sequence == "corresponding" ||
         e.sequence == "firstncorr"

@@ -6,6 +6,8 @@ import { FloatButton, Spin, message } from "antd";
 import Side from "../../src/Common/Side";
 import Top from "../../src/Common/Top";
 import IPRInfo from "../../src/Add/IPRInfo";
+import axios from "axios";
+import URLObj from "../../src/baseURL";
 
 const IPR = () => {
   // BOILERPLATE
@@ -46,7 +48,25 @@ const IPR = () => {
   };
 
   const deleteIPR = () => {
-    message.error("Delete functionality unavailable!");
+    const formdata = new FormData();
+    formdata?.append("id", ID);
+
+    axios({
+      method: "DELETE",
+      url: `${URLObj.base}/research/IPR/`,
+      headers: {
+        "X-ACCESS-KEY": URLObj.key,
+        "X-AUTH-TOKEN": user?.token,
+      },
+      data: formdata,
+    })
+      .then(res => {
+        message.success("IPR deleted successfully!");
+        router.push("/profile");
+      })
+      .catch(err => {
+        message.error("IPR deletion failed!");
+      });
   };
 
   const editIPR = () => {
