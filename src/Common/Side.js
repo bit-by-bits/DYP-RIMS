@@ -5,7 +5,7 @@ import {
   ProjectOutlined,
   DownloadOutlined,
   TrophyOutlined,
-  GroupOutlined,
+  MessageOutlined,
   BookOutlined,
   BulbOutlined,
   UserAddOutlined,
@@ -114,7 +114,7 @@ const Side = ({ sets = () => {} }) => {
                   },
                   {
                     key: "1.2",
-                    icon: createElement(GroupOutlined),
+                    icon: createElement(MessageOutlined),
                     label: <Link href="/add/conference">Add Conference</Link>,
                   },
                   {
@@ -165,7 +165,7 @@ const Side = ({ sets = () => {} }) => {
           },
           {
             link: "/profile#conferences",
-            icon: GroupOutlined,
+            icon: MessageOutlined,
             label: "Conferences",
           },
           {

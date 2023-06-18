@@ -196,7 +196,9 @@ const Profile = () => {
             if (e.is_poster_presented) POSTERS += e.posters?.length;
           });
 
-          res.data?.data?.research?.forEach(e => (FUNDS += number(e.funds)));
+          res.data?.data?.research
+            ?.filter(e => number(e.funds))
+            .forEach(e => (FUNDS += parseFloat(number(e.funds))));
 
           setExtra({
             citations: CITATIONS,
@@ -525,7 +527,13 @@ const Profile = () => {
 
       BODY.sort((a, b) => b.start - a.start);
       if (innerWidth < 1400) TITLE.shift();
-      setConferences({ title: TITLE, body: BODY });
+      setConferences({
+        title:
+          innerWidth < 1400
+            ? TITLE.filter(e => e.key !== "paper" && e.key !== "poster")
+            : TITLE,
+        body: BODY,
+      });
     }
 
     if (data?.books) {
