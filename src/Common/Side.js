@@ -1,4 +1,4 @@
-import { Button, Menu, message } from "antd";
+import { Button, Menu, Spin, message } from "antd";
 import React, { useState, useEffect, createElement } from "react";
 import {
   HomeOutlined,
@@ -54,42 +54,52 @@ const Side = ({ sets = () => {} }) => {
 
   return (
     <div className={styles.sideWrapper}>
-      <div className={styles.sideProfile}>
-        <Image
-          priority={true}
-          className={styles.sideImage}
-          alt={user?.userame ?? "user"}
-          src={
-            user?.picture ??
-            "https://dreamvilla.life/wp-content/uploads/2017/07/dummy-profile-pic.png"
-          }
-          width={100}
-          height={100}
-        />
+      <Spin
+        style={{
+          width: "18vw",
+          height: "max-content",
+          backgroundColor: "rgba(256, 256, 256, 0.8)",
+        }}
+        spinning={user?.name ? false : true}
+        tip="FETCHING PROFILE"
+      >
+        <div className={styles.sideProfile}>
+          <Image
+            priority={true}
+            className={styles.sideImage}
+            alt={user?.username ?? "user"}
+            src={
+              user?.picture ??
+              "https://dreamvilla.life/wp-content/uploads/2017/07/dummy-profile-pic.png"
+            }
+            width={100}
+            height={100}
+          />
 
-        <div className={styles.sideName}>
-          {user?.name?.toUpperCase() ?? "N/A"}
-        </div>
-
-        <div className={styles.sideEmail}>{user?.email}</div>
-
-        <div className={styles.sideContent}>
-          <div>
-            <span className={styles.sideCircle} />
-            <span>{user?.designation ?? "N/A"}</span>
+          <div className={styles.sideName}>
+            {user?.name?.toUpperCase() ?? "N/A"}
           </div>
-          <div>
-            <span className={styles.sideCircle} />
-            <span>{user?.level?.slice(0, -1) ?? "N/A"}</span>
+
+          <div className={styles.sideEmail}>{user?.email}</div>
+
+          <div className={styles.sideContent}>
+            <div>
+              <span className={styles.sideCircle} />
+              <span>{user?.designation ?? "N/A"}</span>
+            </div>
+            <div>
+              <span className={styles.sideCircle} />
+              <span>{user?.level?.slice(0, -1) ?? "N/A"}</span>
+            </div>
           </div>
+
+          <div className={styles.sideEmail}>{user?.department}</div>
+
+          <Button className={styles.sideButton} onClick={edit} type="primary">
+            Edit Profile
+          </Button>
         </div>
-
-        <div className={styles.sideEmail}>{user?.department}</div>
-
-        <Button className={styles.sideButton} onClick={edit} type="primary">
-          Edit Profile
-        </Button>
-      </div>
+      </Spin>
 
       <Menu
         mode="inline"
