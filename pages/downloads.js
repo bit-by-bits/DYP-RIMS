@@ -4,16 +4,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Top from "../src/Common/Top";
 import styles2 from "../styles/add.module.css";
-import {
-  Button,
-  DatePicker,
-  FloatButton,
-  Form,
-  Select,
-  Spin,
-  Table,
-  message,
-} from "antd";
+import { Form, Radio, message, Spin, Table } from "antd";
+import { Button, DatePicker, FloatButton, Select } from "antd";
 
 const Downloads = () => {
   // BOILERPLATE
@@ -98,7 +90,7 @@ const Downloads = () => {
                   autoComplete="off"
                 >
                   <Form.Item
-                    label="What"
+                    label="Pick Download Item"
                     name="what"
                     rules={[
                       {
@@ -129,7 +121,7 @@ const Downloads = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="When"
+                    label="Pick Time Period"
                     name="when"
                     rules={[
                       {
@@ -139,6 +131,22 @@ const Downloads = () => {
                     ]}
                   >
                     <RangePicker picker="month" style={{ width: "100%" }} />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="Provide Soft Copy?"
+                    name="softcopy"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input if you want soft copy!",
+                      },
+                    ]}
+                  >
+                    <Radio.Group>
+                      <Radio value="yes">Yes</Radio>
+                      <Radio value="no">No</Radio>
+                    </Radio.Group>
                   </Form.Item>
 
                   <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

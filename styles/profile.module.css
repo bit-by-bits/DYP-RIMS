@@ -179,10 +179,15 @@
 
 .overviewBottom > div > div {
   gap: 10px;
+  cursor: pointer;
   padding: 10px;
   background: #f7f7f7;
   box-shadow: 0px 0px 4px #615252;
   border-radius: 12px;
+}
+
+.overviewBottom > div > div:hover {
+  background-color: #f1f1f1 !important;
 }
 
 .overviewBottom > div > div > div:first-child {

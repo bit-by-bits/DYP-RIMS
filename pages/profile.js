@@ -196,7 +196,9 @@ const Profile = () => {
             if (e.is_poster_presented) POSTERS += e.posters?.length;
           });
 
-          res.data?.data?.research?.forEach(e => (FUNDS += number(e.funds)));
+          res.data?.data?.research
+            ?.filter(e => number(e.funds))
+            .forEach(e => (FUNDS += parseFloat(number(e.funds))));
 
           setExtra({
             citations: CITATIONS,
@@ -321,6 +323,27 @@ const Profile = () => {
           },
         ].filter(e => e.bool);
 
+        let array = e?.actual_author;
+
+        const FIRST = array?.find(e => e.sequence == "first");
+
+        if (FIRST?.in_dyp == false) {
+          array = array?.map(e =>
+            e.sequence == "first" ? { ...e, sequence: "additional" } : e
+          );
+
+          const FIRST_DYP = array?.find(e => e.in_dyp == true);
+
+          if (FIRST_DYP) {
+            array = array?.map(e =>
+              e.given + " " + e.family ==
+              FIRST_DYP.given + " " + FIRST_DYP.family
+                ? { ...e, sequence: "first" }
+                : e
+            );
+          }
+        }
+
         return {
           key: i,
           publication: (
@@ -336,7 +359,7 @@ const Profile = () => {
                 className={styles.publicationAuthors}
                 ellipsis={{ rows: 3, expandable: true, symbol: "more" }}
               >
-                {e.actual_author.map((e, i) => (
+                {array?.map((e, i) => (
                   <span key={i}>
                     <span>{e?.given + " " + e?.family}</span>
                     <sup>
@@ -525,7 +548,13 @@ const Profile = () => {
 
       BODY.sort((a, b) => b.start - a.start);
       if (innerWidth < 1400) TITLE.shift();
-      setConferences({ title: TITLE, body: BODY });
+      setConferences({
+        title:
+          innerWidth < 1400
+            ? TITLE.filter(e => e.key !== "paper" && e.key !== "poster")
+            : TITLE,
+        body: BODY,
+      });
     }
 
     if (data?.books) {
@@ -573,10 +602,10 @@ const Profile = () => {
 
       const BODY = data?.books?.map((e, i) => ({
         key: i,
-        title: e.publication_title,
-        type: e.publication_type,
-        book: e.book_name,
-        publisher: "N/A",
+        title: capitalize(e.publication_title),
+        type: capitalize(e.publication_type),
+        book: capitalize(e.book_name),
+        publisher: capitalize(e.publisher),
         published: e.year_published,
         action: (
           <Button

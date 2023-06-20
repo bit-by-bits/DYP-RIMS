@@ -6,6 +6,8 @@ import { FloatButton, Spin, message } from "antd";
 import Side from "../../src/Common/Side";
 import Top from "../../src/Common/Top";
 import BookInfo from "../../src/Add/BookInfo";
+import axios from "axios";
+import URLObj from "../../src/baseURL";
 
 const Book = () => {
   // BOILERPLATE
@@ -46,7 +48,25 @@ const Book = () => {
   };
 
   const deleteBook = () => {
-    message.error("Delete functionality unavailable!");
+    const formdata = new FormData();
+    formdata?.append("id", ID);
+
+    axios({
+      method: "DELETE",
+      url: `${URLObj.base}/research/books/`,
+      headers: {
+        "X-ACCESS-KEY": URLObj.key,
+        "X-AUTH-TOKEN": user?.token,
+      },
+      data: formdata,
+    })
+      .then(res => {
+        message.success("Book deleted successfully!");
+        router.push("/profile");
+      })
+      .catch(err => {
+        message.error("Book deletion failed!");
+      });
   };
 
   const editBook = () => {

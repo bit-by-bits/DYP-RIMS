@@ -12,7 +12,6 @@ const AwardInfo = ({ user, setv, ID }) => {
   const { Dragger } = Upload;
 
   const [data, setData] = useState({});
-  const [authors, setAuthors] = useState([]);
   const [fileData, setFileData] = useState({ modal: false, file: null });
 
   // EFFECTS
@@ -65,44 +64,7 @@ const AwardInfo = ({ user, setv, ID }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileData]);
 
-  useEffect(() => {
-    getAuthors();
-  }, [data]);
-
   // FUNCTIONS
-
-  const getAuthors = () => {
-    setAuthors([
-      <Card
-        key={0}
-        hoverable
-        bodyStyle={{ padding: 15, minWidth: 250 }}
-        style={{ border: "1px solid #d9d9d9" }}
-      >
-        <Meta
-          title={
-            <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
-              {user?.name}
-            </div>
-          }
-          description={
-            <div style={{ fontSize: "0.8rem" }}>{`${user?.level?.slice(
-              0,
-              -1
-            )} · ${user?.department}`}</div>
-          }
-          avatar={
-            <Avatar
-              src={
-                user?.picture ??
-                "https://cdn.landesa.org/wp-content/uploads/default-user-image.png"
-              }
-            />
-          }
-        />
-      </Card>,
-    ]);
-  };
 
   return (
     <>
@@ -117,9 +79,13 @@ const AwardInfo = ({ user, setv, ID }) => {
           ) : (
             <>
               <div
-                style={{ cursor: "pointer" }}
                 onClick={() => setFileData({ ...fileData, modal: true })}
-                className={styles.file_tag1}
+                style={{
+                  cursor: "pointer",
+                  backgroundColor: "#f5222d",
+                  borderColor: "#d80b16",
+                }}
+                className={styles.file_tag2}
               >
                 PDF Not Available (Click to Upload)
               </div>

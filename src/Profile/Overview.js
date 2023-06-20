@@ -4,12 +4,12 @@ import Image from "next/image";
 import {
   BookOutlined,
   BulbOutlined,
-  DollarCircleOutlined,
-  GroupOutlined,
+  MessageOutlined,
   PaperClipOutlined,
   ProjectOutlined,
   TrophyOutlined,
   UsergroupAddOutlined,
+  TrademarkCircleOutlined,
 } from "@ant-design/icons";
 
 import crossref from "../../public/logos/crossref.jpg";
@@ -23,8 +23,13 @@ import green from "../../public/logos/green-oa.png";
 import gold from "../../public/logos/gold-oa.png";
 import bronze from "../../public/logos/bronze-oa.png";
 import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 const Overview = ({ data, stats, extra, size }) => {
+  // BOILERPLATE
+
+  const router = useRouter();
+
   // STATES
 
   const [strings, setStrings] = useState({});
@@ -48,6 +53,17 @@ const Overview = ({ data, stats, extra, size }) => {
   // FUNCTIONS
 
   const number = num => (num ? (isNaN(num) ? 0 : num) : 0);
+
+  const createBox = array =>
+    array?.map((e, i) => (
+      <div key={i} onClick={() => router.push(e.link)}>
+        <div>{createElement(e.logo)}</div>
+        <div style={{ display: "flex", gap: 5 }}>
+          <span>{e.label2}</span>
+          <span>{e.label1}</span>
+        </div>
+      </div>
+    ));
 
   return (
     <>
@@ -223,73 +239,66 @@ const Overview = ({ data, stats, extra, size }) => {
       </div>
       <div className={styles.overviewBottom}>
         <div>
-          {[
+          {createBox([
             {
               label1: strings.conferences,
               label2: number(data?.conferences?.length),
-              logo: GroupOutlined,
+              logo: MessageOutlined,
+              link: "/profile#conferences",
             },
             {
               label1: strings.papers,
               label2: number(extra?.papers),
               logo: PaperClipOutlined,
+              link: "/profile#conferences",
             },
             {
               label1: strings.posters,
               label2: number(extra?.posters),
               logo: PaperClipOutlined,
+              link: "/profile#conferences",
             },
             {
               label1: "Books/Chapters",
               label2: number(data?.books?.length),
               logo: BookOutlined,
+              link: "/profile#books",
             },
-          ].map((e, i) => (
-            <div key={i}>
-              <div>{createElement(e.logo)}</div>
-              <div style={{ display: "flex", gap: 5 }}>
-                <span>{e.label2}</span>
-                <span>{e.label1}</span>
-              </div>
-            </div>
-          ))}
+          ])}
         </div>
         <div>
-          {[
+          {createBox([
             {
               label1: strings.projects,
               label2: number(data?.research?.length),
               logo: ProjectOutlined,
+              link: "/profile#projects",
             },
             {
               label1: strings.funds,
-              label2: parseFloat(number(extra?.funds)),
-              logo: DollarCircleOutlined,
+              label2: parseFloat(number(extra?.funds)).toFixed(2),
+              logo: TrademarkCircleOutlined,
+              link: "/profile#projects",
             },
             {
               label1: "Awards",
               label2: number(data?.awards?.length),
               logo: TrophyOutlined,
+              link: "/profile#awards",
             },
             {
               label1: strings.students,
               label2: number(data?.students_guided?.length),
               logo: UsergroupAddOutlined,
+              link: "/profile#students",
             },
             {
               label1: "IPR",
               label2: number(data?.IPR?.length),
               logo: BulbOutlined,
+              link: "/profile#ipr",
             },
-          ].map((e, i) => (
-            <div key={i}>
-              <div>{createElement(e.logo)}</div>
-              <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                <span>{e.label2}</span>
-                <span>{e.label1}</span>
-              </div>
-            </div>
-          ))}
+          ])}
         </div>
       </div>
     </>

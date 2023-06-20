@@ -74,7 +74,7 @@ const Books = () => {
     })
       .then(res => {
         message.success("Book added successfully");
-        router.push(`/book/${ISBN}`);
+        router.push("/profile");
         form.resetFields();
       })
       .catch(err => {
