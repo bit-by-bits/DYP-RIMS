@@ -20,7 +20,6 @@ import URLObj from "../../src/baseURL";
 const Projects = () => {
   // BOILERPLATE
 
-  const { RangePicker } = DatePicker;
   const router = useRouter();
   const [user, setUser] = useState({});
 
@@ -39,6 +38,7 @@ const Projects = () => {
 
   // STATES
 
+  const { RangePicker } = DatePicker;
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(true);
 

@@ -24,14 +24,7 @@ This repository contains the client-side code for DYPU RIMS (Research Informatio
    npm install
    ```
 
-3. Set up the required environment variables. Create a `.env` file in the project's root directory and add the necessary variables. For example:
-
-   ```
-   DATABASE_URL=your_database_url
-   API_KEY=your_api_key
-   ```
-
-4. Start the development server:
+3. Start the development server:
 
    ```bash
    npm run dev
@@ -59,7 +52,7 @@ To deploy the DYPU RIMS Portal to a production environment, follow these steps:
 
 ## Contributing
 
-Contributions to the DYPU RIMS Portal are welcome. If you happen to have any issues or have suggestions for improvement, please open an issue or submit a pull request.
+Contributions to the DYPU RIMS Portal are currently closed. If you happen to have any issues or have suggestions for improvement, please open an issue or submit a pull request.
 
 ## License
 

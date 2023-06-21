@@ -6,6 +6,8 @@ import Top from "../src/Common/Top";
 import styles2 from "../styles/add.module.css";
 import { Form, Radio, message, Spin, Table } from "antd";
 import { Button, DatePicker, FloatButton, Select } from "antd";
+import axios from "axios";
+import URLObj from "../src/baseURL";
 
 const Downloads = () => {
   // BOILERPLATE
@@ -30,11 +32,20 @@ const Downloads = () => {
 
   const [form] = Form.useForm();
   const { RangePicker } = DatePicker;
+
+  const [data, setData] = useState([]);
+  const [allDates, setAllDates] = useState(true);
   const [visible, setVisible] = useState(true);
 
   // EFFECTS
 
   useEffect(() => {
+    const DATA = JSON.parse(localStorage.getItem("data"));
+
+    if (DATA && DATA?.length) {
+      setData(DATA);
+    }
+
     setTimeout(() => {
       setVisible(false);
     }, 1200);
@@ -43,13 +54,68 @@ const Downloads = () => {
   // FUNCTIONS
 
   const onFinish = values => {
-    console.log("Success:", values);
-    message.success("Request sent successfully");
+    const formdata = new FormData();
+
+    formdata.append("export", values.export?.join(","));
+    formdata.append("is_softcopy_required", values.softcopy);
+    formdata.append(
+      "date",
+      values.mode
+        ? "all"
+        : `${values.range[0].format("YYYY-MM")} ## ${values.range[1].format(
+            "YYYY-MM"
+          )}`
+    );
+
+    axios({
+      method: "POST",
+      url: `${URLObj.base}/export/`,
+      headers: {
+        "X-ACCESS-KEY": URLObj.key,
+        "X-AUTH-TOKEN": user?.token,
+      },
+      data: formdata,
+    })
+      .then(res => {
+        onReset();
+        updateData(values, res.data?.url);
+        message.success("Data fetched successfully");
+      })
+      .catch(err => {
+        console.log("Failed:", err);
+        message.error("Something went wrong");
+      });
   };
 
   const onFinishFailed = errorInfo => {
     console.log("Failed:", errorInfo);
-    message.error("Request failed");
+    message.error("Something went wrong");
+  };
+
+  const onReset = () => {
+    form.resetFields();
+    setAllDates(true);
+  };
+
+  const updateData = (values, link) => {
+    const DATA = {
+      key: data?.length + 1,
+      items: values?.export
+        ?.map(
+          i => i?.charAt(0).toUpperCase() + i?.slice(1)?.toLowerCase() + "s"
+        )
+        .join(", "),
+      date: values?.mode
+        ? "All"
+        : values?.range?.map(i => i?.format("YYYY-MM"))?.join(" to "),
+      softcopy:
+        values?.softcopy?.charAt(0).toUpperCase() +
+        values?.softcopy?.slice(1)?.toLowerCase(),
+      file: link,
+    };
+
+    setData([DATA, ...data]);
+    localStorage.setItem("data", JSON.stringify([DATA, ...data]));
   };
 
   return (
@@ -87,15 +153,16 @@ const Downloads = () => {
                   wrapperCol={{ span: 16 }}
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
+                  onReset={onReset}
                   autoComplete="off"
                 >
                   <Form.Item
-                    label="Pick Download Item"
-                    name="what"
+                    label="What to Download?"
+                    name="export"
                     rules={[
                       {
                         required: true,
-                        message: "Please input what you want to download!",
+                        message: "Please input the items you want to download!",
                       },
                     ]}
                   >
@@ -103,17 +170,20 @@ const Downloads = () => {
                       placeholder="Select what you want to download"
                       style={{ width: "100%" }}
                       showSearch
+                      mode="multiple"
+                      allowClear
                     >
                       {[
                         "Publications",
-                        "Conferences",
-                        "Books/Chapters",
-                        "Research Projects",
                         "Awards",
-                        "IPR",
-                        "Students Guided",
+                        "Conferences",
+                        "Books",
+                        "IPRs",
                       ].map((item, index) => (
-                        <Select.Option key={index} value={item}>
+                        <Select.Option
+                          key={index}
+                          value={item?.slice(0, -1)?.toLowerCase()}
+                        >
                           {item}
                         </Select.Option>
                       ))}
@@ -121,25 +191,12 @@ const Downloads = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Pick Time Period"
-                    name="when"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input from when you want to download!",
-                      },
-                    ]}
-                  >
-                    <RangePicker picker="month" style={{ width: "100%" }} />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Provide Soft Copy?"
+                    label="Provide Softcopy?"
                     name="softcopy"
                     rules={[
                       {
                         required: true,
-                        message: "Please input if you want soft copy!",
+                        message: "Please mention if you want softcopy!",
                       },
                     ]}
                   >
@@ -148,6 +205,38 @@ const Downloads = () => {
                       <Radio value="no">No</Radio>
                     </Radio.Group>
                   </Form.Item>
+
+                  <Form.Item
+                    label="Duration of Data"
+                    name="mode"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input if you want all data!",
+                      },
+                    ]}
+                  >
+                    <Radio.Group onChange={e => setAllDates(e.target.value)}>
+                      <Radio value={true}>All</Radio>
+                      <Radio value={false}>Custom</Radio>
+                    </Radio.Group>
+                  </Form.Item>
+
+                  {!allDates && (
+                    <Form.Item
+                      label="Pick Time Period"
+                      name="range"
+                      rules={[
+                        {
+                          required: !allDates,
+                          message:
+                            "Please input from when you want to download!",
+                        },
+                      ]}
+                    >
+                      <RangePicker picker="month" style={{ width: "100%" }} />
+                    </Form.Item>
+                  )}
 
                   <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                     <Button
@@ -162,7 +251,6 @@ const Downloads = () => {
                       type="primary"
                       htmlType="reset"
                       className={styles2.secondary}
-                      onClick={() => form.resetFields()}
                     >
                       Reset
                     </Button>
@@ -176,27 +264,32 @@ const Downloads = () => {
                   columns={[
                     {
                       title: "No.",
-                      dataIndex: "key",
-                      key: "key",
+                      dataIndex: "no",
+                      key: "no",
+                      render: (a, b, c) => `${c + 1}.`,
                     },
-                    {
-                      title: "Downloaded Item",
-                      dataIndex: "item",
-                      key: "item",
-                    },
+                    ...["Items", "Date", "Softcopy"].map(item => ({
+                      title: item,
+                      dataIndex: item?.toLowerCase(),
+                      key: item?.toLowerCase(),
+                    })),
                     {
                       title: "File",
                       dataIndex: "file",
                       key: "file",
+                      render: a => (
+                        <Button
+                          type="primary"
+                          htmlType="submit"
+                          className={styles2.primary}
+                          onClick={() => window.open(a)}
+                        >
+                          Download
+                        </Button>
+                      ),
                     },
                   ]}
-                  dataSource={[
-                    {
-                      key: 1,
-                      item: "Publications",
-                      file: "Download",
-                    },
-                  ]}
+                  dataSource={data}
                 />
               </div>
             </div>
