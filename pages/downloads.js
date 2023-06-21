@@ -40,6 +40,12 @@ const Downloads = () => {
   // EFFECTS
 
   useEffect(() => {
+    const DATA = JSON.parse(localStorage.getItem("data"));
+
+    if (DATA && DATA?.length) {
+      setData(DATA);
+    }
+
     setTimeout(() => {
       setVisible(false);
     }, 1200);
@@ -51,6 +57,7 @@ const Downloads = () => {
     const formdata = new FormData();
 
     formdata.append("export", values.export?.join(","));
+    formdata.append("is_softcopy_required", values.softcopy);
     formdata.append(
       "date",
       values.mode
@@ -101,19 +108,14 @@ const Downloads = () => {
       date: values?.mode
         ? "All"
         : values?.range?.map(i => i?.format("YYYY-MM"))?.join(" to "),
-      file: (
-        <Button
-          type="primary"
-          htmlType="submit"
-          className={styles2.primary}
-          onClick={() => window.open(link)}
-        >
-          Download
-        </Button>
-      ),
+      softcopy:
+        values?.softcopy?.charAt(0).toUpperCase() +
+        values?.softcopy?.slice(1)?.toLowerCase(),
+      file: link,
     };
 
     setData([DATA, ...data]);
+    localStorage.setItem("data", JSON.stringify([DATA, ...data]));
   };
 
   return (
@@ -155,12 +157,12 @@ const Downloads = () => {
                   autoComplete="off"
                 >
                   <Form.Item
-                    label="Pick Download Item"
+                    label="What to Download?"
                     name="export"
                     rules={[
                       {
                         required: true,
-                        message: "Please input what you want to download!",
+                        message: "Please input the items you want to download!",
                       },
                     ]}
                   >
@@ -189,18 +191,34 @@ const Downloads = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Provide All Data?"
+                    label="Provide Softcopy?"
+                    name="softcopy"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please mention if you want softcopy!",
+                      },
+                    ]}
+                  >
+                    <Radio.Group>
+                      <Radio value="yes">Yes</Radio>
+                      <Radio value="no">No</Radio>
+                    </Radio.Group>
+                  </Form.Item>
+
+                  <Form.Item
+                    label="Duration of Data"
                     name="mode"
                     rules={[
                       {
                         required: true,
-                        message: "Please input if you want soft copy!",
+                        message: "Please input if you want all data!",
                       },
                     ]}
                   >
                     <Radio.Group onChange={e => setAllDates(e.target.value)}>
-                      <Radio value={true}>Yes, download all!</Radio>
-                      <Radio value={false}>No, let me choose!</Radio>
+                      <Radio value={true}>All</Radio>
+                      <Radio value={false}>Custom</Radio>
                     </Radio.Group>
                   </Form.Item>
 
@@ -250,11 +268,26 @@ const Downloads = () => {
                       key: "no",
                       render: (a, b, c) => `${c + 1}.`,
                     },
-                    ...["Items", "Date", "File"].map(e => ({
-                      title: e,
-                      dataIndex: e?.toLowerCase(),
-                      key: e?.toLowerCase(),
+                    ...["Items", "Date", "Softcopy"].map(item => ({
+                      title: item,
+                      dataIndex: item?.toLowerCase(),
+                      key: item?.toLowerCase(),
                     })),
+                    {
+                      title: "File",
+                      dataIndex: "file",
+                      key: "file",
+                      render: a => (
+                        <Button
+                          type="primary"
+                          htmlType="submit"
+                          className={styles2.primary}
+                          onClick={() => window.open(a)}
+                        >
+                          Download
+                        </Button>
+                      ),
+                    },
                   ]}
                   dataSource={data}
                 />
