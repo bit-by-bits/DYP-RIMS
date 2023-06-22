@@ -1,13 +1,5 @@
-import {
-  Button,
-  DatePicker,
-  FloatButton,
-  Form,
-  Input,
-  Select,
-  Spin,
-  message,
-} from "antd";
+import { Button, DatePicker, FloatButton, Form } from "antd";
+import { Input, Select, Spin, message } from "antd";
 import styles from "../../styles/add.module.css";
 import Head from "next/head";
 import { useEffect, useState } from "react";
@@ -16,30 +8,18 @@ import { useRouter } from "next/router";
 import Top from "../../src/Common/Top";
 import axios from "axios";
 import URLObj from "../../src/baseURL";
+import { useUser } from "../../src/context/userContext";
 
 const Projects = () => {
-  // BOILERPLATE
+  // HOOKS
 
   const router = useRouter();
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined")
-      user
-        ? Date.now() - user?.setUpTime > 86400000 &&
-          localStorage.removeItem("user")
-        : router.push("/");
-  }, [router, user]);
+  const [form] = Form.useForm();
+  const { user } = useUser();
+  const { RangePicker } = DatePicker;
 
   // STATES
 
-  const { RangePicker } = DatePicker;
-  const [form] = Form.useForm();
   const [visible, setVisible] = useState(true);
 
   // EFFECTS

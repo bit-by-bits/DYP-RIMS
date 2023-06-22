@@ -1,78 +1,69 @@
-import Head from "next/head";
-import React, { useState, useEffect, Fragment, useMemo } from "react";
-import styles from "../styles/profile.module.css";
-import { Table, Modal, Upload, message } from "antd";
-import { Spin, Button, Typography, FloatButton } from "antd";
-import Side from "../src/Common/Side";
-import { useRouter } from "next/router";
 import axios from "axios";
+import Head from "next/head";
 import URLObj from "../src/baseURL";
+import styles from "../styles/profile.module.css";
+import { useRouter } from "next/router";
+import { useState, useEffect, useMemo } from "react";
+import { Spin, Button, FloatButton } from "antd";
+import { Table, Modal, Upload, message } from "antd";
+import { InboxOutlined } from "@ant-design/icons";
 import { useWindowSize } from "rooks";
-import {
-  FileTextOutlined,
-  InboxOutlined,
-  SortAscendingOutlined,
-  SortDescendingOutlined,
-} from "@ant-design/icons";
-import Image from "next/image";
-import Overview from "../src/Profile/Overview";
-import Scite from "../src/Profile/Scite";
-import Altmetric from "../src/Profile/Altmetric";
-import Top from "../src/Common/Top";
-import Section from "../src/Profile/Section";
-import BarChart from "../src/Profile/BarChart";
-import useDate from "../src/utils/useDate";
-import useCapitalize from "../src/utils/useCapitalize";
 
-import crossref from "../public/logos/crossref.jpg";
-import medline from "../public/logos/medline.jpg";
-import doaj from "../public/logos/doaj.png";
-import pmc from "../public/logos/pmc.png";
-import scopus from "../public/logos/scopus.svg";
-import wos from "../public/logos/wos.svg";
+import Top from "../src/Common/Top";
+import Side from "../src/Common/Side";
+import Section from "../src/Profile/Section";
+import Overview from "../src/Profile/Overview";
+import BarChart from "../src/Profile/BarChart";
+import { useUser } from "../src/context/userContext";
 import { useAccess } from "../src/context/accessContext";
 
+import usePubSetter from "../src/utils/dataSetters/usePubSetter";
+import useConfSetter from "../src/utils/dataSetters/useConfSetter";
+import useBookSetter from "../src/utils/dataSetters/useBookSetter";
+import useProjSetter from "../src/utils/dataSetters/useProjSetter";
+import useAwardSetter from "../src/utils/dataSetters/useAwardSetter";
+import useIPRSetter from "../src/utils/dataSetters/useIPRSetter";
+import useStudSetter from "../src/utils/dataSetters/useStudSetter";
+import useExtraSetter from "../src/utils/dataSetters/useExtraSetter";
+
 const Profile = () => {
-  // BOILERPLATE
+  // HOOKS
 
-  const router = useRouter();
-  const [user, setUser] = useState({});
+  const { user, change } = useUser();
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-  }, []);
+  // HOOKS
 
-  useEffect(() => {
-    if (typeof window !== "undefined")
-      user
-        ? Date.now() - user?.setUpTime > 86400000 &&
-          localStorage.removeItem("user")
-        : router.push("/");
-  }, [router, user]);
-
-  // STATES
-
-  const CHANGE = 1600;
-
-  const { date } = useDate();
   const { access } = useAccess();
-  const { capitalize } = useCapitalize();
+  const { setExtra } = useExtraSetter();
+
+  const { pubData } = usePubSetter();
+  const { confData } = useConfSetter();
+  const { bookData } = useBookSetter();
+  const { projData } = useProjSetter();
+  const { awardData } = useAwardSetter();
+  const { iprData } = useIPRSetter();
+  const { studData } = useStudSetter();
 
   const { Dragger } = Upload;
-  const { Paragraph } = Typography;
   const { innerWidth } = useWindowSize();
 
   const [visible, setVisible] = useState(true);
 
+  // LEVEL 1 DATA
+
   const [data, setData] = useState({});
-  const [statistics, setStatistics] = useState({});
-  const [fileData, setFileData] = useState({
+  const [statistics_1, setStatistics_1] = useState({});
+  const [fileData_1, setFileData_1] = useState({
     modal: false,
     file: null,
     doi: "",
     authors: [],
   });
+
+  const [extra_1, setExtra_1] = useState({});
+  const [sortBy_1, setSortBy_1] = useState("scopus");
+  const [sections_1, setSections_1] = useState("all");
+  const [selectedFilters_1, setSelectedFilters_1] = useState([]);
 
   const [publications, setPublications] = useState({ title: [], body: [] });
   const [conferences, setConferences] = useState({ title: [], body: [] });
@@ -81,864 +72,162 @@ const Profile = () => {
   const [awards, setAwards] = useState({ title: [], body: [] });
   const [ipr, setIpr] = useState({ title: [], body: [] });
   const [students, setStudents] = useState({ title: [], body: [] });
-  const [extra, setExtra] = useState({
-    citations: {},
-    impact: {},
-    access: {},
-    index: {},
 
-    funds: 0,
-    papers: 0,
-    posters: 0,
-  });
+  // LEVEL 2 DATA
 
-  const [sortBy, setSortBy] = useState("scopus");
-  const [sections, setSections] = useState("all");
-  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [counts_2, setCounts_2] = useState({});
+  const [publications_2, setPublications_2] = useState([]);
+  const [authorsMax_2, setAuthorsMax_2] = useState([]);
+  const [authorsMin_2, setAuthorsMin_2] = useState([]);
 
   // EFFECTS
 
   useEffect(() => {
     if (user?.token) {
-      axios({
-        method: "GET",
-        url: `${URLObj.base}/home`,
-        headers: {
-          "X-ACCESS-KEY": URLObj.key,
-          "X-AUTH-TOKEN": user?.token,
-        },
-      })
-        .then(res => {
-          // LOAD USER
+      console.log(access);
 
-          const u = res.data?.user;
+      if (access === 1) {
+        setVisible(true);
 
-          const access_level = u?.access_level?.find(
-            e => e.id === Math.max(...u?.access_level?.map(e => e.id))
-          );
-
-          const USER = {
-            ...user,
-            username: u?.username,
-            name: u?.user?.first_name + " " + u?.user?.last_name,
-            email: u?.user?.email,
-            picture: u?.profile_picture,
-            designation: u?.designation,
-            department: u?.department?.name,
-            level: access_level?.display_text,
-            access: access_level?.id,
-          };
-
-          localStorage.setItem("user", JSON.stringify(USER));
-
-          // LOAD DATA
-
-          setData(res.data?.data);
-          setStatistics(res.data?.statistics);
-
-          // EXTRA CALCULATIONS
-
-          let CITATIONS = { total: 0, crossref: 0, scopus: 0, wos: 0 };
-
-          let IMPACT = { total: 0, average: 0 };
-
-          let ACCESS = { gold: 0, green: 0, bronze: 0, closed: 0 };
-
-          let INDEX = {
-            pubmed: 0,
-            scopus: 0,
-            doaj: 0,
-            wos: 0,
-            medline: 0,
-            total: 0,
-          };
-
-          let FUNDS = 0;
-          let PAPERS = 0;
-          let POSTERS = 0;
-
-          res.data?.data?.publication?.forEach(e => {
-            CITATIONS.total += e.citations_total;
-            CITATIONS.crossref += e.citations_crossref;
-            CITATIONS.scopus += e.citations_scopus;
-            CITATIONS.wos += e.citations_wos;
-
-            IMPACT.total += e.impact_factor;
-
-            if (e.open_access) {
-              switch (e.open_access_status) {
-                case "gold":
-                  ACCESS.gold++;
-                  break;
-
-                case "green":
-                  ACCESS.green++;
-                  break;
-
-                case "bronze":
-                  ACCESS.bronze++;
-                  break;
-
-                default:
-              }
-            } else ACCESS.closed++;
-
-            if (e.in_pubmed) INDEX.pubmed++;
-            if (e.in_scopus) INDEX.scopus++;
-            if (e.in_doaj) INDEX.doaj++;
-            if (e.in_wos) INDEX.wos++;
-            if (e.in_medline) INDEX.medline++;
-
-            if (
-              e.in_pubmed ||
-              e.in_scopus ||
-              e.in_doaj ||
-              e.in_wos ||
-              e.in_medline
-            )
-              INDEX.total++;
-          });
-
-          IMPACT.average = IMPACT.total / res.data?.data?.publication?.length;
-
-          res.data?.data?.conferences?.forEach(e => {
-            if (e.is_paper_presented) PAPERS += e.papers?.length;
-
-            if (e.is_poster_presented) POSTERS += e.posters?.length;
-          });
-
-          res.data?.data?.research
-            ?.filter(e => number(e.funds))
-            .forEach(e => (FUNDS += parseFloat(number(e.funds))));
-
-          setExtra({
-            citations: CITATIONS,
-            impact: IMPACT,
-            access: ACCESS,
-            index: INDEX,
-            funds: FUNDS,
-            papers: PAPERS,
-            posters: POSTERS,
-          });
-
-          // LOAD WEBSITE
-          setVisible(false);
+        axios({
+          method: "GET",
+          url: `${URLObj.base}/home`,
+          headers: {
+            "X-ACCESS-KEY": URLObj.key,
+            "X-AUTH-TOKEN": user?.token,
+          },
         })
-        .catch(err => {
-          console.log(err);
-        });
-    }
-  }, [user]);
+          .then(res => {
+            const DATA = res.data?.data;
 
-  useEffect(() => {
-    if (data?.publication) {
-      const TITLE = [
-        {
-          title: "No.",
-          dataIndex: "no",
-          key: "no",
-          render: (id, record, index) => `${index + 1}.`,
-          width: innerWidth > CHANGE ? "5%" : "4%",
-        },
-        {
-          title: t => titleMaker(t, "title", "Publication Title", "Title"),
-          dataIndex: "publication",
-          key: "publication",
-          width: innerWidth > CHANGE ? "30%" : "30%",
-        },
-        {
-          title: t => titleMaker(t, "impact_factor", "Impact Factor", "Impact"),
-          dataIndex: "impact_factor",
-          key: "impact_factor",
-          sorter: (a, b, c) => sorter(a.impact_factor, b.impact_factor, 0, c),
-        },
-        {
-          title: "SJR",
-          dataIndex: "sjr",
-          key: "sjr",
-          sorter: (a, b, c) => sorter(a.sjr, b.sjr, 1, c),
-          width: innerWidth > CHANGE ? "5%" : "9%",
-        },
-        {
-          title: t => titleMaker(t, "h_index", "H-Index", "HIndex"),
-          dataIndex: "h_index",
-          key: "h_index",
-          sorter: (a, b, c) => sorter(a.h_index, b.h_index, 0, c),
-        },
-        {
-          title: t => titleMaker(t, "index", "Indexed In", "Indexed"),
-          dataIndex: "indexed_in",
-          key: "indexed_in",
-          filters: ["PubMed", "Scopus", "DOAJ", "WOS", "Medline", "None"].map(
-            e => ({ text: e, value: e })
-          ),
-          filterSearch: true,
-        },
-        {
-          title: "Citations",
-          dataIndex: "citations",
-          key: "citations",
-          sorter: (a, b, c) =>
-            sorter(a.citations[sortBy], b.citations[sortBy], 0, c),
-          render: e => (
-            <div className={styles.publicationGrid}>
-              <Image src={crossref} alt="Crossref" height={30} width={30} />
-              {`Crossref: ${number(e?.crossref)}`}
-              <Image src={scopus} alt="Scopus" height={30} width={30} />
-              {`Scopus: ${number(e?.scopus)}`}
-              <Image src={wos} alt="WOS" height={30} width={30} />
-              {`WOS: ${number(e?.wos)}`}
-            </div>
-          ),
-        },
-        {
-          title: t => titleMaker(t, "published", "Published", "Year"),
-          dataIndex: "published",
-          key: "published",
-          sorter: (a, b, c) => sorter(a.published, b.published, 0, c),
-        },
-        {
-          title: "",
-          dataIndex: "action",
-          key: "action",
-          width: innerWidth > CHANGE ? "12%" : "6%",
-        },
-      ];
+            setData(DATA);
+            setStatistics_1(res.data?.statistics);
+            updateUser(res.data?.user);
 
-      const BODY = data?.publication?.map((e, i) => {
-        const arr = [
-          {
-            name: "PubMed",
-            logo: pmc,
-            bool: e.in_pubmed,
-          },
-          {
-            name: "Scopus",
-            logo: scopus,
-            bool: e.in_scopus,
-          },
-          {
-            name: "DOAJ",
-            logo: doaj,
-            bool: e.in_doaj,
-          },
-          {
-            name: "WOS",
-            logo: wos,
-            bool: e.in_wos,
-          },
-          {
-            name: "Medline",
-            logo: medline,
-            bool: e.in_medline,
-          },
-        ].filter(e => e.bool);
-
-        let array = e?.actual_author;
-
-        const FIRST = array?.find(e => e.sequence == "first");
-
-        if (FIRST?.in_dyp == false) {
-          array = array?.map(e =>
-            e.sequence == "first" ? { ...e, sequence: "additional" } : e
-          );
-
-          const FIRST_DYP = array?.find(e => e.in_dyp == true);
-
-          if (FIRST_DYP) {
-            array = array?.map(e =>
-              e.given + " " + e.family ==
-              FIRST_DYP.given + " " + FIRST_DYP.family
-                ? { ...e, sequence: "first" }
-                : e
+            setExtra(
+              DATA?.publication,
+              DATA?.conferences,
+              DATA?.research,
+              setExtra_1
             );
-          }
-        }
 
-        return {
-          key: i,
-          publication: (
-            <div className={styles.publication}>
-              <div
-                className={styles.publicationTitle}
-                dangerouslySetInnerHTML={{
-                  __html: e?.publication_title ?? "- Not Available -",
-                }}
-              />
+            setVisible(false);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
 
-              <Paragraph
-                className={styles.publicationAuthors}
-                ellipsis={{ rows: 3, expandable: true, symbol: "more" }}
-              >
-                {array?.map((e, i) => (
-                  <span key={i}>
-                    <span>{e?.given + " " + e?.family}</span>
-                    <sup>
-                      {e.sequence === "first"
-                        ? "1"
-                        : e.sequence === "corresponding"
-                        ? "*"
-                        : e.sequence === "firstncorr"
-                        ? "1*"
-                        : null}
-                    </sup>
-                    <span>, </span>
-                  </span>
-                )) ?? "- Not Available -"}
-              </Paragraph>
+      if (access === 2) {
+        setVisible(true);
 
-              <div className={styles.publicationJournal}>{e.journal_name}</div>
-
-              <div
-                className={styles.publicationStats}
-              >{`Volume: ${e.volume} • Issue: ${e.issue} • Pages: ${e.pages}`}</div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: innerWidth > CHANGE ? 50 : 20,
-                }}
-              >
-                <Scite DOI={e.doi_id} type={1} />
-                <Altmetric DOI={e.doi_id} type={1} />
-              </div>
-
-              {e.file ? (
-                <div
-                  onClick={() => window.open(e.file)}
-                  style={{ color: "#52c41a", cursor: "pointer" }}
-                >
-                  Softcopy Available (Click to View)
-                </div>
-              ) : (
-                <div
-                  style={{ color: "#f5222d", cursor: "pointer" }}
-                  onClick={() =>
-                    setFileData({
-                      ...fileData,
-                      modal: true,
-                      doi: e.doi_id,
-                      authors: e.actual_author,
-                    })
-                  }
-                >
-                  No Softcopy Available (Click to Add)
-                </div>
-              )}
-            </div>
-          ),
-          impact_factor: check(e.impact_factor),
-          sjr: check(e.sjr_quartile),
-          h_index: check(e.h_index),
-          index: [...arr?.map(e => e.name), "None"],
-          indexed_in: (
-            <div className={styles.publicationGrid}>
-              {arr.length > 0
-                ? arr.map(e => (
-                    <Fragment key={e.name}>
-                      <Image src={e.logo} alt={e.name} height={30} width={30} />
-                      {e.name}
-                    </Fragment>
-                  ))
-                : "None"}
-            </div>
-          ),
-          citations: {
-            total: e.citations_total,
-            crossref: e.citations_crossref,
-            scopus: e.citations_scopus,
-            wos: e.citations_wos,
+        axios({
+          method: "GET",
+          url: `${URLObj.base}/home`,
+          headers: {
+            "X-ACCESS-KEY": URLObj.key,
+            "X-AUTH-TOKEN": user?.token,
+            "X-ACCESS-LEVEL": "department",
           },
-          published: check(e.year),
-          action: (
-            <Button
-              type="primary"
-              icon={<FileTextOutlined />}
-              style={innerWidth > CHANGE ? { padding: "2px 10px" } : {}}
-              className={styles.tableButton}
-              onClick={() => router.push(`/file/${e.doi_id}`)}
-            >
-              {innerWidth > CHANGE ? "View More" : null}
-            </Button>
-          ),
-        };
-      });
+        })
+          .then(res => {
+            setCounts_2(res.data?.counts);
+            setPublications_2(res.data?.top_ten_publications);
+            setAuthorsMax_2(res.data?.top_10_authors);
+            setAuthorsMin_2(res.data?.least_10_authors);
 
-      BODY.sort((a, b) => b.published - a.published);
-      if (innerWidth < CHANGE) TITLE.shift();
-      setPublications({ title: TITLE, body: BODY, pubs: BODY });
-    }
+            setVisible(false);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
 
-    if (data?.conferences) {
-      const TITLE = [
-        {
-          title: "No.",
-          dataIndex: "no",
-          key: "no",
-          render: (id, record, index) => `${index + 1}.`,
-        },
-        {
-          title: t => titleMaker(t, "name", "Conference Name", "Name"),
-          dataIndex: "name",
-          key: "name",
-        },
-        {
-          title: t => titleMaker(t, "attended_as", "Attended As", "As"),
-          dataIndex: "attended_as",
-          key: "attended_as",
-        },
-        {
-          title: t => titleMaker(t, "type", "Conference Type", "Type"),
-          dataIndex: "type",
-          key: "type",
-          sorter: (a, b, c) => sorter(a.type, b.type, 1, c),
-        },
-        {
-          title: t => titleMaker(t, "paper", "Paper Presented", "Paper"),
-          dataIndex: "paper",
-          key: "paper",
-        },
-        {
-          title: t => titleMaker(t, "poster", "Poster Presented", "Poster"),
-          dataIndex: "poster",
-          key: "poster",
-        },
-        {
-          title: t => titleMaker(t, "start", "Start Date", "Start"),
-          dataIndex: "start",
-          key: "start",
-          render: e => date(e),
-          sorter: (a, b, c) => sorter(a.start, b.start, 1, c),
-        },
-        {
-          title: t => titleMaker(t, "end", "End Date", "End"),
-          dataIndex: "end",
-          key: "end",
-          render: e => date(e),
-          sorter: (a, b, c) => sorter(a.end, b.end, 1, c),
-        },
-        {
-          title: t =>
-            titleMaker(t, "location", "Conference Location", "Location"),
-          dataIndex: "location",
-          key: "location",
-        },
-        {
-          title: "",
-          dataIndex: "action",
-          key: "action",
-        },
-      ];
+      if (access === 3) {
+        setVisible(true);
 
-      const BODY = data?.conferences?.map((e, i) => ({
-        key: i,
-        name: capitalize(e.conference_name),
-        attended_as: capitalize(e.attended_as),
-        type: capitalize(e.type),
-        paper: e.is_paper_presented
-          ? e.papers?.map(e => e.title).join(", ")
-          : "N/A",
-        poster: e.is_poster_presented
-          ? e.posters?.map(e => e.title).join(", ")
-          : "N/A",
-        start: e.start_date,
-        end: e.end_date,
-        location: capitalize(e.location),
-        action: (
-          <Button
-            type="primary"
-            icon={<FileTextOutlined />}
-            style={innerWidth > CHANGE ? { padding: "2px 10px" } : {}}
-            className={styles.tableButton}
-            onClick={() => router.push(`/conference/${e.id}`)}
-          >
-            {innerWidth > CHANGE ? "View More" : null}
-          </Button>
-        ),
-      }));
+        setVisible(false);
+      }
 
-      BODY.sort((a, b) => b.start - a.start);
-      if (innerWidth < CHANGE) TITLE.shift();
-      setConferences({
-        title:
-          innerWidth < CHANGE
-            ? TITLE.filter(e => e.key !== "paper" && e.key !== "poster")
-            : TITLE,
-        body: BODY,
-      });
-    }
-
-    if (data?.books) {
-      const TITLE = [
-        {
-          title: "No.",
-          dataIndex: "no",
-          key: "no",
-          render: (id, record, index) => `${index + 1}.`,
-        },
-        {
-          title: t => titleMaker(t, "title", "Publication Title", "Title"),
-          dataIndex: "title",
-          key: "title",
-          width: "25%",
-        },
-        {
-          title: t => titleMaker(t, "type", "Publication Type", "Type"),
-          dataIndex: "type",
-          key: "type",
-        },
-        {
-          title: t => titleMaker(t, "book", "Book Name", "Book"),
-          dataIndex: "book",
-          key: "book",
-        },
-        {
-          title: t => titleMaker(t, "publisher", "Publisher Name", "Publisher"),
-          dataIndex: "publisher",
-          key: "publisher",
-        },
-        {
-          title: t => titleMaker(t, "published", "Published Year", "Year"),
-          dataIndex: "published",
-          key: "published",
-          render: e => date(e),
-          sorter: (a, b, c) => sorter(a.published, b.published, 1, c),
-        },
-        {
-          title: "",
-          dataIndex: "action",
-          key: "action",
-        },
-      ];
-
-      const BODY = data?.books?.map((e, i) => ({
-        key: i,
-        title: capitalize(e.publication_title),
-        type: capitalize(e.publication_type),
-        book: capitalize(e.book_name),
-        publisher: capitalize(e.publisher),
-        published: e.year_published,
-        action: (
-          <Button
-            type="primary"
-            icon={<FileTextOutlined />}
-            style={innerWidth > CHANGE ? { padding: "2px 10px" } : {}}
-            className={styles.tableButton}
-            onClick={() => router.push(`/book/${e.id}`)}
-          >
-            {innerWidth > CHANGE ? "View More" : null}
-          </Button>
-        ),
-      }));
-
-      BODY.sort((a, b) => b.published - a.published);
-      if (innerWidth < CHANGE) TITLE.shift();
-      setBooks({ title: TITLE, body: BODY });
-    }
-
-    if (data?.research) {
-      const TITLE = [
-        {
-          title: "No.",
-          dataIndex: "no",
-          key: "no",
-          render: (id, record, index) => `${index + 1}.`,
-        },
-        {
-          title: t => titleMaker(t, "agency", "Funding Agency", "Agency"),
-          dataIndex: "agency",
-          key: "agency",
-        },
-        {
-          title: t => titleMaker(t, "country", "Agency Country", "Country"),
-          dataIndex: "country",
-          key: "country",
-        },
-        {
-          title: t => titleMaker(t, "type", "Agency Type", "Type"),
-          dataIndex: "type",
-          key: "type",
-        },
-        {
-          title: t => titleMaker(t, "amount", "Funds", "Funds"),
-          dataIndex: "amount",
-          key: "amount",
-          render: e => `₹${number(e)} Lakhs`,
-          sorter: (a, b, c) => sorter(a.amount, b.amount, 0, c),
-        },
-        {
-          title: t => titleMaker(t, "start", "Start Date", "Start"),
-          dataIndex: "start",
-          key: "start",
-          render: e => date(e),
-          sorter: (a, b, c) => sorter(a.start, b.start, 1, c),
-        },
-        {
-          title: t => titleMaker(t, "end", "End Date", "End"),
-          dataIndex: "end",
-          key: "end",
-          render: e => date(e),
-          sorter: (a, b, c) => sorter(a.end, b.end, 1, c),
-        },
-        {
-          title: "",
-          dataIndex: "action",
-          key: "action",
-        },
-      ];
-
-      const BODY = data?.research?.map((e, i) => ({
-        key: i,
-        agency: capitalize(e.funding_agency),
-        country: capitalize(e.country_funding_agency),
-        type: capitalize(e.type),
-        amount: number(e.funds),
-        start: e.starting_date,
-        end: e.end_date,
-        action: (
-          <Button
-            type="primary"
-            icon={<FileTextOutlined />}
-            style={innerWidth > CHANGE ? { padding: "2px 10px" } : {}}
-            className={styles.tableButton}
-            onClick={() => router.push(`/project/${e.id}`)}
-          >
-            {innerWidth > CHANGE ? "View More" : null}
-          </Button>
-        ),
-      }));
-
-      BODY.sort((a, b) => b.start - a.start);
-      if (innerWidth < CHANGE) TITLE.shift();
-      setProjects({ title: TITLE, body: BODY });
-    }
-
-    if (data?.awards) {
-      const TITLE = [
-        {
-          title: "No.",
-          dataIndex: "no",
-          key: "no",
-          render: (id, record, index) => `${index + 1}.`,
-        },
-        {
-          title: t => titleMaker(t, "name", "Award Name", "Award"),
-          dataIndex: "name",
-          key: "name",
-        },
-        {
-          title: t => titleMaker(t, "agency", "Awarding Agency", "Agency"),
-          dataIndex: "agency",
-          key: "agency",
-        },
-        {
-          title: t => titleMaker(t, "type", "Award Type", "Type"),
-          dataIndex: "type",
-          key: "type",
-          sorter: (a, b, c) => sorter(a.type, b.type, 1, c),
-        },
-        {
-          title: t => titleMaker(t, "date", "Awarded Date", "Date"),
-          dataIndex: "date",
-          key: "date",
-          render: e => date(e),
-          sorter: (a, b, c) => sorter(a.date, b.date, 1, c),
-        },
-        {
-          title: "",
-          dataIndex: "action",
-          key: "action",
-        },
-      ];
-
-      const BODY = data?.awards?.map((e, i) => ({
-        key: i,
-        name: capitalize(e.title),
-        agency: capitalize(e.awarding_agency),
-        type: capitalize(e.award_type),
-        date: e.date_awarded,
-        action: (
-          <Button
-            type="primary"
-            icon={<FileTextOutlined />}
-            style={innerWidth > CHANGE ? { padding: "2px 10px" } : {}}
-            className={styles.tableButton}
-            onClick={() => router.push(`/award/${e.id}`)}
-          >
-            {innerWidth > CHANGE ? "View More" : null}
-          </Button>
-        ),
-      }));
-
-      BODY.sort((a, b) => b.date - a.date);
-      if (innerWidth < CHANGE) TITLE.shift();
-      setAwards({ title: TITLE, body: BODY });
-    }
-
-    if (data?.IPR) {
-      const TITLE = [
-        {
-          title: "No.",
-          dataIndex: "no",
-          key: "no",
-          render: (id, record, index) => `${index + 1}.`,
-        },
-        {
-          title: t => titleMaker(t, "title", "Title of IPR", "Title"),
-          dataIndex: "title",
-          key: "title",
-        },
-        {
-          title: t => titleMaker(t, "ipr", "IPR Awarded", "IPR"),
-          dataIndex: "ipr",
-          key: "ipr",
-        },
-        {
-          title: t => titleMaker(t, "status", "IPR Status", "Status"),
-          dataIndex: "status",
-          key: "status",
-        },
-        {
-          title: t => titleMaker(t, "agency", "Awarding Agency", "Agency"),
-          dataIndex: "agency",
-          key: "agency",
-        },
-        {
-          title: t => titleMaker(t, "date", "Published Date", "Date"),
-          dataIndex: "date",
-          key: "date",
-          render: e => date(e),
-          sorter: (a, b, c) => sorter(a.date, b.date, 1, c),
-        },
-        {
-          title: t => titleMaker(t, "year", "IPR Number", "Number"),
-          dataIndex: "ipr_number",
-          key: "ipr_number",
-        },
-        {
-          title: "",
-          dataIndex: "action",
-          key: "action",
-        },
-      ];
-
-      const BODY = data?.IPR?.map((e, i) => ({
-        key: i,
-        title: capitalize(e.title_of_ipr),
-        ipr: capitalize(e.IPR_awarded),
-        status: capitalize(e.status),
-        agency: capitalize(e.awarding_agency),
-        date: e.date_of_publication,
-        ipr_number: capitalize(e.ipr_number),
-        action: (
-          <Button
-            type="primary"
-            icon={<FileTextOutlined />}
-            style={innerWidth > CHANGE ? { padding: "2px 10px" } : {}}
-            className={styles.tableButton}
-            onClick={() => router.push(`/ipr/${e.id}`)}
-          >
-            {innerWidth > CHANGE ? "View More" : null}
-          </Button>
-        ),
-      }));
-
-      BODY.sort((a, b) => b.date - a.date);
-      if (innerWidth < CHANGE) TITLE.shift();
-      setIpr({ title: TITLE, body: BODY });
-    }
-
-    if (data?.students_guided) {
-      const TITLE = [
-        {
-          title: "No.",
-          dataIndex: "no",
-          key: "no",
-          render: (id, record, index) => `${index + 1}.`,
-        },
-        {
-          title: t => titleMaker(t, "name", "Student Name", "Name"),
-          dataIndex: "name",
-          key: "name",
-        },
-        {
-          title: t => titleMaker(t, "degree", "Student Degree", "Degree"),
-          dataIndex: "degree",
-          key: "degree",
-        },
-        {
-          title: t => titleMaker(t, "thesis", "Thesis Topic", "Thesis"),
-          dataIndex: "thesis",
-          key: "thesis",
-        },
-        {
-          title: t => titleMaker(t, "year", "Guided Year", "Year"),
-          dataIndex: "year",
-          key: "year",
-        },
-        {
-          title: "",
-          dataIndex: "action",
-          key: "action",
-        },
-      ];
-
-      const BODY = data?.students_guided?.map((e, i) => ({
-        key: i,
-        name: capitalize(e.student_name),
-        degree: capitalize(e.student_degree),
-        thesis: capitalize(e.thesis_topic),
-        year: e.year,
-        action: (
-          <Button
-            type="primary"
-            icon={<FileTextOutlined />}
-            style={innerWidth > CHANGE ? { padding: "2px 10px" } : {}}
-            className={styles.tableButton}
-            onClick={() => router.push(`/student/${e.id}`)}
-          >
-            {innerWidth > CHANGE ? "View More" : null}
-          </Button>
-        ),
-      }));
-
-      BODY.sort((a, b) => b.year - a.year);
-      if (innerWidth < CHANGE) TITLE.shift();
-      setStudents({ title: TITLE, body: BODY });
+      setVisible(false);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, sortBy, innerWidth]);
+  }, [user, access]);
+
+  useEffect(() => {
+    if (access == 1) {
+      if (data?.publication) {
+        const { TITLE, BODY } = pubData(
+          data?.publication,
+          fileData_1,
+          setFileData_1
+        );
+        setPublications({ title: TITLE, body: BODY, pubs: BODY });
+      }
+
+      if (data?.conferences) {
+        const { TITLE, BODY } = confData(data?.conferences);
+        setConferences({ title: TITLE, body: BODY });
+      }
+
+      if (data?.books) {
+        const { TITLE, BODY } = bookData(data?.books);
+        setBooks({ title: TITLE, body: BODY });
+      }
+
+      if (data?.research) {
+        const { TITLE, BODY } = projData(data?.research);
+        setProjects({ title: TITLE, body: BODY });
+      }
+
+      if (data?.awards) {
+        const { TITLE, BODY } = awardData(data?.awards);
+        setAwards({ title: TITLE, body: BODY });
+      }
+
+      if (data?.IPR) {
+        const { TITLE, BODY } = iprData(data?.IPR);
+        setIpr({ title: TITLE, body: BODY });
+      }
+
+      if (data?.students_guided) {
+        const { TITLE, BODY } = studData(data?.students_guided);
+        setStudents({ title: TITLE, body: BODY });
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, access, fileData_1]);
 
   // FUNCTIONS
 
-  const checks = [
-    0,
-    "0",
-    "N/A",
-    "NA",
-    "Not Available",
-    "Not Applicable",
-    "-",
-    "",
-    null,
-    undefined,
-    "null",
-    "undefined",
-    "NaN",
-    "nan",
-    "NAN",
-    "Nan",
-  ];
+  const updateUser = userData => {
+    const access_level = userData?.access_level?.find(
+      e => e.id === Math.max(...userData?.access_level?.map(e => e.id))
+    );
+
+    change({
+      ...user,
+      username: userData?.username,
+      name: userData?.user?.first_name + " " + userData?.user?.last_name,
+      email: userData?.user?.email,
+      picture: userData?.profile_picture,
+      designation: userData?.designation,
+      department: userData?.department?.name,
+      level: access_level?.display_text,
+      access: access_level?.id,
+    });
+  };
 
   const uploadFile = () => {
     message.loading("Uploading file");
 
     if (user?.token) {
       const str = JSON.stringify({
-        doi: fileData?.doi,
-        file: fileData?.file,
-        author: fileData?.authors,
+        doi: fileData_1?.doi,
+        file: fileData_1?.file,
+        author: fileData_1?.authors,
       });
 
       axios({
@@ -954,7 +243,7 @@ const Profile = () => {
       })
         .then(res => {
           message.success("File uploaded successfully");
-          setFileData({ modal: false, file: null, doi: "", authors: [] });
+          setFileData_1({ modal: false, file: null, doi: "", authors: [] });
 
           axios({
             method: "GET",
@@ -972,71 +261,33 @@ const Profile = () => {
     }
   };
 
-  const number = num => (num ? (isNaN(num) ? 0 : num) : 0);
-
-  const sorter = (first, second, type, mode) => {
-    const newChecks = checks.slice(2);
-
-    if (newChecks.includes(first)) return mode === "ascend" ? 1 : -1;
-    if (newChecks.includes(second)) return mode === "ascend" ? -1 : 1;
-
-    if (type == 0) return first - second;
-    else return first.localeCompare(second);
-  };
-
-  const check = num => {
-    if (checks.includes(num)) return "N/A";
-    else return num;
-  };
-
-  const titleMaker = (titleProps, name, title1, title2) => {
-    const sortedColumn = titleProps.sortColumns?.find(
-      ({ column }) => column.key === name
-    );
-
-    return (
-      <div
-        style={{
-          gap: innerWidth > CHANGE ? 10 : 5,
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <span>{innerWidth > CHANGE ? title1 : title2}</span>
-        {sortedColumn?.order === "ascend" ? (
-          <SortAscendingOutlined />
-        ) : sortedColumn?.order === "descend" ? (
-          <SortDescendingOutlined />
-        ) : null}
-      </div>
-    );
-  };
-
-  const handleFilterChange = (pagination, filters) =>
-    setSelectedFilters(filters?.indexed_in?.map(filter => filter) ?? []);
+  const handleFilter1600 = (pagination, filters) =>
+    setSelectedFilters_1(filters?.indexed_in?.map(filter => filter) ?? []);
 
   // MEMOS
 
   useMemo(() => {
-    if (selectedFilters?.length === 0)
-      setPublications({ ...publications, body: publications?.pubs });
-    else
-      setPublications({
-        ...publications,
-        body:
-          selectedFilters?.length == 1 && selectedFilters[0] == "None"
-            ? publications?.pubs?.filter(
-                item => item.index?.length == 1 && item.index[0] == "None"
-              )
-            : publications?.pubs?.filter(item =>
-                selectedFilters?.every(filter => item.index.includes(filter))
-              ),
-      });
+    if (access === 1) {
+      if (selectedFilters_1?.length === 0)
+        setPublications({ ...publications, body: publications?.pubs });
+      else
+        setPublications({
+          ...publications,
+          body:
+            selectedFilters_1?.length == 1 && selectedFilters_1[0] == "None"
+              ? publications?.pubs?.filter(
+                  item => item.index?.length == 1 && item.index[0] == "None"
+                )
+              : publications?.pubs?.filter(item =>
+                  selectedFilters_1?.every(filter =>
+                    item.index.includes(filter)
+                  )
+                ),
+        });
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedFilters]);
+  }, [access, selectedFilters_1]);
 
   return (
     <>
@@ -1057,15 +308,15 @@ const Profile = () => {
           />
 
           <div style={{ paddingLeft: "18vw" }}>
-            <Side sets={setSections} />
+            <Side sets={setSections_1} />
 
             <div className={styles.container}>
               <Top
-                main={{ publications, setPublications, setSections }}
+                main={{ publications, setPublications, setSections_1 }}
                 user={user}
               />
 
-              {sections == "all" && (
+              {sections_1 == "all" && (
                 <div className={styles.section}>
                   <div className={styles.sectionTop}>
                     <div id="overview" className={styles.heading}>
@@ -1074,16 +325,17 @@ const Profile = () => {
                   </div>
                   <Overview
                     data={data}
-                    stats={statistics}
-                    extra={extra}
+                    stats={statistics_1}
+                    extra={extra_1}
                     size={innerWidth}
+                    counts={counts_2}
                   />
                 </div>
               )}
 
               {access != 1 && <BarChart size={innerWidth} />}
 
-              {(sections == "all" || sections == "publications") && (
+              {(sections_1 == "all" || sections_1 == "publications") && (
                 <div className={styles.section}>
                   <div className={styles.sectionTop}>
                     <div id="publications" className={styles.heading}>
@@ -1094,18 +346,19 @@ const Profile = () => {
                         type="primary"
                         className={styles.sectionButton}
                         onClick={() => {
-                          if (sortBy === "scopus") setSortBy("wos");
-                          else if (sortBy === "wos") setSortBy("crossref");
-                          else if (sortBy === "crossref") setSortBy("scopus");
+                          if (sortBy_1 === "scopus") setSortBy_1("wos");
+                          else if (sortBy_1 === "wos") setSortBy_1("crossref");
+                          else if (sortBy_1 === "crossref")
+                            setSortBy_1("scopus");
                         }}
                       >
-                        Sorting Citations By: {sortBy.toUpperCase()}
+                        Sorting Citations By: {sortBy_1.toUpperCase()}
                       </Button>
-                      {sections == "all" ? (
+                      {sections_1 == "all" ? (
                         <Button
                           type="primary"
                           className={styles.sectionButton}
-                          onClick={() => setSections("publications")}
+                          onClick={() => setSections_1("publications")}
                         >
                           View All
                         </Button>
@@ -1113,7 +366,7 @@ const Profile = () => {
                         <Button
                           type="primary"
                           className={styles.sectionButton}
-                          onClick={() => setSections("all")}
+                          onClick={() => setSections_1("all")}
                         >
                           Return Back
                         </Button>
@@ -1122,10 +375,10 @@ const Profile = () => {
                   </div>
                   <div className={styles.sectionBottom}>
                     <Table
-                      pagination={sections == "all" ? true : false}
+                      pagination={sections_1 == "all" ? true : false}
                       columns={publications?.title}
                       dataSource={publications?.body}
-                      onChange={handleFilterChange}
+                      on1600={handleFilter1600}
                     />
                   </div>
                 </div>
@@ -1136,61 +389,61 @@ const Profile = () => {
                   <Section
                     str="Conferences"
                     data={conferences}
-                    sec={sections}
-                    setSec={setSections}
+                    sec={sections_1}
+                    setSec={setSections_1}
                   />
 
                   <Section
                     str="Books"
                     data={books}
-                    sec={sections}
-                    setSec={setSections}
+                    sec={sections_1}
+                    setSec={setSections_1}
                   />
 
                   <Section
                     str="Projects"
                     data={projects}
-                    sec={sections}
-                    setSec={setSections}
+                    sec={sections_1}
+                    setSec={setSections_1}
                   />
 
                   <Section
                     str="Awards"
                     data={awards}
-                    sec={sections}
-                    setSec={setSections}
+                    sec={sections_1}
+                    setSec={setSections_1}
                   />
 
                   <Section
                     str="IPR"
                     data={ipr}
-                    sec={sections}
-                    setSec={setSections}
+                    sec={sections_1}
+                    setSec={setSections_1}
                   />
 
                   <Section
                     str="Students"
                     data={students}
-                    sec={sections}
-                    setSec={setSections}
+                    sec={sections_1}
+                    setSec={setSections_1}
                   />
                 </>
               )}
 
               <Modal
                 title="Upload PDF"
-                open={fileData?.modal}
-                onCancel={() => setFileData({ ...fileData, modal: false })}
+                open={fileData_1?.modal}
+                onCancel={() => setFileData_1({ ...fileData_1, modal: false })}
                 footer={null}
               >
                 <Dragger
                   name="file"
                   multiple={false}
                   style={{ borderColor: "#9a2827" }}
-                  onChange={info => {
+                  on1600={info => {
                     const { status } = info.file;
                     if (status === "done")
-                      setFileData({ ...fileData, file: info.file });
+                      setFileData_1({ ...fileData_1, file: info.file });
                   }}
                   beforeUpload={file => uploadFile()}
                 >

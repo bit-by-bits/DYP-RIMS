@@ -3,12 +3,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import URLObj from "../baseURL";
 import { message } from "antd";
-import useCapitalize from "../utils/useCapitalize";
+import useCaps from "../utils/useCaps";
 
 const StudentInfo = ({ user, setv, ID }) => {
   // STATES
 
-  const { capitalize } = useCapitalize();
+  const { capitalize } = useCaps();
   const [data, setData] = useState({});
 
   // EFFECTS

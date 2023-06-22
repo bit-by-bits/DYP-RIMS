@@ -24,17 +24,98 @@ import gold from "../../public/logos/gold-oa.png";
 import bronze from "../../public/logos/bronze-oa.png";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { useAccess } from "../context/accessContext";
+import useNumber from "../utils/useNumber";
 
-const Overview = ({ data, stats, extra, size }) => {
-  // BOILERPLATE
+const Overview = ({ data, stats, extra, size, counts }) => {
+  // HOOKS
 
   const router = useRouter();
+  const { number } = useNumber();
+  const { access } = useAccess();
 
   // STATES
 
+  const [overview, setOverview] = useState({});
   const [strings, setStrings] = useState({});
 
   // EFFECTS
+
+  useEffect(() => {
+    const check = (val1, val2, val3) => {
+      if (access == 1) return val1;
+      else if (access == 2) return val2;
+      else return val3;
+    };
+
+    setOverview({
+      publication: check(data?.publication?.length, counts?.publication, 0),
+      conferences: check(data?.conferences?.length, counts?.conferences, 0),
+      papers: check(extra?.papers, counts?.papers, 0),
+      posters: check(extra?.posters, counts?.posters, 0),
+      books: check(data?.books?.length, counts?.books, 0),
+      research: check(data?.research?.length, counts?.research, 0),
+      funds: check(extra?.funds, counts?.funds, 0),
+      awards: check(data?.awards?.length, counts?.awards, 0),
+      students: check(data?.students_guided?.length, counts?.students, 0),
+      IPR: check(data?.IPR?.length, counts?.IPR, 0),
+      indexed_pubmed: check(
+        extra?.index?.pubmed,
+        counts?.indexed_at?.pubmed,
+        0
+      ),
+      indexed_scopus: check(
+        extra?.index?.scopus,
+        counts?.indexed_at?.scopus,
+        0
+      ),
+      indexed_doaj: check(extra?.index?.doaj, counts?.indexed_at?.doaj, 0),
+      indexed_wos: check(extra?.index?.wos, counts?.indexed_at?.wos, 0),
+      indexed_medline: check(
+        extra?.index?.medline,
+        counts?.indexed_at?.medline,
+        0
+      ),
+      indexed_total: check(extra?.index?.total, counts?.indexed_at?.total, 0),
+      first_author: check(stats?.FAuthor, counts?.FAuthor, 0),
+      Q1: check(stats?.quartiles?.Q1, counts?.quartiles?.Q1, 0),
+      Q2: check(stats?.quartiles?.Q2, counts?.quartiles?.Q2, 0),
+      Q3: check(stats?.quartiles?.Q3, counts?.quartiles?.Q3, 0),
+      Q4: check(stats?.quartiles?.Q4, counts?.quartiles?.Q4, 0),
+      null: check(stats?.quartiles?.null, counts?.quartiles?.none, 0),
+      h_index_crossref: check(
+        stats?.h_index_crossref,
+        counts?.hindex?.crossref,
+        0
+      ),
+      h_index_scopus: check(stats?.h_index_scopus, counts?.hindex?.scopus, 0),
+      h_index_wos: check(stats?.h_index_wos, counts?.hindex?.wos, 0),
+      impact_total: check(extra?.impact?.total, counts?.impact?.total, 0),
+      impact_average: check(extra?.impact?.average, counts?.impact?.average, 0),
+      open_access_gold: check(extra?.access?.gold, counts?.open_alex?.gold, 0),
+      open_access_green: check(
+        extra?.access?.green,
+        counts?.open_alex?.green,
+        0
+      ),
+      open_access_bronze: check(
+        extra?.access?.bronze,
+        counts?.open_alex?.bronze,
+        0
+      ),
+      citations_crossref: check(
+        extra?.citations?.crossref,
+        counts?.citations?.crossref,
+        0
+      ),
+      citations_scopus: check(
+        extra?.citations?.scopus,
+        counts?.citations?.scopus,
+        0
+      ),
+      citations_wos: check(extra?.citations?.wos, counts?.citations?.wos, 0),
+    });
+  }, [data, stats, extra, counts, access]);
 
   useEffect(() => {
     const check = (str1, str2) => (size > 1400 ? str1 : str2);
@@ -51,8 +132,6 @@ const Overview = ({ data, stats, extra, size }) => {
   }, [size]);
 
   // FUNCTIONS
-
-  const number = num => (num ? (isNaN(num) ? 0 : num) : 0);
 
   const createBox = array =>
     array?.map((e, i) => (
@@ -76,7 +155,7 @@ const Overview = ({ data, stats, extra, size }) => {
                 className={styles.overviewTopCircle}
                 style={{ backgroundColor: "#FABD81" }}
               >
-                {data?.publication?.length ?? "N/A"}
+                {number(overview?.publication)}
               </div>
             ),
             color: "#FABD81",
@@ -86,24 +165,24 @@ const Overview = ({ data, stats, extra, size }) => {
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 {[
                   {
-                    value: number(extra?.index?.pubmed),
+                    value: number(overview?.indexed_pubmed),
                     image: pmc,
                   },
                   {
-                    value: number(extra?.index?.scopus),
+                    value: number(overview?.indexed_scopus),
                     image: scopus,
                   },
                   {
-                    value: number(extra?.index?.doaj),
-                    image: doaj,
-                  },
-                  {
-                    value: number(extra?.index?.wos),
+                    value: number(overview?.indexed_wos),
                     image: wos,
                   },
                   {
-                    value: number(extra?.index?.medline),
+                    value: number(overview?.indexed_medline),
                     image: medline,
+                  },
+                  {
+                    value: number(overview?.indexed_doaj),
+                    image: doaj,
                   },
                 ].map((e, i) => (
                   <div
@@ -121,7 +200,7 @@ const Overview = ({ data, stats, extra, size }) => {
                 ))}
               </div>
             ),
-            label2: `Indexed Publications: ${number(extra?.index?.total)}`,
+            label2: `Indexed Publications: ${number(overview?.indexed_total)}`,
             color: "#F25A1D",
           },
           {
@@ -131,18 +210,18 @@ const Overview = ({ data, stats, extra, size }) => {
                 className={styles.overviewTopCircle}
                 style={{ backgroundColor: "#7891C6" }}
               >
-                {stats?.FAuthor ?? "N/A"}
+                {number(overview?.first_author)}
               </div>
             ),
             color: "#7891C6",
           },
           {
-            label1: `Q4: ${number(stats?.quartiles?.Q4)} | None: ${number(
-              stats?.quartiles?.null
+            label1: `Q4: ${number(overview?.Q4)} | None: ${number(
+              overview?.null
             )}`,
-            label2: `Q1: ${number(stats?.quartiles?.Q1)} | Q2: ${number(
-              stats?.quartiles?.Q2
-            )} | Q3: ${number(stats?.quartiles?.Q3)}`,
+            label2: `Q1: ${number(overview?.Q1)} | Q2: ${number(
+              overview?.Q2
+            )} | Q3: ${number(overview?.Q3)}`,
             color: "grey",
           },
         ].map((e, i) => (
@@ -158,15 +237,15 @@ const Overview = ({ data, stats, extra, size }) => {
           <div style={{ display: "flex", gap: 15 }}>
             {[
               {
-                value: number(extra?.citations?.crossref),
+                value: number(overview?.citations_crossref),
                 image: crossref,
               },
               {
-                value: number(extra?.citations?.scopus),
+                value: number(overview?.citations_scopus),
                 image: scopus,
               },
               {
-                value: number(extra?.citations?.wos),
+                value: number(overview?.citations_wos),
                 image: wos,
               },
             ].map((e, i) => (
@@ -184,9 +263,9 @@ const Overview = ({ data, stats, extra, size }) => {
           <div className={styles.overviewMiddleTop}>H-Index</div>
           <div style={{ display: "flex", gap: 15 }}>
             {[
-              { value: number(stats?.h_index_crossref), image: crossref },
-              { value: number(stats?.h_index_scopus), image: scopus },
-              { value: number(stats?.h_index_wos), image: wos },
+              { value: number(overview?.h_index_crossref), image: crossref },
+              { value: number(overview?.h_index_scopus), image: scopus },
+              { value: number(overview?.h_index_wos), image: wos },
             ].map((e, i) => (
               <div
                 key={i}
@@ -200,32 +279,36 @@ const Overview = ({ data, stats, extra, size }) => {
         </div>
         <div>
           <div>
-            Cumulative Impact Factor:{" "}
-            {extra?.impact?.total?.toFixed(2) ?? "N/A"}
+            {`Cumulative Impact Factor: ${number(
+              overview?.impact_total
+            ).toFixed(2)}`}
           </div>
           <div>
-            Average Impact Factor: {extra?.impact?.average?.toFixed(2) ?? "N/A"}
+            {`Average Impact Factor: ${number(overview?.impact_average).toFixed(
+              2
+            )}`}
           </div>
         </div>
         <div>
           <div>
-            Open Access:{" "}
-            {number(
-              extra?.access?.gold + extra?.access?.green + extra?.access?.bronze
-            )}
+            {`Open Access: ${number(
+              overview?.open_access_gold +
+                overview?.open_access_green +
+                overview?.open_access_bronze
+            )}`}
           </div>
           <div style={{ display: "flex", gap: 15 }}>
             {[
               {
-                value: number(extra?.access?.gold),
+                value: number(overview?.open_access_gold),
                 image: gold,
               },
               {
-                value: number(extra?.access?.green),
+                value: number(overview?.open_access_green),
                 image: green,
               },
               {
-                value: number(extra?.access?.bronze),
+                value: number(overview?.open_access_bronze),
                 image: bronze,
               },
             ].map((e, i) => (

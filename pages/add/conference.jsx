@@ -1,51 +1,29 @@
-import {
-  Button,
-  DatePicker,
-  FloatButton,
-  Form,
-  Input,
-  Select,
-  Spin,
-  Upload,
-  message,
-} from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import styles from "../../styles/add.module.css";
-import styles2 from "../../styles/upload.module.css";
+import axios from "axios";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import Image from "next/image";
 import Side from "../../src/Common/Side";
 import { useRouter } from "next/router";
 import Top from "../../src/Common/Top";
-import Image from "next/image";
-import axios from "axios";
 import URLObj from "../../src/baseURL";
+import { UploadOutlined } from "@ant-design/icons";
+import styles from "../../styles/add.module.css";
+import styles2 from "../../styles/upload.module.css";
+import { useEffect, useState } from "react";
+import { Button, DatePicker, FloatButton, Form } from "antd";
+import { Select, Spin, Upload, message, Input } from "antd";
+import { useUser } from "../../src/context/userContext";
 
 const Conferences = () => {
-  // BOILERPLATE
+  // HOOKS
 
   const router = useRouter();
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined")
-      user
-        ? Date.now() - user?.setUpTime > 86400000 &&
-          localStorage.removeItem("user")
-        : router.push("/");
-  }, [router, user]);
-
-  // STATES
-
+  const { user } = useUser();
+  const [form] = Form.useForm();
   const { RangePicker } = DatePicker;
   const { Dragger } = Upload;
 
-  const [form] = Form.useForm();
+  // STATES
+
   const [visible, setVisible] = useState(true);
 
   const [step, setStep] = useState(0);

@@ -9,29 +9,17 @@ import Top from "../../src/Common/Top";
 import Image from "next/image";
 import axios from "axios";
 import URLObj from "../../src/baseURL";
+import { useUser } from "../../src/context/userContext";
 
 const Books = () => {
-  // BOILERPLATE
+  // HOOKS
 
   const router = useRouter();
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined")
-      user
-        ? Date.now() - user?.setUpTime > 86400000 &&
-          localStorage.removeItem("user")
-        : router.push("/");
-  }, [router, user]);
+  const { user } = useUser();
+  const [form] = Form.useForm();
 
   // STATES
 
-  const [form] = Form.useForm();
   const [visible, setVisible] = useState(true);
 
   const [step, setStep] = useState(0);

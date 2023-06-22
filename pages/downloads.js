@@ -1,37 +1,22 @@
-import Head from "next/head";
-import Side from "../src/Common/Side";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import Top from "../src/Common/Top";
-import styles2 from "../styles/add.module.css";
-import { Form, Radio, message, Spin, Table } from "antd";
-import { Button, DatePicker, FloatButton, Select } from "antd";
 import axios from "axios";
 import URLObj from "../src/baseURL";
+import Head from "next/head";
+import Side from "../src/Common/Side";
+import Top from "../src/Common/Top";
+import { useEffect, useState } from "react";
+import styles2 from "../styles/add.module.css";
+import { useUser } from "../src/context/userContext";
+import { Form, Radio, message, Spin, Table } from "antd";
+import { Button, DatePicker, FloatButton, Select } from "antd";
 
 const Downloads = () => {
-  // BOILERPLATE
+  // HOOKS
 
-  const router = useRouter();
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined")
-      user
-        ? Date.now() - user?.setUpTime > 86400000 &&
-          localStorage.removeItem("user")
-        : router.push("/");
-  }, [router, user]);
-
-  // STATES
-
+  const { user } = useUser();
   const [form] = Form.useForm();
   const { RangePicker } = DatePicker;
+
+  // STATES
 
   const [data, setData] = useState([]);
   const [allDates, setAllDates] = useState(true);

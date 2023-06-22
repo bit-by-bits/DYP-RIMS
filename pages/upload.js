@@ -8,25 +8,13 @@ import URLObj from "../src/baseURL";
 import { FloatButton, Input, Spin, Upload, message } from "antd";
 import Side from "../src/Common/Side";
 import Top from "../src/Common/Top";
+import { useUser } from "../src/context/userContext";
 
 const Publications = () => {
-  // BOILERPLATE
+  // HOOKS
 
   const router = useRouter();
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined")
-      user
-        ? Date.now() - user?.setUpTime > 86400000 &&
-          localStorage.removeItem("user")
-        : router.push("/");
-  }, [router, user]);
+  const { user } = useUser();
 
   // STATES
 
