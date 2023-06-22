@@ -123,7 +123,7 @@ const Edit = () => {
                     first_name: user?.name?.split(" ")[0],
                     last_name: user?.name?.split(" ")?.slice(-1),
                     department: user?.department,
-                    level: user?.level?.slice(0, -1),
+                    level: user?.level,
                   }}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}

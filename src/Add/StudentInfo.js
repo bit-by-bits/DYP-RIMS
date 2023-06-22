@@ -3,10 +3,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import URLObj from "../baseURL";
 import { message } from "antd";
+import useCapitalize from "../utils/useCapitalize";
 
 const StudentInfo = ({ user, setv, ID }) => {
   // STATES
 
+  const { capitalize } = useCapitalize();
   const [data, setData] = useState({});
 
   // EFFECTS
@@ -33,9 +35,6 @@ const StudentInfo = ({ user, setv, ID }) => {
   }, [ID, setv, user]);
 
   // FUNCTIONS
-
-  const capitalize = str =>
-    str ? str.charAt(0).toUpperCase() + str.slice(1) : "- Not Available -";
 
   return (
     <>

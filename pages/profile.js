@@ -20,6 +20,9 @@ import Scite from "../src/Profile/Scite";
 import Altmetric from "../src/Profile/Altmetric";
 import Top from "../src/Common/Top";
 import Section from "../src/Profile/Section";
+import BarChart from "../src/Profile/BarChart";
+import useDate from "../src/utils/useDate";
+import useCapitalize from "../src/utils/useCapitalize";
 
 import crossref from "../public/logos/crossref.jpg";
 import medline from "../public/logos/medline.jpg";
@@ -27,6 +30,7 @@ import doaj from "../public/logos/doaj.png";
 import pmc from "../public/logos/pmc.png";
 import scopus from "../public/logos/scopus.svg";
 import wos from "../public/logos/wos.svg";
+import { useAccess } from "../src/context/accessContext";
 
 const Profile = () => {
   // BOILERPLATE
@@ -48,6 +52,12 @@ const Profile = () => {
   }, [router, user]);
 
   // STATES
+
+  const CHANGE = 1600;
+
+  const { date } = useDate();
+  const { access } = useAccess();
+  const { capitalize } = useCapitalize();
 
   const { Dragger } = Upload;
   const { Paragraph } = Typography;
@@ -115,7 +125,8 @@ const Profile = () => {
             picture: u?.profile_picture,
             designation: u?.designation,
             department: u?.department?.name,
-            level: access_level?.display_text + access_level?.id,
+            level: access_level?.display_text,
+            access: access_level?.id,
           };
 
           localStorage.setItem("user", JSON.stringify(USER));
@@ -227,13 +238,13 @@ const Profile = () => {
           dataIndex: "no",
           key: "no",
           render: (id, record, index) => `${index + 1}.`,
-          width: innerWidth > 1400 ? "5%" : "4%",
+          width: innerWidth > CHANGE ? "5%" : "4%",
         },
         {
           title: t => titleMaker(t, "title", "Publication Title", "Title"),
           dataIndex: "publication",
           key: "publication",
-          width: innerWidth > 1400 ? "30%" : "30%",
+          width: innerWidth > CHANGE ? "30%" : "30%",
         },
         {
           title: t => titleMaker(t, "impact_factor", "Impact Factor", "Impact"),
@@ -246,7 +257,7 @@ const Profile = () => {
           dataIndex: "sjr",
           key: "sjr",
           sorter: (a, b, c) => sorter(a.sjr, b.sjr, 1, c),
-          width: innerWidth > 1400 ? "5%" : "9%",
+          width: innerWidth > CHANGE ? "5%" : "9%",
         },
         {
           title: t => titleMaker(t, "h_index", "H-Index", "HIndex"),
@@ -290,7 +301,7 @@ const Profile = () => {
           title: "",
           dataIndex: "action",
           key: "action",
-          width: innerWidth > 1400 ? "12%" : "6%",
+          width: innerWidth > CHANGE ? "12%" : "6%",
         },
       ];
 
@@ -385,7 +396,7 @@ const Profile = () => {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: innerWidth > 1400 ? 50 : 20,
+                  gap: innerWidth > CHANGE ? 50 : 20,
                 }}
               >
                 <Scite DOI={e.doi_id} type={1} />
@@ -443,18 +454,18 @@ const Profile = () => {
             <Button
               type="primary"
               icon={<FileTextOutlined />}
-              style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
+              style={innerWidth > CHANGE ? { padding: "2px 10px" } : {}}
               className={styles.tableButton}
               onClick={() => router.push(`/file/${e.doi_id}`)}
             >
-              {innerWidth > 1400 ? "View More" : null}
+              {innerWidth > CHANGE ? "View More" : null}
             </Button>
           ),
         };
       });
 
       BODY.sort((a, b) => b.published - a.published);
-      if (innerWidth < 1400) TITLE.shift();
+      if (innerWidth < CHANGE) TITLE.shift();
       setPublications({ title: TITLE, body: BODY, pubs: BODY });
     }
 
@@ -537,20 +548,20 @@ const Profile = () => {
           <Button
             type="primary"
             icon={<FileTextOutlined />}
-            style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
+            style={innerWidth > CHANGE ? { padding: "2px 10px" } : {}}
             className={styles.tableButton}
             onClick={() => router.push(`/conference/${e.id}`)}
           >
-            {innerWidth > 1400 ? "View More" : null}
+            {innerWidth > CHANGE ? "View More" : null}
           </Button>
         ),
       }));
 
       BODY.sort((a, b) => b.start - a.start);
-      if (innerWidth < 1400) TITLE.shift();
+      if (innerWidth < CHANGE) TITLE.shift();
       setConferences({
         title:
-          innerWidth < 1400
+          innerWidth < CHANGE
             ? TITLE.filter(e => e.key !== "paper" && e.key !== "poster")
             : TITLE,
         body: BODY,
@@ -611,17 +622,17 @@ const Profile = () => {
           <Button
             type="primary"
             icon={<FileTextOutlined />}
-            style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
+            style={innerWidth > CHANGE ? { padding: "2px 10px" } : {}}
             className={styles.tableButton}
             onClick={() => router.push(`/book/${e.id}`)}
           >
-            {innerWidth > 1400 ? "View More" : null}
+            {innerWidth > CHANGE ? "View More" : null}
           </Button>
         ),
       }));
 
       BODY.sort((a, b) => b.published - a.published);
-      if (innerWidth < 1400) TITLE.shift();
+      if (innerWidth < CHANGE) TITLE.shift();
       setBooks({ title: TITLE, body: BODY });
     }
 
@@ -688,17 +699,17 @@ const Profile = () => {
           <Button
             type="primary"
             icon={<FileTextOutlined />}
-            style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
+            style={innerWidth > CHANGE ? { padding: "2px 10px" } : {}}
             className={styles.tableButton}
             onClick={() => router.push(`/project/${e.id}`)}
           >
-            {innerWidth > 1400 ? "View More" : null}
+            {innerWidth > CHANGE ? "View More" : null}
           </Button>
         ),
       }));
 
       BODY.sort((a, b) => b.start - a.start);
-      if (innerWidth < 1400) TITLE.shift();
+      if (innerWidth < CHANGE) TITLE.shift();
       setProjects({ title: TITLE, body: BODY });
     }
 
@@ -750,17 +761,17 @@ const Profile = () => {
           <Button
             type="primary"
             icon={<FileTextOutlined />}
-            style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
+            style={innerWidth > CHANGE ? { padding: "2px 10px" } : {}}
             className={styles.tableButton}
             onClick={() => router.push(`/award/${e.id}`)}
           >
-            {innerWidth > 1400 ? "View More" : null}
+            {innerWidth > CHANGE ? "View More" : null}
           </Button>
         ),
       }));
 
       BODY.sort((a, b) => b.date - a.date);
-      if (innerWidth < 1400) TITLE.shift();
+      if (innerWidth < CHANGE) TITLE.shift();
       setAwards({ title: TITLE, body: BODY });
     }
 
@@ -823,17 +834,17 @@ const Profile = () => {
           <Button
             type="primary"
             icon={<FileTextOutlined />}
-            style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
+            style={innerWidth > CHANGE ? { padding: "2px 10px" } : {}}
             className={styles.tableButton}
             onClick={() => router.push(`/ipr/${e.id}`)}
           >
-            {innerWidth > 1400 ? "View More" : null}
+            {innerWidth > CHANGE ? "View More" : null}
           </Button>
         ),
       }));
 
       BODY.sort((a, b) => b.date - a.date);
-      if (innerWidth < 1400) TITLE.shift();
+      if (innerWidth < CHANGE) TITLE.shift();
       setIpr({ title: TITLE, body: BODY });
     }
 
@@ -882,17 +893,17 @@ const Profile = () => {
           <Button
             type="primary"
             icon={<FileTextOutlined />}
-            style={innerWidth > 1400 ? { padding: "2px 10px" } : {}}
+            style={innerWidth > CHANGE ? { padding: "2px 10px" } : {}}
             className={styles.tableButton}
             onClick={() => router.push(`/student/${e.id}`)}
           >
-            {innerWidth > 1400 ? "View More" : null}
+            {innerWidth > CHANGE ? "View More" : null}
           </Button>
         ),
       }));
 
       BODY.sort((a, b) => b.year - a.year);
-      if (innerWidth < 1400) TITLE.shift();
+      if (innerWidth < CHANGE) TITLE.shift();
       setStudents({ title: TITLE, body: BODY });
     }
 
@@ -961,22 +972,7 @@ const Profile = () => {
     }
   };
 
-  const date = d => {
-    return d
-      ? new Date(d)
-        ? new Date(d).toLocaleString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })
-        : d
-      : "N/A";
-  };
-
   const number = num => (num ? (isNaN(num) ? 0 : num) : 0);
-
-  const capitalize = str =>
-    str ? str.charAt(0).toUpperCase() + str.slice(1) : "N/A";
 
   const sorter = (first, second, type, mode) => {
     const newChecks = checks.slice(2);
@@ -1001,14 +997,14 @@ const Profile = () => {
     return (
       <div
         style={{
-          gap: { innerWidth } > 1400 ? 10 : 5,
+          gap: innerWidth > CHANGE ? 10 : 5,
           display: "flex",
           flexWrap: "wrap",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        <span>{innerWidth > 1400 ? title1 : title2}</span>
+        <span>{innerWidth > CHANGE ? title1 : title2}</span>
         {sortedColumn?.order === "ascend" ? (
           <SortAscendingOutlined />
         ) : sortedColumn?.order === "descend" ? (
@@ -1085,6 +1081,8 @@ const Profile = () => {
                 </div>
               )}
 
+              {access != 1 && <BarChart size={innerWidth} />}
+
               {(sections == "all" || sections == "publications") && (
                 <div className={styles.section}>
                   <div className={styles.sectionTop}>
@@ -1133,47 +1131,51 @@ const Profile = () => {
                 </div>
               )}
 
-              <Section
-                str="Conferences"
-                data={conferences}
-                sec={sections}
-                setSec={setSections}
-              />
+              {access == 1 && (
+                <>
+                  <Section
+                    str="Conferences"
+                    data={conferences}
+                    sec={sections}
+                    setSec={setSections}
+                  />
 
-              <Section
-                str="Books"
-                data={books}
-                sec={sections}
-                setSec={setSections}
-              />
+                  <Section
+                    str="Books"
+                    data={books}
+                    sec={sections}
+                    setSec={setSections}
+                  />
 
-              <Section
-                str="Projects"
-                data={projects}
-                sec={sections}
-                setSec={setSections}
-              />
+                  <Section
+                    str="Projects"
+                    data={projects}
+                    sec={sections}
+                    setSec={setSections}
+                  />
 
-              <Section
-                str="Awards"
-                data={awards}
-                sec={sections}
-                setSec={setSections}
-              />
+                  <Section
+                    str="Awards"
+                    data={awards}
+                    sec={sections}
+                    setSec={setSections}
+                  />
 
-              <Section
-                str="IPR"
-                data={ipr}
-                sec={sections}
-                setSec={setSections}
-              />
+                  <Section
+                    str="IPR"
+                    data={ipr}
+                    sec={sections}
+                    setSec={setSections}
+                  />
 
-              <Section
-                str="Students"
-                data={students}
-                sec={sections}
-                setSec={setSections}
-              />
+                  <Section
+                    str="Students"
+                    data={students}
+                    sec={sections}
+                    setSec={setSections}
+                  />
+                </>
+              )}
 
               <Modal
                 title="Upload PDF"

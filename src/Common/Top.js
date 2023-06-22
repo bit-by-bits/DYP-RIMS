@@ -3,14 +3,14 @@ import styles from "../../styles/profile.module.css";
 import router from "next/router";
 import axios from "axios";
 import URLObj from "../baseURL";
-import { AutoComplete, Button, Input, Typography, message } from "antd";
+import { AutoComplete, Button, Input, message, Typography } from "antd";
 import {
   BellOutlined,
   FileTextOutlined,
   LogoutOutlined,
-  SettingOutlined,
 } from "@ant-design/icons";
 import Image from "next/image";
+import Drop from "./Drop";
 import Altmetric from "../Profile/Altmetric";
 import Scite from "../Profile/Scite";
 
@@ -314,10 +314,6 @@ const Top = ({ main = {}, user }) => {
           fxn: openNotifications,
           icon: BellOutlined,
         },
-        {
-          fxn: openSettings,
-          icon: SettingOutlined,
-        },
       ].map((e, i) => (
         <Button
           key={i}
@@ -328,6 +324,8 @@ const Top = ({ main = {}, user }) => {
           {createElement(e.icon)}
         </Button>
       ))}
+
+      <Drop />
     </div>
   );
 };

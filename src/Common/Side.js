@@ -70,7 +70,7 @@ const Side = ({ sets = () => {} }) => {
             alt={user?.username ?? "user"}
             src={
               user?.picture ??
-              "https://dreamvilla.life/wp-content/uploads/2017/07/dummy-profile-pic.png"
+              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2ms7xZr_1gRC4vBgSuMAQNnpt8tFohtzcuuVBAFO_s2BlntoK0WPSC7-OYmPOFA2IMBw&usqp=CAU"
             }
             width={100}
             height={100}
@@ -89,7 +89,7 @@ const Side = ({ sets = () => {} }) => {
             </div>
             <div>
               <span className={styles.sideCircle} />
-              <span>{user?.level?.slice(0, -1) ?? "N/A"}</span>
+              <span>{user?.level ?? "N/A"}</span>
             </div>
           </div>
 

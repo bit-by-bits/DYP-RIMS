@@ -6,9 +6,12 @@ import { InboxOutlined } from "@ant-design/icons";
 import ListSection from "../Common/ListSection";
 import { Avatar, Card, Modal, Upload, message } from "antd";
 import PDFViewer from "../Common/PDFViewer";
+import useCapitalize from "../utils/useCapitalize";
 
 const ConferenceInfo = ({ user, setv, ID }) => {
   // STATES
+
+  const { capitalize } = useCapitalize();
 
   const { Meta } = Card;
   const { Dragger } = Upload;
@@ -75,9 +78,6 @@ const ConferenceInfo = ({ user, setv, ID }) => {
   }, [data]);
 
   // FUNCTIONS
-
-  const capitalize = str =>
-    str ? str.charAt(0).toUpperCase() + str.slice(1) : "- Not Available -";
 
   const getPapers = () => {
     setPapers(

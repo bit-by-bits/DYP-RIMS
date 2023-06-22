@@ -40,7 +40,7 @@ const Downloads = () => {
   // EFFECTS
 
   useEffect(() => {
-    const DATA = JSON.parse(localStorage.getItem("data"));
+    const DATA = JSON.parse(localStorage.getItem("downloads"));
 
     if (DATA && DATA?.length) {
       setData(DATA);
@@ -115,7 +115,7 @@ const Downloads = () => {
     };
 
     setData([DATA, ...data]);
-    localStorage.setItem("data", JSON.stringify([DATA, ...data]));
+    localStorage.setItem("downloads", JSON.stringify([DATA, ...data]));
   };
 
   return (

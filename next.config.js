@@ -4,8 +4,8 @@ const nextConfig = {
   swcMinify: true,
   images: {
     domains: [
+      "encrypted-tbn0.gstatic.com",
       "lh3.googleusercontent.com",
-      "dreamvilla.life",
       "services.journalchecker.com",
     ],
   },
