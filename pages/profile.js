@@ -87,14 +87,16 @@ const Profile = () => {
     setVisible(true);
 
     if (user?.token) {
-      axios({
-        method: "GET",
-        url: `${URLObj.base}/home`,
-        headers: {
-          "X-ACCESS-KEY": URLObj.key,
-          "X-AUTH-TOKEN": user?.token,
-        },
-      }).then(res => updateUser(res.data?.user));
+      if (!user?.name) {
+        axios({
+          method: "GET",
+          url: `${URLObj.base}/home`,
+          headers: {
+            "X-ACCESS-KEY": URLObj.key,
+            "X-AUTH-TOKEN": user?.token,
+          },
+        }).then(res => updateUser(res.data?.user));
+      }
 
       if (access === 1) {
         axios({

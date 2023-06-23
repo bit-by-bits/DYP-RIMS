@@ -1,4 +1,4 @@
-import { Button, Menu, Spin } from "antd";
+import { Button, Menu, Skeleton, Spin } from "antd";
 import React, { createElement } from "react";
 import {
   HomeOutlined,
@@ -104,15 +104,7 @@ const Side = ({ sets = () => {} }) => {
 
   return (
     <div className={styles.sideWrapper}>
-      <Spin
-        style={{
-          width: "18vw",
-          height: "max-content",
-          backgroundColor: "rgba(256, 256, 256, 0.8)",
-        }}
-        spinning={user?.name ? false : true}
-        tip="FETCHING PROFILE"
-      >
+      <Skeleton loading={!user?.name} active paragraph={{ rows: 10 }}>
         <div className={styles.sideProfile}>
           <Image
             priority={true}
@@ -149,7 +141,7 @@ const Side = ({ sets = () => {} }) => {
             Edit Profile
           </Button>
         </div>
-      </Spin>
+      </Skeleton>
 
       <Menu
         mode="inline"

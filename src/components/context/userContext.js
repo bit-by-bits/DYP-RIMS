@@ -13,13 +13,12 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined")
+    if (typeof window !== "undefined") {
       user
         ? Date.now() - user?.setUpTime > 86400000 &&
           localStorage.removeItem("user")
         : router.push("/");
-
-    console.log(user);
+    }
   }, [router, user]);
 
   const change = newUser => {

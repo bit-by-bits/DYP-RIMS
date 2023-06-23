@@ -6,22 +6,13 @@ import { useRouter } from "next/router";
 import URLObj from "../src/components/baseURL";
 import { Spin, message } from "antd";
 import Image from "next/image";
+import { useUser } from "../src/components/context/userContext";
 
 export default function Home() {
   // BOILERPLATE
 
   const router = useRouter();
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    if (user) {
-      const time = Date.now() - user?.setUpTime;
-
-      if (time < 86400000) router.push("/profile");
-      else localStorage.removeItem("user");
-    }
-  }, [router]);
+  const { user, change } = useUser();
 
   // STATES
 
@@ -46,12 +37,7 @@ export default function Home() {
         })
           .then(res => {
             message.success("Login Successful");
-
-            localStorage.setItem(
-              "user",
-              JSON.stringify({ token: res.data?.token, setUpTime: Date.now() })
-            );
-
+            change({ token: res.data?.token, setUpTime: Date.now() });
             router.push("/profile");
           })
           .catch(err => message.error("Login Failed")),
