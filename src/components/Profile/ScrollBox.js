@@ -8,6 +8,7 @@ import useNumber from "../../utils/useNumber";
 import crossref from "../../../public/logos/crossref.jpg";
 import scopus from "../../../public/logos/scopus.svg";
 import wos from "../../../public/logos/wos.svg";
+import EllipsisBefore from "../Common/EllipsisBefore";
 
 const PubItem = ({ item, index, limit }) => {
   const { Item } = List;
@@ -29,13 +30,11 @@ const PubItem = ({ item, index, limit }) => {
         avatar={<Image height={50} width={50} alt="" src={publication.src} />}
         title={
           <>
-            <div
-              className={styles.publicationTitle}
-              dangerouslySetInnerHTML={{ __html: item.title }}
-            />
+            <EllipsisBefore suffixCount={20}>{item.title}</EllipsisBefore>
+
             <Paragraph
               className={styles.publicationAuthors}
-              ellipsis={{ rows: 3, expandable: true, symbol: "more" }}
+              ellipsis={{ rows: 2, expandable: true, symbol: "more" }}
             >
               <Text strong>Authors: </Text>
               {item.authors}
@@ -180,7 +179,7 @@ const ScrollBox = ({ title, subtitle, data, type }) => {
         pagination={{ position: "bottom", align: "center", pageSize: 2 }}
         style={{ borderRadius: 20, border: "2px solid #9a2827" }}
         itemLayout="horizontal"
-        dataSource={data}
+        dataSource={data?.length % 2 === 0 ? data : data.slice(0, -1)}
         renderItem={(item, index) =>
           type === "pubs" ? (
             <PubItem item={item} index={index} limit={data?.length} />

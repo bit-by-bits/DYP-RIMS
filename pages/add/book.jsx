@@ -150,10 +150,9 @@ const Books = () => {
 
                     <Input
                       style={{ width: "40vw", margin: "20px 0 10px 0" }}
-                      autoComplete={true}
+                      onPressEnter={add}
                       placeholder="enter isbn here"
                       onChange={e => setISBN(e.target.value)}
-                      onPressEnter={add}
                     />
 
                     <div

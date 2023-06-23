@@ -7,6 +7,7 @@ import { FloatButton, Spin } from "antd";
 import Side from "../../src/components/Common/Side";
 import Top from "../../src/components/Common/Top";
 import FileInfo from "../../src/components/Upload/FileInfo";
+import { useUser } from "../../src/components/context/userContext";
 
 const Uploading = () => {
   // HOOKS
