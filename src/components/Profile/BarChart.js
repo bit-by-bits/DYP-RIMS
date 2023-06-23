@@ -73,6 +73,7 @@ const BarChart = ({ size }) => {
     ["DOAJ", "#FD9489"],
     ["Non-Indexed", "#9A2827"],
   ].map(([label, color]) => ({
+    barPercentage: 0.7,
     label: label,
     data: labels.map((e, i) =>
       i < 6 ? Math.floor(Math.random() * 200) : Math.floor(Math.random() * 400)

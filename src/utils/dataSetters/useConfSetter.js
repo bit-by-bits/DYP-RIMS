@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import styles from "../../../styles/profile.module.css";
+import styles from "../../styles/profile.module.css";
 import { FileTextOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import { useWindowSize } from "rooks";

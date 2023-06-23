@@ -1,9 +1,9 @@
 import Head from "next/head";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import styles from "../styles/login.module.css";
+import styles from "../src/styles/login.module.css";
 import { useRouter } from "next/router";
-import URLObj from "../src/baseURL";
+import URLObj from "../src/components/baseURL";
 import { Spin, message } from "antd";
 import Image from "next/image";
 

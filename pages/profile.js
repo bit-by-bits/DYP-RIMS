@@ -1,30 +1,30 @@
 import axios from "axios";
 import Head from "next/head";
-import URLObj from "../src/baseURL";
-import styles from "../styles/profile.module.css";
-import { useRouter } from "next/router";
+import URLObj from "../src/components/baseURL";
+import styles from "../src/styles/profile.module.css";
 import { useState, useEffect, useMemo } from "react";
-import { Spin, Button, FloatButton } from "antd";
+import { Spin, Button, FloatButton, Row, Col } from "antd";
 import { Table, Modal, Upload, message } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import { useWindowSize } from "rooks";
 
-import Top from "../src/Common/Top";
-import Side from "../src/Common/Side";
-import Section from "../src/Profile/Section";
-import Overview from "../src/Profile/Overview";
-import BarChart from "../src/Profile/BarChart";
-import { useUser } from "../src/context/userContext";
-import { useAccess } from "../src/context/accessContext";
+import Top from "../src/components/Common/Top";
+import Side from "../src/components/Common/Side";
+import Section from "../src/components/Profile/Section";
+import Overview from "../src/components/Profile/Overview";
+import BarChart from "../src/components/Profile/BarChart";
+import { useUser } from "../src/components/context/userContext";
+import { useAccess } from "../src/components/context/accessContext";
 
-import usePubSetter from "../src/utils/dataSetters/usePubSetter";
-import useConfSetter from "../src/utils/dataSetters/useConfSetter";
-import useBookSetter from "../src/utils/dataSetters/useBookSetter";
-import useProjSetter from "../src/utils/dataSetters/useProjSetter";
-import useAwardSetter from "../src/utils/dataSetters/useAwardSetter";
-import useIPRSetter from "../src/utils/dataSetters/useIPRSetter";
-import useStudSetter from "../src/utils/dataSetters/useStudSetter";
-import useExtraSetter from "../src/utils/dataSetters/useExtraSetter";
+import usePubSetter from "../src//utils/dataSetters/usePubSetter";
+import useConfSetter from "../src//utils/dataSetters/useConfSetter";
+import useBookSetter from "../src//utils/dataSetters/useBookSetter";
+import useProjSetter from "../src//utils/dataSetters/useProjSetter";
+import useAwardSetter from "../src//utils/dataSetters/useAwardSetter";
+import useIPRSetter from "../src//utils/dataSetters/useIPRSetter";
+import useStudSetter from "../src//utils/dataSetters/useStudSetter";
+import useExtraSetter from "../src//utils/dataSetters/useExtraSetter";
+import ScrollBox from "../src/components/Profile/ScrollBox";
 
 const Profile = () => {
   // HOOKS
@@ -76,19 +76,27 @@ const Profile = () => {
   // LEVEL 2 DATA
 
   const [counts_2, setCounts_2] = useState({});
-  const [publications_2, setPublications_2] = useState([]);
+  const [pubsByCitns_2, setPubsByCitns_2] = useState([]);
+  const [pubsByImpact_2, setPubsByImpact_2] = useState([]);
   const [authorsMax_2, setAuthorsMax_2] = useState([]);
   const [authorsMin_2, setAuthorsMin_2] = useState([]);
 
   // EFFECTS
 
   useEffect(() => {
+    setVisible(true);
+
     if (user?.token) {
-      console.log(access);
+      axios({
+        method: "GET",
+        url: `${URLObj.base}/home`,
+        headers: {
+          "X-ACCESS-KEY": URLObj.key,
+          "X-AUTH-TOKEN": user?.token,
+        },
+      }).then(res => updateUser(res.data?.user));
 
       if (access === 1) {
-        setVisible(true);
-
         axios({
           method: "GET",
           url: `${URLObj.base}/home`,
@@ -99,11 +107,10 @@ const Profile = () => {
         })
           .then(res => {
             const DATA = res.data?.data;
+            const STATS = res.data?.statistics;
 
             setData(DATA);
-            setStatistics_1(res.data?.statistics);
-            updateUser(res.data?.user);
-
+            setStatistics_1(STATS);
             setExtra(
               DATA?.publication,
               DATA?.conferences,
@@ -119,8 +126,6 @@ const Profile = () => {
       }
 
       if (access === 2) {
-        setVisible(true);
-
         axios({
           method: "GET",
           url: `${URLObj.base}/home`,
@@ -131,10 +136,23 @@ const Profile = () => {
           },
         })
           .then(res => {
-            setCounts_2(res.data?.counts);
-            setPublications_2(res.data?.top_ten_publications);
-            setAuthorsMax_2(res.data?.top_10_authors);
-            setAuthorsMin_2(res.data?.least_10_authors);
+            const DATA = res.data;
+
+            setCounts_2(DATA?.counts);
+            setAuthorsMax_2(DATA?.top_10_authors);
+            setAuthorsMin_2(DATA?.least_10_authors);
+
+            const { BODY: BODY_1 } = pubData(
+              DATA?.top_ten_publications?.highest_citations ?? []
+            );
+
+            setPubsByCitns_2(BODY_1);
+
+            const { BODY: BODY_2 } = pubData(
+              DATA?.top_ten_publications?.highest_impact_factor ?? []
+            );
+
+            setPubsByImpact_2(BODY_2);
 
             setVisible(false);
           })
@@ -144,16 +162,12 @@ const Profile = () => {
       }
 
       if (access === 3) {
-        setVisible(true);
-
         setVisible(false);
       }
-
-      setVisible(false);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, access]);
+  }, [access]);
 
   useEffect(() => {
     if (access == 1) {
@@ -213,6 +227,7 @@ const Profile = () => {
       name: userData?.user?.first_name + " " + userData?.user?.last_name,
       email: userData?.user?.email,
       picture: userData?.profile_picture,
+      gender: userData?.gender,
       designation: userData?.designation,
       department: userData?.department?.name,
       level: access_level?.display_text,
@@ -333,100 +348,132 @@ const Profile = () => {
                 </div>
               )}
 
-              {access != 1 && <BarChart size={innerWidth} />}
-
-              {(sections_1 == "all" || sections_1 == "publications") && (
-                <div className={styles.section}>
-                  <div className={styles.sectionTop}>
-                    <div id="publications" className={styles.heading}>
-                      Publications
-                    </div>
-                    <div style={{ display: "flex", gap: 15 }}>
-                      <Button
-                        type="primary"
-                        className={styles.sectionButton}
-                        onClick={() => {
-                          if (sortBy_1 === "scopus") setSortBy_1("wos");
-                          else if (sortBy_1 === "wos") setSortBy_1("crossref");
-                          else if (sortBy_1 === "crossref")
-                            setSortBy_1("scopus");
-                        }}
-                      >
-                        Sorting Citations By: {sortBy_1.toUpperCase()}
-                      </Button>
-                      {sections_1 == "all" ? (
-                        <Button
-                          type="primary"
-                          className={styles.sectionButton}
-                          onClick={() => setSections_1("publications")}
-                        >
-                          View All
-                        </Button>
-                      ) : (
-                        <Button
-                          type="primary"
-                          className={styles.sectionButton}
-                          onClick={() => setSections_1("all")}
-                        >
-                          Return Back
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                  <div className={styles.sectionBottom}>
-                    <Table
-                      pagination={sections_1 == "all" ? true : false}
-                      columns={publications?.title}
-                      dataSource={publications?.body}
-                      on1600={handleFilter1600}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {access == 1 && (
+              {access != 1 ? (
                 <>
-                  <Section
-                    str="Conferences"
-                    data={conferences}
-                    sec={sections_1}
-                    setSec={setSections_1}
-                  />
+                  <BarChart size={innerWidth} />
 
-                  <Section
-                    str="Books"
-                    data={books}
-                    sec={sections_1}
-                    setSec={setSections_1}
-                  />
+                  <Row gutter={[20, 20]}>
+                    <Col span={12}>
+                      <ScrollBox
+                        title="Top 3 Publications with Highest Citation"
+                        data={pubsByCitns_2}
+                        type="pubs"
+                      />
+                    </Col>
+                    <Col span={12}>
+                      <ScrollBox
+                        title="Top 3 Publications with Highest Impact Factor"
+                        data={pubsByImpact_2}
+                        type="pubs"
+                      />
+                    </Col>
+                  </Row>
 
-                  <Section
-                    str="Projects"
-                    data={projects}
-                    sec={sections_1}
-                    setSec={setSections_1}
-                  />
+                  <Row gutter={[20, 20]}>
+                    <Col span={12}>
+                      <ScrollBox
+                        title="Faculty with the Highest Publications"
+                        subtitle="Interdepartmental Publications"
+                        data={authorsMax_2}
+                        type="auths"
+                      />
+                    </Col>
+                    <Col span={12}>
+                      <ScrollBox
+                        title="Faculty with the Lowest Publications"
+                        subtitle="Interdepartmental Publications"
+                        data={authorsMin_2}
+                        type="auths"
+                      />
+                    </Col>
+                  </Row>
+                </>
+              ) : (
+                <>
+                  {(sections_1 == "all" || sections_1 == "publications") && (
+                    <div className={styles.section}>
+                      <div className={styles.sectionTop}>
+                        <div id="publications" className={styles.heading}>
+                          Publications
+                        </div>
+                        <div style={{ display: "flex", gap: 15 }}>
+                          <Button
+                            type="primary"
+                            className={styles.sectionButton}
+                            onClick={() => {
+                              if (sortBy_1 === "scopus") setSortBy_1("wos");
+                              else if (sortBy_1 === "wos")
+                                setSortBy_1("crossref");
+                              else if (sortBy_1 === "crossref")
+                                setSortBy_1("scopus");
+                            }}
+                          >
+                            Sorting Citations By: {sortBy_1.toUpperCase()}
+                          </Button>
+                          {sections_1 == "all" ? (
+                            <Button
+                              type="primary"
+                              className={styles.sectionButton}
+                              onClick={() => setSections_1("publications")}
+                            >
+                              View All
+                            </Button>
+                          ) : (
+                            <Button
+                              type="primary"
+                              className={styles.sectionButton}
+                              onClick={() => setSections_1("all")}
+                            >
+                              Return Back
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                      <div className={styles.sectionBottom}>
+                        <Table
+                          pagination={sections_1 == "all" ? true : false}
+                          columns={publications?.title}
+                          dataSource={publications?.body}
+                          onChange={handleFilter1600}
+                        />
+                      </div>
+                    </div>
+                  )}
 
-                  <Section
-                    str="Awards"
-                    data={awards}
-                    sec={sections_1}
-                    setSec={setSections_1}
-                  />
-
-                  <Section
-                    str="IPR"
-                    data={ipr}
-                    sec={sections_1}
-                    setSec={setSections_1}
-                  />
-
-                  <Section
-                    str="Students"
-                    data={students}
-                    sec={sections_1}
-                    setSec={setSections_1}
-                  />
+                  {[
+                    {
+                      title: "Conferences",
+                      data: conferences,
+                    },
+                    {
+                      title: "Books",
+                      data: books,
+                    },
+                    {
+                      title: "Projects",
+                      data: projects,
+                    },
+                    {
+                      title: "Awards",
+                      data: awards,
+                    },
+                    {
+                      title: "IPR",
+                      data: ipr,
+                    },
+                    {
+                      title: "Students",
+                      data: students,
+                    },
+                  ]?.map((e, i) => (
+                    <Section
+                      key={i}
+                      str={e.title}
+                      data={e.data}
+                      sec={sections_1}
+                      setSec={setSections_1}
+                    />
+                  ))}
                 </>
               )}
 
@@ -440,7 +487,7 @@ const Profile = () => {
                   name="file"
                   multiple={false}
                   style={{ borderColor: "#9a2827" }}
-                  on1600={info => {
+                  onChange={info => {
                     const { status } = info.file;
                     if (status === "done")
                       setFileData_1({ ...fileData_1, file: info.file });

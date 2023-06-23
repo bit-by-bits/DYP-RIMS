@@ -1,14 +1,14 @@
 import { Button, DatePicker, FloatButton, Form } from "antd";
 import { Input, Select, Spin, message } from "antd";
-import styles from "../../styles/add.module.css";
+import styles from "../../src/styles/add.module.css";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import Side from "../../src/Common/Side";
+import Side from "../../src/components/Common/Side";
 import { useRouter } from "next/router";
-import Top from "../../src/Common/Top";
+import Top from "../../src/components/Common/Top";
 import axios from "axios";
-import URLObj from "../../src/baseURL";
-import { useUser } from "../../src/context/userContext";
+import URLObj from "../../src/components/baseURL";
+import { useUser } from "../../src/components/context/userContext";
 
 const IPR = () => {
   // HOOKS
@@ -110,7 +110,6 @@ const IPR = () => {
                   }}
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
-                  autoComplete="off"
                 >
                   <Form.Item
                     label="Name Of Faculty"

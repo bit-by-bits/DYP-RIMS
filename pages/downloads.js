@@ -1,11 +1,11 @@
 import axios from "axios";
-import URLObj from "../src/baseURL";
+import URLObj from "../src/components/baseURL";
 import Head from "next/head";
-import Side from "../src/Common/Side";
-import Top from "../src/Common/Top";
+import Side from "../src/components/Common/Side";
+import Top from "../src/components/Common/Top";
 import { useEffect, useState } from "react";
-import styles2 from "../styles/add.module.css";
-import { useUser } from "../src/context/userContext";
+import styles2 from "../src/styles/add.module.css";
+import { useUser } from "../src/components/context/userContext";
 import { Form, Radio, message, Spin, Table } from "antd";
 import { Button, DatePicker, FloatButton, Select } from "antd";
 
@@ -139,7 +139,6 @@ const Downloads = () => {
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
                   onReset={onReset}
-                  autoComplete="off"
                 >
                   <Form.Item
                     label="What to Download?"

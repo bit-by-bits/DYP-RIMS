@@ -6,12 +6,12 @@ import { Avatar, Badge, Card, Modal, Upload, message } from "antd";
 import Scite from "../Profile/Scite";
 import Altmetric from "../Profile/Altmetric";
 
-import scopus from "../../public/logos/scopus.svg";
-import wos from "../../public/logos/wos.svg";
-import crossref from "../../public/logos/crossref.jpg";
-import pmc from "../../public/logos/pmc.png";
-import doaj from "../../public/logos/doaj.png";
-import medline from "../../public/logos/medline.jpg";
+import scopus from "../../../public/logos/scopus.svg";
+import wos from "../../../public/logos/wos.svg";
+import crossref from "../../../public/logos/crossref.jpg";
+import pmc from "../../../public/logos/pmc.png";
+import doaj from "../../../public/logos/doaj.png";
+import medline from "../../../public/logos/medline.jpg";
 import ListSection from "../Common/ListSection";
 import { InboxOutlined } from "@ant-design/icons";
 

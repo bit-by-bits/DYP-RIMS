@@ -1,17 +1,17 @@
 import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
-import Side from "../../src/Common/Side";
+import Side from "../../src/components/Common/Side";
 import { useRouter } from "next/router";
-import Top from "../../src/Common/Top";
-import URLObj from "../../src/baseURL";
+import Top from "../../src/components/Common/Top";
+import URLObj from "../../src/components/baseURL";
 import { UploadOutlined } from "@ant-design/icons";
-import styles from "../../styles/add.module.css";
-import styles2 from "../../styles/upload.module.css";
+import styles from "../../src/styles/add.module.css";
+import styles2 from "../../src/styles/upload.module.css";
 import { useEffect, useState } from "react";
 import { Button, DatePicker, FloatButton, Form } from "antd";
 import { Select, Spin, Upload, message, Input } from "antd";
-import { useUser } from "../../src/context/userContext";
+import { useUser } from "../../src/components/context/userContext";
 
 const Conferences = () => {
   // HOOKS
@@ -183,7 +183,7 @@ const Conferences = () => {
                       width={60}
                       height={60}
                       alt="ADD"
-                      src="/upload/upload.png"
+                      src="/upload.png"
                       className={styles2.upload_img}
                     />
                     <div className={styles2.upload_title}>Add a file</div>
@@ -248,7 +248,6 @@ const Conferences = () => {
                   }
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
-                  autoComplete="off"
                 >
                   <Form.Item
                     label="Name Of Faculty"

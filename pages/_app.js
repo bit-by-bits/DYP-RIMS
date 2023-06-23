@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-sync-scripts */
 import Script from "next/script";
-import "../styles/globals.css";
-import { UserProvider } from "../src/context/userContext";
-import { AccessProvider } from "../src/context/accessContext";
+import "../src/styles/globals.css";
+import { UserProvider } from "../src/components/context/userContext";
+import { AccessProvider } from "../src/components/context/accessContext";
 
 const MyApp = ({ Component, pageProps }) => {
   return (

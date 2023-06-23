@@ -6,7 +6,6 @@ import { InboxOutlined } from "@ant-design/icons";
 import ListSection from "../Common/ListSection";
 import { Avatar, Card, Modal, Upload, message } from "antd";
 import PDFViewer from "../Common/PDFViewer";
-import useCaps from "../utils/useCaps";
 
 const ConferenceInfo = ({ user, setv, ID }) => {
   // STATES

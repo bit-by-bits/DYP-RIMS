@@ -1,5 +1,5 @@
-import { Button, Menu, Spin, message } from "antd";
-import React, { useState, useEffect, createElement } from "react";
+import { Button, Menu, Spin } from "antd";
+import React, { createElement } from "react";
 import {
   HomeOutlined,
   ProjectOutlined,
@@ -24,12 +24,7 @@ const Side = ({ sets = () => {} }) => {
 
   const router = useRouter();
   const { user } = useUser();
-
   const { access } = useAccess();
-
-  // STATES
-
-  // EFFECTS
 
   // FUNCTIONS
 
@@ -125,7 +120,7 @@ const Side = ({ sets = () => {} }) => {
             alt={user?.username ?? "user"}
             src={
               user?.picture ??
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2ms7xZr_1gRC4vBgSuMAQNnpt8tFohtzcuuVBAFO_s2BlntoK0WPSC7-OYmPOFA2IMBw&usqp=CAU"
+              `https://xsgames.co/randomusers/avatar.php?g=${user?.gender?.toLowerCase()}`
             }
             width={100}
             height={100}

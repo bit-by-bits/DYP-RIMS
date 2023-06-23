@@ -2,8 +2,7 @@ import styles from "../../styles/file.module.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import URLObj from "../baseURL";
-import { Image, Modal, Upload, message } from "antd";
-import { InboxOutlined } from "@ant-design/icons";
+import { message } from "antd";
 
 const ProjectInfo = ({ user, setv, ID }) => {
   // STATES

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import URLObj from "../baseURL";
 import { message } from "antd";
-import useCaps from "../utils/useCaps";
+import useCaps from "../../utils/useCaps";
 
 const StudentInfo = ({ user, setv, ID }) => {
   // STATES

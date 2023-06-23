@@ -1,6 +1,8 @@
-import React, { useState, createElement } from "react";
-import styles from "../../styles/profile.module.css";
 import Image from "next/image";
+import React, { useState, createElement, useEffect } from "react";
+import { useRouter } from "next/router";
+import { useAccess } from "../context/accessContext";
+import styles from "../../styles/profile.module.css";
 import {
   BookOutlined,
   BulbOutlined,
@@ -12,20 +14,17 @@ import {
   TrademarkCircleOutlined,
 } from "@ant-design/icons";
 
-import crossref from "../../public/logos/crossref.jpg";
-import medline from "../../public/logos/medline.jpg";
-import doaj from "../../public/logos/doaj.png";
-import pmc from "../../public/logos/pmc.png";
-import scopus from "../../public/logos/scopus.svg";
-import wos from "../../public/logos/wos.svg";
+import crossref from "../../../public/logos/crossref.jpg";
+import medline from "../../../public/logos/medline.jpg";
+import doaj from "../../../public/logos/doaj.png";
+import pmc from "../../../public/logos/pmc.png";
+import scopus from "../../../public/logos/scopus.svg";
+import wos from "../../../public/logos/wos.svg";
 
-import green from "../../public/logos/green-oa.png";
-import gold from "../../public/logos/gold-oa.png";
-import bronze from "../../public/logos/bronze-oa.png";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import { useAccess } from "../context/accessContext";
-import useNumber from "../utils/useNumber";
+import green from "../../../public/logos/green-oa.png";
+import gold from "../../../public/logos/gold-oa.png";
+import bronze from "../../../public/logos/bronze-oa.png";
+import useNumber from "../../utils/useNumber";
 
 const Overview = ({ data, stats, extra, size, counts }) => {
   // HOOKS
@@ -47,6 +46,8 @@ const Overview = ({ data, stats, extra, size, counts }) => {
       else if (access == 2) return val2;
       else return val3;
     };
+
+    const sum = arr => arr?.reduce((a, b) => a + b, 0);
 
     setOverview({
       publication: check(data?.publication?.length, counts?.publication, 0),
@@ -105,15 +106,19 @@ const Overview = ({ data, stats, extra, size, counts }) => {
       ),
       citations_crossref: check(
         extra?.citations?.crossref,
-        counts?.citations?.crossref,
+        sum(counts?.citations?.crossref),
         0
       ),
       citations_scopus: check(
         extra?.citations?.scopus,
-        counts?.citations?.scopus,
+        sum(counts?.citations?.scopus),
         0
       ),
-      citations_wos: check(extra?.citations?.wos, counts?.citations?.wos, 0),
+      citations_wos: check(
+        extra?.citations?.wos,
+        sum(counts?.citations?.wos),
+        0
+      ),
     });
   }, [data, stats, extra, counts, access]);
 

@@ -14,11 +14,11 @@ import Drop from "./Drop";
 import Altmetric from "../Profile/Altmetric";
 import Scite from "../Profile/Scite";
 
-import medline from "../../public/logos/medline.jpg";
-import doaj from "../../public/logos/doaj.png";
-import pmc from "../../public/logos/pmc.png";
-import scopus from "../../public/logos/scopus.svg";
-import wos from "../../public/logos/wos.svg";
+import medline from "../../../public/logos/medline.jpg";
+import doaj from "../../../public/logos/doaj.png";
+import pmc from "../../../public/logos/pmc.png";
+import scopus from "../../../public/logos/scopus.svg";
+import wos from "../../../public/logos/wos.svg";
 
 const Top = ({ main = {}, user }) => {
   // STATES

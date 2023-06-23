@@ -1,5 +1,5 @@
 import Image from "next/image";
-import styles from "../../../styles/profile.module.css";
+import styles from "../../styles/profile.module.css";
 import { Typography, Button } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
 import { Fragment } from "react";
@@ -13,12 +13,12 @@ import pmc from "../../../public/logos/pmc.png";
 import scopus from "../../../public/logos/scopus.svg";
 import wos from "../../../public/logos/wos.svg";
 
-import Scite from "../../Profile/Scite";
-import Altmetric from "../../Profile/Altmetric";
 import useTitleMaker from "../useTitleMaker";
 import useNumber from "../useNumber";
 import useCheck from "../useChecks";
 import useSorter from "../useSorter";
+import Scite from "../../components/Profile/Scite";
+import Altmetric from "../../components/Profile/Altmetric";
 
 const usePubSetter = () => {
   const router = useRouter();
@@ -155,8 +155,27 @@ const usePubSetter = () => {
           }
         }
 
+        const authors =
+          array?.map((e, i) => (
+            <span key={i}>
+              <span>{e?.given + " " + e?.family}</span>
+              <sup>
+                {e.sequence === "first"
+                  ? "1"
+                  : e.sequence === "corresponding"
+                  ? "*"
+                  : e.sequence === "firstncorr"
+                  ? "1*"
+                  : null}
+              </sup>
+              <span>, </span>
+            </span>
+          )) ?? "- Not Available -";
+
         return {
           key: i,
+          title: e?.publication_title ?? "- Not Available -",
+          authors: authors ?? "- Not Available -",
           publication: (
             <div className={styles.publication}>
               <div
@@ -170,21 +189,7 @@ const usePubSetter = () => {
                 className={styles.publicationAuthors}
                 ellipsis={{ rows: 3, expandable: true, symbol: "more" }}
               >
-                {array?.map((e, i) => (
-                  <span key={i}>
-                    <span>{e?.given + " " + e?.family}</span>
-                    <sup>
-                      {e.sequence === "first"
-                        ? "1"
-                        : e.sequence === "corresponding"
-                        ? "*"
-                        : e.sequence === "firstncorr"
-                        ? "1*"
-                        : null}
-                    </sup>
-                    <span>, </span>
-                  </span>
-                )) ?? "- Not Available -"}
+                {authors}
               </Paragraph>
 
               <div className={styles.publicationJournal}>{e.journal_name}</div>

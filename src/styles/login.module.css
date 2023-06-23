@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: flex-start;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    url("../public/login.jpg") no-repeat;
+    url("../../public/login.jpg") no-repeat;
   background-size: cover;
 }
 

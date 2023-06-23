@@ -2,13 +2,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import styles from "../styles/upload.module.css";
+import styles from "../src/styles/upload.module.css";
 import Image from "next/image";
-import URLObj from "../src/baseURL";
+import URLObj from "../src/components/baseURL";
 import { FloatButton, Input, Spin, Upload, message } from "antd";
-import Side from "../src/Common/Side";
-import Top from "../src/Common/Top";
-import { useUser } from "../src/context/userContext";
+import Side from "../src/components/Common/Side";
+import Top from "../src/components/Common/Top";
+import { useUser } from "../src/components/context/userContext";
 
 const Publications = () => {
   // HOOKS
@@ -127,7 +127,7 @@ const Publications = () => {
                     width={60}
                     height={60}
                     alt="ADD"
-                    src="/upload/upload.png"
+                    src="/upload.png"
                     className={styles.upload_img}
                   />
                   <div className={styles.upload_title}>Add a file</div>
