@@ -25,6 +25,7 @@ import useIPRSetter from "../src//utils/dataSetters/useIPRSetter";
 import useStudSetter from "../src//utils/dataSetters/useStudSetter";
 import useExtraSetter from "../src//utils/dataSetters/useExtraSetter";
 import ScrollBox from "../src/components/Profile/ScrollBox";
+import useDeptPubSetter from "../src/utils/dataSetters/useDeptPubSetter";
 
 const Profile = () => {
   // HOOKS
@@ -43,6 +44,8 @@ const Profile = () => {
   const { awardData } = useAwardSetter();
   const { iprData } = useIPRSetter();
   const { studData } = useStudSetter();
+
+  const { deptPubData } = useDeptPubSetter();
 
   const { Dragger } = Upload;
   const { innerWidth } = useWindowSize();
@@ -80,6 +83,7 @@ const Profile = () => {
   const [pubsByImpact_2, setPubsByImpact_2] = useState([]);
   const [authorsMax_2, setAuthorsMax_2] = useState([]);
   const [authorsMin_2, setAuthorsMin_2] = useState([]);
+  const [publications_2, setPublications_2] = useState({ title: [], body: [] });
 
   // EFFECTS
 
@@ -148,13 +152,15 @@ const Profile = () => {
               DATA?.top_ten_publications?.highest_citations ?? []
             );
 
-            setPubsByCitns_2(BODY_1);
-
             const { BODY: BODY_2 } = pubData(
               DATA?.top_ten_publications?.highest_impact_factor ?? []
             );
 
+            const { TITLE, BODY } = deptPubData(DATA?.publication ?? []);
+
+            setPubsByCitns_2(BODY_1);
             setPubsByImpact_2(BODY_2);
+            setPublications_2({ title: TITLE, body: BODY });
 
             setVisible(false);
           })
@@ -174,11 +180,11 @@ const Profile = () => {
   useEffect(() => {
     if (access == 1) {
       if (data?.publication) {
-        const { TITLE, BODY } = pubData(
-          data?.publication,
+        const { TITLE, BODY } = pubData(data?.publication, {
           fileData_1,
-          setFileData_1
-        );
+          setFileData_1,
+          sortBy_1,
+        });
         setPublications({ title: TITLE, body: BODY, pubs: BODY });
       }
 
@@ -353,7 +359,6 @@ const Profile = () => {
               {access != 1 ? (
                 <>
                   <BarChart size={innerWidth} />
-
                   <Row gutter={[20, 20]}>
                     <Col span={12}>
                       <ScrollBox
@@ -370,7 +375,6 @@ const Profile = () => {
                       />
                     </Col>
                   </Row>
-
                   <Row gutter={[20, 20]}>
                     <Col span={12}>
                       <ScrollBox
@@ -389,6 +393,14 @@ const Profile = () => {
                       />
                     </Col>
                   </Row>
+
+                  <Section
+                    data={publications_2}
+                    head={{
+                      header: `Department of ${user?.department}`,
+                      title: "Faculty Publications",
+                    }}
+                  />
                 </>
               ) : (
                 <>
@@ -470,10 +482,9 @@ const Profile = () => {
                   ]?.map((e, i) => (
                     <Section
                       key={i}
-                      str={e.title}
                       data={e.data}
-                      sec={sections_1}
-                      setSec={setSections_1}
+                      head={{ title: e.title }}
+                      sections={{ sec: sections_1, setSec: setSections_1 }}
                     />
                   ))}
                 </>

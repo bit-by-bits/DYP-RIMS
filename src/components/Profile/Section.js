@@ -2,21 +2,29 @@ import { Button, Skeleton, Table } from "antd";
 import styles from "../../styles/profile.module.css";
 import React from "react";
 
-const Section = ({ str, data, sec, setSec }) => {
+const Section = ({
+  data,
+  head = { header: "", title: "" },
+  sections = { sec: "all", setSec: () => {} },
+}) => {
   return (
-    (sec == "all" || sec == str.toLowerCase()) && (
+    (sections?.sec == "all" || sections?.sec == head?.title?.toLowerCase()) && (
       <Skeleton loading={!data?.title?.length} active>
         <div className={styles.section}>
+          <div id={head?.title?.toLowerCase()} className={styles.header}>
+            {head?.header}
+          </div>
+
           <div className={styles.sectionTop}>
-            <div id={str.toLowerCase()} className={styles.heading}>
-              {str}
+            <div id={head?.title?.toLowerCase()} className={styles.heading}>
+              {head?.title}
             </div>
 
-            {sec == "all" ? (
+            {sections?.sec == "all" ? (
               <Button
                 type="primary"
                 className={styles.sectionButton}
-                onClick={() => setSec(str.toLowerCase())}
+                onClick={() => sections?.setSec(head?.title?.toLowerCase())}
               >
                 View All
               </Button>
@@ -24,7 +32,7 @@ const Section = ({ str, data, sec, setSec }) => {
               <Button
                 type="primary"
                 className={styles.sectionButton}
-                onClick={() => setSec("all")}
+                onClick={() => sections?.setSec("all")}
               >
                 Return Back
               </Button>
@@ -35,7 +43,7 @@ const Section = ({ str, data, sec, setSec }) => {
             <Table
               columns={data?.title}
               dataSource={data?.body}
-              pagination={sec == "all" ? true : false}
+              pagination={sections?.sec == "all" ? true : false}
             />
           </div>
         </div>

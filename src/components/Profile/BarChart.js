@@ -109,6 +109,8 @@ const BarChart = ({ size }) => {
       <Bar
         options={options}
         plugins={[ChartDataLabels]}
+        width={size < 1800 ? "60vw" : "50vw"}
+        height={size < 1800 ? "20vh" : "30vh"}
         data={{ labels: labels, datasets: datasets }}
       />
     </>

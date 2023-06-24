@@ -25,13 +25,13 @@ const usePubSetter = () => {
   const { Paragraph } = Typography;
   const { innerWidth } = useWindowSize();
 
-  const { titleMaker } = useTitleMaker();
   const { number } = useNumber();
   const { makeValid } = useCheck();
   const { sorter } = useSorter();
+  const { titleMaker } = useTitleMaker();
 
   return {
-    pubData: (publications, fileData_1, setFileData_1) => {
+    pubData: (publications, { fileData_1, setFileData_1, sortBy_1 } = {}) => {
       const TITLE = [
         {
           title: "No.",

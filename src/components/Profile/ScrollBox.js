@@ -9,9 +9,6 @@ import EllipsisBefore from "../Common/EllipsisBefore";
 import crossref from "../../../public/logos/crossref.jpg";
 import scopus from "../../../public/logos/scopus.svg";
 import wos from "../../../public/logos/wos.svg";
-import hindex from "../../../public/logos/h-index.png";
-import sjr from "../../../public/logos/sjr.png";
-import impact from "../../../public/logos/impact-factor.png";
 
 const PubItem = ({ item, index, limit, type }) => {
   const { Item } = List;
@@ -203,6 +200,7 @@ const AuthItem = ({ item, index, limit }) => {
 };
 
 const ScrollBox = ({ title, subtitle, data, type }) => {
+  const SIZE = data?.length;
   const { Text } = Typography;
 
   return (
@@ -220,20 +218,19 @@ const ScrollBox = ({ title, subtitle, data, type }) => {
 
       <List
         bordered
-        dataSource={data}
+        style={{
+          borderRadius: 20,
+          border: "2px solid #9a2827",
+          overflow: "hidden",
+        }}
         itemLayout="horizontal"
-        pagination={{ position: "bottom", align: "center", pageSize: 5 }}
-        style={{ borderRadius: 20, border: "2px solid #9a2827" }}
+        dataSource={SIZE % 2 ? data.slice(0, -1) : data}
+        pagination={{ position: "bottom", align: "center", pageSize: 2 }}
         renderItem={(item, index) =>
           type === "auths" ? (
-            <AuthItem item={item} index={index} limit={data?.length} />
+            <AuthItem item={item} index={index} limit={SIZE} />
           ) : (
-            <PubItem
-              item={item}
-              index={index}
-              type={type}
-              limit={data?.length}
-            />
+            <PubItem item={item} index={index} type={type} limit={SIZE} />
           )
         }
       />
