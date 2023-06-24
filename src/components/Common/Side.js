@@ -86,7 +86,7 @@ const Side = ({ sets = () => {} }) => {
       children: ["1", "2"],
     },
     {
-      label: "Assistant professor",
+      label: "Assistant Professor",
       children: ["1", "2"],
     },
     {
@@ -95,10 +95,12 @@ const Side = ({ sets = () => {} }) => {
     },
   ].map((e, i) => ({
     key: `2.${i}`,
-    label: `(${e.children.length}) ${e.label}`,
+    label: `${e.children?.length} ${e.label}${
+      e.children.length > 1 ? "s" : ""
+    }`,
     children: e.children.map((child, index) => ({
       key: `2.${i}.${index}`,
-      label: `${e.label} ${child}`,
+      label: `${child} ${e.label}${e.children.length > 1 ? "s" : ""}`,
     })),
   }));
 

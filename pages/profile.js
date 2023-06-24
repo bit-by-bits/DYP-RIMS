@@ -337,7 +337,7 @@ const Profile = () => {
                 <div className={styles.section}>
                   <div className={styles.sectionTop}>
                     <div id="overview" className={styles.heading}>
-                      Overview
+                      {`Overview: Level ${access}`}
                     </div>
                   </div>
                   <Overview
@@ -357,16 +357,16 @@ const Profile = () => {
                   <Row gutter={[20, 20]}>
                     <Col span={12}>
                       <ScrollBox
-                        title="Top 3 Publications with Highest Citation"
+                        title="Top 10 Publications with Highest Citations"
                         data={pubsByCitns_2}
-                        type="pubs"
+                        type="pubs_max"
                       />
                     </Col>
                     <Col span={12}>
                       <ScrollBox
-                        title="Top 3 Publications with Highest Impact Factor"
+                        title="Top 10 Publications with Highest Impact Factors"
                         data={pubsByImpact_2}
-                        type="pubs"
+                        type="pubs_min"
                       />
                     </Col>
                   </Row>

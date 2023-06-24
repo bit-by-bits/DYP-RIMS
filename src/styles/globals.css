@@ -62,12 +62,17 @@ html {
   color: rgb(227, 222, 222) !important;
 }
 
-.ant-menu-light
-  > .ant-menu
-  .ant-menu-submenu-selected
-  > .ant-menu-submenu-title,
-.ant-menu-light .ant-menu-submenu-selected > .ant-menu-submenu-title {
-  color: rgb(206, 157, 157) !important;
+.ant-menu .ant-menu-submenu-open:nth-child(1) > div {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.ant-menu .ant-menu-submenu-open:nth-child(3) > div {
+  color: var(--primary) !important;
+  background-color: white !important;
+}
+
+.ant-menu .ant-menu-submenu-open:nth-child(3) {
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 /* TABLE */

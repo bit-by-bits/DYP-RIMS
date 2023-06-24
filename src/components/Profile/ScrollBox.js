@@ -4,13 +4,16 @@ import publication from "../../../public/publication.svg";
 import styles from "../../styles/profile.module.css";
 import Image from "next/image";
 import useNumber from "../../utils/useNumber";
+import EllipsisBefore from "../Common/EllipsisBefore";
 
 import crossref from "../../../public/logos/crossref.jpg";
 import scopus from "../../../public/logos/scopus.svg";
 import wos from "../../../public/logos/wos.svg";
-import EllipsisBefore from "../Common/EllipsisBefore";
+import hindex from "../../../public/logos/h-index.png";
+import sjr from "../../../public/logos/sjr.png";
+import impact from "../../../public/logos/impact-factor.png";
 
-const PubItem = ({ item, index, limit }) => {
+const PubItem = ({ item, index, limit, type }) => {
   const { Item } = List;
   const { Meta } = Item;
   const { Text, Paragraph } = Typography;
@@ -34,7 +37,7 @@ const PubItem = ({ item, index, limit }) => {
 
             <Paragraph
               className={styles.publicationAuthors}
-              ellipsis={{ rows: 2, expandable: true, symbol: "more" }}
+              ellipsis={{ rows: 1 }}
             >
               <Text strong>Authors: </Text>
               {item.authors}
@@ -45,51 +48,92 @@ const PubItem = ({ item, index, limit }) => {
           <>
             <Divider style={{ backgroundColor: "#97AAB5" }} />
 
-            <Meta
-              title={<Text strong>{"Citations: "}</Text>}
-              description={
-                <Row gutter={16}>
-                  {[
-                    {
-                      label: "Crossref",
-                      value: item.citations?.crossref,
-                      logo: crossref,
-                    },
-                    {
-                      label: "Scopus",
-                      value: item.citations?.scopus,
-                      logo: scopus,
-                    },
-                    {
-                      label: "WOS",
-                      value: item.citations?.wos,
-                      logo: wos,
-                    },
-                  ].map((e, i) => (
-                    <Col
-                      key={i}
-                      span={8}
-                      style={{
-                        gap: 10,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Image
-                        src={e.logo}
-                        alt={e.label}
-                        height={30}
-                        width={30}
-                      />
-                      <Text style={{ color: "#9a2827" }} strong>{`${
-                        e.label
-                      }: ${number(e.value)}`}</Text>
-                    </Col>
-                  ))}
-                </Row>
-              }
-            />
+            {type === "pubs_max" ? (
+              <Meta
+                title={<Text strong>{"Citations: "}</Text>}
+                description={
+                  <Row gutter={16}>
+                    {[
+                      {
+                        label: "Crossref",
+                        value: item.citations?.crossref,
+                        logo: crossref,
+                      },
+                      {
+                        label: "Scopus",
+                        value: item.citations?.scopus,
+                        logo: scopus,
+                      },
+                      {
+                        label: "WOS",
+                        value: item.citations?.wos,
+                        logo: wos,
+                      },
+                    ].map((e, i) => (
+                      <Col
+                        key={i}
+                        span={8}
+                        style={{
+                          gap: 10,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Image
+                          src={e.logo}
+                          alt={e.label}
+                          height={30}
+                          width={30}
+                        />
+                        <Text style={{ color: "#9a2827" }} strong>{`${
+                          e.label
+                        }: ${number(e.value)}`}</Text>
+                      </Col>
+                    ))}
+                  </Row>
+                }
+              />
+            ) : (
+              <Meta
+                title={<Text strong>{"Statistics: "}</Text>}
+                description={
+                  <Row gutter={16}>
+                    {[
+                      {
+                        label: "H-Index",
+                        value: item.h_index,
+                      },
+                      {
+                        label: "Impact Factor",
+                        value: item.impact_factor,
+                      },
+                      {
+                        label: "SJR Quartile",
+                        value: item.sjr,
+                      },
+                    ].map((e, i) => (
+                      <Col
+                        key={i}
+                        span={8}
+                        style={{
+                          gap: 10,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <div style={{ height: 30 }} />
+                        <Text
+                          style={{ color: "#9a2827", minWidth: "max-content" }}
+                          strong
+                        >{`${e.label}: ${number(e.value)}`}</Text>
+                      </Col>
+                    ))}
+                  </Row>
+                }
+              />
+            )}
           </>
         }
       />
@@ -176,15 +220,20 @@ const ScrollBox = ({ title, subtitle, data, type }) => {
 
       <List
         bordered
-        pagination={{ position: "bottom", align: "center", pageSize: 2 }}
-        style={{ borderRadius: 20, border: "2px solid #9a2827" }}
+        dataSource={data}
         itemLayout="horizontal"
-        dataSource={data?.length % 2 === 0 ? data : data.slice(0, -1)}
+        pagination={{ position: "bottom", align: "center", pageSize: 5 }}
+        style={{ borderRadius: 20, border: "2px solid #9a2827" }}
         renderItem={(item, index) =>
-          type === "pubs" ? (
-            <PubItem item={item} index={index} limit={data?.length} />
-          ) : (
+          type === "auths" ? (
             <AuthItem item={item} index={index} limit={data?.length} />
+          ) : (
+            <PubItem
+              item={item}
+              index={index}
+              type={type}
+              limit={data?.length}
+            />
           )
         }
       />
