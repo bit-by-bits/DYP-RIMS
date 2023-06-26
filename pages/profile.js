@@ -327,7 +327,7 @@ const Profile = () => {
 
               {access != 1 ? (
                 <>
-                  <BarChart size={innerWidth} />
+                  <BarChart />
                   <Row gutter={[20, 20]}>
                     <Col span={12}>
                       <ScrollBox

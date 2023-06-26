@@ -20,7 +20,7 @@ export const UserProvider = ({ children }) => {
         : router.push("/");
     }
 
-    console.log(user)
+    console.log(user);
   }, [user, router]);
 
   const change = newUser => {

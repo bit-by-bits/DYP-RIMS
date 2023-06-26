@@ -4,9 +4,12 @@ import { Bar } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { LinearScale, Tooltip, Legend } from "chart.js";
 import { Chart as ChartJS, CategoryScale, BarElement, Title } from "chart.js";
+import { useWindowSize } from "rooks";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 
-const BarChart = ({ size }) => {
+const BarChart = () => {
+  const { innerWidth } = useWindowSize();
+
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -20,7 +23,7 @@ const BarChart = ({ size }) => {
   ChartJS.defaults.set("plugins.datalabels", {
     color: "#000",
     font: {
-      size: size < 1800 ? 10 : 14,
+      size: innerWidth < 1800 ? 10 : 14,
       family: "Jost",
       weight: 500,
     },
@@ -43,7 +46,7 @@ const BarChart = ({ size }) => {
         display: true,
         color: "black",
         font: {
-          size: size < 1800 ? 16 : 22,
+          size: innerWidth < 1800 ? 16 : 22,
           family: "Jost",
           weight: "500",
         },
@@ -54,7 +57,7 @@ const BarChart = ({ size }) => {
         labels: {
           color: "black",
           font: {
-            size: size < 1800 ? 15 : 20,
+            size: innerWidth < 1800 ? 15 : 20,
             family: "Jost",
             weight: "500",
           },
@@ -107,10 +110,9 @@ const BarChart = ({ size }) => {
       </HelmetProvider>
 
       <Bar
+        height={"60%"}
         options={options}
         plugins={[ChartDataLabels]}
-        width={size < 1800 ? "60vw" : "50vw"}
-        height={size < 1800 ? "20vh" : "30vh"}
         data={{ labels: labels, datasets: datasets }}
       />
     </>
