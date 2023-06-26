@@ -120,7 +120,7 @@ const Awards = () => {
             <Side />
 
             <div className={styles.container}>
-              <Top user={user} />
+              <Top />
 
               <div className={styles.formContainer}>
                 <h1 className={styles.heading}>Edit Awards</h1>

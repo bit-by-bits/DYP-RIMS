@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment, createElement } from "react";
 import styles from "../../styles/profile.module.css";
 import router from "next/router";
 import axios from "axios";
+import { useDebounce } from "rooks";
 import URLObj from "../baseURL";
 import { AutoComplete, Button, Input, message, Typography } from "antd";
 import {
@@ -19,22 +20,26 @@ import doaj from "../../../public/logos/doaj.png";
 import pmc from "../../../public/logos/pmc.png";
 import scopus from "../../../public/logos/scopus.svg";
 import wos from "../../../public/logos/wos.svg";
+import { useUser } from "../context/userContext";
 
-const Top = ({ main = {}, user }) => {
+const Top = ({ main = {} }) => {
   // STATES
+
+  const [data, setData] = useState({});
+  const [query, setQuery] = useState("");
+  const [history, setHistory] = useState([]);
+
+  // HOOKS
 
   const { Search } = Input;
   const { Paragraph } = Typography;
-
-  const [data, setData] = useState({});
-  const [history, setHistory] = useState([]);
+  const { user, change } = useUser();
+  const debouncedQuery = useDebounce(setQuery, 1000);
 
   // EFFECTS
 
   useEffect(() => {
     if (user?.token) {
-      getHistory();
-
       axios({
         method: "GET",
         url: `${URLObj.base}/publications/`,
@@ -46,11 +51,9 @@ const Top = ({ main = {}, user }) => {
         .then(res => {
           setData(res.data?.data);
 
-          if (JSON.parse(localStorage.getItem("search"))) {
-            searchPubs(
-              JSON.parse(localStorage.getItem("search"))?.query,
-              res.data?.data
-            );
+          const SEARCH = localStorage.getItem("search");
+          if (SEARCH && JSON.parse(SEARCH)) {
+            searchPubs(JSON.parse(SEARCH)?.query, res.data?.data);
             localStorage.removeItem("search");
           }
         })
@@ -62,61 +65,54 @@ const Top = ({ main = {}, user }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  // FUNCTIONS
+  useEffect(() => {
+    getHistory();
 
-  const logoutUser = () => {
-    localStorage.removeItem("user");
-    router.push("/");
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+
+  // FUNCTIONS
 
   const openNotifications = () => {
     message.error("Notifications are not available yet!");
   };
 
-  const openSettings = () => {
-    message.error("You cannot access settings yet!");
-  };
-
   const getHistory = () => {
-    axios({
-      method: "GET",
-      url: `${URLObj.base}/search/`,
-      headers: {
-        "X-ACCESS-KEY": URLObj.key,
-        "X-AUTH-TOKEN": user?.token,
-      },
-    })
-      .then(res => {
-        setHistory(res.data?.history?.map(e => e?.search_query));
+    if (user?.token) {
+      axios({
+        method: "GET",
+        url: `${URLObj.base}/search/`,
+        headers: {
+          "X-ACCESS-KEY": URLObj.key,
+          "X-AUTH-TOKEN": user?.token,
+        },
       })
-      .catch(err => {
-        console.log(err);
-      });
+        .then(res => setHistory(res.data?.history?.map(e => e?.search_query)))
+        .catch(err => console.log(err));
+    }
   };
 
   const searchPubs = (e, data) => {
     if (main?.publications) {
+      const fixString = str => str?.replaceAll(" ", "").toLowerCase();
+
       if (e) {
         main?.setPublications({
           title: main?.publications?.title,
           body: publicationsMaker(
             data?.filter(p => {
               const keywords = [
-                ...p.keywords?.map(k =>
-                  k.display_name.replaceAll(" ", "").toLowerCase()
-                ),
-                p.publication_title.replaceAll(" ", "").toLowerCase(),
+                ...p.keywords?.map(k => fixString(k.display_name)),
+                fixString(p.publication_title),
               ];
 
-              const query = e.replaceAll(" ", "").toLowerCase();
-
-              console.log(query);
+              const currQuery = fixString(e);
 
               return (
-                keywords?.includes(query) ||
-                keywords?.includes(query.slice(0, -1)) ||
-                keywords?.some(k => k?.includes(query)) ||
-                keywords?.some(k => k?.includes(query.slice(0, -1)))
+                keywords?.includes(currQuery) ||
+                keywords?.includes(currQuery.slice(0, -1)) ||
+                keywords?.some(k => k?.includes(currQuery)) ||
+                keywords?.some(k => k?.includes(currQuery.slice(0, -1)))
               );
             })
           ),
@@ -293,11 +289,12 @@ const Top = ({ main = {}, user }) => {
         <Search
           className={styles.topInput}
           placeholder="Search for research within RIMS using title or keywords"
-          onChange={getHistory}
           onSearch={e => searchPubs(e, data)}
+          onChange={e => debouncedQuery(e.target.value)}
           allowClear
         />
       </AutoComplete>
+
       <Button
         type="primary"
         className={styles.topButton}
@@ -305,9 +302,10 @@ const Top = ({ main = {}, user }) => {
       >
         Add Publications
       </Button>
+
       {[
         {
-          fxn: logoutUser,
+          fxn: () => change({}),
           icon: LogoutOutlined,
         },
         {

@@ -83,7 +83,7 @@ const Student = () => {
             <Side />
 
             <div className={styles.file_wrapper}>
-              <Top user={user} />
+              <Top />
 
               <div>
                 <StudentInfo user={user} setv={setVisible} ID={ID} />

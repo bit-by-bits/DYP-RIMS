@@ -8,8 +8,8 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
+    const localUser = JSON.parse(localStorage.getItem("user"));
+    setUser(localUser);
   }, []);
 
   useEffect(() => {
@@ -19,12 +19,26 @@ export const UserProvider = ({ children }) => {
           localStorage.removeItem("user")
         : router.push("/");
     }
-  }, [router, user]);
+
+    console.log(user)
+  }, [user, router]);
 
   const change = newUser => {
     setUser(newUser);
-    localStorage.setItem("user", JSON.stringify(newUser));
+
+    if (!newUser?.token) {
+      localStorage.removeItem("user");
+      router.push("/");
+    } else {
+      localStorage.setItem("user", JSON.stringify(newUser));
+    }
   };
+
+  useEffect(() => {
+    if (user?.token) {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+  }, [user]);
 
   return (
     <UserContext.Provider value={{ user, change }}>

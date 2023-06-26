@@ -62,7 +62,7 @@ const Uploading = () => {
             <Side />
 
             <div className={styles.uploading_wrapper}>
-              <Top user={user} />
+              <Top />
 
               <div className={styles.uploading_head}>
                 {pending

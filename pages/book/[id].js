@@ -83,7 +83,7 @@ const Book = () => {
             <Side />
 
             <div className={styles.file_wrapper}>
-              <Top user={user} />
+              <Top />
 
               <div>
                 <BookInfo user={user} setv={setVisible} ID={ID} />

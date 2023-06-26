@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 const AccessContext = React.createContext();
 
 export const AccessProvider = ({ children }) => {
-  const [access, setAccess] = useState({});
+  const [access, setAccess] = useState(1);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));

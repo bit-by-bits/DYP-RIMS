@@ -71,12 +71,7 @@ const useDeptPubSetter = () => {
         },
         {
           title: t =>
-            titleMaker(
-              t,
-              "firstncorr",
-              "1st/Corresponding Author",
-              "1st/Corr Author"
-            ),
+            titleMaker(t, "firstncorr", "1st/Corresponding Author", "1st/Corr"),
           dataIndex: "firstncorr",
           key: "firstncorr",
           sorter: (a, b, c) => sorter(a.published, b.published, 0, c),

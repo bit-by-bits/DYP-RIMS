@@ -84,7 +84,7 @@ const File = () => {
             <Side />
 
             <div className={styles.file_wrapper}>
-              <Top user={user} />
+              <Top />
 
               <div>
                 <FileInfo user={user} setv={setVisible} DOI={DOI} />

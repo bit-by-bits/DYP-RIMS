@@ -83,7 +83,7 @@ const Conference = () => {
             <Side />
 
             <div className={styles.file_wrapper}>
-              <Top user={user} />
+              <Top />
 
               <div>
                 <ConferenceInfo user={user} setv={setVisible} ID={ID} />

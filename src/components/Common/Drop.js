@@ -11,11 +11,14 @@ const Drop = () => {
   return (
     <Dropdown
       menu={{
-        items: [1, 2, 3].map(e => ({ key: e, label: `Level ${e}` })),
+        items: ["Individual", "Department", "Institute"].map((e, i) => ({
+          key: `${i + 1}`,
+          label: `${e} Level`,
+        })),
         onClick: e => change(e.key),
         defaultSelectedKeys: ["1"],
         selectable: true,
-        style: { width: 100, textAlign: "center", border: "1px solid #9a2827" },
+        style: { textAlign: "center", border: "1px solid #9a2827" },
       }}
     >
       <Button

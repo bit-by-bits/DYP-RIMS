@@ -209,7 +209,10 @@ const Overview = ({ data, stats, extra, size, counts }) => {
             color: "#F25A1D",
           },
           {
-            label1: "1st/Corresponding Author Publications",
+            label1:
+              access == 1
+                ? "1st/Corresponding Author Publications"
+                : "Number of Faculty",
             label2: (
               <div
                 className={styles.overviewTopCircle}

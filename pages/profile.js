@@ -30,7 +30,7 @@ import useDeptPubSetter from "../src/utils/dataSetters/useDeptPubSetter";
 const Profile = () => {
   // HOOKS
 
-  const { user, change } = useUser();
+  const { user } = useUser();
 
   // HOOKS
 
@@ -91,17 +91,6 @@ const Profile = () => {
     setVisible(true);
 
     if (user?.token) {
-      if (!user?.name) {
-        axios({
-          method: "GET",
-          url: `${URLObj.base}/home`,
-          headers: {
-            "X-ACCESS-KEY": URLObj.key,
-            "X-AUTH-TOKEN": user?.token,
-          },
-        }).then(res => updateUser(res.data?.user));
-      }
-
       if (access === 1) {
         axios({
           method: "GET",
@@ -175,7 +164,7 @@ const Profile = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [access]);
+  }, [user, access]);
 
   useEffect(() => {
     if (access == 1) {
@@ -224,25 +213,6 @@ const Profile = () => {
 
   // FUNCTIONS
 
-  const updateUser = userData => {
-    const access_level = userData?.access_level?.find(
-      e => e.id === Math.max(...userData?.access_level?.map(e => e.id))
-    );
-
-    change({
-      ...user,
-      username: userData?.username,
-      name: userData?.user?.first_name + " " + userData?.user?.last_name,
-      email: userData?.user?.email,
-      picture: userData?.profile_picture,
-      gender: userData?.gender,
-      designation: userData?.designation,
-      department: userData?.department?.name,
-      level: access_level?.display_text,
-      access: access_level?.id,
-    });
-  };
-
   const uploadFile = () => {
     message.loading("Uploading file");
 
@@ -284,7 +254,7 @@ const Profile = () => {
     }
   };
 
-  const handleFilter1600 = (pagination, filters) =>
+  const handleFilterChange = (pagination, filters) =>
     setSelectedFilters_1(filters?.indexed_in?.map(filter => filter) ?? []);
 
   // MEMOS
@@ -334,16 +304,15 @@ const Profile = () => {
             <Side sets={setSections_1} />
 
             <div className={styles.container}>
-              <Top
-                main={{ publications, setPublications, setSections_1 }}
-                user={user}
-              />
+              <Top main={{ publications, setPublications, setSections_1 }} />
 
               {sections_1 == "all" && (
                 <div className={styles.section}>
                   <div className={styles.sectionTop}>
                     <div id="overview" className={styles.heading}>
-                      {`Overview: Level ${access}`}
+                      {`Overview: ${
+                        ["Individual", "Department", "Institute"][access - 1]
+                      } Level`}
                     </div>
                   </div>
                   <Overview
@@ -448,7 +417,7 @@ const Profile = () => {
                           pagination={sections_1 == "all" ? true : false}
                           columns={publications?.title}
                           dataSource={publications?.body}
-                          onChange={handleFilter1600}
+                          onChange={handleFilterChange}
                         />
                       </div>
                     </div>

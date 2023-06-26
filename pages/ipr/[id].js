@@ -83,7 +83,7 @@ const IPR = () => {
             <Side />
 
             <div className={styles.file_wrapper}>
-              <Top user={user} />
+              <Top />
 
               <div>
                 <IPRInfo user={user} setv={setVisible} ID={ID} />

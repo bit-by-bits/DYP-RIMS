@@ -3,7 +3,7 @@ import styles from "../../styles/profile.module.css";
 import React from "react";
 
 const Section = ({
-  data,
+  data = { title: [], body: [] },
   head = { header: "", title: "" },
   sections = { sec: "all", setSec: () => {} },
 }) => {

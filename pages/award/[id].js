@@ -83,7 +83,7 @@ const Award = () => {
             <Side />
 
             <div className={styles.file_wrapper}>
-              <Top user={user} />
+              <Top />
 
               <div>
                 <AwardInfo user={user} setv={setVisible} ID={ID} />

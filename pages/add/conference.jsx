@@ -162,7 +162,7 @@ const Conferences = () => {
             <Side />
 
             <div className={styles.container}>
-              <Top user={user} />
+              <Top />
 
               <div
                 style={step ? { display: "none" } : { height: "max-content" }}

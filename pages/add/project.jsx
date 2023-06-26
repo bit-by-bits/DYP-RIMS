@@ -102,7 +102,7 @@ const Projects = () => {
             <Side />
 
             <div className={styles.container}>
-              <Top user={user} />
+              <Top />
 
               <div className={styles.formContainer}>
                 <h1 className={styles.heading}>Add Projects</h1>

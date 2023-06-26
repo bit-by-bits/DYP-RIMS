@@ -125,7 +125,7 @@ const Downloads = () => {
             <Side />
 
             <div className={styles2.container}>
-              <Top user={user} />
+              <Top />
 
               <div className={styles2.formContainer}>
                 <h1 className={styles2.heading}>Request A Download</h1>

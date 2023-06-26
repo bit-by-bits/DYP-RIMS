@@ -98,7 +98,7 @@ const Edit = () => {
             <Side />
 
             <div className={styles.container}>
-              <Top user={user} />
+              <Top />
 
               <div className={styles.formContainer}>
                 <h1 className={styles.heading}>Edit Profile</h1>
@@ -110,6 +110,7 @@ const Edit = () => {
                   initialValues={{
                     first_name: user?.name?.split(" ")[0],
                     last_name: user?.name?.split(" ")?.slice(-1),
+                    gender: user?.gender,
                     department: user?.department,
                     level: user?.level,
                   }}

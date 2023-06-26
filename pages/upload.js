@@ -35,6 +35,8 @@ const Publications = () => {
 
   useEffect(() => {
     if (file) add();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
 
   // FUNCTIONS
@@ -114,7 +116,7 @@ const Publications = () => {
             <Side />
 
             <div className={styles.upload_wrapper}>
-              <Top user={user} />
+              <Top />
 
               <div className={styles.upload_left}>
                 <Dragger
