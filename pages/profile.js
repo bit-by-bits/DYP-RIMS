@@ -4,7 +4,7 @@ import URLObj from "../src/components/baseURL";
 import styles from "../src/styles/profile.module.css";
 import { useState, useEffect, useMemo } from "react";
 import { Spin, Button, FloatButton, Row, Col } from "antd";
-import { Table, Modal, Upload, message } from "antd";
+import { Table, Modal, Upload, message, DatePicker } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import { useWindowSize } from "rooks";
 
@@ -30,9 +30,8 @@ import useDeptPubSetter from "../src/utils/dataSetters/useDeptPubSetter";
 const Profile = () => {
   // HOOKS
 
+  const { RangePicker } = DatePicker;
   const { user } = useUser();
-
-  // HOOKS
 
   const { access } = useAccess();
   const { setExtra } = useExtraSetter();
@@ -84,6 +83,7 @@ const Profile = () => {
   const [authorsMax_2, setAuthorsMax_2] = useState([]);
   const [authorsMin_2, setAuthorsMin_2] = useState([]);
   const [publications_2, setPublications_2] = useState({ title: [], body: [] });
+  const [pubTrends_2, setPubTrends_2] = useState([]);
 
   // EFFECTS
 
@@ -136,6 +136,7 @@ const Profile = () => {
             setCounts_2(DATA?.counts);
             setAuthorsMax_2(DATA?.top_10_authors);
             setAuthorsMin_2(DATA?.least_10_authors);
+            setPubTrends_2(DATA?.publication_trend);
 
             const { BODY: BODY_1 } = pubData(
               DATA?.top_ten_publications?.highest_citations ?? []
@@ -308,13 +309,45 @@ const Profile = () => {
 
               {sections_1 == "all" && (
                 <div className={styles.section}>
-                  <div className={styles.sectionTop}>
-                    <div id="overview" className={styles.heading}>
-                      {`Overview: ${
-                        ["Individual", "Department", "Institute"][access - 1]
-                      } Level`}
+                  {access == 1 ? (
+                    <div className={styles.sectionTop}>
+                      <div id="overview" className={styles.heading}>
+                        {`Overview: ${
+                          ["Individual", "Department", "Institute"][access - 1]
+                        } Level`}
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className={styles.sectionTop}>
+                      <div id="overview" className={styles.heading}>
+                        {`Overview: ${
+                          ["Individual", "Department", "Institute"][access - 1]
+                        } Level`}
+                      </div>
+                      <div style={{ display: "flex", gap: 5 }}>
+                        {[
+                          "All Time",
+                          "Last 5 Years",
+                          "Last 3 Years",
+                          "Last Year",
+                        ].map((e, i) => (
+                          <Button
+                            key={i}
+                            type="primary"
+                            className={styles.overviewButton}
+                          >
+                            {e}
+                          </Button>
+                        ))}
+
+                        <RangePicker
+                          className={styles.overviewButton}
+                          picker="year"
+                        />
+                      </div>
+                    </div>
+                  )}
+
                   <Overview
                     data={data}
                     stats={statistics_1}
@@ -327,7 +360,32 @@ const Profile = () => {
 
               {access != 1 ? (
                 <>
-                  <BarChart />
+                  <Col
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                    }}
+                  >
+                    <div style={{ display: "flex", gap: 5 }}>
+                      {["Last 10 Years"].map((e, i) => (
+                        <Button
+                          key={i}
+                          type="primary"
+                          className={styles.overviewButton}
+                        >
+                          {e}
+                        </Button>
+                      ))}
+
+                      <RangePicker
+                        className={styles.overviewButton}
+                        picker="year"
+                      />
+                    </div>
+                    <BarChart trends={pubTrends_2} />
+                  </Col>
+
                   <Row gutter={[20, 20]}>
                     <Col span={12}>
                       <ScrollBox

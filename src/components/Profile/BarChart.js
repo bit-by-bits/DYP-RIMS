@@ -7,7 +7,7 @@ import { Chart as ChartJS, CategoryScale, BarElement, Title } from "chart.js";
 import { useWindowSize } from "rooks";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 
-const BarChart = () => {
+const BarChart = ({ trends }) => {
   const { innerWidth } = useWindowSize();
 
   ChartJS.register(
@@ -66,21 +66,19 @@ const BarChart = () => {
     },
   };
 
-  const labels = Array.from({ length: 8 }, (_, i) => 2013 + i);
+  const labels = trends?.map(e => e.year);
 
   const datasets = [
-    ["Total", "#30145E"],
-    ["Scopus", "#E780AD"],
-    ["Web of Science", "#FF9855"],
-    ["Pubmed", "#52BEBF"],
-    ["DOAJ", "#FD9489"],
-    ["Non-Indexed", "#9A2827"],
-  ].map(([label, color]) => ({
+    ["Total", "total", "#30145E"],
+    ["Scopus", "scopus", "#E780AD"],
+    ["Web of Science", "wos", "#FF9855"],
+    ["Pubmed", "pubmed", "#52BEBF"],
+    ["DOAJ", "doaj", "#FD9489"],
+    ["Non-Indexed", "none", "#9A2827"],
+  ].map(([label, trend, color]) => ({
     barPercentage: 0.7,
     label: label,
-    data: labels.map((e, i) =>
-      i < 6 ? Math.floor(Math.random() * 200) : Math.floor(Math.random() * 400)
-    ),
+    data: trends?.map(e => e.trends?.[trend]),
     backgroundColor: color,
   }));
 

@@ -19,8 +19,6 @@ export const UserProvider = ({ children }) => {
           localStorage.removeItem("user")
         : router.push("/");
     }
-
-    console.log(user);
   }, [user, router]);
 
   const change = newUser => {

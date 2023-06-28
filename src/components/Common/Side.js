@@ -1,5 +1,5 @@
 import { Button, Menu, Skeleton } from "antd";
-import React, { createElement } from "react";
+import { createElement, useState, useEffect } from "react";
 import {
   HomeOutlined,
   ProjectOutlined,
@@ -18,91 +18,119 @@ import styles from "../../styles/profile.module.css";
 import { useRouter } from "next/router";
 import { useAccess } from "../context/accessContext";
 import { useUser } from "../context/userContext";
+import axios from "axios";
+import URLObj from "../baseURL";
 
 const Side = ({ sets = () => {} }) => {
   // HOOKS
 
   const router = useRouter();
+
   const { user } = useUser();
   const { access } = useAccess();
+
+  // STATES
+
+  const [data_1, setData_1] = useState({});
+  const [first, setFirst] = useState([]);
+
+  const [data_2, setData_2] = useState({});
+  const [second, setSecond] = useState([]);
+
+  // EFFECTS
+
+  useEffect(() => {
+    setFirst(
+      [
+        {
+          icon: FileTextOutlined,
+          link: "/upload",
+          label: "Add Publication",
+        },
+        {
+          icon: MessageOutlined,
+          link: "/add/conference",
+          label: "Add Conference",
+        },
+        {
+          icon: BookOutlined,
+          link: "/add/book",
+          label: "Add Book/Chapter",
+        },
+        {
+          icon: ProjectOutlined,
+          link: "/add/project",
+          label: "Add Project",
+        },
+        {
+          icon: TrophyOutlined,
+          link: "/add/award",
+          label: "Add Award",
+        },
+        {
+          icon: BulbOutlined,
+          link: "/add/ipr",
+          label: "Add IPR",
+        },
+        {
+          icon: UserAddOutlined,
+          link: "/add/student",
+          label: "Add Student",
+        },
+      ].map((e, i) => ({
+        key: `2.${i}`,
+        icon: createElement(e.icon),
+        label: <Link href={e.link}>{e.label}</Link>,
+      }))
+    );
+  }, []);
+
+  useEffect(() => {
+    if (user?.token) {
+      axios({
+        method: "GET",
+        url: `${URLObj.base}/faculty/`,
+        headers: {
+          "X-ACCESS-KEY": URLObj.key,
+          "X-AUTH-TOKEN": user?.token,
+          "X-ACCESS-LEVEL": "department",
+        },
+      })
+        .then(res => setData_2(res.data?.faculty))
+        .catch(err => console.log(err));
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (data_2) {
+      let DATA_SECOND = [];
+      Object.entries(data_2).forEach(([key, value]) => {
+        DATA_SECOND.push({
+          label: key,
+          children: value.map(e => e.user.first_name + " " + e.user.last_name),
+        });
+      });
+
+      setSecond(
+        DATA_SECOND.map((e, i) => ({
+          key: `2.${i}`,
+          label: `${e.children?.length} ${e.label}${
+            e.children.length > 1 ? "s" : ""
+          }`,
+          children: e.children.map((child, index) => ({
+            key: `2.${i}.${index}`,
+            label: child,
+          })),
+        }))
+      );
+    }
+  }, [data_2]);
 
   // FUNCTIONS
 
   const edit = () => {
     router.push("/profile/edit");
   };
-
-  // DATA STORE
-
-  const FIRST = [
-    {
-      icon: FileTextOutlined,
-      link: "/upload",
-      label: "Add Publication",
-    },
-    {
-      icon: MessageOutlined,
-      link: "/add/conference",
-      label: "Add Conference",
-    },
-    {
-      icon: BookOutlined,
-      link: "/add/book",
-      label: "Add Book/Chapter",
-    },
-    {
-      icon: ProjectOutlined,
-      link: "/add/project",
-      label: "Add Project",
-    },
-    {
-      icon: TrophyOutlined,
-      link: "/add/award",
-      label: "Add Award",
-    },
-    {
-      icon: BulbOutlined,
-      link: "/add/ipr",
-      label: "Add IPR",
-    },
-    {
-      icon: UserAddOutlined,
-      link: "/add/student",
-      label: "Add Student",
-    },
-  ].map((e, i) => ({
-    key: `2.${i}`,
-    icon: createElement(e.icon),
-    label: <Link href={e.link}>{e.label}</Link>,
-  }));
-
-  const SECOND = [
-    {
-      label: "Professor",
-      children: ["1", "2"],
-    },
-    {
-      label: "Associate Professor",
-      children: ["1", "2"],
-    },
-    {
-      label: "Assistant Professor",
-      children: ["1", "2"],
-    },
-    {
-      label: "Senior Resident/Registrar",
-      children: ["1", "2"],
-    },
-  ].map((e, i) => ({
-    key: `2.${i}`,
-    label: `${e.children?.length} ${e.label}${
-      e.children.length > 1 ? "s" : ""
-    }`,
-    children: e.children.map((child, index) => ({
-      key: `2.${i}.${index}`,
-      label: `${child} ${e.label}${e.children.length > 1 ? "s" : ""}`,
-    })),
-  }));
 
   return (
     <div className={styles.sideWrapper}>
@@ -166,7 +194,7 @@ const Side = ({ sets = () => {} }) => {
           return index == 2
             ? {
                 ...ITEM,
-                children: access == 1 ? FIRST : SECOND,
+                children: access == 1 ? first : second,
                 label: item.label,
               }
             : {

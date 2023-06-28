@@ -62,10 +62,6 @@ html {
   color: rgb(227, 222, 222) !important;
 }
 
-.ant-menu .ant-menu-submenu-open:nth-child(1) > div {
-  background-color: rgba(0, 0, 0, 0.2);
-}
-
 .ant-menu .ant-menu-submenu-open:nth-child(3) > div {
   color: var(--primary) !important;
   background-color: white !important;
@@ -73,6 +69,10 @@ html {
 
 .ant-menu .ant-menu-submenu-open:nth-child(3) {
   background-color: rgba(255, 255, 255, 0.25);
+}
+
+.ant-menu .ant-menu-submenu-open > div {
+  background-color: rgba(0, 0, 0, 0.2) !important;
 }
 
 /* TABLE */
