@@ -1,37 +1,22 @@
+import axios from "axios";
+import URLObj from "../src/components/baseURL";
 import Head from "next/head";
-import Side from "../src/Common/Side";
-import { useRouter } from "next/router";
+import Side from "../src/components/Common/Side";
+import Top from "../src/components/Common/Top";
 import { useEffect, useState } from "react";
-import Top from "../src/Common/Top";
-import styles2 from "../styles/add.module.css";
+import styles2 from "../src/styles/add.module.css";
+import { useUser } from "../src/components/context/userContext";
 import { Form, Radio, message, Spin, Table } from "antd";
 import { Button, DatePicker, FloatButton, Select } from "antd";
-import axios from "axios";
-import URLObj from "../src/baseURL";
 
 const Downloads = () => {
-  // BOILERPLATE
+  // HOOKS
 
-  const router = useRouter();
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined")
-      user
-        ? Date.now() - user?.setUpTime > 86400000 &&
-          localStorage.removeItem("user")
-        : router.push("/");
-  }, [router, user]);
-
-  // STATES
-
+  const { user } = useUser();
   const [form] = Form.useForm();
   const { RangePicker } = DatePicker;
+
+  // STATES
 
   const [data, setData] = useState([]);
   const [allDates, setAllDates] = useState(true);
@@ -40,7 +25,7 @@ const Downloads = () => {
   // EFFECTS
 
   useEffect(() => {
-    const DATA = JSON.parse(localStorage.getItem("data"));
+    const DATA = JSON.parse(localStorage.getItem("downloads"));
 
     if (DATA && DATA?.length) {
       setData(DATA);
@@ -115,7 +100,7 @@ const Downloads = () => {
     };
 
     setData([DATA, ...data]);
-    localStorage.setItem("data", JSON.stringify([DATA, ...data]));
+    localStorage.setItem("downloads", JSON.stringify([DATA, ...data]));
   };
 
   return (
@@ -140,7 +125,7 @@ const Downloads = () => {
             <Side />
 
             <div className={styles2.container}>
-              <Top user={user} />
+              <Top />
 
               <div className={styles2.formContainer}>
                 <h1 className={styles2.heading}>Request A Download</h1>
@@ -154,7 +139,6 @@ const Downloads = () => {
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
                   onReset={onReset}
-                  autoComplete="off"
                 >
                   <Form.Item
                     label="What to Download?"

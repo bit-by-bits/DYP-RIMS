@@ -2,31 +2,19 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import styles from "../styles/upload.module.css";
+import styles from "../src/styles/upload.module.css";
 import Image from "next/image";
-import URLObj from "../src/baseURL";
+import URLObj from "../src/components/baseURL";
 import { FloatButton, Input, Spin, Upload, message } from "antd";
-import Side from "../src/Common/Side";
-import Top from "../src/Common/Top";
+import Side from "../src/components/Common/Side";
+import Top from "../src/components/Common/Top";
+import { useUser } from "../src/components/context/userContext";
 
 const Publications = () => {
-  // BOILERPLATE
+  // HOOKS
 
   const router = useRouter();
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined")
-      user
-        ? Date.now() - user?.setUpTime > 86400000 &&
-          localStorage.removeItem("user")
-        : router.push("/");
-  }, [router, user]);
+  const { user } = useUser();
 
   // STATES
 
@@ -47,6 +35,8 @@ const Publications = () => {
 
   useEffect(() => {
     if (file) add();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
 
   // FUNCTIONS
@@ -126,7 +116,7 @@ const Publications = () => {
             <Side />
 
             <div className={styles.upload_wrapper}>
-              <Top user={user} />
+              <Top />
 
               <div className={styles.upload_left}>
                 <Dragger
@@ -139,7 +129,7 @@ const Publications = () => {
                     width={60}
                     height={60}
                     alt="ADD"
-                    src="/upload/upload.png"
+                    src="/upload.png"
                     className={styles.upload_img}
                   />
                   <div className={styles.upload_title}>Add a file</div>

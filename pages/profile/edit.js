@@ -1,32 +1,20 @@
 import Head from "next/head";
 import axios from "axios";
-import URLObj from "../../src/baseURL";
-import Side from "../../src/Common/Side";
+import URLObj from "../../src/components/baseURL";
+import Side from "../../src/components/Common/Side";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Top from "../../src/Common/Top";
-import styles from "../../styles/add.module.css";
+import Top from "../../src/components/Common/Top";
+import styles from "../../src/styles/add.module.css";
 import { Button, DatePicker, FloatButton, Input, Radio } from "antd";
 import { Select, Spin, Upload, Form, message } from "antd";
+import { useUser } from "../../src/components/context/userContext";
 
 const Edit = () => {
   // BOILERPLATE
 
   const router = useRouter();
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined")
-      user
-        ? Date.now() - user?.setUpTime > 86400000 &&
-          localStorage.removeItem("user")
-        : router.push("/");
-  }, [router, user]);
+  const { user } = useUser();
 
   // STATES
 
@@ -110,7 +98,7 @@ const Edit = () => {
             <Side />
 
             <div className={styles.container}>
-              <Top user={user} />
+              <Top />
 
               <div className={styles.formContainer}>
                 <h1 className={styles.heading}>Edit Profile</h1>
@@ -122,14 +110,14 @@ const Edit = () => {
                   initialValues={{
                     first_name: user?.name?.split(" ")[0],
                     last_name: user?.name?.split(" ")?.slice(-1),
+                    gender: user?.gender,
                     department: user?.department,
-                    level: user?.level?.slice(0, -1),
+                    level: user?.level,
                   }}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
-                  autoComplete="off"
                 >
                   <Form.Item
                     label="First Name"

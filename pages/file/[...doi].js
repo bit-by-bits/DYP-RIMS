@@ -1,35 +1,23 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import styles from "../../styles/file.module.css";
+import styles from "../../src/styles/file.module.css";
 import React, { useState, useEffect } from "react";
-import FileInfo from "../../src/File/FileInfo";
+import FileInfo from "../../src/components/File/FileInfo";
 import { FloatButton, Spin, message } from "antd";
-import Side from "../../src/Common/Side";
-import Top from "../../src/Common/Top";
+import Side from "../../src/components/Common/Side";
+import Top from "../../src/components/Common/Top";
 import axios from "axios";
-import URLObj from "../../src/baseURL";
+import URLObj from "../../src/components/baseURL";
+import { useUser } from "../../src/components/context/userContext";
 
 const File = () => {
-  // BOILERPLATE
+  // HOOKS
 
   const router = useRouter();
-  const [user, setUser] = useState({});
+  const { user } = useUser();
 
   const { doi } = router.query;
   const [DOI, setDOI] = useState("");
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined")
-      user
-        ? Date.now() - user?.setUpTime > 86400000 &&
-          localStorage.removeItem("user")
-        : router.push("/");
-  }, [router, user]);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -96,7 +84,7 @@ const File = () => {
             <Side />
 
             <div className={styles.file_wrapper}>
-              <Top user={user} />
+              <Top />
 
               <div>
                 <FileInfo user={user} setv={setVisible} DOI={DOI} />

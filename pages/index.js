@@ -1,27 +1,18 @@
 import Head from "next/head";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import styles from "../styles/login.module.css";
+import styles from "../src/styles/login.module.css";
 import { useRouter } from "next/router";
-import URLObj from "../src/baseURL";
+import URLObj from "../src/components/baseURL";
 import { Spin, message } from "antd";
 import Image from "next/image";
+import { useUser } from "../src/components/context/userContext";
 
 export default function Home() {
   // BOILERPLATE
 
   const router = useRouter();
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    if (user) {
-      const time = Date.now() - user?.setUpTime;
-
-      if (time < 86400000) router.push("/profile");
-      else localStorage.removeItem("user");
-    }
-  }, [router]);
+  const { user, change } = useUser();
 
   // STATES
 
@@ -30,31 +21,51 @@ export default function Home() {
   // EFFECTS
 
   useEffect(() => {
+    if (user?.token && user?.setUpTime && !user?.name) {
+      if (user.setUpTime + 86400000 > Date.now()) {
+        router.push("/profile");
+        message.success("Session Restored");
+      } else {
+        change({});
+        message.error("Session Expired");
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     /* global google */
 
     google.accounts.id.initialize({
       client_id:
         "827028625147-3sai220i70tsqd8rqr89i4gnrl2d6n2j.apps.googleusercontent.com",
-      callback: response =>
-        axios({
+      callback: async response => {
+        await axios({
           method: "POST",
           url: `${URLObj.base}/login/`,
           headers: {
             "X-ACCESS-KEY": URLObj.key,
             "X-GOOGLE-ID-TOKEN": response.credential,
           },
-        })
-          .then(res => {
-            message.success("Login Successful");
-
-            localStorage.setItem(
-              "user",
-              JSON.stringify({ token: res.data?.token, setUpTime: Date.now() })
-            );
-
-            router.push("/profile");
+        }).then(res => {
+          axios({
+            method: "GET",
+            url: `${URLObj.base}/home`,
+            headers: {
+              "X-ACCESS-KEY": URLObj.key,
+              "X-AUTH-TOKEN": res.data?.token,
+            },
           })
-          .catch(err => message.error("Login Failed")),
+            .then(resp =>
+              updateUser(
+                { token: res.data?.token, setUpTime: Date.now() },
+                resp.data?.user
+              )
+            )
+            .catch(err => message.error("Login Failed"));
+        });
+      },
     });
 
     google.accounts.id.renderButton(document.getElementById("signInDiv"), {
@@ -68,6 +79,29 @@ export default function Home() {
   }, []);
 
   // FUNCTIONS
+
+  const updateUser = (prevData, newData) => {
+    const access_level = newData?.access_level?.find(
+      e => e.id === Math.max(...newData?.access_level?.map(e => e.id))
+    );
+
+    change({
+      ...prevData,
+      username: newData?.username,
+      name: newData?.user?.first_name + " " + newData?.user?.last_name,
+      email: newData?.user?.email,
+      picture: newData?.profile_picture,
+      gender: newData?.gender,
+      designation: newData?.designation,
+      department: newData?.department?.name,
+      level: access_level?.display_text,
+      access: access_level?.id,
+      max_access: access_level?.id,
+    });
+
+    message.success("Login Successful");
+    router.push("/profile");
+  };
 
   return (
     <>

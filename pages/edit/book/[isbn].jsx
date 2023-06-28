@@ -2,34 +2,22 @@ import axios from "axios";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import styles from "../../../styles/add.module.css";
-import Side from "../../../src/Common/Side";
-import Top from "../../../src/Common/Top";
-import URLObj from "../../../src/baseURL";
+import styles from "../../../src/styles/add.module.css";
+import Side from "../../../src/components/Common/Side";
+import Top from "../../../src/components/Common/Top";
+import URLObj from "../../../src/components/baseURL";
 import { Button, DatePicker, FloatButton } from "antd";
 import { Spin, message, Form, Input, Select } from "antd";
+import { useUser } from "../../../src/components/context/userContext";
 
 const Books = () => {
-  // BOILERPLATE
+  // HOOKS
 
   const router = useRouter();
-  const [user, setUser] = useState({});
+  const { user } = useUser();
 
   const { isbn } = router.query;
   const [ISBN, setISBN] = useState("");
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined")
-      user
-        ? Date.now() - user?.setUpTime > 86400000 &&
-          localStorage.removeItem("user")
-        : router.push("/");
-  }, [router, user]);
 
   useEffect(() => {
     if (router.isReady) setISBN(isbn);
@@ -131,7 +119,7 @@ const Books = () => {
             <Side />
 
             <div className={styles.container}>
-              <Top user={user} />
+              <Top />
 
               <div className={styles.formContainer}>
                 <h1 className={styles.heading}>Edit Books/Chapters</h1>
@@ -151,7 +139,6 @@ const Books = () => {
                   }
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
-                  autoComplete="off"
                 >
                   <Form.Item
                     label="Name Of Faculty"

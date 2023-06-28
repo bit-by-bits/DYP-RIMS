@@ -1,44 +1,24 @@
-import {
-  Button,
-  DatePicker,
-  FloatButton,
-  Form,
-  Input,
-  Select,
-  Spin,
-  message,
-} from "antd";
-import styles from "../../styles/add.module.css";
+import { Button, DatePicker, FloatButton, Form } from "antd";
+import { Input, Select, Spin, message } from "antd";
+import styles from "../../src/styles/add.module.css";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import Side from "../../src/Common/Side";
+import Side from "../../src/components/Common/Side";
 import { useRouter } from "next/router";
-import Top from "../../src/Common/Top";
+import Top from "../../src/components/Common/Top";
 import axios from "axios";
-import URLObj from "../../src/baseURL";
+import URLObj from "../../src/components/baseURL";
+import { useUser } from "../../src/components/context/userContext";
 
 const Students = () => {
-  // BOILERPLATE
+  // HOOKS
 
   const router = useRouter();
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined")
-      user
-        ? Date.now() - user?.setUpTime > 86400000 &&
-          localStorage.removeItem("user")
-        : router.push("/");
-  }, [router, user]);
+  const { user } = useUser();
+  const [form] = Form.useForm();
 
   // STATES
 
-  const [form] = Form.useForm();
   const [visible, setVisible] = useState(true);
 
   // EFFECTS
@@ -111,7 +91,7 @@ const Students = () => {
             <Side />
 
             <div className={styles.container}>
-              <Top user={user} />
+              <Top />
 
               <div className={styles.formContainer}>
                 <h1 className={styles.heading}>Add Students Guided</h1>
@@ -128,7 +108,6 @@ const Students = () => {
                   }}
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
-                  autoComplete="off"
                 >
                   <Form.Item
                     label="Name Of Faculty"

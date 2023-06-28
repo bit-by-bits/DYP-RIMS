@@ -1,35 +1,23 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import styles from "../../styles/file.module.css";
+import styles from "../../src/styles/file.module.css";
 import React, { useState, useEffect } from "react";
 import { FloatButton, Spin, message } from "antd";
-import Side from "../../src/Common/Side";
-import Top from "../../src/Common/Top";
-import ConferenceInfo from "../../src/Add/ConferenceInfo";
-import URLObj from "../../src/baseURL";
+import Side from "../../src/components/Common/Side";
+import Top from "../../src/components/Common/Top";
+import ConferenceInfo from "../../src/components/Add/ConferenceInfo";
+import URLObj from "../../src/components/baseURL";
 import axios from "axios";
+import { useUser } from "../../src/components/context/userContext";
 
 const Conference = () => {
-  // BOILERPLATE
+  // HOOKS
 
   const router = useRouter();
-  const [user, setUser] = useState({});
+  const { user } = useUser();
 
   const { id } = router.query;
   const [ID, setID] = useState("");
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined")
-      user
-        ? Date.now() - user?.setUpTime > 86400000 &&
-          localStorage.removeItem("user")
-        : router.push("/");
-  }, [router, user]);
 
   useEffect(() => {
     if (router.isReady) setID(id);
@@ -95,7 +83,7 @@ const Conference = () => {
             <Side />
 
             <div className={styles.file_wrapper}>
-              <Top user={user} />
+              <Top />
 
               <div>
                 <ConferenceInfo user={user} setv={setVisible} ID={ID} />

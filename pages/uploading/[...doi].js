@@ -1,34 +1,22 @@
 import React, { Fragment, useState, useEffect } from "react";
 import Head from "next/head";
-import styles from "../../styles/uploading.module.css";
+import styles from "../../src/styles/uploading.module.css";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { FloatButton, Spin } from "antd";
-import Side from "../../src/Common/Side";
-import Top from "../../src/Common/Top";
-import FileInfo from "../../src/Upload/FileInfo";
+import Side from "../../src/components/Common/Side";
+import Top from "../../src/components/Common/Top";
+import FileInfo from "../../src/components/Upload/FileInfo";
+import { useUser } from "../../src/components/context/userContext";
 
 const Uploading = () => {
-  // BOILERPLATE
+  // HOOKS
 
   const router = useRouter();
-  const [user, setUser] = useState({});
+  const { user } = useUser();
 
   const { doi } = router.query;
   const [DOI, setDOI] = useState("");
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined")
-      user
-        ? Date.now() - user?.setUpTime > 86400000 &&
-          localStorage.removeItem("user")
-        : router.push("/");
-  }, [router, user]);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -74,7 +62,7 @@ const Uploading = () => {
             <Side />
 
             <div className={styles.uploading_wrapper}>
-              <Top user={user} />
+              <Top />
 
               <div className={styles.uploading_head}>
                 {pending
