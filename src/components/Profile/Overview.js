@@ -26,6 +26,9 @@ import gold from "../../../public/logos/gold-oa.png";
 import bronze from "../../../public/logos/bronze-oa.png";
 import useNumber from "../../utils/useNumber";
 import { useWindowSize } from "rooks";
+import axios from "axios";
+import URLObj from "../baseURL";
+import { useUser } from "../context/userContext";
 
 const Overview = ({
   one = { data: {}, stats: {}, extra: {} },
@@ -33,17 +36,43 @@ const Overview = ({
 }) => {
   // HOOKS
 
+  const { user } = useUser();
+  const { access } = useAccess();
+
   const router = useRouter();
   const { number } = useNumber();
-  const { access } = useAccess();
   const { innerWidth } = useWindowSize();
 
   // STATES
 
-  const [overview, setOverview] = useState({});
+  const [faculty, setFaculty] = useState([]);
   const [strings, setStrings] = useState({});
+  const [overview, setOverview] = useState({});
 
   // EFFECTS
+
+  useEffect(() => {
+    if (user) {
+      axios({
+        method: "GET",
+        url: `${URLObj.base}/faculty/`,
+        headers: {
+          "X-ACCESS-KEY": URLObj.key,
+          "X-AUTH-TOKEN": user?.token,
+          "X-ACCESS-LEVEL": "department",
+        },
+      })
+        .then(res =>
+          setFaculty(
+            Object.entries(res.data?.faculty)?.reduce(
+              (a, b) => a + b[1]?.length,
+              0
+            )
+          )
+        )
+        .catch(err => console.log(err));
+    }
+  }, [user]);
 
   useEffect(() => {
     const check = (val1, val2, val3) => {
@@ -55,7 +84,7 @@ const Overview = ({
     const sum = arr => arr?.reduce((a, b) => a + b, 0);
 
     const { data, stats, extra } = one;
-    const { counts, faculty } = two;
+    const { counts } = two;
 
     setOverview({
       publication: check(data?.publication?.length, counts?.publication, 0),
@@ -90,11 +119,7 @@ const Overview = ({
         0
       ),
       indexed_total: check(extra?.index?.total, counts?.indexed_at?.total, 0),
-      first_author: check(
-        stats?.FAuthor,
-        Object.entries(faculty)?.reduce((a, b) => a + b[1]?.length, 0),
-        0
-      ),
+      first_author: check(stats?.FAuthor, faculty, 0),
       Q1: check(stats?.quartiles?.Q1, counts?.quartiles?.Q1, 0),
       Q2: check(stats?.quartiles?.Q2, counts?.quartiles?.Q2, 0),
       Q3: check(stats?.quartiles?.Q3, counts?.quartiles?.Q3, 0),
@@ -140,7 +165,7 @@ const Overview = ({
         0
       ),
     });
-  }, [one, two, access]);
+  }, [one, two, faculty, access]);
 
   useEffect(() => {
     const check = (str1, str2) => (innerWidth > 1400 ? str1 : str2);

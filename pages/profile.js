@@ -84,7 +84,6 @@ const Profile = () => {
   const [authorsMin_2, setAuthorsMin_2] = useState([]);
   const [publications_2, setPublications_2] = useState({ title: [], body: [] });
   const [pubTrends_2, setPubTrends_2] = useState([]);
-  const [faculty_2, setFaculty_2] = useState([]);
 
   // EFFECTS
 
@@ -122,7 +121,6 @@ const Profile = () => {
       }
 
       if (access === 2) {
-        console.log(ranges);
         axios({
           method: "GET",
           url: `${URLObj.base}/home/?filter=${ranges?.overview}&graph_range=${ranges?.graph}`,
@@ -159,18 +157,6 @@ const Profile = () => {
           .catch(err => {
             console.log(err);
           });
-
-        axios({
-          method: "GET",
-          url: `${URLObj.base}/faculty/`,
-          headers: {
-            "X-ACCESS-KEY": URLObj.key,
-            "X-AUTH-TOKEN": user?.token,
-            "X-ACCESS-LEVEL": "department",
-          },
-        })
-          .then(res => setFaculty_2(res.data?.faculty))
-          .catch(err => console.log(err));
       }
 
       if (access === 3) {
@@ -316,7 +302,7 @@ const Profile = () => {
           />
 
           <div style={{ paddingLeft: "18vw" }}>
-            <Side sets={setSections} faculty={faculty_2} />
+            <Side sets={setSections} />
 
             <div className={styles.container}>
               <Top main={{ publications, setPublications, setSections }} />
@@ -395,7 +381,7 @@ const Profile = () => {
 
                   <Overview
                     one={{ data: data, stats: statistics_1, extra: extra_1 }}
-                    two={{ counts: counts_2, faculty: faculty_2 }}
+                    two={{ counts: counts_2 }}
                   />
                 </div>
               )}
