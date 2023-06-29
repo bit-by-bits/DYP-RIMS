@@ -3,10 +3,9 @@ import Head from "next/head";
 import URLObj from "../src/components/baseURL";
 import styles from "../src/styles/profile.module.css";
 import { useState, useEffect, useMemo } from "react";
+import { InboxOutlined } from "@ant-design/icons";
 import { Spin, Button, FloatButton, Row, Col } from "antd";
 import { Table, Modal, Upload, message, DatePicker } from "antd";
-import { InboxOutlined } from "@ant-design/icons";
-import { useWindowSize } from "rooks";
 
 import Top from "../src/components/Common/Top";
 import Side from "../src/components/Common/Side";
@@ -30,11 +29,14 @@ import useDeptPubSetter from "../src/utils/dataSetters/useDeptPubSetter";
 const Profile = () => {
   // HOOKS
 
+  const { Dragger } = Upload;
   const { RangePicker } = DatePicker;
-  const { user } = useUser();
 
+  const { user } = useUser();
   const { access } = useAccess();
+
   const { setExtra } = useExtraSetter();
+  const { deptPubData } = useDeptPubSetter();
 
   const { pubData } = usePubSetter();
   const { confData } = useConfSetter();
@@ -44,12 +46,10 @@ const Profile = () => {
   const { iprData } = useIPRSetter();
   const { studData } = useStudSetter();
 
-  const { deptPubData } = useDeptPubSetter();
-
-  const { Dragger } = Upload;
-  const { innerWidth } = useWindowSize();
+  // COMMON STATES
 
   const [visible, setVisible] = useState(true);
+  const [sections, setSections] = useState("all");
 
   // LEVEL 1 DATA
 
@@ -64,7 +64,6 @@ const Profile = () => {
 
   const [extra_1, setExtra_1] = useState({});
   const [sortBy_1, setSortBy_1] = useState("scopus");
-  const [sections_1, setSections_1] = useState("all");
   const [selectedFilters_1, setSelectedFilters_1] = useState([]);
 
   const [publications, setPublications] = useState({ title: [], body: [] });
@@ -77,6 +76,7 @@ const Profile = () => {
 
   // LEVEL 2 DATA
 
+  const [ranges, setRanges] = useState({ overview: "", graph: "" });
   const [counts_2, setCounts_2] = useState({});
   const [pubsByCitns_2, setPubsByCitns_2] = useState([]);
   const [pubsByImpact_2, setPubsByImpact_2] = useState([]);
@@ -84,6 +84,7 @@ const Profile = () => {
   const [authorsMin_2, setAuthorsMin_2] = useState([]);
   const [publications_2, setPublications_2] = useState({ title: [], body: [] });
   const [pubTrends_2, setPubTrends_2] = useState([]);
+  const [faculty_2, setFaculty_2] = useState([]);
 
   // EFFECTS
 
@@ -121,9 +122,10 @@ const Profile = () => {
       }
 
       if (access === 2) {
+        console.log(ranges);
         axios({
           method: "GET",
-          url: `${URLObj.base}/home`,
+          url: `${URLObj.base}/home/?filter=${ranges?.overview}&graph_range=${ranges?.graph}`,
           headers: {
             "X-ACCESS-KEY": URLObj.key,
             "X-AUTH-TOKEN": user?.token,
@@ -157,6 +159,18 @@ const Profile = () => {
           .catch(err => {
             console.log(err);
           });
+
+        axios({
+          method: "GET",
+          url: `${URLObj.base}/faculty/`,
+          headers: {
+            "X-ACCESS-KEY": URLObj.key,
+            "X-AUTH-TOKEN": user?.token,
+            "X-ACCESS-LEVEL": "department",
+          },
+        })
+          .then(res => setFaculty_2(res.data?.faculty))
+          .catch(err => console.log(err));
       }
 
       if (access === 3) {
@@ -165,7 +179,7 @@ const Profile = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, access]);
+  }, [user, ranges, access]);
 
   useEffect(() => {
     if (access == 1) {
@@ -210,7 +224,7 @@ const Profile = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, access, fileData_1]);
+  }, [data, access, sortBy_1, fileData_1]);
 
   // FUNCTIONS
 
@@ -302,12 +316,12 @@ const Profile = () => {
           />
 
           <div style={{ paddingLeft: "18vw" }}>
-            <Side sets={setSections_1} />
+            <Side sets={setSections} faculty={faculty_2} />
 
             <div className={styles.container}>
-              <Top main={{ publications, setPublications, setSections_1 }} />
+              <Top main={{ publications, setPublications, setSections }} />
 
-              {sections_1 == "all" && (
+              {sections == "all" && (
                 <div className={styles.section}>
                   {access == 1 ? (
                     <div className={styles.sectionTop}>
@@ -341,19 +355,30 @@ const Profile = () => {
                         ))}
 
                         <RangePicker
-                          className={styles.overviewButton}
                           picker="year"
+                          className={styles.overviewButton}
+                          onChange={e => {
+                            if (e?.[1]?.format("YYYY") > 2025) {
+                              message.error(
+                                "End year cannot be greater than 2025"
+                              );
+                            } else {
+                              setRanges({
+                                ...ranges,
+                                overview: `${e?.[0]?.format(
+                                  "YYYY"
+                                )}-${e?.[1]?.format("YYYY")}`,
+                              });
+                            }
+                          }}
                         />
                       </div>
                     </div>
                   )}
 
                   <Overview
-                    data={data}
-                    stats={statistics_1}
-                    extra={extra_1}
-                    size={innerWidth}
-                    counts={counts_2}
+                    one={{ data: data, stats: statistics_1, extra: extra_1 }}
+                    two={{ counts: counts_2, faculty: faculty_2 }}
                   />
                 </div>
               )}
@@ -379,8 +404,22 @@ const Profile = () => {
                       ))}
 
                       <RangePicker
-                        className={styles.overviewButton}
                         picker="year"
+                        className={styles.overviewButton}
+                        onChange={e => {
+                          if (e?.[1]?.format("YYYY") > 2025) {
+                            message.error(
+                              "End year cannot be greater than 2025"
+                            );
+                          } else {
+                            setRanges({
+                              ...ranges,
+                              graph: `${e?.[0]?.format(
+                                "YYYY"
+                              )}-${e?.[1]?.format("YYYY")}`,
+                            });
+                          }
+                        }}
                       />
                     </div>
                     <BarChart trends={pubTrends_2} />
@@ -389,14 +428,14 @@ const Profile = () => {
                   <Row gutter={[20, 20]}>
                     <Col span={12}>
                       <ScrollBox
-                        title="Top 10 Publications with Highest Citations"
+                        title="Frequently Cited Publications"
                         data={pubsByCitns_2}
                         type="pubs_max"
                       />
                     </Col>
                     <Col span={12}>
                       <ScrollBox
-                        title="Top 10 Publications with Highest Impact Factors"
+                        title="Publications with the Highest Impact Factors"
                         data={pubsByImpact_2}
                         type="pubs_min"
                       />
@@ -431,7 +470,7 @@ const Profile = () => {
                 </>
               ) : (
                 <>
-                  {(sections_1 == "all" || sections_1 == "publications") && (
+                  {(sections == "all" || sections == "publications") && (
                     <div className={styles.section}>
                       <div className={styles.sectionTop}>
                         <div id="publications" className={styles.heading}>
@@ -451,11 +490,11 @@ const Profile = () => {
                           >
                             Sorting Citations By: {sortBy_1.toUpperCase()}
                           </Button>
-                          {sections_1 == "all" ? (
+                          {sections == "all" ? (
                             <Button
                               type="primary"
                               className={styles.sectionButton}
-                              onClick={() => setSections_1("publications")}
+                              onClick={() => setSections("publications")}
                             >
                               View All
                             </Button>
@@ -463,7 +502,7 @@ const Profile = () => {
                             <Button
                               type="primary"
                               className={styles.sectionButton}
-                              onClick={() => setSections_1("all")}
+                              onClick={() => setSections("all")}
                             >
                               Return Back
                             </Button>
@@ -472,7 +511,7 @@ const Profile = () => {
                       </div>
                       <div className={styles.sectionBottom}>
                         <Table
-                          pagination={sections_1 == "all" ? true : false}
+                          pagination={sections == "all" ? true : false}
                           columns={publications?.title}
                           dataSource={publications?.body}
                           onChange={handleFilterChange}
@@ -511,7 +550,7 @@ const Profile = () => {
                       key={i}
                       data={e.data}
                       head={{ title: e.title }}
-                      sections={{ sec: sections_1, setSec: setSections_1 }}
+                      sections={{ sec: sections, setSec: setSections }}
                     />
                   ))}
                 </>

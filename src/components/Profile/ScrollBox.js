@@ -1,21 +1,21 @@
 import React from "react";
-import { Avatar, Button, Col, Divider, List, Row, Typography } from "antd";
+import { Avatar, Button, Col, Divider } from "antd";
+import { List, Row, Typography } from "antd";
 import publication from "../../../public/publication.svg";
 import styles from "../../styles/profile.module.css";
 import Image from "next/image";
 import useNumber from "../../utils/useNumber";
-import EllipsisBefore from "../Common/EllipsisBefore";
 
-import crossref from "../../../public/logos/crossref.jpg";
 import scopus from "../../../public/logos/scopus.svg";
+import crossref from "../../../public/logos/crossref.jpg";
 import wos from "../../../public/logos/wos.svg";
 
 const PubItem = ({ item, index, limit, type }) => {
   const { Item } = List;
   const { Meta } = Item;
-  const { Text, Paragraph } = Typography;
 
   const { number } = useNumber();
+  const { Text, Paragraph } = Typography;
 
   return (
     <Item
@@ -30,7 +30,18 @@ const PubItem = ({ item, index, limit, type }) => {
         avatar={<Image height={50} width={50} alt="" src={publication.src} />}
         title={
           <>
-            <EllipsisBefore suffixCount={20}>{item.title}</EllipsisBefore>
+            <h2
+              style={{
+                maxWidth: "100%",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+              className={styles.publicationTitle}
+              dangerouslySetInnerHTML={{
+                __html: item?.title ?? "N/A",
+              }}
+            />
 
             <Paragraph
               className={styles.publicationAuthors}
@@ -99,11 +110,11 @@ const PubItem = ({ item, index, limit, type }) => {
                     {[
                       {
                         label: "H-Index",
-                        value: item.h_index,
+                        value: number(item.h_index),
                       },
                       {
                         label: "Impact Factor",
-                        value: item.impact_factor,
+                        value: number(item.impact_factor),
                       },
                       {
                         label: "SJR Quartile",
@@ -124,7 +135,7 @@ const PubItem = ({ item, index, limit, type }) => {
                         <Text
                           style={{ color: "#9a2827", minWidth: "max-content" }}
                           strong
-                        >{`${e.label}: ${number(e.value)}`}</Text>
+                        >{`${e.label}: ${e.value}`}</Text>
                       </Col>
                     ))}
                   </Row>
@@ -224,8 +235,12 @@ const ScrollBox = ({ title, subtitle, data, type }) => {
           overflow: "hidden",
         }}
         itemLayout="horizontal"
-        dataSource={SIZE % 2 ? data.slice(0, -1) : data}
-        pagination={{ position: "bottom", align: "center", pageSize: 2 }}
+        dataSource={data}
+        pagination={{
+          position: "bottom",
+          align: "center",
+          pageSize: type === "auths" ? 5 : 2,
+        }}
         renderItem={(item, index) =>
           type === "auths" ? (
             <AuthItem item={item} index={index} limit={SIZE} />
