@@ -56,7 +56,7 @@ const PubItem = ({ item, index, limit, type }) => {
           <>
             <Divider style={{ backgroundColor: "#97AAB5" }} />
 
-            {type === "pubs_max" ? (
+            {type === "pubs_citns" ? (
               <Meta
                 title={<Text strong>{"Citations: "}</Text>}
                 description={
@@ -94,9 +94,10 @@ const PubItem = ({ item, index, limit, type }) => {
                           height={30}
                           width={30}
                         />
-                        <Text style={{ color: "#9a2827" }} strong>{`${
-                          e.label
-                        }: ${number(e.value)}`}</Text>
+                        <Text
+                          style={{ color: "#9a2827", minWidth: "max-content" }}
+                          strong
+                        >{`${e.label}: ${number(e.value)}`}</Text>
                       </Col>
                     ))}
                   </Row>
@@ -114,7 +115,7 @@ const PubItem = ({ item, index, limit, type }) => {
                       },
                       {
                         label: "Impact Factor",
-                        value: number(item.impact_factor),
+                        value: number(item.impact_factor).toFixed(2),
                       },
                       {
                         label: "SJR Quartile",
@@ -214,6 +215,13 @@ const ScrollBox = ({ title, subtitle, data, type }) => {
   const SIZE = data?.length;
   const { Text } = Typography;
 
+  let DATA;
+
+  if (type === "pubs_citns")
+    DATA = data?.sort((a, b) => b.citations?.crossref - a.citations?.crossref);
+  else if (type === "pubs_impact")
+    DATA = data?.sort((a, b) => b.impact_factor - a.impact_factor);
+
   return (
     <>
       <Col
@@ -235,7 +243,7 @@ const ScrollBox = ({ title, subtitle, data, type }) => {
           overflow: "hidden",
         }}
         itemLayout="horizontal"
-        dataSource={data}
+        dataSource={type === "auths" ? data : DATA}
         pagination={{
           position: "bottom",
           align: "center",

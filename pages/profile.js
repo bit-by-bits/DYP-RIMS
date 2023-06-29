@@ -148,7 +148,7 @@ const Profile = () => {
               DATA?.top_ten_publications?.highest_impact_factor ?? []
             );
 
-            const { TITLE, BODY } = deptPubData(DATA?.publication ?? []);
+            const { TITLE, BODY } = deptPubData(DATA?.publications ?? []);
 
             setPubsByCitns_2(BODY_1);
             setPubsByImpact_2(BODY_2);
@@ -340,15 +340,31 @@ const Profile = () => {
                       </div>
                       <div style={{ display: "flex", gap: 5 }}>
                         {[
-                          "All Time",
-                          "Last 5 Years",
-                          "Last 3 Years",
-                          "Last Year",
-                        ].map((e, i) => (
+                          [
+                            "All Time",
+                            () => setRanges({ ...ranges, overview: "" }),
+                          ],
+                          [
+                            "Last 5 Years",
+                            () =>
+                              setRanges({ ...ranges, overview: "2018-2023" }),
+                          ],
+                          [
+                            "Last 3 Years",
+                            () =>
+                              setRanges({ ...ranges, overview: "2020-2023" }),
+                          ],
+                          [
+                            "Last Year",
+                            () =>
+                              setRanges({ ...ranges, overview: "2022-2023" }),
+                          ],
+                        ].map(([e, f], i) => (
                           <Button
                             key={i}
                             type="primary"
                             className={styles.overviewButton}
+                            onClick={f}
                           >
                             {e}
                           </Button>
@@ -357,6 +373,7 @@ const Profile = () => {
                         <RangePicker
                           picker="year"
                           className={styles.overviewButton}
+                          allowClear={false}
                           onChange={e => {
                             if (e?.[1]?.format("YYYY") > 2025) {
                               message.error(
@@ -393,11 +410,17 @@ const Profile = () => {
                     }}
                   >
                     <div style={{ display: "flex", gap: 5 }}>
-                      {["Last 10 Years"].map((e, i) => (
+                      {[
+                        [
+                          "Last 10 Years",
+                          () => setRanges({ ...ranges, graph: "2013-2023" }),
+                        ],
+                      ].map(([e, f], i) => (
                         <Button
                           key={i}
                           type="primary"
                           className={styles.overviewButton}
+                          onClick={f}
                         >
                           {e}
                         </Button>
@@ -406,6 +429,7 @@ const Profile = () => {
                       <RangePicker
                         picker="year"
                         className={styles.overviewButton}
+                        allowClear={false}
                         onChange={e => {
                           if (e?.[1]?.format("YYYY") > 2025) {
                             message.error(
@@ -430,14 +454,14 @@ const Profile = () => {
                       <ScrollBox
                         title="Frequently Cited Publications"
                         data={pubsByCitns_2}
-                        type="pubs_max"
+                        type="pubs_citns"
                       />
                     </Col>
                     <Col span={12}>
                       <ScrollBox
                         title="Publications with the Highest Impact Factors"
                         data={pubsByImpact_2}
-                        type="pubs_min"
+                        type="pubs_impact"
                       />
                     </Col>
                   </Row>

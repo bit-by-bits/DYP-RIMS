@@ -64,7 +64,11 @@ const Overview = ({
       posters: check(extra?.posters, counts?.posters, 0),
       books: check(data?.books?.length, counts?.books, 0),
       research: check(data?.research?.length, counts?.projects, 0),
-      funds: check(extra?.funds, counts?.funds, 0),
+      funds: check(
+        extra?.funds,
+        counts?.funds?.reduce((a, b) => number(a) + number(b), 0),
+        0
+      ),
       awards: check(data?.awards?.length, counts?.awards, 0),
       students: check(data?.students_guided?.length, counts?.students, 0),
       IPR: check(data?.IPR?.length, counts?.ipr, 0),

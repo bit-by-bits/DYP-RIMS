@@ -8,7 +8,7 @@ import { useUser } from "../context/userContext";
 const Drop = () => {
   const { user } = useUser();
   const { change } = useAccess();
-  useEffect(() => change(2), []);
+  useEffect(() => change(1), []);
 
   return (
     <Dropdown
