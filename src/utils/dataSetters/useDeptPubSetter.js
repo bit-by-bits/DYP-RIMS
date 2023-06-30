@@ -1,7 +1,5 @@
 import Image from "next/image";
 import styles from "../../styles/profile.module.css";
-import { Typography, Button } from "antd";
-import { FileTextOutlined } from "@ant-design/icons";
 import { Fragment } from "react";
 import { useRouter } from "next/router";
 import { useWindowSize } from "rooks";
@@ -13,20 +11,19 @@ import pmc from "../../../public/logos/pmc.png";
 import scopus from "../../../public/logos/scopus.svg";
 import wos from "../../../public/logos/wos.svg";
 
-import useTitleMaker from "../useTitleMaker";
+import useCaps from "../useCaps";
 import useNumber from "../useNumber";
-import useCheck from "../useChecks";
 import useSorter from "../useSorter";
+import useTitleMaker from "../useTitleMaker";
 
 const useDeptPubSetter = () => {
   const router = useRouter();
-  const { Paragraph } = Typography;
   const { innerWidth } = useWindowSize();
 
-  const { titleMaker } = useTitleMaker();
   const { number } = useNumber();
-  const { makeValid } = useCheck();
   const { sorter } = useSorter();
+  const { capitalize } = useCaps();
+  const { titleMaker } = useTitleMaker();
 
   return {
     deptPubData: publications => {
@@ -77,14 +74,13 @@ const useDeptPubSetter = () => {
             titleMaker(t, "firstncorr", "1st/Corresponding Author", "1st/Corr"),
           dataIndex: "firstncorr",
           key: "firstncorr",
-          sorter: (a, b, c) => sorter(a.published, b.published, 0, c),
+          sorter: (a, b, c) => sorter(a.firstncorr, b.firstncorr, 0, c),
           width: "6%",
         },
         {
           title: "SJR",
           dataIndex: "sjr",
           key: "sjr",
-          sorter: (a, b, c) => sorter(a.sjr, b.sjr, 1, c),
           render: a => (
             <div className={styles.publicationGrid2}>
               {a.map(e => (
@@ -100,14 +96,11 @@ const useDeptPubSetter = () => {
           title: t => titleMaker(t, "impact", "Impact Factor", "Impact"),
           dataIndex: "impact",
           key: "impact",
-          sorter: (a, b, c) => sorter(a.impact, b.impact, 1, c),
           render: a => (
-            <div className={styles.publicationGrid}>
+            <div className={styles.publicationGrid3}>
               {a.map(e => (
                 <Fragment key={e.name}>
-                  <span>
-                    {innerWidth < 1600 ? e.name?.slice(0, 3) : e.name}:
-                  </span>
+                  <span>{innerWidth < 1600 ? e.name?.[1] : e.name?.[0]}:</span>
                   <span>{number(e.value).toFixed(2)}</span>
                 </Fragment>
               ))}
@@ -118,7 +111,6 @@ const useDeptPubSetter = () => {
           title: "Citations",
           dataIndex: "citations",
           key: "citations",
-          sorter: (a, b, c) => sorter(a.citations, b.citations, 0, c),
           render: a => (
             <div className={styles.publicationGrid}>
               {a.map(e => (
@@ -134,7 +126,6 @@ const useDeptPubSetter = () => {
           title: t => titleMaker(t, "h_index", "H-Index", "Hindex"),
           dataIndex: "h_index",
           key: "h_index",
-          sorter: (a, b, c) => sorter(a.h_index, b.h_index, 1, c),
           render: a => (
             <div className={styles.publicationGrid}>
               {a.map(e => (
@@ -190,11 +181,11 @@ const useDeptPubSetter = () => {
 
         const impactArray = [
           {
-            name: "Average",
+            name: ["Average", "Avg"],
             value: avg(imf),
           },
           {
-            name: "Cumulative",
+            name: ["Cumulative", "Cum"],
             value: sum(imf),
           },
         ];
@@ -238,11 +229,11 @@ const useDeptPubSetter = () => {
         return {
           key: i,
           no: i + 1,
-          faculty: e.faculty_name,
-          position: e.designation,
-          publications: e.total_publication,
+          faculty: capitalize(e.faculty_name),
+          position: capitalize(e.designation),
+          publications: number(e.total_publication),
           indexed: indexedArray,
-          firstncorr: e.first_or_corr_count,
+          firstncorr: number(e.first_or_corr_count),
           sjr: ["Q1", "Q2", "Q3", "Q4", "None"]?.map(e => ({
             name: e,
             value: qrt ? qrt[e] : 0,

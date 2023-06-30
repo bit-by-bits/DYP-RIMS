@@ -6,6 +6,7 @@ const useCheck = () => {
     "NA",
     "Not Available",
     "Not Applicable",
+    "- Not Available -",
     "-",
     "",
     null,

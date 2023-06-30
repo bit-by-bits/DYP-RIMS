@@ -52,7 +52,7 @@ const Overview = ({
   // EFFECTS
 
   useEffect(() => {
-    if (user) {
+    if (user?.token) {
       axios({
         method: "GET",
         url: `${URLObj.base}/faculty/`,
@@ -165,6 +165,8 @@ const Overview = ({
         0
       ),
     });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [one, two, faculty, access]);
 
   useEffect(() => {

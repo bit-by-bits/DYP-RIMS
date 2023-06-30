@@ -5,11 +5,14 @@ import { useRouter } from "next/router";
 import { useWindowSize } from "rooks";
 import useTitleMaker from "../useTitleMaker";
 import useCaps from "../useCaps";
+import useSorter from "../useSorter";
+import useNumber from "../useNumber";
 
 const useStudSetter = () => {
   const router = useRouter();
   const { innerWidth } = useWindowSize();
 
+  const { sorter } = useSorter();
   const { capitalize } = useCaps();
   const { titleMaker } = useTitleMaker();
 
@@ -41,6 +44,7 @@ const useStudSetter = () => {
           title: t => titleMaker(t, "year", "Guided Year", "Year"),
           dataIndex: "year",
           key: "year",
+          sorter: (a, b, c) => sorter(a.date, b.date, 0, c),
         },
         {
           title: "",

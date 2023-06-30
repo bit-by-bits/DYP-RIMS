@@ -332,9 +332,9 @@ const Profile = () => {
                       <div style={{ display: "flex", gap: 5 }}>
                         {[
                           ["All Time", ""],
-                          ["Last 5 Years", "2018-2023"],
-                          ["Last 3 Years", "2020-2023"],
-                          ["Last Year", "2022-2023"],
+                          ["Last 5 Years", "2019-2023"],
+                          ["Last 3 Years", "2021-2023"],
+                          ["Last Year", "2023-2023"],
                         ].map(([e, r], i) => (
                           <Button
                             key={i}
@@ -375,7 +375,7 @@ const Profile = () => {
                 </div>
               )}
 
-              {access != 1 ? (
+              {access != 1 && (
                 <>
                   <BarChart trends={pubTrends_2} />
                   <Row gutter={[20, 20]}>
@@ -418,93 +418,91 @@ const Profile = () => {
                     head={{ header: "", title: "Faculty Publications" }}
                   />
                 </>
-              ) : (
-                <>
-                  {(sections == "all" || sections == "publications") && (
-                    <div className={styles.section}>
-                      <div className={styles.sectionTop}>
-                        <div id="publications" className={styles.heading}>
-                          Publications
-                        </div>
-                        <div style={{ display: "flex", gap: 15 }}>
-                          <Button
-                            type="primary"
-                            className={styles.sectionButton}
-                            onClick={() => {
-                              if (sortBy_1 === "scopus") setSortBy_1("wos");
-                              else if (sortBy_1 === "wos")
-                                setSortBy_1("crossref");
-                              else if (sortBy_1 === "crossref")
-                                setSortBy_1("scopus");
-                            }}
-                          >
-                            Sorting Citations By: {sortBy_1.toUpperCase()}
-                          </Button>
-                          {sections == "all" ? (
-                            <Button
-                              type="primary"
-                              className={styles.sectionButton}
-                              onClick={() => setSections("publications")}
-                            >
-                              View All
-                            </Button>
-                          ) : (
-                            <Button
-                              type="primary"
-                              className={styles.sectionButton}
-                              onClick={() => setSections("all")}
-                            >
-                              Return Back
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                      <div className={styles.sectionBottom}>
-                        <Table
-                          pagination={sections == "all" ? true : false}
-                          columns={publications?.title}
-                          dataSource={publications?.body}
-                          onChange={handleFilterChange}
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {[
-                    {
-                      title: "Conferences",
-                      data: conferences,
-                    },
-                    {
-                      title: "Books",
-                      data: books,
-                    },
-                    {
-                      title: "Projects",
-                      data: projects,
-                    },
-                    {
-                      title: "Awards",
-                      data: awards,
-                    },
-                    {
-                      title: "IPR",
-                      data: ipr,
-                    },
-                    {
-                      title: "Students",
-                      data: students,
-                    },
-                  ]?.map((e, i) => (
-                    <Section
-                      key={i}
-                      data={e.data}
-                      head={{ title: e.title }}
-                      sections={{ sec: sections, setSec: setSections }}
-                    />
-                  ))}
-                </>
               )}
+
+              {(sections == "all" || sections == "publications") && (
+                <div className={styles.section}>
+                  <div className={styles.sectionTop}>
+                    <div id="publications" className={styles.heading}>
+                      Publications
+                    </div>
+                    <div style={{ display: "flex", gap: 15 }}>
+                      <Button
+                        type="primary"
+                        className={styles.sectionButton}
+                        onClick={() => {
+                          if (sortBy_1 === "scopus") setSortBy_1("wos");
+                          else if (sortBy_1 === "wos") setSortBy_1("crossref");
+                          else if (sortBy_1 === "crossref")
+                            setSortBy_1("scopus");
+                        }}
+                      >
+                        Sorting Citations By: {sortBy_1.toUpperCase()}
+                      </Button>
+                      {sections == "all" ? (
+                        <Button
+                          type="primary"
+                          className={styles.sectionButton}
+                          onClick={() => setSections("publications")}
+                        >
+                          View All
+                        </Button>
+                      ) : (
+                        <Button
+                          type="primary"
+                          className={styles.sectionButton}
+                          onClick={() => setSections("all")}
+                        >
+                          Return Back
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  <div className={styles.sectionBottom}>
+                    <Table
+                      pagination={sections == "all" ? true : false}
+                      columns={publications?.title}
+                      dataSource={publications?.body}
+                      onChange={handleFilterChange}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {access == 1 &&
+                [
+                  {
+                    title: "Conferences",
+                    data: conferences,
+                  },
+                  {
+                    title: "Books",
+                    data: books,
+                  },
+                  {
+                    title: "Projects",
+                    data: projects,
+                  },
+                  {
+                    title: "Awards",
+                    data: awards,
+                  },
+                  {
+                    title: "IPR",
+                    data: ipr,
+                  },
+                  {
+                    title: "Students",
+                    data: students,
+                  },
+                ]?.map((e, i) => (
+                  <Section
+                    key={i}
+                    data={e.data}
+                    head={{ title: e.title }}
+                    sections={{ sec: sections, setSec: setSections }}
+                  />
+                ))}
 
               <Modal
                 title="Upload PDF"

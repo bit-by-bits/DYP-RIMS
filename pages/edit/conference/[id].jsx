@@ -80,6 +80,8 @@ const Conferences = () => {
         setPoster(DATA?.posters?.length);
       });
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ID, user]);
 
   useEffect(() => {
