@@ -33,5 +33,6 @@ jobs:
           password: admin@10
           script: |
             cd sites/rims
+            nvm use v18
             npm run build
             pm2 restart rims
