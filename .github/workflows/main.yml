@@ -1,4 +1,4 @@
-name: Transfer Repository to EC2
+name: Transfer Repository to EC2 ( dpu.journalchecker.com )
 
 on:
   push:
@@ -25,3 +25,12 @@ jobs:
           password: admin@10
           source: ./
           target: /home/ubuntu/sites/rims/
+      - name: Logging into SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: dpu.journalchecker.com
+          username: ubuntu
+          password: admin@10
+          script: |
+            npm run build
+            pm2 restart rims
