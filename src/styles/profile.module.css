@@ -16,7 +16,8 @@
 .overviewMiddle > div,
 .overviewBottom > div,
 .overviewBottom > div > div,
-.publication {
+.publication,
+.sideButtons {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -337,6 +338,10 @@
   display: block;
   height: 5px;
   width: 5px;
+}
+
+.sideButtons {
+  gap: 1rem;
 }
 
 .sideButton {

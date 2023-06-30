@@ -153,10 +153,7 @@ const PubItem = ({ item, index, limit, type }) => {
 const AuthItem = ({ item, index, limit }) => {
   const { Item } = List;
   const { Meta } = Item;
-  const { Text } = Typography;
-
   const { user } = item;
-  const { number } = useNumber();
 
   return (
     <Item
@@ -177,7 +174,7 @@ const AuthItem = ({ item, index, limit }) => {
           />
         }
         title={
-          <>
+          <Row justify="space-between">
             <div
               className={styles.publicationTitle}
               dangerouslySetInnerHTML={{
@@ -185,26 +182,10 @@ const AuthItem = ({ item, index, limit }) => {
               }}
             />
 
-            <Text strong>{item.department?.name}</Text>
-          </>
-        }
-        description={
-          <Col
-            style={{
-              gap: 10,
-              padding: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ color: "#9a2827" }} strong>{`Publications: ${number(
-              item?.publications?.length
-            )}`}</Text>
             <Button className={styles.sectionButton} type="primary">
               View Profile
             </Button>
-          </Col>
+          </Row>
         }
       />
     </Item>
@@ -227,10 +208,13 @@ const ScrollBox = ({ title, subtitle, data, type }) => {
       <Col
         style={{ display: "flex", flexDirection: "column", marginBottom: 20 }}
       >
-        <Text strong style={{ fontSize: 20, color: "#9a2827" }}>
+        <Text
+          strong
+          style={{ textAlign: "center", fontSize: 20, color: "#9a2827" }}
+        >
           {title}
         </Text>
-        <Text strong style={{ fontSize: 18 }}>
+        <Text strong style={{ textAlign: "center", fontSize: 18 }}>
           {subtitle}
         </Text>
       </Col>

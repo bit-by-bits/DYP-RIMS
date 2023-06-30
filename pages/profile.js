@@ -76,7 +76,7 @@ const Profile = () => {
 
   // LEVEL 2 DATA
 
-  const [ranges, setRanges] = useState({ overview: "", graph: "" });
+  const [range, setRange] = useState("");
   const [counts_2, setCounts_2] = useState({});
   const [pubsByCitns_2, setPubsByCitns_2] = useState([]);
   const [pubsByImpact_2, setPubsByImpact_2] = useState([]);
@@ -123,7 +123,7 @@ const Profile = () => {
       if (access === 2) {
         axios({
           method: "GET",
-          url: `${URLObj.base}/home/?filter=${ranges?.overview}&graph_range=${ranges?.graph}`,
+          url: `${URLObj.base}/home/?filter=${range}`,
           headers: {
             "X-ACCESS-KEY": URLObj.key,
             "X-AUTH-TOKEN": user?.token,
@@ -165,7 +165,7 @@ const Profile = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, ranges, access]);
+  }, [user, range, access]);
 
   useEffect(() => {
     if (access == 1) {
@@ -309,6 +309,11 @@ const Profile = () => {
 
               {sections == "all" && (
                 <div className={styles.section}>
+                  {access == 2 && (
+                    <div
+                      className={styles.header}
+                    >{`Department of ${user?.department}`}</div>
+                  )}
                   {access == 1 ? (
                     <div className={styles.sectionTop}>
                       <div id="overview" className={styles.heading}>
@@ -326,31 +331,16 @@ const Profile = () => {
                       </div>
                       <div style={{ display: "flex", gap: 5 }}>
                         {[
-                          [
-                            "All Time",
-                            () => setRanges({ ...ranges, overview: "" }),
-                          ],
-                          [
-                            "Last 5 Years",
-                            () =>
-                              setRanges({ ...ranges, overview: "2018-2023" }),
-                          ],
-                          [
-                            "Last 3 Years",
-                            () =>
-                              setRanges({ ...ranges, overview: "2020-2023" }),
-                          ],
-                          [
-                            "Last Year",
-                            () =>
-                              setRanges({ ...ranges, overview: "2022-2023" }),
-                          ],
-                        ].map(([e, f], i) => (
+                          ["All Time", ""],
+                          ["Last 5 Years", "2018-2023"],
+                          ["Last 3 Years", "2020-2023"],
+                          ["Last Year", "2022-2023"],
+                        ].map(([e, r], i) => (
                           <Button
                             key={i}
                             type="primary"
                             className={styles.overviewButton}
-                            onClick={f}
+                            onClick={() => setRange(r)}
                           >
                             {e}
                           </Button>
@@ -366,12 +356,11 @@ const Profile = () => {
                                 "End year cannot be greater than 2025"
                               );
                             } else {
-                              setRanges({
-                                ...ranges,
-                                overview: `${e?.[0]?.format(
+                              setRange(
+                                `${e?.[0]?.format("YYYY")}-${e?.[1]?.format(
                                   "YYYY"
-                                )}-${e?.[1]?.format("YYYY")}`,
-                              });
+                                )}`
+                              );
                             }
                           }}
                         />
@@ -388,53 +377,7 @@ const Profile = () => {
 
               {access != 1 ? (
                 <>
-                  <Col
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-end",
-                    }}
-                  >
-                    <div style={{ display: "flex", gap: 5 }}>
-                      {[
-                        [
-                          "Last 10 Years",
-                          () => setRanges({ ...ranges, graph: "2013-2023" }),
-                        ],
-                      ].map(([e, f], i) => (
-                        <Button
-                          key={i}
-                          type="primary"
-                          className={styles.overviewButton}
-                          onClick={f}
-                        >
-                          {e}
-                        </Button>
-                      ))}
-
-                      <RangePicker
-                        picker="year"
-                        className={styles.overviewButton}
-                        allowClear={false}
-                        onChange={e => {
-                          if (e?.[1]?.format("YYYY") > 2025) {
-                            message.error(
-                              "End year cannot be greater than 2025"
-                            );
-                          } else {
-                            setRanges({
-                              ...ranges,
-                              graph: `${e?.[0]?.format(
-                                "YYYY"
-                              )}-${e?.[1]?.format("YYYY")}`,
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                    <BarChart trends={pubTrends_2} />
-                  </Col>
-
+                  <BarChart trends={pubTrends_2} />
                   <Row gutter={[20, 20]}>
                     <Col span={12}>
                       <ScrollBox
@@ -472,10 +415,7 @@ const Profile = () => {
 
                   <Section
                     data={publications_2}
-                    head={{
-                      header: `Department of ${user?.department}`,
-                      title: "Faculty Publications",
-                    }}
+                    head={{ header: "", title: "Faculty Publications" }}
                   />
                 </>
               ) : (

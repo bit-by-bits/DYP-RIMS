@@ -36,7 +36,7 @@ const useDeptPubSetter = () => {
           dataIndex: "no",
           key: "no",
           render: (id, record, index) => `${index + 1}.`,
-          width: "5%",
+          width: "4%",
         },
         {
           title: t => titleMaker(t, "faculty", "Faculty Name", "Faculty"),
@@ -54,7 +54,7 @@ const useDeptPubSetter = () => {
           dataIndex: "publications",
           key: "publications",
           sorter: (a, b, c) => sorter(a.publications, b.publications, 0, c),
-          width: "8%",
+          width: "6%",
         },
         {
           title: t =>
@@ -78,6 +78,7 @@ const useDeptPubSetter = () => {
           dataIndex: "firstncorr",
           key: "firstncorr",
           sorter: (a, b, c) => sorter(a.published, b.published, 0, c),
+          width: "6%",
         },
         {
           title: "SJR",
@@ -91,6 +92,24 @@ const useDeptPubSetter = () => {
                   <span>{e.name}:</span>
                   <span>{number(e.value)}</span>
                 </div>
+              ))}
+            </div>
+          ),
+        },
+        {
+          title: t => titleMaker(t, "impact", "Impact Factor", "Impact"),
+          dataIndex: "impact",
+          key: "impact",
+          sorter: (a, b, c) => sorter(a.impact, b.impact, 1, c),
+          render: a => (
+            <div className={styles.publicationGrid}>
+              {a.map(e => (
+                <Fragment key={e.name}>
+                  <span>
+                    {innerWidth < 1600 ? e.name?.slice(0, 3) : e.name}:
+                  </span>
+                  <span>{number(e.value).toFixed(2)}</span>
+                </Fragment>
               ))}
             </div>
           ),
@@ -131,8 +150,11 @@ const useDeptPubSetter = () => {
 
       const BODY = publications.map((e, i) => {
         const sum = arr => arr?.reduce((a, b) => a + b, 0);
+        const avg = arr => sum(arr) / arr?.length;
+
         const {
           indexed_at: iat,
+          impact_factor: imf,
           citations: cts,
           quartiles: qrt,
           hindex: hix,
@@ -163,6 +185,17 @@ const useDeptPubSetter = () => {
             // name: "Medline",
             logo: medline,
             value: iat?.medline,
+          },
+        ];
+
+        const impactArray = [
+          {
+            name: "Average",
+            value: avg(imf),
+          },
+          {
+            name: "Cumulative",
+            value: sum(imf),
           },
         ];
 
@@ -214,6 +247,7 @@ const useDeptPubSetter = () => {
             name: e,
             value: qrt ? qrt[e] : 0,
           })),
+          impact: impactArray,
           citations: citationsArray,
           h_index: hindexArray,
         };

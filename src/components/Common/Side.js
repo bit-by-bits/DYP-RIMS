@@ -105,10 +105,6 @@ const Side = ({ sets = () => {} }) => {
 
   // FUNCTIONS
 
-  const edit = () => {
-    router.push("/profile/edit");
-  };
-
   const setMenuData = () => {
     let DATA_SECOND = [];
     Object.entries(faculty)?.forEach(([key, value]) => {
@@ -168,9 +164,16 @@ const Side = ({ sets = () => {} }) => {
 
           <div className={styles.sideEmail}>{user?.department}</div>
 
-          <Button className={styles.sideButton} onClick={edit} type="primary">
-            Edit Profile
-          </Button>
+          <div className={styles.sideButtons}>
+            <Button className={styles.sideButton} type="primary">
+              <Link href="/profile/edit">Edit Profile</Link>
+            </Button>
+            {access > 1 && (
+              <Button className={styles.sideButton} type="primary">
+                <Link href="/add/faculty">Add Faculty</Link>
+              </Button>
+            )}
+          </div>
         </div>
       </Skeleton>
 
