@@ -32,5 +32,6 @@ jobs:
           username: ubuntu
           password: admin@10
           script: |
+            cd sites/rims
             npm run build
             pm2 restart rims
