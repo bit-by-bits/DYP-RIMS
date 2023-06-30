@@ -229,7 +229,6 @@
 .file_btns {
   display: flex;
   gap: 1rem;
-  margin-top: 2rem;
   padding: 10px;
   align-items: center;
 }

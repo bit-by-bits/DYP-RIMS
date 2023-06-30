@@ -16,7 +16,8 @@
 .overviewMiddle > div,
 .overviewBottom > div,
 .overviewBottom > div > div,
-.publication {
+.publication,
+.sideButtons {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -254,13 +255,20 @@
   font-style: italic;
 }
 
-.publicationGrid {
+.publicationGrid,
+.publicationGrid2 {
   display: grid;
   align-items: center;
   text-align: left;
   grid-template-columns: auto auto;
   min-width: max-content;
   gap: 10px;
+}
+
+.publicationGrid2 {
+  text-align: right;
+  grid-template-columns: auto auto;
+  gap: 5px;
 }
 
 .tableButton {
@@ -330,6 +338,10 @@
   display: block;
   height: 5px;
   width: 5px;
+}
+
+.sideButtons {
+  gap: 1rem;
 }
 
 .sideButton {

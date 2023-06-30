@@ -32,12 +32,6 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    if (user?.token) {
-      localStorage.setItem("user", JSON.stringify(user));
-    }
-  }, [user]);
-
   return (
     <UserContext.Provider value={{ user, change }}>
       {children}

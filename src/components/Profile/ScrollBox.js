@@ -1,21 +1,21 @@
 import React from "react";
-import { Avatar, Button, Col, Divider, List, Row, Typography } from "antd";
+import { Avatar, Button, Col, Divider } from "antd";
+import { List, Row, Typography } from "antd";
 import publication from "../../../public/publication.svg";
 import styles from "../../styles/profile.module.css";
 import Image from "next/image";
 import useNumber from "../../utils/useNumber";
-import EllipsisBefore from "../Common/EllipsisBefore";
 
-import crossref from "../../../public/logos/crossref.jpg";
 import scopus from "../../../public/logos/scopus.svg";
+import crossref from "../../../public/logos/crossref.jpg";
 import wos from "../../../public/logos/wos.svg";
 
 const PubItem = ({ item, index, limit, type }) => {
   const { Item } = List;
   const { Meta } = Item;
-  const { Text, Paragraph } = Typography;
 
   const { number } = useNumber();
+  const { Text, Paragraph } = Typography;
 
   return (
     <Item
@@ -30,7 +30,18 @@ const PubItem = ({ item, index, limit, type }) => {
         avatar={<Image height={50} width={50} alt="" src={publication.src} />}
         title={
           <>
-            <EllipsisBefore suffixCount={20}>{item.title}</EllipsisBefore>
+            <h2
+              style={{
+                maxWidth: "100%",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+              className={styles.publicationTitle}
+              dangerouslySetInnerHTML={{
+                __html: item?.title ?? "N/A",
+              }}
+            />
 
             <Paragraph
               className={styles.publicationAuthors}
@@ -45,7 +56,7 @@ const PubItem = ({ item, index, limit, type }) => {
           <>
             <Divider style={{ backgroundColor: "#97AAB5" }} />
 
-            {type === "pubs_max" ? (
+            {type === "pubs_citns" ? (
               <Meta
                 title={<Text strong>{"Citations: "}</Text>}
                 description={
@@ -83,9 +94,10 @@ const PubItem = ({ item, index, limit, type }) => {
                           height={30}
                           width={30}
                         />
-                        <Text style={{ color: "#9a2827" }} strong>{`${
-                          e.label
-                        }: ${number(e.value)}`}</Text>
+                        <Text
+                          style={{ color: "#9a2827", minWidth: "max-content" }}
+                          strong
+                        >{`${e.label}: ${number(e.value)}`}</Text>
                       </Col>
                     ))}
                   </Row>
@@ -99,11 +111,11 @@ const PubItem = ({ item, index, limit, type }) => {
                     {[
                       {
                         label: "H-Index",
-                        value: item.h_index,
+                        value: number(item.h_index),
                       },
                       {
                         label: "Impact Factor",
-                        value: item.impact_factor,
+                        value: number(item.impact_factor).toFixed(2),
                       },
                       {
                         label: "SJR Quartile",
@@ -124,7 +136,7 @@ const PubItem = ({ item, index, limit, type }) => {
                         <Text
                           style={{ color: "#9a2827", minWidth: "max-content" }}
                           strong
-                        >{`${e.label}: ${number(e.value)}`}</Text>
+                        >{`${e.label}: ${e.value}`}</Text>
                       </Col>
                     ))}
                   </Row>
@@ -141,10 +153,7 @@ const PubItem = ({ item, index, limit, type }) => {
 const AuthItem = ({ item, index, limit }) => {
   const { Item } = List;
   const { Meta } = Item;
-  const { Text } = Typography;
-
   const { user } = item;
-  const { number } = useNumber();
 
   return (
     <Item
@@ -165,7 +174,7 @@ const AuthItem = ({ item, index, limit }) => {
           />
         }
         title={
-          <>
+          <Row justify="space-between">
             <div
               className={styles.publicationTitle}
               dangerouslySetInnerHTML={{
@@ -173,26 +182,10 @@ const AuthItem = ({ item, index, limit }) => {
               }}
             />
 
-            <Text strong>{item.department?.name}</Text>
-          </>
-        }
-        description={
-          <Col
-            style={{
-              gap: 10,
-              padding: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ color: "#9a2827" }} strong>{`Publications: ${number(
-              item?.publications?.length
-            )}`}</Text>
             <Button className={styles.sectionButton} type="primary">
               View Profile
             </Button>
-          </Col>
+          </Row>
         }
       />
     </Item>
@@ -203,15 +196,25 @@ const ScrollBox = ({ title, subtitle, data, type }) => {
   const SIZE = data?.length;
   const { Text } = Typography;
 
+  let DATA;
+
+  if (type === "pubs_citns")
+    DATA = data?.sort((a, b) => b.citations?.crossref - a.citations?.crossref);
+  else if (type === "pubs_impact")
+    DATA = data?.sort((a, b) => b.impact_factor - a.impact_factor);
+
   return (
     <>
       <Col
         style={{ display: "flex", flexDirection: "column", marginBottom: 20 }}
       >
-        <Text strong style={{ fontSize: 20, color: "#9a2827" }}>
+        <Text
+          strong
+          style={{ textAlign: "center", fontSize: 20, color: "#9a2827" }}
+        >
           {title}
         </Text>
-        <Text strong style={{ fontSize: 18 }}>
+        <Text strong style={{ textAlign: "center", fontSize: 18 }}>
           {subtitle}
         </Text>
       </Col>
@@ -224,8 +227,12 @@ const ScrollBox = ({ title, subtitle, data, type }) => {
           overflow: "hidden",
         }}
         itemLayout="horizontal"
-        dataSource={SIZE % 2 ? data.slice(0, -1) : data}
-        pagination={{ position: "bottom", align: "center", pageSize: 2 }}
+        dataSource={type === "auths" ? data : DATA}
+        pagination={{
+          position: "bottom",
+          align: "center",
+          pageSize: type === "auths" ? 5 : 2,
+        }}
         renderItem={(item, index) =>
           type === "auths" ? (
             <AuthItem item={item} index={index} limit={SIZE} />

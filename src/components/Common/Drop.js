@@ -7,8 +7,7 @@ import { useUser } from "../context/userContext";
 
 const Drop = () => {
   const { user } = useUser();
-  const { change } = useAccess();
-  useEffect(() => change(2), []);
+  const { access, change } = useAccess();
 
   return (
     <Dropdown
@@ -20,7 +19,7 @@ const Drop = () => {
             label: `${e} Level`,
           })),
         onClick: e => change(e.key),
-        defaultSelectedKeys: ["1"],
+        defaultSelectedKeys: [`${access}`],
         selectable: true,
         style: { textAlign: "center", border: "1px solid #9a2827" },
       }}

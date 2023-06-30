@@ -3,10 +3,9 @@ import Head from "next/head";
 import URLObj from "../src/components/baseURL";
 import styles from "../src/styles/profile.module.css";
 import { useState, useEffect, useMemo } from "react";
+import { InboxOutlined } from "@ant-design/icons";
 import { Spin, Button, FloatButton, Row, Col } from "antd";
 import { Table, Modal, Upload, message, DatePicker } from "antd";
-import { InboxOutlined } from "@ant-design/icons";
-import { useWindowSize } from "rooks";
 
 import Top from "../src/components/Common/Top";
 import Side from "../src/components/Common/Side";
@@ -30,11 +29,14 @@ import useDeptPubSetter from "../src/utils/dataSetters/useDeptPubSetter";
 const Profile = () => {
   // HOOKS
 
+  const { Dragger } = Upload;
   const { RangePicker } = DatePicker;
-  const { user } = useUser();
 
+  const { user } = useUser();
   const { access } = useAccess();
+
   const { setExtra } = useExtraSetter();
+  const { deptPubData } = useDeptPubSetter();
 
   const { pubData } = usePubSetter();
   const { confData } = useConfSetter();
@@ -44,12 +46,10 @@ const Profile = () => {
   const { iprData } = useIPRSetter();
   const { studData } = useStudSetter();
 
-  const { deptPubData } = useDeptPubSetter();
-
-  const { Dragger } = Upload;
-  const { innerWidth } = useWindowSize();
+  // COMMON STATES
 
   const [visible, setVisible] = useState(true);
+  const [sections, setSections] = useState("all");
 
   // LEVEL 1 DATA
 
@@ -64,7 +64,6 @@ const Profile = () => {
 
   const [extra_1, setExtra_1] = useState({});
   const [sortBy_1, setSortBy_1] = useState("scopus");
-  const [sections_1, setSections_1] = useState("all");
   const [selectedFilters_1, setSelectedFilters_1] = useState([]);
 
   const [publications, setPublications] = useState({ title: [], body: [] });
@@ -77,6 +76,7 @@ const Profile = () => {
 
   // LEVEL 2 DATA
 
+  const [range, setRange] = useState("");
   const [counts_2, setCounts_2] = useState({});
   const [pubsByCitns_2, setPubsByCitns_2] = useState([]);
   const [pubsByImpact_2, setPubsByImpact_2] = useState([]);
@@ -123,7 +123,7 @@ const Profile = () => {
       if (access === 2) {
         axios({
           method: "GET",
-          url: `${URLObj.base}/home`,
+          url: `${URLObj.base}/home/?filter=${range}`,
           headers: {
             "X-ACCESS-KEY": URLObj.key,
             "X-AUTH-TOKEN": user?.token,
@@ -146,7 +146,7 @@ const Profile = () => {
               DATA?.top_ten_publications?.highest_impact_factor ?? []
             );
 
-            const { TITLE, BODY } = deptPubData(DATA?.publication ?? []);
+            const { TITLE, BODY } = deptPubData(DATA?.publications ?? []);
 
             setPubsByCitns_2(BODY_1);
             setPubsByImpact_2(BODY_2);
@@ -165,7 +165,7 @@ const Profile = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, access]);
+  }, [user, range, access]);
 
   useEffect(() => {
     if (access == 1) {
@@ -210,7 +210,7 @@ const Profile = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, access, fileData_1]);
+  }, [data, access, sortBy_1, fileData_1]);
 
   // FUNCTIONS
 
@@ -302,13 +302,18 @@ const Profile = () => {
           />
 
           <div style={{ paddingLeft: "18vw" }}>
-            <Side sets={setSections_1} />
+            <Side sets={setSections} />
 
             <div className={styles.container}>
-              <Top main={{ publications, setPublications, setSections_1 }} />
+              <Top main={{ publications, setPublications, setSections }} />
 
-              {sections_1 == "all" && (
+              {sections == "all" && (
                 <div className={styles.section}>
+                  {access == 2 && (
+                    <div
+                      className={styles.header}
+                    >{`Department of ${user?.department}`}</div>
+                  )}
                   {access == 1 ? (
                     <div className={styles.sectionTop}>
                       <div id="overview" className={styles.heading}>
@@ -326,79 +331,66 @@ const Profile = () => {
                       </div>
                       <div style={{ display: "flex", gap: 5 }}>
                         {[
-                          "All Time",
-                          "Last 5 Years",
-                          "Last 3 Years",
-                          "Last Year",
-                        ].map((e, i) => (
+                          ["All Time", ""],
+                          ["Last 5 Years", "2018-2023"],
+                          ["Last 3 Years", "2020-2023"],
+                          ["Last Year", "2022-2023"],
+                        ].map(([e, r], i) => (
                           <Button
                             key={i}
                             type="primary"
                             className={styles.overviewButton}
+                            onClick={() => setRange(r)}
                           >
                             {e}
                           </Button>
                         ))}
 
                         <RangePicker
-                          className={styles.overviewButton}
                           picker="year"
+                          className={styles.overviewButton}
+                          allowClear={false}
+                          onChange={e => {
+                            if (e?.[1]?.format("YYYY") > 2025) {
+                              message.error(
+                                "End year cannot be greater than 2025"
+                              );
+                            } else {
+                              setRange(
+                                `${e?.[0]?.format("YYYY")}-${e?.[1]?.format(
+                                  "YYYY"
+                                )}`
+                              );
+                            }
+                          }}
                         />
                       </div>
                     </div>
                   )}
 
                   <Overview
-                    data={data}
-                    stats={statistics_1}
-                    extra={extra_1}
-                    size={innerWidth}
-                    counts={counts_2}
+                    one={{ data: data, stats: statistics_1, extra: extra_1 }}
+                    two={{ counts: counts_2 }}
                   />
                 </div>
               )}
 
               {access != 1 ? (
                 <>
-                  <Col
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-end",
-                    }}
-                  >
-                    <div style={{ display: "flex", gap: 5 }}>
-                      {["Last 10 Years"].map((e, i) => (
-                        <Button
-                          key={i}
-                          type="primary"
-                          className={styles.overviewButton}
-                        >
-                          {e}
-                        </Button>
-                      ))}
-
-                      <RangePicker
-                        className={styles.overviewButton}
-                        picker="year"
-                      />
-                    </div>
-                    <BarChart trends={pubTrends_2} />
-                  </Col>
-
+                  <BarChart trends={pubTrends_2} />
                   <Row gutter={[20, 20]}>
                     <Col span={12}>
                       <ScrollBox
-                        title="Top 10 Publications with Highest Citations"
+                        title="Frequently Cited Publications"
                         data={pubsByCitns_2}
-                        type="pubs_max"
+                        type="pubs_citns"
                       />
                     </Col>
                     <Col span={12}>
                       <ScrollBox
-                        title="Top 10 Publications with Highest Impact Factors"
+                        title="Publications with the Highest Impact Factors"
                         data={pubsByImpact_2}
-                        type="pubs_min"
+                        type="pubs_impact"
                       />
                     </Col>
                   </Row>
@@ -423,15 +415,12 @@ const Profile = () => {
 
                   <Section
                     data={publications_2}
-                    head={{
-                      header: `Department of ${user?.department}`,
-                      title: "Faculty Publications",
-                    }}
+                    head={{ header: "", title: "Faculty Publications" }}
                   />
                 </>
               ) : (
                 <>
-                  {(sections_1 == "all" || sections_1 == "publications") && (
+                  {(sections == "all" || sections == "publications") && (
                     <div className={styles.section}>
                       <div className={styles.sectionTop}>
                         <div id="publications" className={styles.heading}>
@@ -451,11 +440,11 @@ const Profile = () => {
                           >
                             Sorting Citations By: {sortBy_1.toUpperCase()}
                           </Button>
-                          {sections_1 == "all" ? (
+                          {sections == "all" ? (
                             <Button
                               type="primary"
                               className={styles.sectionButton}
-                              onClick={() => setSections_1("publications")}
+                              onClick={() => setSections("publications")}
                             >
                               View All
                             </Button>
@@ -463,7 +452,7 @@ const Profile = () => {
                             <Button
                               type="primary"
                               className={styles.sectionButton}
-                              onClick={() => setSections_1("all")}
+                              onClick={() => setSections("all")}
                             >
                               Return Back
                             </Button>
@@ -472,7 +461,7 @@ const Profile = () => {
                       </div>
                       <div className={styles.sectionBottom}>
                         <Table
-                          pagination={sections_1 == "all" ? true : false}
+                          pagination={sections == "all" ? true : false}
                           columns={publications?.title}
                           dataSource={publications?.body}
                           onChange={handleFilterChange}
@@ -511,7 +500,7 @@ const Profile = () => {
                       key={i}
                       data={e.data}
                       head={{ title: e.title }}
-                      sections={{ sec: sections_1, setSec: setSections_1 }}
+                      sections={{ sec: sections, setSec: setSections }}
                     />
                   ))}
                 </>

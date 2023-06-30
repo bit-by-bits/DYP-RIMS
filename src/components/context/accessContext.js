@@ -3,12 +3,17 @@ import React, { useState, useEffect, useContext } from "react";
 const AccessContext = React.createContext();
 
 export const AccessProvider = ({ children }) => {
-  const [access, setAccess] = useState(1);
+  const [access, setAccess] = useState();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     setAccess(parseInt(user?.access) ?? 1);
   }, []);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    console.log(parseInt(user?.access), access);
+  }, [access]);
 
   const change = key => {
     const newUser = {

@@ -25,20 +25,54 @@ import green from "../../../public/logos/green-oa.png";
 import gold from "../../../public/logos/gold-oa.png";
 import bronze from "../../../public/logos/bronze-oa.png";
 import useNumber from "../../utils/useNumber";
+import { useWindowSize } from "rooks";
+import axios from "axios";
+import URLObj from "../baseURL";
+import { useUser } from "../context/userContext";
 
-const Overview = ({ data, stats, extra, size, counts }) => {
+const Overview = ({
+  one = { data: {}, stats: {}, extra: {} },
+  two = { counts: {}, faculty: 0 },
+}) => {
   // HOOKS
+
+  const { user } = useUser();
+  const { access } = useAccess();
 
   const router = useRouter();
   const { number } = useNumber();
-  const { access } = useAccess();
+  const { innerWidth } = useWindowSize();
 
   // STATES
 
-  const [overview, setOverview] = useState({});
+  const [faculty, setFaculty] = useState([]);
   const [strings, setStrings] = useState({});
+  const [overview, setOverview] = useState({});
 
   // EFFECTS
+
+  useEffect(() => {
+    if (user) {
+      axios({
+        method: "GET",
+        url: `${URLObj.base}/faculty/`,
+        headers: {
+          "X-ACCESS-KEY": URLObj.key,
+          "X-AUTH-TOKEN": user?.token,
+          "X-ACCESS-LEVEL": "department",
+        },
+      })
+        .then(res =>
+          setFaculty(
+            Object.entries(res.data?.faculty)?.reduce(
+              (a, b) => a + b[1]?.length,
+              0
+            )
+          )
+        )
+        .catch(err => console.log(err));
+    }
+  }, [user]);
 
   useEffect(() => {
     const check = (val1, val2, val3) => {
@@ -49,17 +83,24 @@ const Overview = ({ data, stats, extra, size, counts }) => {
 
     const sum = arr => arr?.reduce((a, b) => a + b, 0);
 
+    const { data, stats, extra } = one;
+    const { counts } = two;
+
     setOverview({
       publication: check(data?.publication?.length, counts?.publication, 0),
-      conferences: check(data?.conferences?.length, counts?.conferences, 0),
+      conferences: check(data?.conferences?.length, counts?.conference, 0),
       papers: check(extra?.papers, counts?.papers, 0),
       posters: check(extra?.posters, counts?.posters, 0),
       books: check(data?.books?.length, counts?.books, 0),
-      research: check(data?.research?.length, counts?.research, 0),
-      funds: check(extra?.funds, counts?.funds, 0),
+      research: check(data?.research?.length, counts?.projects, 0),
+      funds: check(
+        extra?.funds,
+        counts?.funds?.reduce((a, b) => number(a) + number(b), 0),
+        0
+      ),
       awards: check(data?.awards?.length, counts?.awards, 0),
       students: check(data?.students_guided?.length, counts?.students, 0),
-      IPR: check(data?.IPR?.length, counts?.IPR, 0),
+      IPR: check(data?.IPR?.length, counts?.ipr, 0),
       indexed_pubmed: check(
         extra?.index?.pubmed,
         counts?.indexed_at?.pubmed,
@@ -78,7 +119,7 @@ const Overview = ({ data, stats, extra, size, counts }) => {
         0
       ),
       indexed_total: check(extra?.index?.total, counts?.indexed_at?.total, 0),
-      first_author: check(stats?.FAuthor, counts?.FAuthor, 0),
+      first_author: check(stats?.FAuthor, faculty, 0),
       Q1: check(stats?.quartiles?.Q1, counts?.quartiles?.Q1, 0),
       Q2: check(stats?.quartiles?.Q2, counts?.quartiles?.Q2, 0),
       Q3: check(stats?.quartiles?.Q3, counts?.quartiles?.Q3, 0),
@@ -91,8 +132,12 @@ const Overview = ({ data, stats, extra, size, counts }) => {
       ),
       h_index_scopus: check(stats?.h_index_scopus, counts?.hindex?.scopus, 0),
       h_index_wos: check(stats?.h_index_wos, counts?.hindex?.wos, 0),
-      impact_total: check(extra?.impact?.total, counts?.impact?.total, 0),
-      impact_average: check(extra?.impact?.average, counts?.impact?.average, 0),
+      impact_total: check(extra?.impact?.total, sum(counts?.impact_factor), 0),
+      impact_average: check(
+        extra?.impact?.average,
+        sum(counts?.impact_factor) / counts?.impact_factor?.length,
+        0
+      ),
       open_access_gold: check(extra?.access?.gold, counts?.open_alex?.gold, 0),
       open_access_green: check(
         extra?.access?.green,
@@ -120,10 +165,10 @@ const Overview = ({ data, stats, extra, size, counts }) => {
         0
       ),
     });
-  }, [data, stats, extra, counts, access]);
+  }, [one, two, faculty, access]);
 
   useEffect(() => {
-    const check = (str1, str2) => (size > 1400 ? str1 : str2);
+    const check = (str1, str2) => (innerWidth > 1400 ? str1 : str2);
 
     setStrings({
       conferences: check("Conferences Attended", "Conferences"),
@@ -134,7 +179,7 @@ const Overview = ({ data, stats, extra, size, counts }) => {
       funds: check("Lakhs Received", "Lakhs"),
       students: check("Students Guided", "Students"),
     });
-  }, [size]);
+  }, [innerWidth]);
 
   // FUNCTIONS
 
@@ -197,8 +242,8 @@ const Overview = ({ data, stats, extra, size, counts }) => {
                     <Image
                       src={e.image}
                       alt="-"
-                      width={size > 1400 ? 35 : 25}
-                      height={size > 1400 ? 35 : 25}
+                      width={innerWidth > 1400 ? 35 : 25}
+                      height={innerWidth > 1400 ? 35 : 25}
                     />
                     <span>{e.value}</span>
                   </div>
@@ -333,25 +378,25 @@ const Overview = ({ data, stats, extra, size, counts }) => {
           {createBox([
             {
               label1: strings.conferences,
-              label2: number(data?.conferences?.length),
+              label2: number(overview?.conferences),
               logo: MessageOutlined,
               link: "/profile#conferences",
             },
             {
               label1: strings.papers,
-              label2: number(extra?.papers),
+              label2: number(overview?.papers),
               logo: PaperClipOutlined,
               link: "/profile#conferences",
             },
             {
               label1: strings.posters,
-              label2: number(extra?.posters),
+              label2: number(overview?.posters),
               logo: PaperClipOutlined,
               link: "/profile#conferences",
             },
             {
               label1: "Books/Chapters",
-              label2: number(data?.books?.length),
+              label2: number(overview?.books),
               logo: BookOutlined,
               link: "/profile#books",
             },
@@ -361,31 +406,31 @@ const Overview = ({ data, stats, extra, size, counts }) => {
           {createBox([
             {
               label1: strings.projects,
-              label2: number(data?.research?.length),
+              label2: number(overview?.research),
               logo: ProjectOutlined,
               link: "/profile#projects",
             },
             {
               label1: strings.funds,
-              label2: parseFloat(number(extra?.funds)).toFixed(2),
+              label2: parseFloat(number(overview?.funds)).toFixed(2),
               logo: TrademarkCircleOutlined,
               link: "/profile#projects",
             },
             {
               label1: "Awards",
-              label2: number(data?.awards?.length),
+              label2: number(overview?.awards),
               logo: TrophyOutlined,
               link: "/profile#awards",
             },
             {
               label1: strings.students,
-              label2: number(data?.students_guided?.length),
+              label2: number(overview?.students),
               logo: UsergroupAddOutlined,
               link: "/profile#students",
             },
             {
               label1: "IPR",
-              label2: number(data?.IPR?.length),
+              label2: number(overview?.IPR),
               logo: BulbOutlined,
               link: "/profile#ipr",
             },
