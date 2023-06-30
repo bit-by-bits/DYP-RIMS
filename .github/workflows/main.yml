@@ -32,7 +32,8 @@ jobs:
           username: ubuntu
           password: admin@10
           script: |
-            cd sites/rims
+            cd sites/rims/
+            source ~/.nvm/nvm.sh
             nvm use v18
             npm run build
             pm2 restart rims
