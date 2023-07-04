@@ -57,6 +57,7 @@ const useIPRSetter = () => {
           title: t => titleMaker(t, "year", "IPR Number", "Number"),
           dataIndex: "ipr_number",
           key: "ipr_number",
+          sorter: (a, b, c) => sorter(a.ipr_number, b.ipr_number, 0, c),
         },
         {
           title: "",
@@ -86,7 +87,7 @@ const useIPRSetter = () => {
         ),
       }));
 
-      BODY.sort((a, b) => b.date - a.date);
+      BODY?.sort((a, b) => b.date - a.date);
       if (innerWidth < 1600) TITLE.shift();
 
       return { TITLE, BODY };

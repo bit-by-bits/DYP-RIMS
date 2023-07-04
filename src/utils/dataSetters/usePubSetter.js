@@ -269,7 +269,7 @@ const usePubSetter = () => {
         };
       });
 
-      BODY.sort((a, b) => b.published - a.published);
+      BODY?.sort((a, b) => b.published - a.published);
       if (innerWidth < 1600) TITLE.shift();
 
       return { TITLE, BODY };

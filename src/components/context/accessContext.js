@@ -10,11 +10,6 @@ export const AccessProvider = ({ children }) => {
     setAccess(parseInt(user?.access) ?? 1);
   }, []);
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    console.log(parseInt(user?.access), access);
-  }, [access]);
-
   const change = key => {
     const newUser = {
       ...JSON.parse(localStorage.getItem("user")),

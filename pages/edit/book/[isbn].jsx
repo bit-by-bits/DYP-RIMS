@@ -59,7 +59,7 @@ const Books = () => {
 
   useEffect(() => {
     form.resetFields();
-  }, [ISBN, initialValues]);
+  }, [ISBN, form, initialValues]);
 
   // FUNCTIONS
 

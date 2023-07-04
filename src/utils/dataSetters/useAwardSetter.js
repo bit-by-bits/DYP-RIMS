@@ -3,6 +3,7 @@ import styles from "../../styles/profile.module.css";
 import { FileTextOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import { useWindowSize } from "rooks";
+
 import useTitleMaker from "../useTitleMaker";
 import useSorter from "../useSorter";
 import useCaps from "../useCaps";
@@ -75,7 +76,7 @@ const useAwardSetter = () => {
         ),
       }));
 
-      BODY.sort((a, b) => b.date - a.date);
+      BODY?.sort((a, b) => b.date - a.date);
       if (innerWidth < 1600) TITLE.shift();
 
       return { TITLE, BODY };

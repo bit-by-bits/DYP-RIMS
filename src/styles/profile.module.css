@@ -256,7 +256,8 @@
 }
 
 .publicationGrid,
-.publicationGrid2 {
+.publicationGrid2,
+.publicationGrid3 {
   display: grid;
   align-items: center;
   text-align: left;
@@ -269,6 +270,11 @@
   text-align: right;
   grid-template-columns: auto auto;
   gap: 5px;
+}
+
+.publicationGrid3 {
+  gap: 10px 0;
+  text-align: center;
 }
 
 .tableButton {

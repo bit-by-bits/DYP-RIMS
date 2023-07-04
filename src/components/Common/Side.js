@@ -38,7 +38,7 @@ const Side = ({ sets = () => {} }) => {
   // EFFECTS
 
   useEffect(() => {
-    if (user) {
+    if (user?.token) {
       setFirst(
         [
           {
@@ -101,6 +101,8 @@ const Side = ({ sets = () => {} }) => {
     if (faculty) {
       setMenuData();
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [faculty]);
 
   // FUNCTIONS

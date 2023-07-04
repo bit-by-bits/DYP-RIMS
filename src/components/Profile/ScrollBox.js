@@ -3,8 +3,9 @@ import { Avatar, Button, Col, Divider } from "antd";
 import { List, Row, Typography } from "antd";
 import publication from "../../../public/publication.svg";
 import styles from "../../styles/profile.module.css";
-import Image from "next/image";
 import useNumber from "../../utils/useNumber";
+import Image from "next/image";
+import Link from "next/link";
 
 import scopus from "../../../public/logos/scopus.svg";
 import crossref from "../../../public/logos/crossref.jpg";
@@ -183,7 +184,7 @@ const AuthItem = ({ item, index, limit }) => {
             />
 
             <Button className={styles.sectionButton} type="primary">
-              View Profile
+              <Link href={`/profile/${user?.id}`}>View Profile</Link>
             </Button>
           </Row>
         }
