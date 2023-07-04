@@ -76,7 +76,7 @@ const useAwardSetter = () => {
         ),
       }));
 
-      BODY.sort((a, b) => b.date - a.date);
+      BODY?.sort((a, b) => b.date - a.date);
       if (innerWidth < 1600) TITLE.shift();
 
       return { TITLE, BODY };

@@ -72,7 +72,7 @@ const useStudSetter = () => {
         ),
       }));
 
-      BODY.sort((a, b) => b.year - a.year);
+      BODY?.sort((a, b) => b.year - a.year);
       if (innerWidth < 1600) TITLE.shift();
 
       return { TITLE, BODY };

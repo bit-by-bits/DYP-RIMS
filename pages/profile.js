@@ -133,6 +133,7 @@ const Profile = () => {
           .then(res => {
             const DATA = res.data;
 
+            setData(DATA?.research);
             setCounts_2(DATA?.counts);
             setAuthorsMax_2(DATA?.top_10_authors);
             setAuthorsMin_2(DATA?.least_10_authors);
@@ -168,45 +169,45 @@ const Profile = () => {
   }, [user, range, access]);
 
   useEffect(() => {
-    if (access == 1) {
-      if (data?.publication) {
-        const { TITLE, BODY } = pubData(data?.publication, {
-          fileData_1,
-          setFileData_1,
-          sortBy_1,
-        });
-        setPublications({ title: TITLE, body: BODY, pubs: BODY });
-      }
+    if (data?.publications) {
+      const { TITLE, BODY } = pubData(data?.publications, {
+        fileData_1,
+        setFileData_1,
+        sortBy_1,
+      });
 
-      if (data?.conferences) {
-        const { TITLE, BODY } = confData(data?.conferences);
-        setConferences({ title: TITLE, body: BODY });
-      }
+      console.log(TITLE, BODY);
+      setPublications({ title: TITLE, body: BODY, pubs: BODY });
+    }
 
-      if (data?.books) {
-        const { TITLE, BODY } = bookData(data?.books);
-        setBooks({ title: TITLE, body: BODY });
-      }
+    if (data?.conferences) {
+      const { TITLE, BODY } = confData(data?.conferences);
+      setConferences({ title: TITLE, body: BODY });
+    }
 
-      if (data?.research) {
-        const { TITLE, BODY } = projData(data?.research);
-        setProjects({ title: TITLE, body: BODY });
-      }
+    if (data?.books) {
+      const { TITLE, BODY } = bookData(data?.books);
+      setBooks({ title: TITLE, body: BODY });
+    }
 
-      if (data?.awards) {
-        const { TITLE, BODY } = awardData(data?.awards);
-        setAwards({ title: TITLE, body: BODY });
-      }
+    if (data?.projects) {
+      const { TITLE, BODY } = projData(data?.projects);
+      setProjects({ title: TITLE, body: BODY });
+    }
 
-      if (data?.IPR) {
-        const { TITLE, BODY } = iprData(data?.IPR);
-        setIpr({ title: TITLE, body: BODY });
-      }
+    if (data?.awards) {
+      const { TITLE, BODY } = awardData(data?.awards);
+      setAwards({ title: TITLE, body: BODY });
+    }
 
-      if (data?.students_guided) {
-        const { TITLE, BODY } = studData(data?.students_guided);
-        setStudents({ title: TITLE, body: BODY });
-      }
+    if (data?.IPR) {
+      const { TITLE, BODY } = iprData(data?.IPR);
+      setIpr({ title: TITLE, body: BODY });
+    }
+
+    if (data?.students_guided) {
+      const { TITLE, BODY } = studData(data?.students_guided);
+      setStudents({ title: TITLE, body: BODY });
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -308,201 +309,214 @@ const Profile = () => {
               <Top main={{ publications, setPublications, setSections }} />
 
               {sections == "all" && (
-                <div className={styles.section}>
-                  {access == 2 && (
-                    <div
-                      className={styles.header}
-                    >{`Department of ${user?.department}`}</div>
-                  )}
-                  {access == 1 ? (
-                    <div className={styles.sectionTop}>
-                      <div id="overview" className={styles.heading}>
-                        {`Overview: ${
-                          ["Individual", "Department", "Institute"][access - 1]
-                        } Level`}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className={styles.sectionTop}>
-                      <div id="overview" className={styles.heading}>
-                        {`Overview: ${
-                          ["Individual", "Department", "Institute"][access - 1]
-                        } Level`}
-                      </div>
-                      <div style={{ display: "flex", gap: 5 }}>
-                        {[
-                          ["All Time", ""],
-                          ["Last 5 Years", "2019-2023"],
-                          ["Last 3 Years", "2021-2023"],
-                          ["Last Year", "2023-2023"],
-                        ].map(([e, r], i) => (
-                          <Button
-                            key={i}
-                            type="primary"
-                            className={styles.overviewButton}
-                            onClick={() => setRange(r)}
-                          >
-                            {e}
-                          </Button>
-                        ))}
-
-                        <RangePicker
-                          picker="year"
-                          className={styles.overviewButton}
-                          allowClear={false}
-                          onChange={e => {
-                            if (e?.[1]?.format("YYYY") > 2025) {
-                              message.error(
-                                "End year cannot be greater than 2025"
-                              );
-                            } else {
-                              setRange(
-                                `${e?.[0]?.format("YYYY")}-${e?.[1]?.format(
-                                  "YYYY"
-                                )}`
-                              );
-                            }
-                          }}
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  <Overview
-                    one={{ data: data, stats: statistics_1, extra: extra_1 }}
-                    two={{ counts: counts_2 }}
-                  />
-                </div>
-              )}
-
-              {access != 1 && (
                 <>
-                  <BarChart trends={pubTrends_2} />
-                  <Row gutter={[20, 20]}>
-                    <Col span={12}>
-                      <ScrollBox
-                        title="Frequently Cited Publications"
-                        data={pubsByCitns_2}
-                        type="pubs_citns"
-                      />
-                    </Col>
-                    <Col span={12}>
-                      <ScrollBox
-                        title="Publications with the Highest Impact Factors"
-                        data={pubsByImpact_2}
-                        type="pubs_impact"
-                      />
-                    </Col>
-                  </Row>
-                  <Row gutter={[20, 20]}>
-                    <Col span={12}>
-                      <ScrollBox
-                        title="Faculty with the Highest Publications"
-                        subtitle="Interdepartmental Publications"
-                        data={authorsMax_2}
-                        type="auths"
-                      />
-                    </Col>
-                    <Col span={12}>
-                      <ScrollBox
-                        title="Faculty with the Lowest Publications"
-                        subtitle="Interdepartmental Publications"
-                        data={authorsMin_2}
-                        type="auths"
-                      />
-                    </Col>
-                  </Row>
+                  <div className={styles.section}>
+                    {access == 2 && (
+                      <div
+                        className={styles.header}
+                      >{`Department of ${user?.department}`}</div>
+                    )}
+                    {access == 1 ? (
+                      <div className={styles.sectionTop}>
+                        <div id="overview" className={styles.heading}>
+                          {`Overview: ${
+                            ["Individual", "Department", "Institute"][
+                              access - 1
+                            ]
+                          } Level`}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className={styles.sectionTop}>
+                        <div id="overview" className={styles.heading}>
+                          {`Overview: ${
+                            ["Individual", "Department", "Institute"][
+                              access - 1
+                            ]
+                          } Level`}
+                        </div>
+                        <div style={{ display: "flex", gap: 5 }}>
+                          {[
+                            ["All Time", ""],
+                            ["Last 5 Years", "2019-2023"],
+                            ["Last 3 Years", "2021-2023"],
+                            ["Last Year", "2023-2023"],
+                          ].map(([e, r], i) => (
+                            <Button
+                              key={i}
+                              type="primary"
+                              className={styles.overviewButton}
+                              onClick={() => setRange(r)}
+                            >
+                              {e}
+                            </Button>
+                          ))}
 
-                  <Section
-                    data={publications_2}
-                    head={{ header: "", title: "Faculty Publications" }}
-                  />
+                          <RangePicker
+                            picker="year"
+                            className={styles.overviewButton}
+                            allowClear={false}
+                            onChange={e => {
+                              if (e?.[1]?.format("YYYY") > 2025) {
+                                message.error(
+                                  "End year cannot be greater than 2025"
+                                );
+                              } else {
+                                setRange(
+                                  `${e?.[0]?.format("YYYY")}-${e?.[1]?.format(
+                                    "YYYY"
+                                  )}`
+                                );
+                              }
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    <Overview
+                      one={{ data: data, stats: statistics_1, extra: extra_1 }}
+                      two={{ counts: counts_2 }}
+                    />
+                  </div>
+
+                  {access > 1 && (
+                    <>
+                      <BarChart trends={pubTrends_2} />
+                      <Row gutter={[20, 20]}>
+                        <Col span={12}>
+                          <ScrollBox
+                            title="Frequently Cited Publications"
+                            data={pubsByCitns_2}
+                            type="pubs_citns"
+                          />
+                        </Col>
+                        <Col span={12}>
+                          <ScrollBox
+                            title="Publications with the Highest Impact Factors"
+                            data={pubsByImpact_2}
+                            type="pubs_impact"
+                          />
+                        </Col>
+                      </Row>
+                      <Row gutter={[20, 20]}>
+                        <Col span={12}>
+                          <ScrollBox
+                            title="Faculty with the Highest Publications"
+                            subtitle="Interdepartmental Publications"
+                            data={authorsMax_2}
+                            type="auths"
+                          />
+                        </Col>
+                        <Col span={12}>
+                          <ScrollBox
+                            title="Faculty with the Lowest Publications"
+                            subtitle="Interdepartmental Publications"
+                            data={authorsMin_2}
+                            type="auths"
+                          />
+                        </Col>
+                      </Row>
+
+                      <Section
+                        data={publications_2}
+                        head={{ header: "", title: "Faculty Publications" }}
+                      />
+                    </>
+                  )}
                 </>
               )}
 
-              {(sections == "all" || sections == "publications") && (
-                <div className={styles.section}>
-                  <div className={styles.sectionTop}>
-                    <div id="publications" className={styles.heading}>
-                      Publications
-                    </div>
-                    <div style={{ display: "flex", gap: 15 }}>
-                      <Button
-                        type="primary"
-                        className={styles.sectionButton}
-                        onClick={() => {
-                          if (sortBy_1 === "scopus") setSortBy_1("wos");
-                          else if (sortBy_1 === "wos") setSortBy_1("crossref");
-                          else if (sortBy_1 === "crossref")
-                            setSortBy_1("scopus");
-                        }}
-                      >
-                        Sorting Citations By: {sortBy_1.toUpperCase()}
-                      </Button>
-                      {sections == "all" ? (
+              {(sections == "all" || sections == "publications") &&
+                (access == 1 ? (
+                  <div className={styles.section}>
+                    <div className={styles.sectionTop}>
+                      <div id="publications" className={styles.heading}>
+                        Publications
+                      </div>
+                      <div style={{ display: "flex", gap: 15 }}>
                         <Button
                           type="primary"
                           className={styles.sectionButton}
-                          onClick={() => setSections("publications")}
+                          onClick={() => {
+                            if (sortBy_1 === "scopus") setSortBy_1("wos");
+                            else if (sortBy_1 === "wos")
+                              setSortBy_1("crossref");
+                            else if (sortBy_1 === "crossref")
+                              setSortBy_1("scopus");
+                          }}
                         >
-                          View All
+                          Sorting Citations By: {sortBy_1.toUpperCase()}
                         </Button>
-                      ) : (
-                        <Button
-                          type="primary"
-                          className={styles.sectionButton}
-                          onClick={() => setSections("all")}
-                        >
-                          Return Back
-                        </Button>
-                      )}
+                        {sections == "all" ? (
+                          <Button
+                            type="primary"
+                            className={styles.sectionButton}
+                            onClick={() => setSections("publications")}
+                          >
+                            View All
+                          </Button>
+                        ) : (
+                          <Button
+                            type="primary"
+                            className={styles.sectionButton}
+                            onClick={() => setSections("all")}
+                          >
+                            Return Back
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                    <div className={styles.sectionBottom}>
+                      <Table
+                        pagination={sections == "all" ? true : false}
+                        columns={publications?.title}
+                        dataSource={publications?.body}
+                        onChange={handleFilterChange}
+                      />
                     </div>
                   </div>
-                  <div className={styles.sectionBottom}>
-                    <Table
-                      pagination={sections == "all" ? true : false}
-                      columns={publications?.title}
-                      dataSource={publications?.body}
-                      onChange={handleFilterChange}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {access == 1 &&
-                [
-                  {
-                    title: "Conferences",
-                    data: conferences,
-                  },
-                  {
-                    title: "Books",
-                    data: books,
-                  },
-                  {
-                    title: "Projects",
-                    data: projects,
-                  },
-                  {
-                    title: "Awards",
-                    data: awards,
-                  },
-                  {
-                    title: "IPR",
-                    data: ipr,
-                  },
-                  {
-                    title: "Students",
-                    data: students,
-                  },
-                ]?.map((e, i) => (
+                ) : (
                   <Section
-                    key={i}
-                    data={e.data}
-                    head={{ title: e.title }}
+                    data={publications}
+                    head={{ title: "Publications" }}
                     sections={{ sec: sections, setSec: setSections }}
                   />
                 ))}
+
+              {[
+                {
+                  title: "Conferences",
+                  data: conferences,
+                },
+                {
+                  title: "Books",
+                  data: books,
+                },
+                {
+                  title: "Projects",
+                  data: projects,
+                },
+                {
+                  title: "Awards",
+                  data: awards,
+                },
+                {
+                  title: "IPR",
+                  data: ipr,
+                },
+                {
+                  title: "Students",
+                  data: students,
+                },
+              ]?.map((e, i) => (
+                <Section
+                  key={i}
+                  data={e.data}
+                  head={{ title: e.title }}
+                  sections={{ sec: sections, setSec: setSections }}
+                />
+              ))}
 
               <Modal
                 title="Upload PDF"

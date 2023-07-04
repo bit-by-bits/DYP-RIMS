@@ -92,7 +92,7 @@ const useProjSetter = () => {
         ),
       }));
 
-      BODY.sort((a, b) => b.start - a.start);
+      BODY?.sort((a, b) => b.start - a.start);
       if (innerWidth < 1600) TITLE.shift();
 
       return { TITLE, BODY };

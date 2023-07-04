@@ -123,9 +123,11 @@ const Top = ({ main = {} }) => {
 
         main?.setSections("publications");
       } else {
+        const { TITLE, BODY } = pubData(data);
+
         main?.setPublications({
-          title: main?.publications?.title,
-          body: publicationsMaker(data),
+          ...main?.publications,
+          body: BODY,
         });
 
         main?.setSections("all");
