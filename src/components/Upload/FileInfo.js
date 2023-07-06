@@ -4,11 +4,14 @@ import axios from "axios";
 import URLObj from "../baseURL";
 import { Button, Table, message } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
+import { useAccess } from "../context/accessContext";
 
 const FileInfo = ({ user, setp, setv, sett, DOI }) => {
   // STATES
 
+  const { access } = useAccess();
   const [data, setData] = useState({});
+
   const [checking, setChecking] = useState(false);
   const [authors, setAuthors] = useState({
     title: [],
@@ -86,12 +89,23 @@ const FileInfo = ({ user, setp, setv, sett, DOI }) => {
       axios({
         method: "POST",
         url: `${URLObj.base}/publications/`,
-        headers: {
-          "X-ACCESS-KEY": URLObj.key,
-          "X-AUTH-TOKEN": user?.token,
-          "X-TEST-ENVIRONMENT": "0",
-          "Content-Type": "application/json",
-        },
+        headers:
+          access == 1
+            ? {
+                "X-ACCESS-KEY": URLObj.key,
+                "X-AUTH-TOKEN": user?.token,
+                "X-TEST-ENVIRONMENT": "0",
+                "Content-Type": "application/json",
+              }
+            : {
+                "X-ACCESS-KEY": URLObj.key,
+                "X-AUTH-TOKEN":
+                  JSON.parse(localStorage.getItem("token") ?? "{}")?.token ??
+                  "",
+                "X-DEPARTMENT-TOKEN": user?.token,
+                "X-TEST-ENVIRONMENT": "0",
+                "Content-Type": "application/json",
+              },
         data: str,
       })
         .then(res => {

@@ -27,35 +27,40 @@ const Profile = () => {
   // STATES
 
   const [visible, setVisible] = useState(true);
+  const [userData, setUserData] = useState({});
 
   // EFFECTS
 
+  useEffect(() => {
+    if (ID && user?.token) {
+      axios({
+        method: "PUT",
+        url: `${URLObj.base}/faculty/?id=${ID}`,
+        headers: {
+          "X-ACCESS-KEY": URLObj.key,
+          "X-AUTH-TOKEN": user?.token,
+          "X-ACCESS-LEVEL": "department",
+        },
+      })
+        .then(res => {
+          setVisible(false);
+          setUserData(res?.data?.profile?.user);
+          localStorage.setItem(
+            "token",
+            JSON.stringify({ token: res?.data?.token })
+          );
+        })
+        .catch(err => {
+          console.log(err);
+          message.error("Could not fetch file data");
+        });
+    }
+  }, [ID, user]);
+
   // FUNCTIONS
 
-  const downloadProfile = () => {
-    message.error("Download functionality unavailable!");
-  };
-
-  const deleteProfile = () => {
-    const formdata = new FormData();
-    formdata?.append("id", ID);
-
-    axios({
-      method: "DELETE",
-      url: `${URLObj.base}/faculty/`,
-      headers: {
-        "X-ACCESS-KEY": URLObj.key,
-        "X-AUTH-TOKEN": user?.token,
-      },
-      data: formdata,
-    })
-      .then(res => {
-        message.success("Profile deleted successfully!");
-        router.push("/profile");
-      })
-      .catch(err => {
-        message.error("Profile deletion failed!");
-      });
+  const addPubs = () => {
+    router.push("/upload");
   };
 
   const editProfile = () => {
@@ -87,13 +92,13 @@ const Profile = () => {
               <Top />
 
               <div>
-                <ProfileInfo user={user} setv={setVisible} ID={ID} />
+                <ProfileInfo data={userData} />
 
                 <div className={styles.file_btns}>
                   {[
                     {
-                      name: "Delete",
-                      function: deleteProfile,
+                      name: "Add Publications",
+                      function: addPubs,
                       class: styles.file_btn2,
                     },
                     {

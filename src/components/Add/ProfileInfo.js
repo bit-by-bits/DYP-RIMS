@@ -5,35 +5,12 @@ import URLObj from "../baseURL";
 import { Image, message } from "antd";
 import useCaps from "../../utils/useCaps";
 
-const ProfileInfo = ({ user, setv, ID }) => {
+const ProfileInfo = ({ data }) => {
   // STATES
 
   const { capitalize } = useCaps();
-  const [data, setData] = useState({});
 
   // EFFECTS
-
-  useEffect(() => {
-    if (ID && user?.token) {
-      axios({
-        method: "PUT",
-        url: `${URLObj.base}/faculty/?id=${ID}`,
-        headers: {
-          "X-ACCESS-KEY": URLObj.key,
-          "X-AUTH-TOKEN": user?.token,
-          "X-ACCESS-LEVEL": "department",
-        },
-      })
-        .then(res => {
-          setv(false);
-          setData(res?.data?.data);
-        })
-        .catch(err => {
-          console.log(err);
-          message.error("Could not fetch file data");
-        });
-    }
-  }, [ID, setv, user]);
 
   // FUNCTIONS
 
@@ -46,6 +23,13 @@ const ProfileInfo = ({ user, setv, ID }) => {
             __html:
               data?.user?.first_name + " " + data?.user?.last_name ??
               "- Not Available -",
+          }}
+        />
+
+        <div
+          className={styles.file_subtitle}
+          dangerouslySetInnerHTML={{
+            __html: data?.user?.username ?? "- Not Available -",
           }}
         />
 

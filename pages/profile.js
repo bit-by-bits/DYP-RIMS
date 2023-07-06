@@ -176,7 +176,6 @@ const Profile = () => {
         sortBy_1,
       });
 
-      console.log(TITLE, BODY);
       setPublications({ title: TITLE, body: BODY, pubs: BODY });
     }
 
@@ -301,13 +300,10 @@ const Profile = () => {
           <FloatButton.BackTop
             style={{ left: 30, bottom: 30, borderRadius: "50%" }}
           />
-
           <div style={{ paddingLeft: "18vw" }}>
             <Side sets={setSections} />
-
             <div className={styles.container}>
               <Top main={{ publications, setPublications, setSections }} />
-
               {sections == "all" && (
                 <>
                   <div className={styles.section}>
@@ -351,7 +347,6 @@ const Profile = () => {
                               {e}
                             </Button>
                           ))}
-
                           <RangePicker
                             picker="year"
                             className={styles.overviewButton}
@@ -373,13 +368,11 @@ const Profile = () => {
                         </div>
                       </div>
                     )}
-
                     <Overview
                       one={{ data: data, stats: statistics_1, extra: extra_1 }}
                       two={{ counts: counts_2 }}
                     />
                   </div>
-
                   {access > 1 && (
                     <>
                       <BarChart trends={pubTrends_2} />
@@ -417,7 +410,6 @@ const Profile = () => {
                           />
                         </Col>
                       </Row>
-
                       <Section
                         data={publications_2}
                         head={{ header: "", title: "Faculty Publications" }}
@@ -426,7 +418,6 @@ const Profile = () => {
                   )}
                 </>
               )}
-
               {(sections == "all" || sections == "publications") &&
                 (access == 1 ? (
                   <div className={styles.section}>
@@ -483,15 +474,10 @@ const Profile = () => {
                     sections={{ sec: sections, setSec: setSections }}
                   />
                 ))}
-
               {[
                 {
                   title: "Conferences",
                   data: conferences,
-                },
-                {
-                  title: "Books",
-                  data: books,
                 },
                 {
                   title: "Projects",
@@ -506,18 +492,27 @@ const Profile = () => {
                   data: ipr,
                 },
                 {
+                  title: "Books",
+                  data: books,
+                },
+                {
                   title: "Students",
                   data: students,
                 },
-              ]?.map((e, i) => (
-                <Section
-                  key={i}
-                  data={e.data}
-                  head={{ title: e.title }}
-                  sections={{ sec: sections, setSec: setSections }}
-                />
-              ))}
-
+              ]
+                ?.filter((_, i) => {
+                  if (access == 1) return true;
+                  else if (access == 2) return i < 3;
+                  else return false;
+                })
+                ?.map((e, i) => (
+                  <Section
+                    key={i}
+                    data={e.data}
+                    head={{ title: e.title }}
+                    sections={{ sec: sections, setSec: setSections }}
+                  />
+                ))}
               <Modal
                 title="Upload PDF"
                 open={fileData_1?.modal}
@@ -533,7 +528,7 @@ const Profile = () => {
                     if (status === "done")
                       setFileData_1({ ...fileData_1, file: info.file });
                   }}
-                  beforeUpload={file => uploadFile()}
+                  beforeUpload={_ => uploadFile()}
                 >
                   <InboxOutlined
                     style={{ fontSize: 60, margin: "10px 0", color: "#9a2827" }}
