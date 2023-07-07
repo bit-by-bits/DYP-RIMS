@@ -15,14 +15,14 @@ import BarChart from "../src/components/Profile/BarChart";
 import { useUser } from "../src/components/context/userContext";
 import { useAccess } from "../src/components/context/accessContext";
 
-import usePubSetter from "../src//utils/dataSetters/usePubSetter";
-import useConfSetter from "../src//utils/dataSetters/useConfSetter";
-import useBookSetter from "../src//utils/dataSetters/useBookSetter";
-import useProjSetter from "../src//utils/dataSetters/useProjSetter";
-import useAwardSetter from "../src//utils/dataSetters/useAwardSetter";
-import useIPRSetter from "../src//utils/dataSetters/useIPRSetter";
-import useStudSetter from "../src//utils/dataSetters/useStudSetter";
-import useExtraSetter from "../src//utils/dataSetters/useExtraSetter";
+import usePubSetter from "../src/utils/dataSetters/usePubSetter";
+import useConfSetter from "../src/utils/dataSetters/useConfSetter";
+import useBookSetter from "../src/utils/dataSetters/useBookSetter";
+import useProjSetter from "../src/utils/dataSetters/useProjSetter";
+import useAwardSetter from "../src/utils/dataSetters/useAwardSetter";
+import useIPRSetter from "../src/utils/dataSetters/useIPRSetter";
+import useStudSetter from "../src/utils/dataSetters/useStudSetter";
+import useExtraSetter from "../src/utils/dataSetters/useExtraSetter";
 import ScrollBox from "../src/components/Profile/ScrollBox";
 import useDeptPubSetter from "../src/utils/dataSetters/useDeptPubSetter";
 
@@ -499,20 +499,14 @@ const Profile = () => {
                   title: "Students",
                   data: students,
                 },
-              ]
-                ?.filter((_, i) => {
-                  if (access == 1) return true;
-                  else if (access == 2) return i < 3;
-                  else return false;
-                })
-                ?.map((e, i) => (
-                  <Section
-                    key={i}
-                    data={e.data}
-                    head={{ title: e.title }}
-                    sections={{ sec: sections, setSec: setSections }}
-                  />
-                ))}
+              ]?.map((e, i) => (
+                <Section
+                  key={i}
+                  data={e.data}
+                  head={{ title: e.title }}
+                  sections={{ sec: sections, setSec: setSections }}
+                />
+              ))}
               <Modal
                 title="Upload PDF"
                 open={fileData_1?.modal}

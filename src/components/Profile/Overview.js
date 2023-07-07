@@ -31,6 +31,7 @@ import URLObj from "../baseURL";
 import { useUser } from "../context/userContext";
 
 const Overview = ({
+  mode = "one",
   one = { data: {}, stats: {}, extra: {} },
   two = { counts: {}, faculty: 0 },
 }) => {
@@ -72,11 +73,11 @@ const Overview = ({
         )
         .catch(err => console.log(err));
     }
-  }, [user]);
+  }, [user?.token]);
 
   useEffect(() => {
     const check = (val1, val2, val3) => {
-      if (access == 1) return val1;
+      if (mode == "two" || access == 1) return val1;
       else if (access == 2) return val2;
       else return val3;
     };

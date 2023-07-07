@@ -62,7 +62,7 @@ const useExtraSetter = () => {
 
       IMPACT.average = IMPACT.total / pubs?.length;
 
-      confs.forEach(e => {
+      confs?.forEach(e => {
         if (e.is_paper_presented) PAPERS += e.papers?.length;
 
         if (e.is_poster_presented) POSTERS += e.posters?.length;
