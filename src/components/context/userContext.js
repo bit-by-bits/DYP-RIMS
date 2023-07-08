@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, createContext } from "react";
 
-const UserContext = React.createContext();
+const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const router = useRouter();

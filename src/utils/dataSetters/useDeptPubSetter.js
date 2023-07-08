@@ -244,7 +244,9 @@ const useDeptPubSetter = () => {
         };
       });
 
+      BODY?.sort((a, b) => b.publications - a.publications);
       if (innerWidth < 1600) TITLE.shift();
+
       return { TITLE, BODY };
     },
   };

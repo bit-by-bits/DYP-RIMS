@@ -3,10 +3,8 @@ import styles from "../../src/styles/profile.module.css";
 import React, { useState, useEffect, useMemo } from "react";
 import { InboxOutlined } from "@ant-design/icons";
 import { Spin, Button, FloatButton } from "antd";
-import { Table, Modal, Upload, Image, message } from "antd";
+import { Table, Modal, Upload, message } from "antd";
 import axios from "axios";
-import useCaps from "../../src/utils/useCaps";
-import styles2 from "../../src/styles/file.module.css";
 
 import Top from "../../src/components/Common/Top";
 import Side from "../../src/components/Common/Side";
@@ -59,6 +57,7 @@ const Profile = () => {
   // LEVEL 1 DATA
 
   const [data, setData] = useState({});
+  const [faculty, setFaculty] = useState({});
   const [statistics_1, setStatistics_1] = useState({});
   const [fileData_1, setFileData_1] = useState({
     modal: false,
@@ -95,9 +94,11 @@ const Profile = () => {
         },
       })
         .then(res => {
+          const FAC = res.data?.profile?.user;
           const DATA = res.data?.profile?.data;
           const STATS = res.data?.profile?.statistics;
 
+          setFaculty(FAC);
           setData(DATA);
           setStatistics_1(STATS);
           setExtra(
@@ -213,21 +214,22 @@ const Profile = () => {
             <div className={styles.container}>
               <Top main={{ publications, setPublications, setSections }} />
               {sections == "all" && (
-                <>
-                  <div className={styles.section}>
-                    <div className={styles.sectionTop}>
-                      <div id="overview" className={styles.heading}>
-                        Overview: Individual Level
-                      </div>
-                    </div>
-
-                    <Overview
-                      mode="two"
-                      one={{ data: data, stats: statistics_1, extra: extra_1 }}
-                      two={{ counts: {}, faculty: 0 }}
-                    />
+                <div className={styles.section}>
+                  <div className={styles.header}>
+                    {`${faculty?.user?.first_name} ${faculty?.user?.last_name} - ${faculty.designation}`}
                   </div>
-                </>
+                  <div className={styles.sectionTop}>
+                    <div id="overview" className={styles.heading}>
+                      Overview: Individual Level
+                    </div>
+                  </div>
+
+                  <Overview
+                    mode="two"
+                    one={{ data: data, stats: statistics_1, extra: extra_1 }}
+                    two={{ counts: {}, faculty: 0 }}
+                  />
+                </div>
               )}
               {(sections == "all" || sections == "publications") && (
                 <div className={styles.section}>
@@ -348,111 +350,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
-const ProfileSection = ({ data }) => {
-  // STATES
-
-  const { capitalize } = useCaps();
-
-  // EFFECTS
-
-  // FUNCTIONS
-
-  return (
-    <>
-      <div className={styles.file_text}>
-        <div
-          className={styles.file_title}
-          dangerouslySetInnerHTML={{
-            __html:
-              data?.user?.first_name + " " + data?.user?.last_name ??
-              "- Not Available -",
-          }}
-        />
-
-        <div
-          className={styles.file_subtitle}
-          dangerouslySetInnerHTML={{
-            __html: data?.user?.username ?? "- Not Available -",
-          }}
-        />
-
-        {data?.profile_picture && (
-          <Image
-            style={{ margin: "10px 0", maxHeight: 400 }}
-            alt={data?.username ?? "- Not Available -"}
-            src={data?.profile_picture}
-          />
-        )}
-
-        <div className={styles.file_info}>
-          <div className={styles.file_info_box}>
-            <div>
-              <div className={styles.info}>
-                <span className={styles.info_head}>Email</span>
-                <span className={styles.info_body}>
-                  {data?.user?.email ?? "- Not Available -"}
-                </span>
-              </div>
-
-              <span className={styles.middot}>&middot;</span>
-
-              <div className={styles.info}>
-                <span className={styles.info_head}>Department</span>
-                <span className={styles.info_body}>
-                  {capitalize(data?.department?.name) ?? "- Not Available -"}
-                </span>
-              </div>
-            </div>
-
-            <div>
-              <div className={styles.info}>
-                <span className={styles.info_head}>Gender</span>
-                <span className={styles.info_body}>
-                  {data?.gender ?? "- Not Available -"}
-                </span>
-              </div>
-
-              <span className={styles.middot}>&middot;</span>
-
-              <div className={styles.info}>
-                <span className={styles.info_head}>Age</span>
-                <span className={styles.info_body}>
-                  {data?.age ?? "- Not Available -"}
-                </span>
-              </div>
-
-              <span className={styles.middot}>&middot;</span>
-
-              <div className={styles.info}>
-                <span className={styles.info_head}>Mobile</span>
-                <span className={styles.info_body}>
-                  {data?.mobile ?? "- Not Available -"}
-                </span>
-              </div>
-            </div>
-
-            <div>
-              <div className={styles.info}>
-                <span className={styles.info_head}>Designation</span>
-                <span className={styles.info_body}>
-                  {data?.designation ?? "- Not Available -"}
-                </span>
-              </div>
-
-              <span className={styles.middot}>&middot;</span>
-
-              <div className={styles.info}>
-                <span className={styles.info_head}>Access Level</span>
-                <span className={styles.info_body}>
-                  {`${data?.access_level?.[0]?.display_text} (${data?.access_level?.[0]?.level_name})` ??
-                    "- Not Available -"}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};

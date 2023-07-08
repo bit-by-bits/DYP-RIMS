@@ -15,16 +15,16 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import styles from "../../styles/profile.module.css";
-import { useRouter } from "next/router";
 import { useAccess } from "../context/accessContext";
 import { useUser } from "../context/userContext";
+import { useWindowSize } from "rooks";
 import axios from "axios";
 import URLObj from "../baseURL";
 
 const Side = ({ sets = () => {} }) => {
   // HOOKS
 
-  const router = useRouter();
+  const { innerWidth } = useWindowSize();
 
   const { user } = useUser();
   const { access } = useAccess();
@@ -172,7 +172,9 @@ const Side = ({ sets = () => {} }) => {
             </Button>
             {access > 1 && (
               <Button className={styles.sideButton} type="primary">
-                <Link href="/add/faculty">Add Faculty</Link>
+                <Link href="/add/faculty">
+                  {innerWidth > 1600 ? "Add/Edit Faculty" : "Add Faculty"}
+                </Link>
               </Button>
             )}
           </div>

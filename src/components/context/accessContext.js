@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, createContext } from "react";
 
-const AccessContext = React.createContext();
+const AccessContext = createContext();
 
 export const AccessProvider = ({ children }) => {
   const [access, setAccess] = useState();

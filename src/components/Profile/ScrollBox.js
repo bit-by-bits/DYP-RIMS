@@ -229,11 +229,7 @@ const ScrollBox = ({ title, subtitle, data, type }) => {
         }}
         itemLayout="horizontal"
         dataSource={type === "auths" ? data : DATA}
-        pagination={{
-          position: "bottom",
-          align: "center",
-          pageSize: type === "auths" ? 5 : 2,
-        }}
+        pagination={{ position: "bottom", align: "center", pageSize: 5 }}
         renderItem={(item, index) =>
           type === "auths" ? (
             <AuthItem item={item} index={index} limit={SIZE} />

@@ -95,7 +95,7 @@ export default function Home() {
       designation: newData?.designation,
       department: newData?.department?.name,
       level: access_level?.display_text,
-      access: access_level?.id,
+      access: 1,
       max_access: access_level?.id,
     });
 
