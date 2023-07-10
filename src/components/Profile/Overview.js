@@ -82,23 +82,19 @@ const Overview = ({
       else return val3;
     };
 
-    const sum = arr => arr?.reduce((a, b) => a + b, 0);
+    const sum = arr => arr?.reduce((a, b) => number(a) + number(b), 0);
 
     const { data, stats, extra } = one;
     const { counts } = two;
 
     setOverview({
-      publication: check(data?.publication?.length, counts?.publication, 0),
+      publication: check(data?.publications?.length, counts?.publication, 0),
       conferences: check(data?.conferences?.length, counts?.conference, 0),
       papers: check(extra?.papers, counts?.papers, 0),
       posters: check(extra?.posters, counts?.posters, 0),
       books: check(data?.books?.length, counts?.books, 0),
-      research: check(data?.research?.length, counts?.projects, 0),
-      funds: check(
-        extra?.funds,
-        counts?.funds?.reduce((a, b) => number(a) + number(b), 0),
-        0
-      ),
+      research: check(data?.projects?.length, counts?.projects, 0),
+      funds: check(extra?.funds, sum(counts?.funds), 0),
       awards: check(data?.awards?.length, counts?.awards, 0),
       students: check(data?.students_guided?.length, counts?.students, 0),
       IPR: check(data?.IPR?.length, counts?.ipr, 0),

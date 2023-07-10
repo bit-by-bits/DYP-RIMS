@@ -480,6 +480,10 @@ const Profile = () => {
                   data: conferences,
                 },
                 {
+                  title: "Books",
+                  data: books,
+                },
+                {
                   title: "Projects",
                   data: projects,
                 },
@@ -490,10 +494,6 @@ const Profile = () => {
                 {
                   title: "IPR",
                   data: ipr,
-                },
-                {
-                  title: "Books",
-                  data: books,
                 },
                 {
                   title: "Students",

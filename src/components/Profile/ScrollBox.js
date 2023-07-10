@@ -31,7 +31,7 @@ const PubItem = ({ item, index, limit, type }) => {
         avatar={<Image height={50} width={50} alt="" src={publication.src} />}
         title={
           <>
-            <h2
+            <div
               style={{
                 maxWidth: "100%",
                 whiteSpace: "nowrap",
