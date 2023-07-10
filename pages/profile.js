@@ -107,9 +107,9 @@ const Profile = () => {
             setData(DATA);
             setStatistics_1(STATS);
             setExtra(
-              DATA?.publication,
+              DATA?.publications,
               DATA?.conferences,
-              DATA?.research,
+              DATA?.projects,
               setExtra_1
             );
 
