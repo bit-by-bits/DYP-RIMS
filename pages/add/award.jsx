@@ -11,14 +11,18 @@ import Image from "next/image";
 import axios from "axios";
 import URLObj from "../../src/components/baseURL";
 import { useUser } from "../../src/components/context/userContext";
+import { useAccess } from "../../src/components/context/accessContext";
 
 const Awards = () => {
   // HOOKS
 
   const router = useRouter();
-  const { user } = useUser();
-  const { Dragger } = Upload;
   const [form] = Form.useForm();
+
+  const { access } = useAccess();
+  const { user } = useUser();
+
+  const { Dragger } = Upload;
 
   // STATES
 
@@ -65,10 +69,18 @@ const Awards = () => {
     axios({
       method: "POST",
       url: `${URLObj.base}/research/award/`,
-      headers: {
-        "X-ACCESS-KEY": URLObj.key,
-        "X-AUTH-TOKEN": user?.token,
-      },
+      headers:
+        access == 1
+          ? {
+              "X-ACCESS-KEY": URLObj.key,
+              "X-AUTH-TOKEN": user?.token,
+            }
+          : {
+              "X-ACCESS-KEY": URLObj.key,
+              "X-AUTH-TOKEN":
+                JSON.parse(localStorage.getItem("token") ?? "{}")?.token ?? "",
+              "X-DEPARTMENT-TOKEN": user?.token,
+            },
       data: formdata,
     })
       .then(res => {

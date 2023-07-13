@@ -62,12 +62,12 @@ html {
   color: rgb(227, 222, 222) !important;
 }
 
-.ant-menu .ant-menu-submenu-open:nth-child(3) > div {
+.ant-menu .ant-menu-submenu-open:nth-child(4) > div {
   color: var(--primary) !important;
   background-color: white !important;
 }
 
-.ant-menu .ant-menu-submenu-open:nth-child(3) {
+.ant-menu .ant-menu-submenu-open:nth-child(4) {
   background-color: rgba(255, 255, 255, 0.25);
 }
 

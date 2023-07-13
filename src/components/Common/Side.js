@@ -189,27 +189,27 @@ const Side = ({ sets = () => {} }) => {
         items={[
           { link: "/profile", icon: HomeOutlined, label: "Home" },
           { link: "/downloads", icon: DownloadOutlined, label: "Downloads" },
-          {
-            icon: access == 1 ? FileAddOutlined : UserAddOutlined,
-            label: access == 1 ? "Add Research" : "Faculty",
-          },
-        ].map((item, index) => {
-          const ITEM = {
-            key: `${index}`,
-            icon: createElement(item.icon),
-          };
+          { link: null, icon: FileAddOutlined, label: "Add Research" },
+          { link: null, icon: UserAddOutlined, label: "Faculty" },
+        ]
+          ?.filter((_, i) => (access > 1 ? true : i < 3))
+          ?.map((item, index) => {
+            const ITEM = {
+              key: `${index}`,
+              icon: createElement(item.icon),
+            };
 
-          return index == 2
-            ? {
-                ...ITEM,
-                children: access == 1 ? first : second,
-                label: item.label,
-              }
-            : {
-                ...ITEM,
-                label: <Link href={item.link}>{item.label}</Link>,
-              };
-        })}
+            return item?.link
+              ? {
+                  ...ITEM,
+                  label: <Link href={item.link}>{item.label}</Link>,
+                }
+              : {
+                  ...ITEM,
+                  children: index == 2 ? first : second,
+                  label: item.label,
+                };
+          })}
       />
 
       <Menu

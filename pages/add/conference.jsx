@@ -12,13 +12,17 @@ import { useEffect, useState } from "react";
 import { Button, DatePicker, FloatButton, Form } from "antd";
 import { Select, Spin, Upload, message, Input } from "antd";
 import { useUser } from "../../src/components/context/userContext";
+import { useAccess } from "../../src/components/context/accessContext";
 
 const Conferences = () => {
   // HOOKS
 
   const router = useRouter();
-  const { user } = useUser();
   const [form] = Form.useForm();
+
+  const { access } = useAccess();
+  const { user } = useUser();
+
   const { RangePicker } = DatePicker;
   const { Dragger } = Upload;
 
@@ -83,10 +87,18 @@ const Conferences = () => {
     axios({
       method: "POST",
       url: `${URLObj.base}/research/conference/`,
-      headers: {
-        "X-ACCESS-KEY": URLObj.key,
-        "X-AUTH-TOKEN": user?.token,
-      },
+      headers:
+        access == 1
+          ? {
+              "X-ACCESS-KEY": URLObj.key,
+              "X-AUTH-TOKEN": user?.token,
+            }
+          : {
+              "X-ACCESS-KEY": URLObj.key,
+              "X-AUTH-TOKEN":
+                JSON.parse(localStorage.getItem("token") ?? "{}")?.token ?? "",
+              "X-DEPARTMENT-TOKEN": user?.token,
+            },
       data: formdata,
     })
       .then(res => {

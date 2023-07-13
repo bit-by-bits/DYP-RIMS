@@ -9,13 +9,17 @@ import Top from "../../src/components/Common/Top";
 import axios from "axios";
 import URLObj from "../../src/components/baseURL";
 import { useUser } from "../../src/components/context/userContext";
+import { useAccess } from "../../src/components/context/accessContext";
 
 const Projects = () => {
   // HOOKS
 
   const router = useRouter();
   const [form] = Form.useForm();
+
+  const { access } = useAccess();
   const { user } = useUser();
+
   const { RangePicker } = DatePicker;
 
   // STATES
@@ -59,10 +63,18 @@ const Projects = () => {
     axios({
       method: "POST",
       url: `${URLObj.base}/research/project/`,
-      headers: {
-        "X-ACCESS-KEY": URLObj.key,
-        "X-AUTH-TOKEN": user?.token,
-      },
+      headers:
+        access == 1
+          ? {
+              "X-ACCESS-KEY": URLObj.key,
+              "X-AUTH-TOKEN": user?.token,
+            }
+          : {
+              "X-ACCESS-KEY": URLObj.key,
+              "X-AUTH-TOKEN":
+                JSON.parse(localStorage.getItem("token") ?? "{}")?.token ?? "",
+              "X-DEPARTMENT-TOKEN": user?.token,
+            },
       data: formdata,
     })
       .then(res => {

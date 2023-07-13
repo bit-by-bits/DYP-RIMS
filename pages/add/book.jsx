@@ -10,13 +10,16 @@ import Image from "next/image";
 import axios from "axios";
 import URLObj from "../../src/components/baseURL";
 import { useUser } from "../../src/components/context/userContext";
+import { useAccess } from "../../src/components/context/accessContext";
 
 const Books = () => {
   // HOOKS
 
   const router = useRouter();
-  const { user } = useUser();
   const [form] = Form.useForm();
+
+  const { access } = useAccess();
+  const { user } = useUser();
 
   // STATES
 
@@ -84,10 +87,18 @@ const Books = () => {
     axios({
       method: "PUT",
       url: `${URLObj.base}/books/?isbn=${ISBN}`,
-      headers: {
-        "X-ACCESS-KEY": URLObj.key,
-        "X-AUTH-TOKEN": user?.token,
-      },
+      headers:
+        access == 1
+          ? {
+              "X-ACCESS-KEY": URLObj.key,
+              "X-AUTH-TOKEN": user?.token,
+            }
+          : {
+              "X-ACCESS-KEY": URLObj.key,
+              "X-AUTH-TOKEN":
+                JSON.parse(localStorage.getItem("token") ?? "{}")?.token ?? "",
+              "X-DEPARTMENT-TOKEN": user?.token,
+            },
     })
       .then(res => {
         message.success("Book found");
