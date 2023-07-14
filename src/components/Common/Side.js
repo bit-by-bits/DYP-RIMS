@@ -172,7 +172,7 @@ const Side = ({ sets = () => {} }) => {
             </Button>
             {access > 1 && (
               <Button className={styles.sideButton} type="primary">
-                <Link href="/add/faculty">
+                <Link href="/add/profile">
                   {innerWidth > 1600 ? "Add/Edit Faculty" : "Add Faculty"}
                 </Link>
               </Button>
