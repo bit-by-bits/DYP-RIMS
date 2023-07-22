@@ -1,4 +1,4 @@
-import { Button, Menu, Skeleton } from "antd";
+import { Button, Menu, Popconfirm, Skeleton, message } from "antd";
 import { createElement, useState, useEffect } from "react";
 import {
   HomeOutlined,
@@ -20,14 +20,16 @@ import { useUser } from "../context/userContext";
 import { useWindowSize } from "rooks";
 import axios from "axios";
 import URLObj from "../baseURL";
+import { useRouter } from "next/router";
 
 const Side = ({ sets = () => {} }) => {
   // HOOKS
 
+  const router = useRouter();
   const { innerWidth } = useWindowSize();
 
-  const { user } = useUser();
-  const { access } = useAccess();
+  const { user, change: setU } = useUser();
+  const { access, change: setA } = useAccess();
 
   // DATA
 
@@ -107,6 +109,48 @@ const Side = ({ sets = () => {} }) => {
 
   // FUNCTIONS
 
+  const switchUser = (token, to) => {
+    axios({
+      method: "GET",
+      url: `${URLObj.base}/home`,
+      headers: {
+        "X-ACCESS-KEY": URLObj.key,
+        "X-AUTH-TOKEN": token,
+      },
+    })
+      .then(resp => {
+        const DATA = resp.data?.user;
+        const LEVEL = DATA?.access_level?.find(e =>
+          e.id === (to === 1)
+            ? 1
+            : Math.max(...DATA?.access_level?.map(e => e.id))
+        );
+
+        setA(1);
+        setU({
+          token: token,
+          setUpTime: Date.now(),
+          username: DATA?.username,
+          name: DATA?.user?.first_name + " " + DATA?.user?.last_name,
+          email: DATA?.user?.email,
+          picture: DATA?.profile_picture,
+          gender: DATA?.gender,
+          designation: DATA?.designation,
+          department: DATA?.department?.name,
+          level: LEVEL?.display_text,
+          max_access: LEVEL?.id,
+          access: 1,
+        });
+
+        message.success("Login Successful");
+        router.push("/profile");
+      })
+      .catch(err => {
+        console.log(err);
+        message.error("Login Failed");
+      });
+  };
+
   const setMenuData = () => {
     let DATA_SECOND = [];
     Object.entries(faculty)?.forEach(([key, value]) => {
@@ -121,11 +165,45 @@ const Side = ({ sets = () => {} }) => {
 
     setSecond(
       DATA_SECOND.map((e, i) => ({
-        key: `2.${i}`,
+        key: `3.${i}`,
         label: `${e.label} (${e.children?.length})`,
         children: e.children.map((child, index) => ({
-          key: `2.${i}.${index}`,
-          label: <Link href={`/profile/${child[0]}`}>{child[1]}</Link>,
+          key: `3.${i}.${index}`,
+          label: (
+            <Popconfirm
+              title="Switch levels"
+              description="Do you want to switch to this profile?"
+              onConfirm={() => {
+                localStorage.setItem(
+                  "prev",
+                  JSON.stringify({ token: user?.token })
+                );
+
+                axios({
+                  method: "PUT",
+                  url: `${URLObj.base}/faculty/?id=${child[0]}`,
+                  headers: {
+                    "X-ACCESS-KEY": URLObj.key,
+                    "X-AUTH-TOKEN": user?.token,
+                    "X-ACCESS-LEVEL": "department",
+                  },
+                })
+                  .then(res => {
+                    const TOKEN = res.data?.token;
+                    switchUser(TOKEN, 1);
+                  })
+                  .catch(err => {
+                    console.log(err);
+                    message.error("Login Failed");
+                  });
+              }}
+              onCancel={() => {}}
+              okText="Yes"
+              cancelText="No"
+            >
+              {child[1]}
+            </Popconfirm>
+          ),
         })),
       }))
     );
@@ -170,11 +248,21 @@ const Side = ({ sets = () => {} }) => {
             <Button className={styles.sideButton} type="primary">
               <Link href="/profile/edit">Edit Profile</Link>
             </Button>
-            {access > 1 && (
+            {access > 1 ? (
               <Button className={styles.sideButton} type="primary">
                 <Link href="/add/profile">
                   {innerWidth > 1600 ? "Add/Edit Faculty" : "Add Faculty"}
                 </Link>
+              </Button>
+            ) : (
+              <Button
+                onClick={() =>
+                  switchUser(JSON.parse(localStorage.getItem("prev"))?.token, 2)
+                }
+                className={styles.sideButton}
+                type="primary"
+              >
+                Return Back
               </Button>
             )}
           </div>

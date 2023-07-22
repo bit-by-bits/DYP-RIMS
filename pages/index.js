@@ -48,23 +48,51 @@ export default function Home() {
             "X-ACCESS-KEY": URLObj.key,
             "X-GOOGLE-ID-TOKEN": response.credential,
           },
-        }).then(res => {
-          axios({
-            method: "GET",
-            url: `${URLObj.base}/home`,
-            headers: {
-              "X-ACCESS-KEY": URLObj.key,
-              "X-AUTH-TOKEN": res.data?.token,
-            },
+        })
+          .then(res => {
+            const TOKEN = res.data?.token;
+
+            axios({
+              method: "GET",
+              url: `${URLObj.base}/home`,
+              headers: {
+                "X-ACCESS-KEY": URLObj.key,
+                "X-AUTH-TOKEN": TOKEN,
+              },
+            })
+              .then(resp => {
+                const DATA = resp.data?.user;
+                const LEVEL = DATA?.access_level?.find(
+                  e => e.id === Math.max(...DATA?.access_level?.map(e => e.id))
+                );
+
+                change({
+                  token: TOKEN,
+                  setUpTime: Date.now(),
+                  username: DATA?.username,
+                  name: DATA?.user?.first_name + " " + DATA?.user?.last_name,
+                  email: DATA?.user?.email,
+                  picture: DATA?.profile_picture,
+                  gender: DATA?.gender,
+                  designation: DATA?.designation,
+                  department: DATA?.department?.name,
+                  level: LEVEL?.display_text,
+                  max_access: LEVEL?.id,
+                  access: 1,
+                });
+
+                message.success("Login Successful");
+                router.push("/profile");
+              })
+              .catch(err => {
+                console.log(err);
+                message.error("Login Failed");
+              });
           })
-            .then(resp =>
-              updateUser(
-                { token: res.data?.token, setUpTime: Date.now() },
-                resp.data?.user
-              )
-            )
-            .catch(err => message.error("Login Failed"));
-        });
+          .catch(err => {
+            console.log(err);
+            message.error("Login Failed");
+          });
       },
     });
 
@@ -79,29 +107,6 @@ export default function Home() {
   }, []);
 
   // FUNCTIONS
-
-  const updateUser = (prevData, newData) => {
-    const access_level = newData?.access_level?.find(
-      e => e.id === Math.max(...newData?.access_level?.map(e => e.id))
-    );
-
-    change({
-      ...prevData,
-      username: newData?.username,
-      name: newData?.user?.first_name + " " + newData?.user?.last_name,
-      email: newData?.user?.email,
-      picture: newData?.profile_picture,
-      gender: newData?.gender,
-      designation: newData?.designation,
-      department: newData?.department?.name,
-      level: access_level?.display_text,
-      access: 1,
-      max_access: access_level?.id,
-    });
-
-    message.success("Login Successful");
-    router.push("/profile");
-  };
 
   return (
     <>

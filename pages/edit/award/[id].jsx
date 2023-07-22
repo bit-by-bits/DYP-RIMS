@@ -128,7 +128,7 @@ const Awards = () => {
                 <Form
                   form={form}
                   name="award"
-                  style={{ width: "80vw", transform: "translateX(-10vw)" }}
+                  style={{ width: "80vw" }}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   initialValues={

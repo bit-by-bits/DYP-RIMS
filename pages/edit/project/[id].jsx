@@ -139,7 +139,7 @@ const Projects = () => {
                 <Form
                   name="project"
                   form={form}
-                  style={{ width: "80vw", transform: "translateX(-10vw)" }}
+                  style={{ width: "80vw" }}
                   initialValues={
                     initialValues ?? {
                       faculty: user?.name,

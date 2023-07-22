@@ -129,7 +129,7 @@ const IPR = () => {
                 <Form
                   name="ipr"
                   form={form}
-                  style={{ width: "80vw", transform: "translateX(-10vw)" }}
+                  style={{ width: "80vw" }}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   initialValues={

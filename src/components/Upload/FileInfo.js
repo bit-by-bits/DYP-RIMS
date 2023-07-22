@@ -89,23 +89,12 @@ const FileInfo = ({ user, setp, setv, sett, DOI }) => {
       axios({
         method: "POST",
         url: `${URLObj.base}/publications/`,
-        headers:
-          access == 1
-            ? {
-                "X-ACCESS-KEY": URLObj.key,
-                "X-AUTH-TOKEN": user?.token,
-                "X-TEST-ENVIRONMENT": "0",
-                "Content-Type": "application/json",
-              }
-            : {
-                "X-ACCESS-KEY": URLObj.key,
-                "X-AUTH-TOKEN":
-                  JSON.parse(localStorage.getItem("token") ?? "{}")?.token ??
-                  "",
-                "X-DEPARTMENT-TOKEN": user?.token,
-                "X-TEST-ENVIRONMENT": "0",
-                "Content-Type": "application/json",
-              },
+        headers: {
+          "X-ACCESS-KEY": URLObj.key,
+          "X-AUTH-TOKEN": user?.token,
+          "X-TEST-ENVIRONMENT": "0",
+          "Content-Type": "application/json",
+        },
         data: str,
       })
         .then(res => {

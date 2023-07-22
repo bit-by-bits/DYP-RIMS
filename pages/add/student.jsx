@@ -51,18 +51,10 @@ const Students = () => {
     axios({
       method: "POST",
       url: `${URLObj.base}/research/student/`,
-      headers:
-        access == 1
-          ? {
-              "X-ACCESS-KEY": URLObj.key,
-              "X-AUTH-TOKEN": user?.token,
-            }
-          : {
-              "X-ACCESS-KEY": URLObj.key,
-              "X-AUTH-TOKEN":
-                JSON.parse(localStorage.getItem("token") ?? "{}")?.token ?? "",
-              "X-DEPARTMENT-TOKEN": user?.token,
-            },
+      headers: {
+        "X-ACCESS-KEY": URLObj.key,
+        "X-AUTH-TOKEN": user?.token,
+      },
       data: formdata,
     })
       .then(res => {
@@ -110,7 +102,7 @@ const Students = () => {
                 <Form
                   name="students"
                   form={form}
-                  style={{ width: "80vw", transform: "translateX(-10vw)" }}
+                  style={{ width: "80vw" }}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   initialValues={{

@@ -106,7 +106,7 @@ const Edit = () => {
                 <Form
                   name="edit"
                   form={form}
-                  style={{ width: "80vw", transform: "translateX(-10vw)" }}
+                  style={{ width: "80vw" }}
                   initialValues={{
                     first_name: user?.name?.split(" ")[0],
                     last_name: user?.name?.split(" ")?.slice(-1),
