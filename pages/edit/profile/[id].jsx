@@ -1,14 +1,14 @@
 import { Button, DatePicker, FloatButton, Form, Radio, Upload } from "antd";
 import { Input, Spin, message } from "antd";
-import styles from "../../../src/styles/add.module.css";
 import Head from "next/head";
-import { useEffect, useState } from "react";
-import Side from "../../../../src/components/Common/Side";
-import { useRouter } from "next/router";
-import Top from "../../../../src/components/Common/Top";
 import axios from "axios";
-import URLObj from "../../../../src/components/baseURL";
-import { useUser } from "../../../../src/components/context/userContext";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import styles from "../../../src/styles/add.module.css";
+import Side from "../../../src/components/Common/Side";
+import Top from "../../../src/components/Common/Top";
+import URLObj from "../../../src/components/baseURL";
+import { useUser } from "../../../src/components/context/userContext";
 
 const Faculty = () => {
   // HOOKS
