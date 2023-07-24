@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import URLObj from "../baseURL";
 import { Avatar, Badge, Card, Modal, Upload, message } from "antd";
+import useCaps from "../../utils/useCaps";
 import Scite from "../Profile/Scite";
 import Altmetric from "../Profile/Altmetric";
 
@@ -21,6 +22,8 @@ const FileInfo = ({ user, setv, DOI }) => {
   const { Meta } = Card;
   const { Ribbon } = Badge;
   const { Dragger } = Upload;
+
+  const { capitalize } = useCaps();
 
   const [data, setData] = useState({});
   const [fileData, setFileData] = useState({ modal: false, file: null });
@@ -89,7 +92,7 @@ const FileInfo = ({ user, setv, DOI }) => {
           <Meta
             title={
               <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
-                {e.given + " " + e.family}
+                {capitalize(e.given + " " + e.family)}
               </div>
             }
             description={
@@ -122,7 +125,7 @@ const FileInfo = ({ user, setv, DOI }) => {
         <Meta
           title={
             <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
-              {e.given + " " + e.family}
+              {capitalize(e.given + " " + e.family)}
             </div>
           }
           description={

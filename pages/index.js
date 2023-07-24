@@ -66,6 +66,8 @@ export default function Home() {
                   e => e.id === Math.max(...DATA?.access_level?.map(e => e.id))
                 );
 
+                localStorage?.removeItem("prev");
+
                 change({
                   token: TOKEN,
                   setUpTime: Date.now(),

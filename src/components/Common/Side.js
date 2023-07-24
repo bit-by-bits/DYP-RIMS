@@ -1,17 +1,10 @@
 import { Button, Menu, Popconfirm, Skeleton, message } from "antd";
 import { createElement, useState, useEffect } from "react";
-import {
-  HomeOutlined,
-  ProjectOutlined,
-  DownloadOutlined,
-  TrophyOutlined,
-  MessageOutlined,
-  BookOutlined,
-  BulbOutlined,
-  UserAddOutlined,
-  FileTextOutlined,
-  FileAddOutlined,
-} from "@ant-design/icons";
+import { BookOutlined, TrophyOutlined } from "@ant-design/icons";
+import { UserAddOutlined } from "@ant-design/icons";
+import { HomeOutlined, BulbOutlined, MessageOutlined } from "@ant-design/icons";
+import { DownloadOutlined, FileTextOutlined } from "@ant-design/icons";
+import { ProjectOutlined, FileAddOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "../../styles/profile.module.css";
@@ -35,6 +28,7 @@ const Side = ({ sets = () => {} }) => {
 
   const [first, setFirst] = useState([]);
   const [second, setSecond] = useState([]);
+  const [prev, setPrev] = useState(null);
   const [faculty, setFaculty] = useState([]);
 
   // EFFECTS
@@ -106,6 +100,18 @@ const Side = ({ sets = () => {} }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [faculty]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setPrev(localStorage.getItem("prev"));
+    }
+
+    return () => {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("prev");
+      }
+    };
+  }, []);
 
   // FUNCTIONS
 
@@ -255,15 +261,15 @@ const Side = ({ sets = () => {} }) => {
                 </Link>
               </Button>
             ) : (
-              <Button
-                onClick={() =>
-                  switchUser(JSON.parse(localStorage.getItem("prev"))?.token, 2)
-                }
-                className={styles.sideButton}
-                type="primary"
-              >
-                Return Back
-              </Button>
+              prev && (
+                <Button
+                  onClick={() => switchUser(JSON.parse(prev)?.token, 2)}
+                  className={styles.sideButton}
+                  type="primary"
+                >
+                  Return Back
+                </Button>
+              )
             )}
           </div>
         </div>
