@@ -47,8 +47,15 @@ const FileInfo = ({ user, setv, DOI }) => {
         },
       })
         .then(res => {
-          setv(false);
-          setData(res?.data?.data[0]);
+          const DATA = res?.data?.data?.[0];
+
+          if (DATA?.publication_title) {
+            setv(false);
+            setData(DATA);
+          } else {
+            setv(true);
+            message.error("Network error! Try again");
+          }
         })
         .catch(err => {
           console.log(err);
@@ -394,9 +401,9 @@ const FileInfo = ({ user, setv, DOI }) => {
     <>
       <div className={styles.file_text}>
         <div className={styles.file_tags}>
-          <div className={styles.file_tag1}>
+          {/* <div className={styles.file_tag1}>
             {data?.publication_type ?? "Unknown Type"}
-          </div>
+          </div> */}
 
           {data?.file ? (
             <div className={styles.file_tag1}>PDF Available</div>
@@ -455,6 +462,8 @@ const FileInfo = ({ user, setv, DOI }) => {
 
         <div
           className={styles.file_title}
+          style={{ cursor: "pointer" }}
+          onClick={() => window.open(`https://dx.doi.org/${DOI}`, "_blank")}
           dangerouslySetInnerHTML={{
             __html: data?.publication_title ?? "- Not Available -",
           }}

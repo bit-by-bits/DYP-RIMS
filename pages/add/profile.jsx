@@ -39,26 +39,25 @@ const Faculty = () => {
   // FUNCTIONS
 
   const onFinish = values => {
-    const formdata = new FormData();
-    formdata?.append("organisation_name", values?.org_name);
-    formdata?.append("organisation_domain", values?.org_domain);
-    formdata?.append(
-      "age",
-      Math.max(
-        Math.floor((new Date() - new Date(values.age).getTime()) / 3.15576e10),
-        0
-      )
+    const AGE = Math.floor(
+      (new Date() - new Date(values.age).getTime()) / 3.15576e10
     );
-    formdata?.append("access_level", values?.access_level);
-    formdata?.append("mobile", values?.mobile);
-    formdata?.append("gender", values?.gender);
-    formdata?.append("profile_picture", file);
-    formdata?.append("department", values?.department);
-    formdata?.append("designation", values?.designation);
+
+    const formdata = new FormData();
+    // formdata?.append("organisation_name", values?.org_name);
+    // formdata?.append("organisation_domain", values?.org_domain);
     formdata?.append("first_name", values?.first_name);
+    formdata?.append("middle_name", values?.middle_name);
     formdata?.append("last_name", values?.last_name);
+    formdata?.append("age", Math.max(0, AGE));
+    formdata?.append("department", values?.department);
+    formdata?.append("access_level", values?.access_level);
+    // formdata?.append("mobile", values?.mobile);
+    // formdata?.append("gender", values?.gender);
+    formdata?.append("profile_picture", file);
+    formdata?.append("designation", values?.designation);
     formdata?.append("email", values?.email);
-    formdata?.append("username", values?.username);
+    // formdata?.append("username", values?.username);
 
     axios({
       method: "POST",
@@ -115,32 +114,34 @@ const Faculty = () => {
                 <Form
                   name="Faculty"
                   form={form}
-                  style={{ width: "80vw" }}
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
+                  style={{ width: "80vw", padding: "0 10vw" }}
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
                 >
                   <Form.Item
-                    label="Org Name"
-                    name="org_name"
+                    label="First Name"
+                    name="first_name"
                     rules={[
                       {
                         required: true,
-                        message: "Please input organisation name!",
+                        message: "Please input your first name!",
                       },
                     ]}
                   >
                     <Input />
                   </Form.Item>
 
+                  <Form.Item label="Middle Name" name="middle_name">
+                    <Input />
+                  </Form.Item>
+
                   <Form.Item
-                    label="Org Domain"
-                    name="org_domain"
+                    label="Last Name"
+                    name="last_name"
                     rules={[
                       {
                         required: true,
-                        message: "Please input organisation domain!",
+                        message: "Please input your last name!",
                       },
                     ]}
                   >
@@ -161,6 +162,19 @@ const Faculty = () => {
                   </Form.Item>
 
                   <Form.Item
+                    label="Department"
+                    name="department"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your department!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+
+                  <Form.Item
                     label="Access Level"
                     name="access_level"
                     rules={[
@@ -170,7 +184,7 @@ const Faculty = () => {
                     <Input />
                   </Form.Item>
 
-                  <Form.Item
+                  {/* <Form.Item
                     label="Mobile"
                     name="mobile"
                     rules={[
@@ -178,9 +192,9 @@ const Faculty = () => {
                     ]}
                   >
                     <Input />
-                  </Form.Item>
+                  </Form.Item> */}
 
-                  <Form.Item
+                  {/* <Form.Item
                     label="Gender"
                     name="gender"
                     rules={[
@@ -195,7 +209,7 @@ const Faculty = () => {
                       <Radio value="Female">Female</Radio>
                       <Radio value="Non-binary">Non-binary</Radio>
                     </Radio.Group>
-                  </Form.Item>
+                  </Form.Item> */}
 
                   <Form.Item
                     label="Profile Picture"
@@ -233,51 +247,12 @@ const Faculty = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Department"
-                    name="department"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your department!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
                     label="Designation"
                     name="designation"
                     rules={[
                       {
                         required: true,
                         message: "Please input your designation!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="First Name"
-                    name="first_name"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your first name!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Last Name"
-                    name="last_name"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your last name!",
                       },
                     ]}
                   >
@@ -294,7 +269,7 @@ const Faculty = () => {
                     <Input />
                   </Form.Item>
 
-                  <Form.Item
+                  {/* <Form.Item
                     label="Username"
                     name="username"
                     rules={[
@@ -305,7 +280,7 @@ const Faculty = () => {
                     ]}
                   >
                     <Input />
-                  </Form.Item>
+                  </Form.Item> */}
 
                   <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                     <Button

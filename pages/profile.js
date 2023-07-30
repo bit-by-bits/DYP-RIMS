@@ -60,6 +60,7 @@ const Profile = () => {
     file: null,
     doi: "",
     authors: [],
+    status: 0,
   });
 
   const [extra_1, setExtra_1] = useState({});
@@ -212,6 +213,12 @@ const Profile = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, access, sortBy_1, fileData_1]);
 
+  useEffect(() => {
+    if (fileData_1?.status === 1) {
+      uploadFile();
+    }
+  }, [fileData_1?.status]);
+
   // FUNCTIONS
 
   const uploadFile = () => {
@@ -237,7 +244,14 @@ const Profile = () => {
       })
         .then(res => {
           message.success("File uploaded successfully");
-          setFileData_1({ modal: false, file: null, doi: "", authors: [] });
+          setFileData_1({
+            ...fileData_1,
+            modal: false,
+            file: null,
+            doi: "",
+            authors: [],
+            status: 0,
+          });
 
           axios({
             method: "GET",
@@ -249,10 +263,11 @@ const Profile = () => {
           }).then(res => setData(res.data?.data));
         })
         .catch(err => {
+          setFileData_1({ ...fileData_1, modal: false, status: 0 });
           message.error("Could not upload file");
           console.log(err);
         });
-    }
+    } else setFileData_1({ ...fileData_1, status: 0 });
   };
 
   const handleFilterChange = (pagination, filters) =>
@@ -336,7 +351,7 @@ const Profile = () => {
                             ["All Time", ""],
                             ["Last 5 Years", "2019-2023"],
                             ["Last 3 Years", "2021-2023"],
-                            ["Last Year", "2023-2023"],
+                            ["Last Year", "2022-2023"],
                           ].map(([e, r], i) => (
                             <Button
                               key={i}
@@ -520,9 +535,12 @@ const Profile = () => {
                   onChange={info => {
                     const { status } = info.file;
                     if (status === "done")
-                      setFileData_1({ ...fileData_1, file: info.file });
+                      setFileData_1({
+                        ...fileData_1,
+                        file: info.file,
+                        status: 1,
+                      });
                   }}
-                  beforeUpload={_ => uploadFile()}
                 >
                   <InboxOutlined
                     style={{ fontSize: 60, margin: "10px 0", color: "#9a2827" }}

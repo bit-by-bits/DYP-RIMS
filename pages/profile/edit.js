@@ -106,7 +106,7 @@ const Edit = () => {
                 <Form
                   name="edit"
                   form={form}
-                  style={{ width: "80vw" }}
+                  style={{ width: "80vw", padding: "0 10vw" }}
                   initialValues={{
                     first_name: user?.name?.split(" ")[0],
                     last_name: user?.name?.split(" ")?.slice(-1),
@@ -114,8 +114,6 @@ const Edit = () => {
                     department: user?.department,
                     level: user?.level,
                   }}
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
                 >

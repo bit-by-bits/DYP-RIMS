@@ -129,9 +129,7 @@ const IPR = () => {
                 <Form
                   name="ipr"
                   form={form}
-                  style={{ width: "80vw" }}
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
+                  style={{ width: "80vw", padding: "0 10vw" }}
                   initialValues={
                     initialValues ?? {
                       faculty: user?.name,

@@ -114,13 +114,11 @@ const Projects = () => {
                 <Form
                   name="project"
                   form={form}
-                  style={{ width: "80vw" }}
+                  style={{ width: "80vw", padding: "0 10vw" }}
                   initialValues={{
                     faculty: user?.name,
                     department: user?.department,
                   }}
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
                 >

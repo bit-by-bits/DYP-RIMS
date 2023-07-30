@@ -129,9 +129,7 @@ const Downloads = () => {
                 <Form
                   name="request"
                   form={form}
-                  style={{ width: "80vw" }}
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
+                  style={{ width: "80vw", padding: "0 10vw" }}
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
                   onReset={onReset}

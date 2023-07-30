@@ -75,6 +75,13 @@ html {
   background-color: rgba(0, 0, 0, 0.2) !important;
 }
 
+/* FORM */
+
+.ant-form-item .ant-form-item-label > label {
+  color: rgb(125, 125, 125) !important;
+  font-weight: 500 !important;
+}
+
 /* TABLE */
 
 .ant-table-wrapper table {
