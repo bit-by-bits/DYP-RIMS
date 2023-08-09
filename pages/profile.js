@@ -119,7 +119,9 @@ const Profile = () => {
           .catch(err => {
             console.log(err);
           });
-      } else {
+      }
+
+      if (access === 2) {
         axios({
           method: "GET",
           url: `${URLObj.base}/home/?filter=${range}`,
@@ -157,6 +159,10 @@ const Profile = () => {
           .catch(err => {
             console.log(err);
           });
+      }
+
+      if (access === 3) {
+        setVisible(false);
       }
     }
 
@@ -211,8 +217,6 @@ const Profile = () => {
     if (fileData_1?.status === 1) {
       uploadFile();
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileData_1?.status]);
 
   // FUNCTIONS
