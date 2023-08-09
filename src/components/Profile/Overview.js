@@ -79,7 +79,7 @@ const Overview = ({
     const check = (val1, val2, val3) => {
       if (mode == "two" || access == 1) return val1;
       else if (access == 2) return val2;
-      else return val3;
+      else return val2;
     };
 
     const sum = arr => arr?.reduce((a, b) => number(a) + number(b), 0);
@@ -329,7 +329,7 @@ const Overview = ({
             ))}
           </div>
         </div>
-        <div>
+        <div style={{ minWidth: "max-content" }}>
           <div>
             {`Cumulative Impact Factor: ${number(
               overview?.impact_total
