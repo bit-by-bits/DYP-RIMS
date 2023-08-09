@@ -13,10 +13,11 @@ import pmc from "../../../public/logos/pmc.png";
 import scopus from "../../../public/logos/scopus.svg";
 import wos from "../../../public/logos/wos.svg";
 
-import useTitleMaker from "../useTitleMaker";
 import useNumber from "../useNumber";
 import useCheck from "../useChecks";
 import useSorter from "../useSorter";
+import useTitleMaker from "../useTitleMaker";
+import useCaps from "../useCaps";
 import Scite from "../../components/Profile/Scite";
 import Altmetric from "../../components/Profile/Altmetric";
 
@@ -29,6 +30,7 @@ const usePubSetter = () => {
   const { makeValid } = useCheck();
   const { sorter } = useSorter();
   const { titleMaker } = useTitleMaker();
+  const { capitalize } = useCaps();
 
   return {
     pubData: (publications, { fileData_1, setFileData_1, sortBy_1 } = {}) => {
@@ -158,7 +160,7 @@ const usePubSetter = () => {
         const authors =
           array?.map((e, i) => (
             <span key={i}>
-              <span>{e?.given + " " + e?.family}</span>
+              <span>{capitalize(e?.given + " " + e?.family)}</span>
               <sup>
                 {e.sequence === "first"
                   ? "1"

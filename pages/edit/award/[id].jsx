@@ -128,9 +128,7 @@ const Awards = () => {
                 <Form
                   form={form}
                   name="award"
-                  style={{ width: "80vw", transform: "translateX(-10vw)" }}
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
+                  style={{ width: "80vw", padding: "0 10vw" }}
                   initialValues={
                     initialValues ?? {
                       faculty: user?.name,

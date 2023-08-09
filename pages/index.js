@@ -1,6 +1,6 @@
 import Head from "next/head";
-import React, { useState, useEffect } from "react";
 import axios from "axios";
+import React, { useState, useEffect } from "react";
 import styles from "../src/styles/login.module.css";
 import { useRouter } from "next/router";
 import URLObj from "../src/components/baseURL";
@@ -48,23 +48,53 @@ export default function Home() {
             "X-ACCESS-KEY": URLObj.key,
             "X-GOOGLE-ID-TOKEN": response.credential,
           },
-        }).then(res => {
-          axios({
-            method: "GET",
-            url: `${URLObj.base}/home`,
-            headers: {
-              "X-ACCESS-KEY": URLObj.key,
-              "X-AUTH-TOKEN": res.data?.token,
-            },
+        })
+          .then(res => {
+            const TOKEN = res.data?.token;
+
+            axios({
+              method: "GET",
+              url: `${URLObj.base}/home`,
+              headers: {
+                "X-ACCESS-KEY": URLObj.key,
+                "X-AUTH-TOKEN": TOKEN,
+              },
+            })
+              .then(resp => {
+                const DATA = resp.data?.user;
+                const LEVEL = DATA?.access_level?.find(
+                  e => e.id === Math.max(...DATA?.access_level?.map(e => e.id))
+                );
+
+                localStorage?.removeItem("prev");
+
+                change({
+                  token: TOKEN,
+                  setUpTime: Date.now(),
+                  username: DATA?.username,
+                  name: DATA?.user?.first_name + " " + DATA?.user?.last_name,
+                  email: DATA?.user?.email,
+                  picture: DATA?.profile_picture,
+                  gender: DATA?.gender,
+                  designation: DATA?.designation,
+                  department: DATA?.department?.name,
+                  level: LEVEL?.display_text,
+                  max_access: LEVEL?.id,
+                  access: 1,
+                });
+
+                message.success("Login Successful");
+                router.push("/profile");
+              })
+              .catch(err => {
+                console.log(err);
+                message.error("Login Failed");
+              });
           })
-            .then(resp =>
-              updateUser(
-                { token: res.data?.token, setUpTime: Date.now() },
-                resp.data?.user
-              )
-            )
-            .catch(err => message.error("Login Failed"));
-        });
+          .catch(err => {
+            console.log(err);
+            message.error("Login Failed");
+          });
       },
     });
 
@@ -79,29 +109,6 @@ export default function Home() {
   }, []);
 
   // FUNCTIONS
-
-  const updateUser = (prevData, newData) => {
-    const access_level = newData?.access_level?.find(
-      e => e.id === Math.max(...newData?.access_level?.map(e => e.id))
-    );
-
-    change({
-      ...prevData,
-      username: newData?.username,
-      name: newData?.user?.first_name + " " + newData?.user?.last_name,
-      email: newData?.user?.email,
-      picture: newData?.profile_picture,
-      gender: newData?.gender,
-      designation: newData?.designation,
-      department: newData?.department?.name,
-      level: access_level?.display_text,
-      access: access_level?.id,
-      max_access: access_level?.id,
-    });
-
-    message.success("Login Successful");
-    router.push("/profile");
-  };
 
   return (
     <>

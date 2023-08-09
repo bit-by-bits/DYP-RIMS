@@ -26,10 +26,7 @@ const Downloads = () => {
 
   useEffect(() => {
     const DATA = JSON.parse(localStorage.getItem("downloads"));
-
-    if (DATA && DATA?.length) {
-      setData(DATA);
-    }
+    DATA && DATA?.length && setData(DATA);
 
     setTimeout(() => {
       setVisible(false);
@@ -43,6 +40,7 @@ const Downloads = () => {
 
     formdata.append("export", values.export?.join(","));
     formdata.append("is_softcopy_required", values.softcopy);
+    formdata.append("download", values.softcopy);
     formdata.append(
       "date",
       values.mode
@@ -63,7 +61,7 @@ const Downloads = () => {
     })
       .then(res => {
         onReset();
-        updateData(values, res.data?.url);
+        updateData(values, res.data);
         message.success("Data fetched successfully");
       })
       .catch(err => {
@@ -82,7 +80,7 @@ const Downloads = () => {
     setAllDates(true);
   };
 
-  const updateData = (values, link) => {
+  const updateData = (values, links) => {
     const DATA = {
       key: data?.length + 1,
       items: values?.export
@@ -93,10 +91,8 @@ const Downloads = () => {
       date: values?.mode
         ? "All"
         : values?.range?.map(i => i?.format("YYYY-MM"))?.join(" to "),
-      softcopy:
-        values?.softcopy?.charAt(0).toUpperCase() +
-        values?.softcopy?.slice(1)?.toLowerCase(),
-      file: link,
+      file: links.url,
+      softcopy: links.soft_copy,
     };
 
     setData([DATA, ...data]);
@@ -128,14 +124,12 @@ const Downloads = () => {
               <Top />
 
               <div className={styles2.formContainer}>
-                <h1 className={styles2.heading}>Request A Download</h1>
+                <h1 className={styles2.heading}>Request Download</h1>
 
                 <Form
                   name="request"
                   form={form}
-                  style={{ width: "80vw", transform: "translateX(-10vw)" }}
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
+                  style={{ width: "80vw", padding: "0 10vw" }}
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
                   onReset={onReset}
@@ -252,26 +246,25 @@ const Downloads = () => {
                       key: "no",
                       render: (a, b, c) => `${c + 1}.`,
                     },
-                    ...["Items", "Date", "Softcopy"].map(item => ({
+                    ...["Items", "Date"].map(item => ({
                       title: item,
                       dataIndex: item?.toLowerCase(),
                       key: item?.toLowerCase(),
                     })),
-                    {
-                      title: "File",
-                      dataIndex: "file",
-                      key: "file",
+                    ...["Softcopy", "File"].map(item => ({
+                      title: item,
+                      dataIndex: item?.toLowerCase(),
+                      key: item?.toLowerCase(),
                       render: a => (
                         <Button
                           type="primary"
-                          htmlType="submit"
                           className={styles2.primary}
                           onClick={() => window.open(a)}
                         >
                           Download
                         </Button>
                       ),
-                    },
+                    })),
                   ]}
                   dataSource={data}
                 />

@@ -84,7 +84,7 @@ const Top = ({ main = {} }) => {
     if (main?.publications) {
       const fixString = str => str?.replaceAll(" ", "").toLowerCase();
 
-      if (e) {
+      if (e && e?.trim() != "") {
         const { TITLE, BODY } = pubData(
           data?.filter(p => {
             const keywords = [
@@ -150,11 +150,11 @@ const Top = ({ main = {} }) => {
         }))}
       >
         <Search
+          allowClear
           className={styles.topInput}
+          onChange={e => debouncedQuery(e.target.value)}
           placeholder="Search for research within RIMS using title or keywords"
           onSearch={e => searchPubs(e, data)}
-          onChange={e => debouncedQuery(e.target.value)}
-          allowClear
         />
       </AutoComplete>
 

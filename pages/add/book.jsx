@@ -10,13 +10,16 @@ import Image from "next/image";
 import axios from "axios";
 import URLObj from "../../src/components/baseURL";
 import { useUser } from "../../src/components/context/userContext";
+import { useAccess } from "../../src/components/context/accessContext";
 
 const Books = () => {
   // HOOKS
 
   const router = useRouter();
-  const { user } = useUser();
   const [form] = Form.useForm();
+
+  const { access } = useAccess();
+  const { user } = useUser();
 
   // STATES
 
@@ -191,9 +194,7 @@ const Books = () => {
                 <Form
                   name="book"
                   form={form}
-                  style={{ width: "80vw", transform: "translateX(-10vw)" }}
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
+                  style={{ width: "80vw", padding: "0 10vw" }}
                   initialValues={{
                     faculty: user?.name,
                     department: user?.department,

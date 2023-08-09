@@ -15,14 +15,14 @@ import BarChart from "../src/components/Profile/BarChart";
 import { useUser } from "../src/components/context/userContext";
 import { useAccess } from "../src/components/context/accessContext";
 
-import usePubSetter from "../src//utils/dataSetters/usePubSetter";
-import useConfSetter from "../src//utils/dataSetters/useConfSetter";
-import useBookSetter from "../src//utils/dataSetters/useBookSetter";
-import useProjSetter from "../src//utils/dataSetters/useProjSetter";
-import useAwardSetter from "../src//utils/dataSetters/useAwardSetter";
-import useIPRSetter from "../src//utils/dataSetters/useIPRSetter";
-import useStudSetter from "../src//utils/dataSetters/useStudSetter";
-import useExtraSetter from "../src//utils/dataSetters/useExtraSetter";
+import usePubSetter from "../src/utils/dataSetters/usePubSetter";
+import useConfSetter from "../src/utils/dataSetters/useConfSetter";
+import useBookSetter from "../src/utils/dataSetters/useBookSetter";
+import useProjSetter from "../src/utils/dataSetters/useProjSetter";
+import useAwardSetter from "../src/utils/dataSetters/useAwardSetter";
+import useIPRSetter from "../src/utils/dataSetters/useIPRSetter";
+import useStudSetter from "../src/utils/dataSetters/useStudSetter";
+import useExtraSetter from "../src/utils/dataSetters/useExtraSetter";
 import ScrollBox from "../src/components/Profile/ScrollBox";
 import useDeptPubSetter from "../src/utils/dataSetters/useDeptPubSetter";
 
@@ -60,6 +60,7 @@ const Profile = () => {
     file: null,
     doi: "",
     authors: [],
+    status: 0,
   });
 
   const [extra_1, setExtra_1] = useState({});
@@ -107,9 +108,9 @@ const Profile = () => {
             setData(DATA);
             setStatistics_1(STATS);
             setExtra(
-              DATA?.publication,
+              DATA?.publications,
               DATA?.conferences,
-              DATA?.research,
+              DATA?.projects,
               setExtra_1
             );
 
@@ -118,9 +119,7 @@ const Profile = () => {
           .catch(err => {
             console.log(err);
           });
-      }
-
-      if (access === 2) {
+      } else {
         axios({
           method: "GET",
           url: `${URLObj.base}/home/?filter=${range}`,
@@ -159,10 +158,6 @@ const Profile = () => {
             console.log(err);
           });
       }
-
-      if (access === 3) {
-        setVisible(false);
-      }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -176,7 +171,6 @@ const Profile = () => {
         sortBy_1,
       });
 
-      console.log(TITLE, BODY);
       setPublications({ title: TITLE, body: BODY, pubs: BODY });
     }
 
@@ -213,6 +207,14 @@ const Profile = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, access, sortBy_1, fileData_1]);
 
+  useEffect(() => {
+    if (fileData_1?.status === 1) {
+      uploadFile();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fileData_1?.status]);
+
   // FUNCTIONS
 
   const uploadFile = () => {
@@ -238,7 +240,14 @@ const Profile = () => {
       })
         .then(res => {
           message.success("File uploaded successfully");
-          setFileData_1({ modal: false, file: null, doi: "", authors: [] });
+          setFileData_1({
+            ...fileData_1,
+            modal: false,
+            file: null,
+            doi: "",
+            authors: [],
+            status: 0,
+          });
 
           axios({
             method: "GET",
@@ -250,10 +259,11 @@ const Profile = () => {
           }).then(res => setData(res.data?.data));
         })
         .catch(err => {
+          setFileData_1({ ...fileData_1, modal: false, status: 0 });
           message.error("Could not upload file");
           console.log(err);
         });
-    }
+    } else setFileData_1({ ...fileData_1, status: 0 });
   };
 
   const handleFilterChange = (pagination, filters) =>
@@ -301,13 +311,10 @@ const Profile = () => {
           <FloatButton.BackTop
             style={{ left: 30, bottom: 30, borderRadius: "50%" }}
           />
-
           <div style={{ paddingLeft: "18vw" }}>
             <Side sets={setSections} />
-
             <div className={styles.container}>
               <Top main={{ publications, setPublications, setSections }} />
-
               {sections == "all" && (
                 <>
                   <div className={styles.section}>
@@ -340,7 +347,7 @@ const Profile = () => {
                             ["All Time", ""],
                             ["Last 5 Years", "2019-2023"],
                             ["Last 3 Years", "2021-2023"],
-                            ["Last Year", "2023-2023"],
+                            ["Last Year", "2022-2023"],
                           ].map(([e, r], i) => (
                             <Button
                               key={i}
@@ -351,7 +358,6 @@ const Profile = () => {
                               {e}
                             </Button>
                           ))}
-
                           <RangePicker
                             picker="year"
                             className={styles.overviewButton}
@@ -373,13 +379,11 @@ const Profile = () => {
                         </div>
                       </div>
                     )}
-
                     <Overview
                       one={{ data: data, stats: statistics_1, extra: extra_1 }}
                       two={{ counts: counts_2 }}
                     />
                   </div>
-
                   {access > 1 && (
                     <>
                       <BarChart trends={pubTrends_2} />
@@ -417,7 +421,6 @@ const Profile = () => {
                           />
                         </Col>
                       </Row>
-
                       <Section
                         data={publications_2}
                         head={{ header: "", title: "Faculty Publications" }}
@@ -426,7 +429,6 @@ const Profile = () => {
                   )}
                 </>
               )}
-
               {(sections == "all" || sections == "publications") &&
                 (access == 1 ? (
                   <div className={styles.section}>
@@ -483,7 +485,6 @@ const Profile = () => {
                     sections={{ sec: sections, setSec: setSections }}
                   />
                 ))}
-
               {[
                 {
                   title: "Conferences",
@@ -517,7 +518,6 @@ const Profile = () => {
                   sections={{ sec: sections, setSec: setSections }}
                 />
               ))}
-
               <Modal
                 title="Upload PDF"
                 open={fileData_1?.modal}
@@ -531,9 +531,12 @@ const Profile = () => {
                   onChange={info => {
                     const { status } = info.file;
                     if (status === "done")
-                      setFileData_1({ ...fileData_1, file: info.file });
+                      setFileData_1({
+                        ...fileData_1,
+                        file: info.file,
+                        status: 1,
+                      });
                   }}
-                  beforeUpload={file => uploadFile()}
                 >
                   <InboxOutlined
                     style={{ fontSize: 60, margin: "10px 0", color: "#9a2827" }}

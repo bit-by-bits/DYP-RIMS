@@ -12,13 +12,17 @@ import { useEffect, useState } from "react";
 import { Button, DatePicker, FloatButton, Form } from "antd";
 import { Select, Spin, Upload, message, Input } from "antd";
 import { useUser } from "../../src/components/context/userContext";
+import { useAccess } from "../../src/components/context/accessContext";
 
 const Conferences = () => {
   // HOOKS
 
   const router = useRouter();
-  const { user } = useUser();
   const [form] = Form.useForm();
+
+  const { access } = useAccess();
+  const { user } = useUser();
+
   const { RangePicker } = DatePicker;
   const { Dragger } = Upload;
 
@@ -226,9 +230,7 @@ const Conferences = () => {
                 <Form
                   form={form}
                   name="conference"
-                  style={{ width: "80vw", transform: "translateX(-10vw)" }}
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
+                  style={{ width: "80vw", padding: "0 10vw" }}
                   initialValues={
                     data?.start_date && data?.end_date
                       ? {

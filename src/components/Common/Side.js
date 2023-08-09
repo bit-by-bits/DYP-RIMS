@@ -1,38 +1,34 @@
-import { Button, Menu, Skeleton } from "antd";
+import { Button, Menu, Popconfirm, Skeleton, message } from "antd";
 import { createElement, useState, useEffect } from "react";
-import {
-  HomeOutlined,
-  ProjectOutlined,
-  DownloadOutlined,
-  TrophyOutlined,
-  MessageOutlined,
-  BookOutlined,
-  BulbOutlined,
-  UserAddOutlined,
-  FileTextOutlined,
-  FileAddOutlined,
-} from "@ant-design/icons";
+import { BookOutlined, TrophyOutlined } from "@ant-design/icons";
+import { UserAddOutlined } from "@ant-design/icons";
+import { HomeOutlined, BulbOutlined, MessageOutlined } from "@ant-design/icons";
+import { DownloadOutlined, FileTextOutlined } from "@ant-design/icons";
+import { ProjectOutlined, FileAddOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "../../styles/profile.module.css";
-import { useRouter } from "next/router";
 import { useAccess } from "../context/accessContext";
 import { useUser } from "../context/userContext";
+import { useWindowSize } from "rooks";
 import axios from "axios";
 import URLObj from "../baseURL";
+import { useRouter } from "next/router";
 
 const Side = ({ sets = () => {} }) => {
   // HOOKS
 
   const router = useRouter();
+  const { innerWidth } = useWindowSize();
 
-  const { user } = useUser();
-  const { access } = useAccess();
+  const { user, change: setU } = useUser();
+  const { access, change: setA } = useAccess();
 
   // DATA
 
   const [first, setFirst] = useState([]);
   const [second, setSecond] = useState([]);
+  const [prev, setPrev] = useState(null);
   const [faculty, setFaculty] = useState([]);
 
   // EFFECTS
@@ -105,7 +101,61 @@ const Side = ({ sets = () => {} }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [faculty]);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setPrev(localStorage.getItem("prev"));
+    }
+
+    return () => {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("prev");
+      }
+    };
+  }, []);
+
   // FUNCTIONS
+
+  const switchUser = (token, to) => {
+    axios({
+      method: "GET",
+      url: `${URLObj.base}/home`,
+      headers: {
+        "X-ACCESS-KEY": URLObj.key,
+        "X-AUTH-TOKEN": token,
+      },
+    })
+      .then(resp => {
+        const DATA = resp.data?.user;
+        const LEVEL = DATA?.access_level?.find(e =>
+          e.id === (to === 1)
+            ? 1
+            : Math.max(...DATA?.access_level?.map(e => e.id))
+        );
+
+        setA(1);
+        setU({
+          token: token,
+          setUpTime: Date.now(),
+          username: DATA?.username,
+          name: DATA?.user?.first_name + " " + DATA?.user?.last_name,
+          email: DATA?.user?.email,
+          picture: DATA?.profile_picture,
+          gender: DATA?.gender,
+          designation: DATA?.designation,
+          department: DATA?.department?.name,
+          level: LEVEL?.display_text,
+          max_access: LEVEL?.id,
+          access: 1,
+        });
+
+        message.success("Login Successful");
+        router.push("/profile");
+      })
+      .catch(err => {
+        console.log(err);
+        message.error("Login Failed");
+      });
+  };
 
   const setMenuData = () => {
     let DATA_SECOND = [];
@@ -121,11 +171,45 @@ const Side = ({ sets = () => {} }) => {
 
     setSecond(
       DATA_SECOND.map((e, i) => ({
-        key: `2.${i}`,
+        key: `3.${i}`,
         label: `${e.label} (${e.children?.length})`,
         children: e.children.map((child, index) => ({
-          key: `2.${i}.${index}`,
-          label: <Link href={`/profile/${child[0]}`}>{child[1]}</Link>,
+          key: `3.${i}.${index}`,
+          label: (
+            <Popconfirm
+              title="Switch levels"
+              description="Do you want to switch to this profile?"
+              onConfirm={() => {
+                localStorage.setItem(
+                  "prev",
+                  JSON.stringify({ token: user?.token })
+                );
+
+                axios({
+                  method: "PUT",
+                  url: `${URLObj.base}/faculty/?id=${child[0]}`,
+                  headers: {
+                    "X-ACCESS-KEY": URLObj.key,
+                    "X-AUTH-TOKEN": user?.token,
+                    "X-ACCESS-LEVEL": "department",
+                  },
+                })
+                  .then(res => {
+                    const TOKEN = res.data?.token;
+                    switchUser(TOKEN, 1);
+                  })
+                  .catch(err => {
+                    console.log(err);
+                    message.error("Login Failed");
+                  });
+              }}
+              onCancel={() => {}}
+              okText="Yes"
+              cancelText="No"
+            >
+              {child[1]}
+            </Popconfirm>
+          ),
         })),
       }))
     );
@@ -170,10 +254,22 @@ const Side = ({ sets = () => {} }) => {
             <Button className={styles.sideButton} type="primary">
               <Link href="/profile/edit">Edit Profile</Link>
             </Button>
-            {access > 1 && (
+            {access > 1 ? (
               <Button className={styles.sideButton} type="primary">
-                <Link href="/add/faculty">Add Faculty</Link>
+                <Link href="/add/profile">
+                  {innerWidth > 1600 ? "Add/Edit Faculty" : "Add Faculty"}
+                </Link>
               </Button>
+            ) : (
+              prev && (
+                <Button
+                  onClick={() => switchUser(JSON.parse(prev)?.token, 2)}
+                  className={styles.sideButton}
+                  type="primary"
+                >
+                  Return Back
+                </Button>
+              )
             )}
           </div>
         </div>
@@ -187,27 +283,27 @@ const Side = ({ sets = () => {} }) => {
         items={[
           { link: "/profile", icon: HomeOutlined, label: "Home" },
           { link: "/downloads", icon: DownloadOutlined, label: "Downloads" },
-          {
-            icon: access == 1 ? FileAddOutlined : UserAddOutlined,
-            label: access == 1 ? "Add Research" : "Faculty",
-          },
-        ].map((item, index) => {
-          const ITEM = {
-            key: `${index}`,
-            icon: createElement(item.icon),
-          };
+          { link: null, icon: FileAddOutlined, label: "Add Research" },
+          { link: null, icon: UserAddOutlined, label: "Faculty" },
+        ]
+          ?.filter((_, i) => (access > 1 ? true : i < 3))
+          ?.map((item, index) => {
+            const ITEM = {
+              key: `${index}`,
+              icon: createElement(item.icon),
+            };
 
-          return index == 2
-            ? {
-                ...ITEM,
-                children: access == 1 ? first : second,
-                label: item.label,
-              }
-            : {
-                ...ITEM,
-                label: <Link href={item.link}>{item.label}</Link>,
-              };
-        })}
+            return item?.link
+              ? {
+                  ...ITEM,
+                  label: <Link href={item.link}>{item.label}</Link>,
+                }
+              : {
+                  ...ITEM,
+                  children: index == 2 ? first : second,
+                  label: item.label,
+                };
+          })}
       />
 
       <Menu

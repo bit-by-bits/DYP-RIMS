@@ -29,6 +29,11 @@ const useProjSetter = () => {
           render: (id, record, index) => `${index + 1}.`,
         },
         {
+          title: t => titleMaker(t, "title", "Project Title", "Title"),
+          dataIndex: "title",
+          key: "title",
+        },
+        {
           title: t => titleMaker(t, "agency", "Funding Agency", "Agency"),
           dataIndex: "agency",
           key: "agency",
@@ -73,6 +78,7 @@ const useProjSetter = () => {
 
       const BODY = projects?.map((e, i) => ({
         key: i,
+        title: capitalize(e.project_title),
         agency: capitalize(e.funding_agency),
         country: capitalize(e.country_funding_agency),
         type: capitalize(e.type),

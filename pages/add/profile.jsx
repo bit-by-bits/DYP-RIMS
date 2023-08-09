@@ -1,24 +1,26 @@
+import { Button, DatePicker, FloatButton, Form, Radio, Upload } from "antd";
+import { Input, Spin, message } from "antd";
+import styles from "../../src/styles/add.module.css";
 import Head from "next/head";
-import axios from "axios";
-import URLObj from "../../src/components/baseURL";
+import { useEffect, useState } from "react";
 import Side from "../../src/components/Common/Side";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import Top from "../../src/components/Common/Top";
-import styles from "../../src/styles/add.module.css";
-import { Button, DatePicker, FloatButton, Input, Radio } from "antd";
-import { Select, Spin, Upload, Form, message } from "antd";
+import axios from "axios";
+import URLObj from "../../src/components/baseURL";
 import { useUser } from "../../src/components/context/userContext";
+import { useAccess } from "../../src/components/context/accessContext";
 
-const Edit = () => {
-  // BOILERPLATE
+const Faculty = () => {
+  // HOOKS
 
   const router = useRouter();
+  const [form] = Form.useForm();
+
   const { user } = useUser();
 
   // STATES
 
-  const [form] = Form.useForm();
   const [file, setFile] = useState(null);
   const [visible, setVisible] = useState(true);
 
@@ -37,34 +39,40 @@ const Edit = () => {
   // FUNCTIONS
 
   const onFinish = values => {
-    const formdata = new FormData();
-
-    formdata?.append("first_name", values.first_name);
-    formdata?.append("last_name", values.last_name);
-    formdata?.append(
-      "age",
-      Math.max(
-        Math.floor((new Date() - new Date(values.age).getTime()) / 3.15576e10),
-        0
-      )
+    const AGE = Math.floor(
+      (new Date() - new Date(values.age).getTime()) / 3.15576e10
     );
-    formdata?.append("gender", values.gender);
-    formdata?.append("position", values.position);
+
+    const formdata = new FormData();
+    // formdata?.append("organisation_name", values?.org_name);
+    // formdata?.append("organisation_domain", values?.org_domain);
+    formdata?.append("first_name", values?.first_name);
+    formdata?.append("middle_name", values?.middle_name);
+    formdata?.append("last_name", values?.last_name);
+    formdata?.append("age", Math.max(0, AGE));
+    formdata?.append("department", values?.department);
+    formdata?.append("access_level", values?.access_level);
+    // formdata?.append("mobile", values?.mobile);
+    // formdata?.append("gender", values?.gender);
     formdata?.append("profile_picture", file);
+    formdata?.append("designation", values?.designation);
+    formdata?.append("email", values?.email);
+    // formdata?.append("username", values?.username);
 
     axios({
-      method: "PATCH",
-      url: `${URLObj.base}/profiles/users/`,
+      method: "POST",
+      url: `${URLObj.base}/faculty/`,
       headers: {
         "X-ACCESS-KEY": URLObj.key,
         "X-AUTH-TOKEN": user?.token,
+        "X-ACCESS-LEVEL": "department",
       },
       data: formdata,
     })
       .then(res => {
+        message.success("Student added successfully");
+        router.push("/profile");
         form.resetFields();
-        message.success("Profile edited successfully");
-        setTimeout(() => router.push("/profile"), 1200);
       })
       .catch(err => {
         message.error("Something went wrong");
@@ -79,8 +87,8 @@ const Edit = () => {
   return (
     <>
       <Head>
-        <title>DYPU RIMS | Edit Profile</title>
-        <link rel="icon" href="../../logos/dpu-2.png" />
+        <title>DYPU RIMS | Add Faculty</title>
+        <link rel="icon" href="../logos/dpu-2.png" />
       </Head>
 
       <div className={styles.wrapper}>
@@ -101,19 +109,12 @@ const Edit = () => {
               <Top />
 
               <div className={styles.formContainer}>
-                <h1 className={styles.heading}>Edit Profile</h1>
+                <h1 className={styles.heading}>Add Faculty</h1>
 
                 <Form
-                  name="edit"
+                  name="Faculty"
                   form={form}
                   style={{ width: "80vw", padding: "0 10vw" }}
-                  initialValues={{
-                    first_name: user?.name?.split(" ")[0],
-                    last_name: user?.name?.split(" ")?.slice(-1),
-                    gender: user?.gender,
-                    department: user?.department,
-                    level: user?.level,
-                  }}
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
                 >
@@ -148,6 +149,52 @@ const Edit = () => {
                   </Form.Item>
 
                   <Form.Item
+                    label="Date of Birth"
+                    name="age"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your age!",
+                      },
+                    ]}
+                  >
+                    <DatePicker style={{ width: "100%" }} format="YYYY-MM-DD" />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="Department"
+                    name="department"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your department!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="Access Level"
+                    name="access_level"
+                    rules={[
+                      { required: true, message: "Please input access level!" },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+
+                  {/* <Form.Item
+                    label="Mobile"
+                    name="mobile"
+                    rules={[
+                      { required: true, message: "Please input mobile!" },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item> */}
+
+                  {/* <Form.Item
                     label="Gender"
                     name="gender"
                     rules={[
@@ -162,52 +209,7 @@ const Edit = () => {
                       <Radio value="Female">Female</Radio>
                       <Radio value="Non-binary">Non-binary</Radio>
                     </Radio.Group>
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Date of Birth"
-                    name="age"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your age!",
-                      },
-                    ]}
-                  >
-                    <DatePicker style={{ width: "100%" }} format="YYYY-MM-DD" />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Current Position"
-                    name="position"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your position!",
-                      },
-                    ]}
-                  >
-                    <Select
-                      placeholder="Select your position"
-                      showSearch
-                      options={[
-                        "Senior resident/registrar/tutor",
-                        "Assistant professor",
-                        "Associate Professor",
-                        "Professor",
-                        "Professor emeritus",
-                        "Admin staff",
-                      ].map(item => ({ value: item, label: item }))}
-                    />
-                  </Form.Item>
-
-                  <Form.Item label="Access Level" name="level">
-                    <Input disabled />
-                  </Form.Item>
-
-                  <Form.Item label="Department" name="department">
-                    <Input disabled />
-                  </Form.Item>
+                  </Form.Item> */}
 
                   <Form.Item
                     label="Profile Picture"
@@ -244,6 +246,42 @@ const Edit = () => {
                     </Upload>
                   </Form.Item>
 
+                  <Form.Item
+                    label="Designation"
+                    name="designation"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your designation!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="Email"
+                    name="email"
+                    rules={[
+                      { required: true, message: "Please input your email!" },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+
+                  {/* <Form.Item
+                    label="Username"
+                    name="username"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your username!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item> */}
+
                   <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                     <Button
                       className={styles.primary}
@@ -251,6 +289,13 @@ const Edit = () => {
                       htmlType="submit"
                     >
                       Submit
+                    </Button>
+                    <Button
+                      className={styles.secondary}
+                      type="primary"
+                      htmlType="reset"
+                    >
+                      Reset
                     </Button>
                   </Form.Item>
                 </Form>
@@ -263,4 +308,4 @@ const Edit = () => {
   );
 };
 
-export default Edit;
+export default Faculty;

@@ -19,7 +19,7 @@ const Drop = () => {
             label: `${e} Level`,
           })),
         onClick: e => change(e.key),
-        defaultSelectedKeys: [`${access}`],
+        selectedKeys: [`${access}`],
         selectable: true,
         style: { textAlign: "center", border: "1px solid #9a2827" },
       }}

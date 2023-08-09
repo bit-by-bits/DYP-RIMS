@@ -11,14 +11,18 @@ import Image from "next/image";
 import axios from "axios";
 import URLObj from "../../src/components/baseURL";
 import { useUser } from "../../src/components/context/userContext";
+import { useAccess } from "../../src/components/context/accessContext";
 
 const Awards = () => {
   // HOOKS
 
   const router = useRouter();
-  const { user } = useUser();
-  const { Dragger } = Upload;
   const [form] = Form.useForm();
+
+  const { access } = useAccess();
+  const { user } = useUser();
+
+  const { Dragger } = Upload;
 
   // STATES
 
@@ -208,9 +212,7 @@ const Awards = () => {
                 <Form
                   form={form}
                   name="award"
-                  style={{ width: "80vw", transform: "translateX(-10vw)" }}
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
+                  style={{ width: "80vw", padding: "0 10vw" }}
                   initialValues={
                     data?.start_date
                       ? {

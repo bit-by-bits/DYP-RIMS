@@ -9,13 +9,17 @@ import Top from "../../src/components/Common/Top";
 import axios from "axios";
 import URLObj from "../../src/components/baseURL";
 import { useUser } from "../../src/components/context/userContext";
+import { useAccess } from "../../src/components/context/accessContext";
 
 const Projects = () => {
   // HOOKS
 
   const router = useRouter();
   const [form] = Form.useForm();
+
+  const { access } = useAccess();
   const { user } = useUser();
+
   const { RangePicker } = DatePicker;
 
   // STATES
@@ -110,13 +114,11 @@ const Projects = () => {
                 <Form
                   name="project"
                   form={form}
-                  style={{ width: "80vw", transform: "translateX(-10vw)" }}
+                  style={{ width: "80vw", padding: "0 10vw" }}
                   initialValues={{
                     faculty: user?.name,
                     department: user?.department,
                   }}
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
                 >

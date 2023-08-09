@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import URLObj from "../baseURL";
 import { Avatar, Badge, Card, Modal, Upload, message } from "antd";
+import useCaps from "../../utils/useCaps";
 import Scite from "../Profile/Scite";
 import Altmetric from "../Profile/Altmetric";
 
@@ -21,6 +22,8 @@ const FileInfo = ({ user, setv, DOI }) => {
   const { Meta } = Card;
   const { Ribbon } = Badge;
   const { Dragger } = Upload;
+
+  const { capitalize } = useCaps();
 
   const [data, setData] = useState({});
   const [fileData, setFileData] = useState({ modal: false, file: null });
@@ -44,8 +47,15 @@ const FileInfo = ({ user, setv, DOI }) => {
         },
       })
         .then(res => {
-          setv(false);
-          setData(res?.data?.data[0]);
+          const DATA = res?.data?.data?.[0];
+
+          if (DATA?.publication_title) {
+            setv(false);
+            setData(DATA);
+          } else {
+            setv(true);
+            message.error("Network error! Try again");
+          }
         })
         .catch(err => {
           console.log(err);
@@ -89,7 +99,7 @@ const FileInfo = ({ user, setv, DOI }) => {
           <Meta
             title={
               <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
-                {e.given + " " + e.family}
+                {capitalize(e.given + " " + e.family)}
               </div>
             }
             description={
@@ -122,7 +132,7 @@ const FileInfo = ({ user, setv, DOI }) => {
         <Meta
           title={
             <div style={{ fontSize: "0.9rem", marginBottom: -4 }}>
-              {e.given + " " + e.family}
+              {capitalize(e.given + " " + e.family)}
             </div>
           }
           description={
@@ -391,9 +401,9 @@ const FileInfo = ({ user, setv, DOI }) => {
     <>
       <div className={styles.file_text}>
         <div className={styles.file_tags}>
-          <div className={styles.file_tag1}>
+          {/* <div className={styles.file_tag1}>
             {data?.publication_type ?? "Unknown Type"}
-          </div>
+          </div> */}
 
           {data?.file ? (
             <div className={styles.file_tag1}>PDF Available</div>
@@ -452,6 +462,8 @@ const FileInfo = ({ user, setv, DOI }) => {
 
         <div
           className={styles.file_title}
+          style={{ cursor: "pointer" }}
+          onClick={() => window.open(`https://dx.doi.org/${DOI}`, "_blank")}
           dangerouslySetInnerHTML={{
             __html: data?.publication_title ?? "- Not Available -",
           }}
