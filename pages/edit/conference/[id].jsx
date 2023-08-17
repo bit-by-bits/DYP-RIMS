@@ -303,7 +303,7 @@ const Conferences = () => {
                   <Input />
                 </Form.Item>
 
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                <Form.Item>
                   <Button
                     onClick={() => setPaper(paper + 1)}
                     type="primary"
@@ -377,7 +377,7 @@ const Conferences = () => {
                   </div>
                 ))}
 
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                <Form.Item>
                   <Button
                     className={styles.primary}
                     type="primary"
@@ -394,4 +394,5 @@ const Conferences = () => {
     </>
   );
 };
+
 export default Conferences;

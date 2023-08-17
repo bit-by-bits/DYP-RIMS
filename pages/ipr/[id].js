@@ -9,6 +9,7 @@ import IPRInfo from "../../src/components/Add/IPRInfo";
 import axios from "axios";
 import URLObj from "../../src/components/baseURL";
 import { useUser } from "../../src/components/context/userContext";
+import Spinner from "../../src/components/Common/Spinner";
 
 const IPR = () => {
   // HOOKS

@@ -21,7 +21,6 @@ const Conferences = () => {
   const router = useRouter();
   const [form] = Form.useForm();
 
-  const { access } = useAccess();
   const { user } = useUser();
 
   const { RangePicker } = DatePicker;
@@ -62,28 +61,57 @@ const Conferences = () => {
     formdata?.append("conference_name", values.conference);
     formdata?.append("certificate_file", file);
     formdata?.append("attended_as", values.attended_as);
+    formdata?.append("location", values.location);
 
-    if (data?.start_date && data?.end_date) {
-      formdata?.append("start_date", values.start_date);
-      formdata?.append("end_date", values.end_date);
-    } else {
-      formdata?.append("start_date", values.date[0]);
-      formdata?.append("end_date", values.date[1]);
+    // DATE CONVERSION
+
+    const convert = date => `${date?.$y}-${date?.$M + 1}-${date?.$D}`;
+
+    formdata?.append(
+      "start_date",
+      data?.start_date ? values?.start_date : convert(values.date[0])
+    );
+
+    formdata?.append(
+      "end_date",
+      data?.end_date ? values?.end_date : convert(values.date[1])
+    );
+
+    // PAPERS AND POSTERS
+
+    const papers = new Array();
+    const posters = new Array();
+
+    if (paper) {
+      new Array(paper).fill(0).forEach((_, i) => {
+        const pi = values[`paper${i}`]?.file;
+        const ti = values[`tpaper${i}`];
+
+        if (pi && ti) papers.push({ title: ti, file: pi });
+      });
+
+      formdata?.append("papers", JSON.stringify(papers));
     }
 
-    formdata?.append("location", values.location);
-    formdata?.append("is_paper_presented", paper ? 1 : 0);
-    formdata?.append("is_poster_presented", poster ? 1 : 0);
+    if (poster) {
+      new Array(poster).fill(0).forEach((_, i) => {
+        const pi = values[`poster${i}`]?.file;
+        const ti = values[`tposter${i}`];
 
-    new Array(paper).fill(0).forEach((e, i) => {
-      formdata?.append(`paper${i}`, values[`paper${i}`]?.file);
-      formdata?.append(`tpaper${i}`, values[`tpaper${i}`]);
-    });
+        if (pi && ti) posters.push({ title: ti, file: pi });
+      });
 
-    new Array(poster).fill(0).forEach((e, i) => {
-      formdata?.append(`poster${i}`, values[`poster${i}`]?.file);
-      formdata?.append(`tposter${i}`, values[`tposter${i}`]);
-    });
+      formdata?.append("posters", JSON.stringify(posters));
+    }
+
+    formdata?.append(
+      "is_paper_presented",
+      paper && papers && papers?.length ? 1 : 0
+    );
+    formdata?.append(
+      "is_poster_presented",
+      poster && posters && posters?.length ? 1 : 0
+    );
 
     axios({
       method: "POST",
@@ -397,7 +425,7 @@ const Conferences = () => {
                   <Input />
                 </Form.Item>
 
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                <Form.Item>
                   <Button
                     onClick={() => setPaper(paper + 1)}
                     type="primary"
@@ -424,15 +452,14 @@ const Conferences = () => {
                     <Form.Item label="Upload Poster" name={`poster${i}`}>
                       <Upload
                         onValuesChange={info => {
-                          if (info.file.status === "done") {
+                          if (info.file.status === "done")
                             message.success(
                               `${info.file.name} file uploaded successfully`
                             );
-                          } else if (info.file.status === "error") {
+                          else if (info.file.status === "error")
                             message.error(
                               `${info.file.name} file upload failed.`
                             );
-                          }
                         }}
                       >
                         <Button icon={<UploadOutlined />}>
@@ -471,7 +498,7 @@ const Conferences = () => {
                   </div>
                 ))}
 
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                <Form.Item>
                   <Button
                     className={styles.primary}
                     type="primary"
@@ -501,4 +528,5 @@ const Conferences = () => {
     </>
   );
 };
+
 export default Conferences;

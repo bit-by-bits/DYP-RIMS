@@ -1,4 +1,4 @@
-import { Button, DatePicker, FloatButton, Form, Radio, Upload } from "antd";
+import { Button, DatePicker, FloatButton, Form, Select, Upload } from "antd";
 import { Input, message } from "antd";
 import styles from "../../src/styles/add.module.css";
 import Head from "next/head";
@@ -11,6 +11,7 @@ import URLObj from "../../src/components/baseURL";
 import { useUser } from "../../src/components/context/userContext";
 import { useAccess } from "../../src/components/context/accessContext";
 import Spinner from "../../src/components/Common/Spinner";
+import AllowPage from "../../src/components/Common/allow";
 
 const Faculty = () => {
   // HOOKS
@@ -19,6 +20,7 @@ const Faculty = () => {
   const [form] = Form.useForm();
 
   const { user } = useUser();
+  const { access } = useAccess();
 
   // STATES
 
@@ -86,7 +88,7 @@ const Faculty = () => {
   };
 
   return (
-    <>
+    <AllowPage accesses={[2]}>
       <Head>
         <title>DYPU RIMS | Add Faculty</title>
         <link rel="icon" href="../logos/dpu-2.png" />
@@ -114,6 +116,14 @@ const Faculty = () => {
                 style={{ width: "80vw", padding: "0 10vw" }}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
+                initialValues={
+                  access === 2
+                    ? {
+                        department: user?.department,
+                        access_level: 1,
+                      }
+                    : {}
+                }
               >
                 <Form.Item
                   label="First Name"
@@ -178,7 +188,16 @@ const Faculty = () => {
                     { required: true, message: "Please input access level!" },
                   ]}
                 >
-                  <Input />
+                  <Select
+                    showSearch
+                    placeholder="Choose access level"
+                    allowClear
+                    options={["Individual", "Department", "Institute"].map(
+                      (item, index) => {
+                        return { value: index + 1, label: item };
+                      }
+                    )}
+                  />
                 </Form.Item>
 
                 {/* <Form.Item
@@ -247,11 +266,25 @@ const Faculty = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Please input your designation!",
+                      message: "Please choose your designation!",
                     },
                   ]}
                 >
-                  <Input />
+                  <Select
+                    showSearch
+                    placeholder="Choose designation"
+                    allowClear
+                    options={[
+                      "Professor Emeritus",
+                      "Professor and HOD",
+                      "Professor",
+                      "Associate Professor",
+                      "Assistant Professor",
+                      "Senior Resident/Tutor/Registrar",
+                    ].map((item, index) => {
+                      return { value: index + 1, label: item };
+                    })}
+                  />
                 </Form.Item>
 
                 <Form.Item
@@ -277,7 +310,7 @@ const Faculty = () => {
                     <Input />
                   </Form.Item> */}
 
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                <Form.Item>
                   <Button
                     className={styles.primary}
                     type="primary"
@@ -298,7 +331,7 @@ const Faculty = () => {
           </div>
         </div>
       </div>
-    </>
+    </AllowPage>
   );
 };
 

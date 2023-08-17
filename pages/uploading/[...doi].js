@@ -8,6 +8,7 @@ import Side from "../../src/components/Common/Side";
 import Top from "../../src/components/Common/Top";
 import FileInfo from "../../src/components/Upload/FileInfo";
 import { useUser } from "../../src/components/context/userContext";
+import Spinner from "../../src/components/Common/Spinner";
 
 const Uploading = () => {
   // HOOKS

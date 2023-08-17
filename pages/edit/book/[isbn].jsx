@@ -217,7 +217,7 @@ const Books = () => {
                   {ISBN ? <Input disabled /> : <Input />}
                 </Form.Item>
 
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                <Form.Item>
                   <Button
                     type="primary"
                     className={styles.primary}
@@ -234,4 +234,5 @@ const Books = () => {
     </>
   );
 };
+
 export default Books;

@@ -297,7 +297,7 @@ const Faculty = () => {
                   <Input />
                 </Form.Item>
 
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                <Form.Item>
                   <Button
                     className={styles.primary}
                     type="primary"

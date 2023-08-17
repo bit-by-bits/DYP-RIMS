@@ -181,7 +181,7 @@ const Students = () => {
                   <DatePicker style={{ width: "100%" }} picker="year" />
                 </Form.Item>
 
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                <Form.Item>
                   <Button
                     className={styles.primary}
                     type="primary"

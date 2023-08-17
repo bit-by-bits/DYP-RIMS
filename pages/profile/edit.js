@@ -9,6 +9,7 @@ import styles from "../../src/styles/add.module.css";
 import { Button, DatePicker, FloatButton, Input, Radio } from "antd";
 import { Select, Upload, Form, message } from "antd";
 import { useUser } from "../../src/components/context/userContext";
+import Spinner from "../../src/components/Common/Spinner";
 
 const Edit = () => {
   // BOILERPLATE
@@ -238,7 +239,7 @@ const Edit = () => {
                   </Upload>
                 </Form.Item>
 
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                <Form.Item>
                   <Button
                     className={styles.primary}
                     type="primary"

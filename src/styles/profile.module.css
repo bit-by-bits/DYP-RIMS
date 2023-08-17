@@ -122,6 +122,11 @@
   border: 2px solid var(--primary);
 }
 
+.overviewButtonActive {
+  background-color: var(--primary) !important;
+  color: white !important;
+}
+
 .overviewButton:hover {
   border-color: var(--primary-dark) !important;
   background-color: rgba(0, 0, 0, 0.04) !important;

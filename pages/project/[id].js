@@ -9,6 +9,7 @@ import ProjectInfo from "../../src/components/Add/ProjectInfo";
 import URLObj from "../../src/components/baseURL";
 import axios from "axios";
 import { useUser } from "../../src/components/context/userContext";
+import Spinner from "../../src/components/Common/Spinner";
 
 const Project = () => {
   // HOOKS

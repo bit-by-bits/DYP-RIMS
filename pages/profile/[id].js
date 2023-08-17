@@ -22,6 +22,7 @@ import useStudSetter from "../../src/utils/dataSetters/useStudSetter";
 import useExtraSetter from "../../src/utils/dataSetters/useExtraSetter";
 import URLObj from "../../src/components/baseURL";
 import { useRouter } from "next/router";
+import Spinner from "../../src/components/Common/Spinner";
 
 const Profile = () => {
   // BOILERPLATE

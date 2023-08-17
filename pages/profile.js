@@ -90,6 +90,8 @@ const Profile = () => {
   // EFFECTS
 
   useEffect(() => {
+    setVisible(true);
+
     if (user?.token) {
       if (access === 1) {
         axios({
@@ -338,12 +340,14 @@ const Profile = () => {
                           ["All Time", ""],
                           ["Last 5 Years", "2019-2023"],
                           ["Last 3 Years", "2021-2023"],
-                          ["Last Year", "2022-2023"],
+                          ["Last Year", "2023-2023"],
                         ].map(([e, r], i) => (
                           <Button
                             key={i}
                             type="primary"
-                            className={styles.overviewButton}
+                            className={`${styles.overviewButton} ${
+                              range === r ? styles.overviewButtonActive : ""
+                            }`}
                             onClick={() => setRange(r)}
                           >
                             {e}
