@@ -11,7 +11,7 @@ import URLObj from "../../src/components/baseURL";
 import { useUser } from "../../src/components/context/userContext";
 import { useAccess } from "../../src/components/context/accessContext";
 import Spinner from "../../src/components/Common/Spinner";
-import AllowPage from "../../src/components/Common/allow";
+import AllowPage from "../../src/components/Common/AllowPage";
 
 const Faculty = () => {
   // HOOKS

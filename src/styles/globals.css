@@ -217,3 +217,7 @@ a.ant-typography-expand {
 .sideMenu .ant-menu-item-selected a:hover {
   color: var(--primary) !important;
 }
+
+.ant-menu-light.ant-menu-root.ant-menu-inline {
+  border-inline-end: 0;
+}
