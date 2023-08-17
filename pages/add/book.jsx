@@ -1,4 +1,4 @@
-import { Button, FloatButton, Form, Input, Select, Spin, message } from "antd";
+import { Button, FloatButton, Form, Input, Select, message } from "antd";
 import styles from "../../src/styles/add.module.css";
 import styles2 from "../../src/styles/upload.module.css";
 import Head from "next/head";
@@ -11,6 +11,7 @@ import axios from "axios";
 import URLObj from "../../src/components/baseURL";
 import { useUser } from "../../src/components/context/userContext";
 import { useAccess } from "../../src/components/context/accessContext";
+import Spinner from "../../src/components/Common/Spinner";
 
 const Books = () => {
   // HOOKS
@@ -113,205 +114,200 @@ const Books = () => {
       </Head>
 
       <div className={styles.wrapper}>
-        <Spin
-          className="spinner"
-          spinning={visible}
-          size="large"
-          tip="Please wait as page loads"
-        >
-          <FloatButton.BackTop
-            style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-          />
+        <Spinner show={visible} />
 
-          <div style={{ paddingLeft: "18vw" }}>
-            <Side />
+        <FloatButton.BackTop
+          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
+        />
 
-            <div className={styles.container}>
-              <Top />
+        <div style={{ paddingLeft: "18vw" }}>
+          <Side />
 
+          <div className={styles.container}>
+            <Top />
+
+            <div
+              style={step ? { display: "none" } : { height: "max-content" }}
+              className={styles2.wrapper}
+            >
               <div
-                style={step ? { display: "none" } : { height: "max-content" }}
-                className={styles2.wrapper}
+                style={{ width: "65vw", minHeight: "0" }}
+                className={styles2.upload_wrapper}
               >
-                <div
-                  style={{ width: "65vw", minHeight: "0" }}
-                  className={styles2.upload_wrapper}
-                >
-                  <div className={styles2.upload_left}>
-                    <Image
-                      width={60}
-                      height={60}
-                      alt="ADD"
-                      src="/upload.png"
-                      className={styles2.upload_img}
-                    />
-                    <div className={styles2.upload_title}>Add a file</div>
+                <div className={styles2.upload_left}>
+                  <Image
+                    width={60}
+                    height={60}
+                    alt="ADD"
+                    src="/upload.png"
+                    className={styles2.upload_img}
+                  />
+                  <div className={styles2.upload_title}>Add a file</div>
 
-                    <div className={styles2.upload_msg}>
-                      Kindly enter the ISBN number of the book you want to add
-                    </div>
+                  <div className={styles2.upload_msg}>
+                    Kindly enter the ISBN number of the book you want to add
+                  </div>
 
-                    <Input
-                      style={{ width: "40vw", margin: "20px 0 10px 0" }}
-                      onPressEnter={add}
-                      placeholder="enter isbn here"
-                      onChange={e => setISBN(e.target.value)}
-                    />
+                  <Input
+                    style={{ width: "40vw", margin: "20px 0 10px 0" }}
+                    onPressEnter={add}
+                    placeholder="enter isbn here"
+                    onChange={e => setISBN(e.target.value)}
+                  />
+
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "1rem",
+                    }}
+                  >
+                    {searching ? (
+                      <div className={styles2.upload_btn}>
+                        <div className={styles2.dots} />
+                      </div>
+                    ) : (
+                      <div onClick={add} className={styles2.upload_btn}>
+                        Add File
+                      </div>
+                    )}
 
                     <div
-                      style={{
-                        display: "flex",
-                        gap: "1rem",
-                      }}
+                      onClick={() => setStep(1)}
+                      className={styles2.upload_btn2}
                     >
-                      {searching ? (
-                        <div className={styles2.upload_btn}>
-                          <div className={styles2.dots} />
-                        </div>
-                      ) : (
-                        <div onClick={add} className={styles2.upload_btn}>
-                          Add File
-                        </div>
-                      )}
-
-                      <div
-                        onClick={() => setStep(1)}
-                        className={styles2.upload_btn2}
-                      >
-                        Skip
-                      </div>
+                      Skip
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div
-                className={styles.formContainer}
-                style={step ? {} : { display: "none" }}
+            <div
+              className={styles.formContainer}
+              style={step ? {} : { display: "none" }}
+            >
+              <h1 className={styles.heading}>Add Books/Chapters</h1>
+
+              <Form
+                name="book"
+                form={form}
+                style={{ width: "80vw", padding: "0 10vw" }}
+                initialValues={{
+                  faculty: user?.name,
+                  department: user?.department,
+                  book:
+                    (data?.title ?? "") +
+                    (data?.subtitle ? ": " : "") +
+                    (data?.subtitle ?? ""),
+                  year: data?.publishedDate,
+                  isbn: ISBN,
+                }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
               >
-                <h1 className={styles.heading}>Add Books/Chapters</h1>
-
-                <Form
-                  name="book"
-                  form={form}
-                  style={{ width: "80vw", padding: "0 10vw" }}
-                  initialValues={{
-                    faculty: user?.name,
-                    department: user?.department,
-                    book:
-                      (data?.title ?? "") +
-                      (data?.subtitle ? ": " : "") +
-                      (data?.subtitle ?? ""),
-                    year: data?.publishedDate,
-                    isbn: ISBN,
-                  }}
-                  onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
+                <Form.Item
+                  label="Name Of Faculty"
+                  name="faculty"
+                  rules={[
+                    { required: true, message: "Please input faculty name!" },
+                  ]}
                 >
-                  <Form.Item
-                    label="Name Of Faculty"
-                    name="faculty"
-                    rules={[
-                      { required: true, message: "Please input faculty name!" },
-                    ]}
+                  <Input disabled />
+                </Form.Item>
+
+                <Form.Item
+                  label="Department"
+                  name="department"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your department!",
+                    },
+                  ]}
+                >
+                  <Input disabled />
+                </Form.Item>
+
+                <Form.Item
+                  label="Publication Type"
+                  name="type"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input publication type!",
+                    },
+                  ]}
+                >
+                  <Select showSearch placeholder="Select a type" allowClear>
+                    <Select.Option value="book">Book</Select.Option>
+                    <Select.Option value="chapter">Chapter</Select.Option>
+                  </Select>
+                </Form.Item>
+
+                <Form.Item label="Chapter Title" name="title">
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  label="Book Title"
+                  name="book"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input the book name!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  label="Year Published"
+                  name="year"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter publishing year!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  label="ISBN Number"
+                  name="isbn"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input ISBN number!",
+                    },
+                  ]}
+                >
+                  {ISBN ? <Input disabled /> : <Input />}
+                </Form.Item>
+
+                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                  <Button
+                    type="primary"
+                    className={styles.secondary}
+                    htmlType="submit"
                   >
-                    <Input disabled />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Department"
-                    name="department"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your department!",
-                      },
-                    ]}
+                    SUBMIT
+                  </Button>
+                  <Button
+                    onClick={() => setStep(0)}
+                    className={styles.primary}
+                    type="primary"
+                    htmlType="reset"
                   >
-                    <Input disabled />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Publication Type"
-                    name="type"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input publication type!",
-                      },
-                    ]}
-                  >
-                    <Select showSearch placeholder="Select a type" allowClear>
-                      <Select.Option value="book">Book</Select.Option>
-                      <Select.Option value="chapter">Chapter</Select.Option>
-                    </Select>
-                  </Form.Item>
-
-                  <Form.Item label="Chapter Title" name="title">
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Book Title"
-                    name="book"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input the book name!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Year Published"
-                    name="year"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter publishing year!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="ISBN Number"
-                    name="isbn"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input ISBN number!",
-                      },
-                    ]}
-                  >
-                    {ISBN ? <Input disabled /> : <Input />}
-                  </Form.Item>
-
-                  <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button
-                      type="primary"
-                      className={styles.secondary}
-                      htmlType="submit"
-                    >
-                      SUBMIT
-                    </Button>
-                    <Button
-                      onClick={() => setStep(0)}
-                      className={styles.primary}
-                      type="primary"
-                      htmlType="reset"
-                    >
-                      RETURN BACK
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </div>
+                    RETURN BACK
+                  </Button>
+                </Form.Item>
+              </Form>
             </div>
           </div>
-        </Spin>
+        </div>
       </div>
     </>
   );

@@ -6,8 +6,9 @@ import Top from "../src/components/Common/Top";
 import { useEffect, useState } from "react";
 import styles2 from "../src/styles/add.module.css";
 import { useUser } from "../src/components/context/userContext";
-import { Form, Radio, message, Spin, Table } from "antd";
+import { Form, Radio, message, Table } from "antd";
 import { Button, DatePicker, FloatButton, Select } from "antd";
+import Spinner from "../src/components/Common/Spinner";
 
 const Downloads = () => {
   // HOOKS
@@ -107,171 +108,165 @@ const Downloads = () => {
       </Head>
 
       <div className={styles2.wrapper}>
-        <Spin
-          className="spinner"
-          spinning={visible}
-          size="large"
-          tip="Please wait as page loads"
-        >
-          <FloatButton.BackTop
-            style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-          />
+        <Spinner show={visible} />
 
-          <div style={{ paddingLeft: "18vw" }}>
-            <Side />
+        <FloatButton.BackTop
+          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
+        />
 
-            <div className={styles2.container}>
-              <Top />
+        <div style={{ paddingLeft: "18vw" }}>
+          <Side />
 
-              <div className={styles2.formContainer}>
-                <h1 className={styles2.heading}>Request Download</h1>
+          <div className={styles2.container}>
+            <Top />
 
-                <Form
-                  name="request"
-                  form={form}
-                  style={{ width: "80vw", padding: "0 10vw" }}
-                  onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
-                  onReset={onReset}
-                >
-                  <Form.Item
-                    label="What to Download?"
-                    name="export"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input the items you want to download!",
-                      },
-                    ]}
-                  >
-                    <Select
-                      placeholder="Select what you want to download"
-                      style={{ width: "100%" }}
-                      showSearch
-                      mode="multiple"
-                      allowClear
-                    >
-                      {[
-                        "Publications",
-                        "Awards",
-                        "Conferences",
-                        "Books",
-                        "IPRs",
-                      ].map((item, index) => (
-                        <Select.Option
-                          key={index}
-                          value={item?.slice(0, -1)?.toLowerCase()}
-                        >
-                          {item}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
+            <div className={styles2.formContainer}>
+              <h1 className={styles2.heading}>Request Download</h1>
 
-                  <Form.Item
-                    label="Provide Softcopy?"
-                    name="softcopy"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please mention if you want softcopy!",
-                      },
-                    ]}
-                  >
-                    <Radio.Group>
-                      <Radio value="yes">Yes</Radio>
-                      <Radio value="no">No</Radio>
-                    </Radio.Group>
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Duration of Data"
-                    name="mode"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input if you want all data!",
-                      },
-                    ]}
-                  >
-                    <Radio.Group onChange={e => setAllDates(e.target.value)}>
-                      <Radio value={true}>All</Radio>
-                      <Radio value={false}>Custom</Radio>
-                    </Radio.Group>
-                  </Form.Item>
-
-                  {!allDates && (
-                    <Form.Item
-                      label="Pick Time Period"
-                      name="range"
-                      rules={[
-                        {
-                          required: !allDates,
-                          message:
-                            "Please input from when you want to download!",
-                        },
-                      ]}
-                    >
-                      <RangePicker picker="month" style={{ width: "100%" }} />
-                    </Form.Item>
-                  )}
-
-                  <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      className={styles2.primary}
-                    >
-                      Submit
-                    </Button>
-
-                    <Button
-                      type="primary"
-                      htmlType="reset"
-                      className={styles2.secondary}
-                    >
-                      Reset
-                    </Button>
-                  </Form.Item>
-                </Form>
-
-                <h1 className={styles2.heading}>My Downloads</h1>
-
-                <Table
-                  className={styles2.table}
-                  columns={[
+              <Form
+                name="request"
+                form={form}
+                style={{ width: "80vw", padding: "0 10vw" }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                onReset={onReset}
+              >
+                <Form.Item
+                  label="What to Download?"
+                  name="export"
+                  rules={[
                     {
-                      title: "No.",
-                      dataIndex: "no",
-                      key: "no",
-                      render: (a, b, c) => `${c + 1}.`,
+                      required: true,
+                      message: "Please input the items you want to download!",
                     },
-                    ...["Items", "Date"].map(item => ({
-                      title: item,
-                      dataIndex: item?.toLowerCase(),
-                      key: item?.toLowerCase(),
-                    })),
-                    ...["Softcopy", "File"].map(item => ({
-                      title: item,
-                      dataIndex: item?.toLowerCase(),
-                      key: item?.toLowerCase(),
-                      render: a => (
-                        <Button
-                          type="primary"
-                          className={styles2.primary}
-                          onClick={() => window.open(a)}
-                        >
-                          Download
-                        </Button>
-                      ),
-                    })),
                   ]}
-                  dataSource={data}
-                />
-              </div>
+                >
+                  <Select
+                    placeholder="Select what you want to download"
+                    style={{ width: "100%" }}
+                    showSearch
+                    mode="multiple"
+                    allowClear
+                  >
+                    {[
+                      "Publications",
+                      "Awards",
+                      "Conferences",
+                      "Books",
+                      "IPRs",
+                    ].map((item, index) => (
+                      <Select.Option
+                        key={index}
+                        value={item?.slice(0, -1)?.toLowerCase()}
+                      >
+                        {item}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+
+                <Form.Item
+                  label="Provide Softcopy?"
+                  name="softcopy"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please mention if you want softcopy!",
+                    },
+                  ]}
+                >
+                  <Radio.Group>
+                    <Radio value="yes">Yes</Radio>
+                    <Radio value="no">No</Radio>
+                  </Radio.Group>
+                </Form.Item>
+
+                <Form.Item
+                  label="Duration of Data"
+                  name="mode"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input if you want all data!",
+                    },
+                  ]}
+                >
+                  <Radio.Group onChange={e => setAllDates(e.target.value)}>
+                    <Radio value={true}>All</Radio>
+                    <Radio value={false}>Custom</Radio>
+                  </Radio.Group>
+                </Form.Item>
+
+                {!allDates && (
+                  <Form.Item
+                    label="Pick Time Period"
+                    name="range"
+                    rules={[
+                      {
+                        required: !allDates,
+                        message: "Please input from when you want to download!",
+                      },
+                    ]}
+                  >
+                    <RangePicker picker="month" style={{ width: "100%" }} />
+                  </Form.Item>
+                )}
+
+                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    className={styles2.primary}
+                  >
+                    Submit
+                  </Button>
+
+                  <Button
+                    type="primary"
+                    htmlType="reset"
+                    className={styles2.secondary}
+                  >
+                    Reset
+                  </Button>
+                </Form.Item>
+              </Form>
+
+              <h1 className={styles2.heading}>My Downloads</h1>
+
+              <Table
+                className={styles2.table}
+                columns={[
+                  {
+                    title: "No.",
+                    dataIndex: "no",
+                    key: "no",
+                    render: (a, b, c) => `${c + 1}.`,
+                  },
+                  ...["Items", "Date"].map(item => ({
+                    title: item,
+                    dataIndex: item?.toLowerCase(),
+                    key: item?.toLowerCase(),
+                  })),
+                  ...["Softcopy", "File"].map(item => ({
+                    title: item,
+                    dataIndex: item?.toLowerCase(),
+                    key: item?.toLowerCase(),
+                    render: a => (
+                      <Button
+                        type="primary"
+                        className={styles2.primary}
+                        onClick={() => window.open(a)}
+                      >
+                        Download
+                      </Button>
+                    ),
+                  })),
+                ]}
+                dataSource={data}
+              />
             </div>
           </div>
-        </Spin>
+        </div>
       </div>
     </>
   );

@@ -7,8 +7,9 @@ import Side from "../../../src/components/Common/Side";
 import Top from "../../../src/components/Common/Top";
 import URLObj from "../../../src/components/baseURL";
 import { Button, DatePicker, FloatButton } from "antd";
-import { Spin, message, Form, Input, Select } from "antd";
+import { message, Form, Input, Select } from "antd";
 import { useUser } from "../../../src/components/context/userContext";
+import Spinner from "../../../src/components/Common/Spinner";
 
 const IPR = () => {
   // HOOKS
@@ -107,162 +108,153 @@ const IPR = () => {
       </Head>
 
       <div className={styles.wrapper}>
-        <Spin
-          className="spinner"
-          spinning={visible}
-          size="large"
-          tip="Please wait as page loads"
-        >
-          <FloatButton.BackTop
-            style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-          />
+        <Spinner show={visible} />
 
-          <div style={{ paddingLeft: "18vw" }}>
-            <Side />
+        <FloatButton.BackTop
+          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
+        />
 
-            <div className={styles.container}>
-              <Top />
+        <div style={{ paddingLeft: "18vw" }}>
+          <Side />
 
-              <div className={styles.formContainer}>
-                <h1 className={styles.heading}>Edit IPR</h1>
+          <div className={styles.container}>
+            <Top />
 
-                <Form
-                  name="ipr"
-                  form={form}
-                  style={{ width: "80vw", padding: "0 10vw" }}
-                  initialValues={
-                    initialValues ?? {
-                      faculty: user?.name,
-                      department: user?.department,
-                    }
+            <div className={styles.formContainer}>
+              <h1 className={styles.heading}>Edit IPR</h1>
+
+              <Form
+                name="ipr"
+                form={form}
+                style={{ width: "80vw", padding: "0 10vw" }}
+                initialValues={
+                  initialValues ?? {
+                    faculty: user?.name,
+                    department: user?.department,
                   }
-                  onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
+                }
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+              >
+                <Form.Item
+                  label="Name Of Faculty"
+                  name="faculty"
+                  rules={[
+                    { required: true, message: "Please input faculty name!" },
+                  ]}
                 >
-                  <Form.Item
-                    label="Name Of Faculty"
-                    name="faculty"
-                    rules={[
-                      { required: true, message: "Please input faculty name!" },
-                    ]}
-                  >
-                    <Input disabled />
-                  </Form.Item>
+                  <Input disabled />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Department"
-                    name="department"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your department!",
-                      },
-                    ]}
-                  >
-                    <Input disabled />
-                  </Form.Item>
+                <Form.Item
+                  label="Department"
+                  name="department"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your department!",
+                    },
+                  ]}
+                >
+                  <Input disabled />
+                </Form.Item>
 
-                  <Form.Item
-                    label="IPR Awarded"
-                    name="ipr"
-                    rules={[
-                      { required: true, message: "Please input IPR awarded!" },
-                    ]}
-                  >
-                    <Select showSearch placeholder="Select an IPR" allowClear>
-                      <Select.Option value="patent">Patent</Select.Option>
-                      <Select.Option value="patent-design">
-                        Patent Design
-                      </Select.Option>
-                      <Select.Option value="copyright">Copyright</Select.Option>
-                    </Select>
-                  </Form.Item>
+                <Form.Item
+                  label="IPR Awarded"
+                  name="ipr"
+                  rules={[
+                    { required: true, message: "Please input IPR awarded!" },
+                  ]}
+                >
+                  <Select showSearch placeholder="Select an IPR" allowClear>
+                    <Select.Option value="patent">Patent</Select.Option>
+                    <Select.Option value="patent-design">
+                      Patent Design
+                    </Select.Option>
+                    <Select.Option value="copyright">Copyright</Select.Option>
+                  </Select>
+                </Form.Item>
 
-                  <Form.Item
-                    label="IPR Title"
-                    name="title"
-                    rules={[
-                      { required: true, message: "Please input IPR title!" },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
+                <Form.Item
+                  label="IPR Title"
+                  name="title"
+                  rules={[
+                    { required: true, message: "Please input IPR title!" },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Award Status"
-                    name="status"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input current status!",
-                      },
-                    ]}
-                  >
-                    <Select showSearch placeholder="Select a status" allowClear>
-                      <Select.Option value="published">Published</Select.Option>
-                      <Select.Option value="awarded">Awarded</Select.Option>
-                    </Select>
-                  </Form.Item>
+                <Form.Item
+                  label="Award Status"
+                  name="status"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input current status!",
+                    },
+                  ]}
+                >
+                  <Select showSearch placeholder="Select a status" allowClear>
+                    <Select.Option value="published">Published</Select.Option>
+                    <Select.Option value="awarded">Awarded</Select.Option>
+                  </Select>
+                </Form.Item>
 
-                  <Form.Item
-                    label="Awarding Agency"
-                    name="agency"
-                    rules={[
-                      { required: true, message: "Please input agency name!" },
-                    ]}
-                  >
-                    <Select
-                      showSearch
-                      placeholder="Select an agency"
-                      allowClear
-                    >
-                      <Select.Option value="india">India</Select.Option>
-                      <Select.Option value="international">
-                        International
-                      </Select.Option>
-                    </Select>
-                  </Form.Item>
+                <Form.Item
+                  label="Awarding Agency"
+                  name="agency"
+                  rules={[
+                    { required: true, message: "Please input agency name!" },
+                  ]}
+                >
+                  <Select showSearch placeholder="Select an agency" allowClear>
+                    <Select.Option value="india">India</Select.Option>
+                    <Select.Option value="international">
+                      International
+                    </Select.Option>
+                  </Select>
+                </Form.Item>
 
-                  <Form.Item
-                    label="Date Awarded"
-                    name="date"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter recieving date!",
-                      },
-                    ]}
-                  >
-                    <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
-                  </Form.Item>
+                <Form.Item
+                  label="Date Awarded"
+                  name="date"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter recieving date!",
+                    },
+                  ]}
+                >
+                  <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
+                </Form.Item>
 
-                  <Form.Item
-                    label="IPR Number"
-                    name="ipr_number"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input IPR number!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
+                <Form.Item
+                  label="IPR Number"
+                  name="ipr_number"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input IPR number!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
 
-                  <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button
-                      className={styles.primary}
-                      type="primary"
-                      htmlType="submit"
-                    >
-                      Submit
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </div>
+                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                  <Button
+                    className={styles.primary}
+                    type="primary"
+                    htmlType="submit"
+                  >
+                    Submit
+                  </Button>
+                </Form.Item>
+              </Form>
             </div>
           </div>
-        </Spin>
+        </div>
       </div>
     </>
   );

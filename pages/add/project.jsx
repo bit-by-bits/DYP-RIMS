@@ -1,5 +1,5 @@
 import { Button, DatePicker, FloatButton, Form } from "antd";
-import { Input, Select, Spin, message } from "antd";
+import { Input, Select, message } from "antd";
 import styles from "../../src/styles/add.module.css";
 import Head from "next/head";
 import { useEffect, useState } from "react";
@@ -10,6 +10,7 @@ import axios from "axios";
 import URLObj from "../../src/components/baseURL";
 import { useUser } from "../../src/components/context/userContext";
 import { useAccess } from "../../src/components/context/accessContext";
+import Spinner from "../../src/components/Common/Spinner";
 
 const Projects = () => {
   // HOOKS
@@ -92,151 +93,144 @@ const Projects = () => {
       </Head>
 
       <div className={styles.wrapper}>
-        <Spin
-          className="spinner"
-          spinning={visible}
-          size="large"
-          tip="Please wait as page loads"
-        >
-          <FloatButton.BackTop
-            style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-          />
+        <Spinner show={visible} />
 
-          <div style={{ paddingLeft: "18vw" }}>
-            <Side />
+        <FloatButton.BackTop
+          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
+        />
 
-            <div className={styles.container}>
-              <Top />
+        <div style={{ paddingLeft: "18vw" }}>
+          <Side />
 
-              <div className={styles.formContainer}>
-                <h1 className={styles.heading}>Add Projects</h1>
+          <div className={styles.container}>
+            <Top />
 
-                <Form
-                  name="project"
-                  form={form}
-                  style={{ width: "80vw", padding: "0 10vw" }}
-                  initialValues={{
-                    faculty: user?.name,
-                    department: user?.department,
-                  }}
-                  onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
+            <div className={styles.formContainer}>
+              <h1 className={styles.heading}>Add Projects</h1>
+
+              <Form
+                name="project"
+                form={form}
+                style={{ width: "80vw", padding: "0 10vw" }}
+                initialValues={{
+                  faculty: user?.name,
+                  department: user?.department,
+                }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+              >
+                <Form.Item
+                  label="Name Of Faculty"
+                  name="faculty"
+                  rules={[
+                    { required: true, message: "Please input faculty name!" },
+                  ]}
                 >
-                  <Form.Item
-                    label="Name Of Faculty"
-                    name="faculty"
-                    rules={[
-                      { required: true, message: "Please input faculty name!" },
-                    ]}
-                  >
-                    <Input disabled />
-                  </Form.Item>
+                  <Input disabled />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Department"
-                    name="department"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your department!",
-                      },
-                    ]}
-                  >
-                    <Input disabled />
-                  </Form.Item>
+                <Form.Item
+                  label="Department"
+                  name="department"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your department!",
+                    },
+                  ]}
+                >
+                  <Input disabled />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Title of Project"
-                    name="project_title"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input project title!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
+                <Form.Item
+                  label="Title of Project"
+                  name="project_title"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input project title!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Funding Agency"
-                    name="agency"
-                    rules={[
-                      { required: true, message: "Please input agency name!" },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
+                <Form.Item
+                  label="Funding Agency"
+                  name="agency"
+                  rules={[
+                    { required: true, message: "Please input agency name!" },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Country of Agency"
-                    name="country"
-                    rules={[
-                      { required: true, message: "Please input country name!" },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
+                <Form.Item
+                  label="Country of Agency"
+                  name="country"
+                  rules={[
+                    { required: true, message: "Please input country name!" },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Type of Project"
-                    name="type"
-                    rules={[
-                      { required: true, message: "Please input project type!" },
-                    ]}
-                  >
-                    <Select showSearch placeholder="Select a type" allowClear>
-                      <Select.Option value="government">
-                        Government
-                      </Select.Option>
-                      <Select.Option value="private">Private</Select.Option>
-                      <Select.Option value="non-government">
-                        Non-Government
-                      </Select.Option>
-                    </Select>
-                  </Form.Item>
+                <Form.Item
+                  label="Type of Project"
+                  name="type"
+                  rules={[
+                    { required: true, message: "Please input project type!" },
+                  ]}
+                >
+                  <Select showSearch placeholder="Select a type" allowClear>
+                    <Select.Option value="government">Government</Select.Option>
+                    <Select.Option value="private">Private</Select.Option>
+                    <Select.Option value="non-government">
+                      Non-Government
+                    </Select.Option>
+                  </Select>
+                </Form.Item>
 
-                  <Form.Item
-                    label="Project Dates"
-                    name="date"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter project dates!",
-                      },
-                    ]}
-                  >
-                    <RangePicker style={{ width: "100%" }} />
-                  </Form.Item>
+                <Form.Item
+                  label="Project Dates"
+                  name="date"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter project dates!",
+                    },
+                  ]}
+                >
+                  <RangePicker style={{ width: "100%" }} />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Funds (INR Lakhs)"
-                    name="funds"
-                    rules={[
-                      {
-                        pattern: /^[1-9]\d*(\.\d+)?$/,
-                        required: true,
-                        message: "Please enter project funds!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
+                <Form.Item
+                  label="Funds (INR Lakhs)"
+                  name="funds"
+                  rules={[
+                    {
+                      pattern: /^[1-9]\d*(\.\d+)?$/,
+                      required: true,
+                      message: "Please enter project funds!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
 
-                  <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button
-                      className={styles.primary}
-                      type="primary"
-                      htmlType="submit"
-                    >
-                      SUBMIT
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </div>
+                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                  <Button
+                    className={styles.primary}
+                    type="primary"
+                    htmlType="submit"
+                  >
+                    SUBMIT
+                  </Button>
+                </Form.Item>
+              </Form>
             </div>
           </div>
-        </Spin>
+        </div>
       </div>
     </>
   );

@@ -5,10 +5,11 @@ import { useRouter } from "next/router";
 import styles from "../src/styles/upload.module.css";
 import Image from "next/image";
 import URLObj from "../src/components/baseURL";
-import { FloatButton, Input, Spin, Upload, message } from "antd";
+import { FloatButton, Input, Upload, message } from "antd";
 import Side from "../src/components/Common/Side";
 import Top from "../src/components/Common/Top";
 import { useUser } from "../src/components/context/userContext";
+import Spinner from "../src/components/Common/Spinner";
 
 const Publications = () => {
   // HOOKS
@@ -102,66 +103,61 @@ const Publications = () => {
       </Head>
 
       <div className={styles.wrapper}>
-        <Spin
-          className="spinner"
-          spinning={visible}
-          size="large"
-          tip="Please wait as page loads"
-        >
-          <FloatButton.BackTop
-            style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-          />
+        <Spinner show={visible} />
 
-          <div style={{ paddingLeft: "18vw" }}>
-            <Side />
+        <FloatButton.BackTop
+          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
+        />
 
-            <div className={styles.upload_wrapper}>
-              <Top />
+        <div style={{ paddingLeft: "18vw" }}>
+          <Side />
 
-              <div className={styles.upload_left}>
-                <Dragger
-                  name="file"
-                  multiple={false}
-                  style={{ border: "none", width: "65vw" }}
-                  beforeUpload={file => setFile(file)}
-                >
-                  <Image
-                    width={60}
-                    height={60}
-                    alt="ADD"
-                    src="/upload.png"
-                    className={styles.upload_img}
-                  />
-                  <div className={styles.upload_title}>Add a file</div>
+          <div className={styles.upload_wrapper}>
+            <Top />
 
-                  <div className={styles.upload_msg}>
-                    Click or drag file to this area to upload
-                  </div>
-                </Dragger>
+            <div className={styles.upload_left}>
+              <Dragger
+                name="file"
+                multiple={false}
+                style={{ border: "none", width: "65vw" }}
+                beforeUpload={file => setFile(file)}
+              >
+                <Image
+                  width={60}
+                  height={60}
+                  alt="ADD"
+                  src="/upload.png"
+                  className={styles.upload_img}
+                />
+                <div className={styles.upload_title}>Add a file</div>
 
-                <div className={styles.upload_msg}>Or add a file using DOI</div>
-                <div className={styles.flex}>
-                  <Input
-                    className={styles.upload_input2}
-                    placeholder="enter doi here"
-                    onChange={e => setDOI(e.target.value)}
-                    onPressEnter={searchDOI}
-                  />
-
-                  {searching ? (
-                    <div className={styles.upload_btn}>
-                      <div className={styles.dots} />
-                    </div>
-                  ) : (
-                    <div onClick={searchDOI} className={styles.upload_btn}>
-                      Add DOI
-                    </div>
-                  )}
+                <div className={styles.upload_msg}>
+                  Click or drag file to this area to upload
                 </div>
+              </Dragger>
+
+              <div className={styles.upload_msg}>Or add a file using DOI</div>
+              <div className={styles.flex}>
+                <Input
+                  className={styles.upload_input2}
+                  placeholder="enter doi here"
+                  onChange={e => setDOI(e.target.value)}
+                  onPressEnter={searchDOI}
+                />
+
+                {searching ? (
+                  <div className={styles.upload_btn}>
+                    <div className={styles.dots} />
+                  </div>
+                ) : (
+                  <div onClick={searchDOI} className={styles.upload_btn}>
+                    Add DOI
+                  </div>
+                )}
               </div>
             </div>
           </div>
-        </Spin>
+        </div>
       </div>
     </>
   );

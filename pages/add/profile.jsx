@@ -1,5 +1,5 @@
 import { Button, DatePicker, FloatButton, Form, Radio, Upload } from "antd";
-import { Input, Spin, message } from "antd";
+import { Input, message } from "antd";
 import styles from "../../src/styles/add.module.css";
 import Head from "next/head";
 import { useEffect, useState } from "react";
@@ -10,6 +10,7 @@ import axios from "axios";
 import URLObj from "../../src/components/baseURL";
 import { useUser } from "../../src/components/context/userContext";
 import { useAccess } from "../../src/components/context/accessContext";
+import Spinner from "../../src/components/Common/Spinner";
 
 const Faculty = () => {
   // HOOKS
@@ -92,99 +93,95 @@ const Faculty = () => {
       </Head>
 
       <div className={styles.wrapper}>
-        <Spin
-          className="spinner"
-          spinning={visible}
-          size="large"
-          tip="Please wait as page loads"
-        >
-          <FloatButton.BackTop
-            style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-          />
+        <Spinner show={visible} />
 
-          <div style={{ paddingLeft: "18vw" }}>
-            <Side />
+        <FloatButton.BackTop
+          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
+        />
 
-            <div className={styles.container}>
-              <Top />
+        <div style={{ paddingLeft: "18vw" }}>
+          <Side />
 
-              <div className={styles.formContainer}>
-                <h1 className={styles.heading}>Add Faculty</h1>
+          <div className={styles.container}>
+            <Top />
 
-                <Form
-                  name="Faculty"
-                  form={form}
-                  style={{ width: "80vw", padding: "0 10vw" }}
-                  onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
+            <div className={styles.formContainer}>
+              <h1 className={styles.heading}>Add Faculty</h1>
+
+              <Form
+                name="Faculty"
+                form={form}
+                style={{ width: "80vw", padding: "0 10vw" }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+              >
+                <Form.Item
+                  label="First Name"
+                  name="first_name"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your first name!",
+                    },
+                  ]}
                 >
-                  <Form.Item
-                    label="First Name"
-                    name="first_name"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your first name!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
+                  <Input />
+                </Form.Item>
 
-                  <Form.Item label="Middle Name" name="middle_name">
-                    <Input />
-                  </Form.Item>
+                <Form.Item label="Middle Name" name="middle_name">
+                  <Input />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Last Name"
-                    name="last_name"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your last name!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
+                <Form.Item
+                  label="Last Name"
+                  name="last_name"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your last name!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Date of Birth"
-                    name="age"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your age!",
-                      },
-                    ]}
-                  >
-                    <DatePicker style={{ width: "100%" }} format="YYYY-MM-DD" />
-                  </Form.Item>
+                <Form.Item
+                  label="Date of Birth"
+                  name="age"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your age!",
+                    },
+                  ]}
+                >
+                  <DatePicker style={{ width: "100%" }} format="YYYY-MM-DD" />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Department"
-                    name="department"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your department!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
+                <Form.Item
+                  label="Department"
+                  name="department"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your department!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Access Level"
-                    name="access_level"
-                    rules={[
-                      { required: true, message: "Please input access level!" },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
+                <Form.Item
+                  label="Access Level"
+                  name="access_level"
+                  rules={[
+                    { required: true, message: "Please input access level!" },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
 
-                  {/* <Form.Item
+                {/* <Form.Item
                     label="Mobile"
                     name="mobile"
                     rules={[
@@ -194,7 +191,7 @@ const Faculty = () => {
                     <Input />
                   </Form.Item> */}
 
-                  {/* <Form.Item
+                {/* <Form.Item
                     label="Gender"
                     name="gender"
                     rules={[
@@ -211,65 +208,63 @@ const Faculty = () => {
                     </Radio.Group>
                   </Form.Item> */}
 
-                  <Form.Item
-                    label="Profile Picture"
-                    name="picture"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your profile picture!",
-                      },
-                    ]}
+                <Form.Item
+                  label="Profile Picture"
+                  name="picture"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your profile picture!",
+                    },
+                  ]}
+                >
+                  <Upload
+                    maxCount={1}
+                    listType="picture"
+                    beforeUpload={file => {
+                      const isJpgOrPng =
+                        file.type === "image/png" ||
+                        file.type === "image/jpeg" ||
+                        file.type === "image/jpg";
+
+                      if (isJpgOrPng) {
+                        setFile(file);
+                        message.success("JPEG/PNG file uploaded successfully");
+                      } else {
+                        message.error("You can only upload JPG/PNG file!");
+                      }
+
+                      return isJpgOrPng || Upload.LIST_IGNORE;
+                    }}
                   >
-                    <Upload
-                      maxCount={1}
-                      listType="picture"
-                      beforeUpload={file => {
-                        const isJpgOrPng =
-                          file.type === "image/png" ||
-                          file.type === "image/jpeg" ||
-                          file.type === "image/jpg";
+                    <Button>Click to Upload</Button>
+                  </Upload>
+                </Form.Item>
 
-                        if (isJpgOrPng) {
-                          setFile(file);
-                          message.success(
-                            "JPEG/PNG file uploaded successfully"
-                          );
-                        } else {
-                          message.error("You can only upload JPG/PNG file!");
-                        }
+                <Form.Item
+                  label="Designation"
+                  name="designation"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your designation!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
 
-                        return isJpgOrPng || Upload.LIST_IGNORE;
-                      }}
-                    >
-                      <Button>Click to Upload</Button>
-                    </Upload>
-                  </Form.Item>
+                <Form.Item
+                  label="Email"
+                  name="email"
+                  rules={[
+                    { required: true, message: "Please input your email!" },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Designation"
-                    name="designation"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your designation!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Email"
-                    name="email"
-                    rules={[
-                      { required: true, message: "Please input your email!" },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  {/* <Form.Item
+                {/* <Form.Item
                     label="Username"
                     name="username"
                     rules={[
@@ -282,27 +277,26 @@ const Faculty = () => {
                     <Input />
                   </Form.Item> */}
 
-                  <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button
-                      className={styles.primary}
-                      type="primary"
-                      htmlType="submit"
-                    >
-                      Submit
-                    </Button>
-                    <Button
-                      className={styles.secondary}
-                      type="primary"
-                      htmlType="reset"
-                    >
-                      Reset
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </div>
+                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                  <Button
+                    className={styles.primary}
+                    type="primary"
+                    htmlType="submit"
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    className={styles.secondary}
+                    type="primary"
+                    htmlType="reset"
+                  >
+                    Reset
+                  </Button>
+                </Form.Item>
+              </Form>
             </div>
           </div>
-        </Spin>
+        </div>
       </div>
     </>
   );

@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import styles from "../../src/styles/file.module.css";
 import React, { useState, useEffect } from "react";
-import { FloatButton, Spin, message } from "antd";
+import { FloatButton, message } from "antd";
 import Side from "../../src/components/Common/Side";
 import Top from "../../src/components/Common/Top";
 import IPRInfo from "../../src/components/Add/IPRInfo";
@@ -69,56 +69,51 @@ const IPR = () => {
       </Head>
 
       <div className={styles.wrapper}>
-        <Spin
-          className="spinner"
-          spinning={visible}
-          size="large"
-          tip="Please wait as page loads"
-        >
-          <FloatButton.BackTop
-            style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-          />
+        <Spinner show={visible} />
 
-          <div style={{ paddingLeft: "18vw" }}>
-            <Side />
+        <FloatButton.BackTop
+          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
+        />
 
-            <div className={styles.file_wrapper}>
-              <Top />
+        <div style={{ paddingLeft: "18vw" }}>
+          <Side />
 
-              <div>
-                <IPRInfo user={user} setv={setVisible} ID={ID} />
+          <div className={styles.file_wrapper}>
+            <Top />
 
-                <div className={styles.file_btns}>
-                  {[
-                    {
-                      name: "Delete",
-                      function: deleteIPR,
-                      class: styles.file_btn2,
-                    },
-                    {
-                      name: "Edit Info",
-                      function: editIPR,
-                      class: styles.file_btn1,
-                    },
-                    {
-                      name: "Download",
-                      function: downloadIPR,
-                      class: styles.file_btn2,
-                    },
-                  ].map(btn => (
-                    <div
-                      key={btn.name}
-                      onClick={btn.function}
-                      className={btn.class}
-                    >
-                      {btn.name.toUpperCase()}
-                    </div>
-                  ))}
-                </div>
+            <div>
+              <IPRInfo user={user} setv={setVisible} ID={ID} />
+
+              <div className={styles.file_btns}>
+                {[
+                  {
+                    name: "Delete",
+                    function: deleteIPR,
+                    class: styles.file_btn2,
+                  },
+                  {
+                    name: "Edit Info",
+                    function: editIPR,
+                    class: styles.file_btn1,
+                  },
+                  {
+                    name: "Download",
+                    function: downloadIPR,
+                    class: styles.file_btn2,
+                  },
+                ].map(btn => (
+                  <div
+                    key={btn.name}
+                    onClick={btn.function}
+                    className={btn.class}
+                  >
+                    {btn.name.toUpperCase()}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
-        </Spin>
+        </div>
       </div>
     </>
   );

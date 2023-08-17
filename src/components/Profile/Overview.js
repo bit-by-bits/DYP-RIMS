@@ -76,9 +76,8 @@ const Overview = ({
   }, [user?.token]);
 
   useEffect(() => {
-    const check = (val1, val2, val3) => {
+    const check = (val1, val2) => {
       if (mode == "two" || access == 1) return val1;
-      else if (access == 2) return val2;
       else return val2;
     };
 
@@ -88,79 +87,57 @@ const Overview = ({
     const { counts } = two;
 
     setOverview({
-      publication: check(data?.publications?.length, counts?.publication, 0),
-      conferences: check(data?.conferences?.length, counts?.conference, 0),
-      papers: check(extra?.papers, counts?.papers, 0),
-      posters: check(extra?.posters, counts?.posters, 0),
-      books: check(data?.books?.length, counts?.books, 0),
-      research: check(data?.projects?.length, counts?.projects, 0),
-      funds: check(extra?.funds, sum(counts?.funds), 0),
-      awards: check(data?.awards?.length, counts?.awards, 0),
-      students: check(data?.students_guided?.length, counts?.students, 0),
-      IPR: check(data?.IPR?.length, counts?.ipr, 0),
-      indexed_pubmed: check(
-        extra?.index?.pubmed,
-        counts?.indexed_at?.pubmed,
-        0
-      ),
-      indexed_scopus: check(
-        extra?.index?.scopus,
-        counts?.indexed_at?.scopus,
-        0
-      ),
-      indexed_doaj: check(extra?.index?.doaj, counts?.indexed_at?.doaj, 0),
-      indexed_wos: check(extra?.index?.wos, counts?.indexed_at?.wos, 0),
+      publication: check(data?.publications?.length, counts?.publication),
+      conferences: check(data?.conferences?.length, counts?.conference),
+      papers: check(extra?.papers, counts?.papers),
+      posters: check(extra?.posters, counts?.posters),
+      books: check(data?.books?.length, counts?.books),
+      research: check(data?.projects?.length, counts?.projects),
+      funds: check(extra?.funds, sum(counts?.funds)),
+      awards: check(data?.awards?.length, counts?.awards),
+      students: check(data?.students_guided?.length, counts?.students),
+      IPR: check(data?.IPR?.length, counts?.ipr),
+      indexed_pubmed: check(extra?.index?.pubmed, counts?.indexed_at?.pubmed),
+      indexed_scopus: check(extra?.index?.scopus, counts?.indexed_at?.scopus),
+      indexed_doaj: check(extra?.index?.doaj, counts?.indexed_at?.doaj),
+      indexed_wos: check(extra?.index?.wos, counts?.indexed_at?.wos),
       indexed_medline: check(
         extra?.index?.medline,
-        counts?.indexed_at?.medline,
-        0
+        counts?.indexed_at?.medline
       ),
-      indexed_total: check(extra?.index?.total, counts?.indexed_at?.total, 0),
-      first_author: check(stats?.FAuthor, faculty, 0),
-      Q1: check(stats?.quartiles?.Q1, counts?.quartiles?.Q1, 0),
-      Q2: check(stats?.quartiles?.Q2, counts?.quartiles?.Q2, 0),
-      Q3: check(stats?.quartiles?.Q3, counts?.quartiles?.Q3, 0),
-      Q4: check(stats?.quartiles?.Q4, counts?.quartiles?.Q4, 0),
-      null: check(stats?.quartiles?.null, counts?.quartiles?.none, 0),
+      indexed_total: check(extra?.index?.total, counts?.indexed_at?.total),
+      first_author: check(stats?.FAuthor, faculty),
+      Q1: check(stats?.quartiles?.Q1, counts?.quartiles?.Q1),
+      Q2: check(stats?.quartiles?.Q2, counts?.quartiles?.Q2),
+      Q3: check(stats?.quartiles?.Q3, counts?.quartiles?.Q3),
+      Q4: check(stats?.quartiles?.Q4, counts?.quartiles?.Q4),
+      null: check(stats?.quartiles?.null, counts?.quartiles?.none),
       h_index_crossref: check(
         stats?.h_index_crossref,
-        counts?.hindex?.crossref,
-        0
+        counts?.hindex?.crossref
       ),
-      h_index_scopus: check(stats?.h_index_scopus, counts?.hindex?.scopus, 0),
-      h_index_wos: check(stats?.h_index_wos, counts?.hindex?.wos, 0),
-      impact_total: check(extra?.impact?.total, sum(counts?.impact_factor), 0),
+      h_index_scopus: check(stats?.h_index_scopus, counts?.hindex?.scopus),
+      h_index_wos: check(stats?.h_index_wos, counts?.hindex?.wos),
+      impact_total: check(extra?.impact?.total, sum(counts?.impact_factor)),
       impact_average: check(
         extra?.impact?.average,
-        sum(counts?.impact_factor) / counts?.impact_factor?.length,
-        0
+        sum(counts?.impact_factor) / counts?.impact_factor?.length
       ),
-      open_access_gold: check(extra?.access?.gold, counts?.open_alex?.gold, 0),
-      open_access_green: check(
-        extra?.access?.green,
-        counts?.open_alex?.green,
-        0
-      ),
+      open_access_gold: check(extra?.access?.gold, counts?.open_alex?.gold),
+      open_access_green: check(extra?.access?.green, counts?.open_alex?.green),
       open_access_bronze: check(
         extra?.access?.bronze,
-        counts?.open_alex?.bronze,
-        0
+        counts?.open_alex?.bronze
       ),
       citations_crossref: check(
         extra?.citations?.crossref,
-        sum(counts?.citations?.crossref),
-        0
+        sum(counts?.citations?.crossref)
       ),
       citations_scopus: check(
         extra?.citations?.scopus,
-        sum(counts?.citations?.scopus),
-        0
+        sum(counts?.citations?.scopus)
       ),
-      citations_wos: check(
-        extra?.citations?.wos,
-        sum(counts?.citations?.wos),
-        0
-      ),
+      citations_wos: check(extra?.citations?.wos, sum(counts?.citations?.wos)),
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

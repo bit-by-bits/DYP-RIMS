@@ -2,13 +2,14 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import styles from "../../src/styles/file.module.css";
 import React, { useState, useEffect } from "react";
-import { FloatButton, Spin, message } from "antd";
+import { FloatButton, message } from "antd";
 import Side from "../../src/components/Common/Side";
 import Top from "../../src/components/Common/Top";
 import ConferenceInfo from "../../src/components/Add/ConferenceInfo";
 import URLObj from "../../src/components/baseURL";
 import axios from "axios";
 import { useUser } from "../../src/components/context/userContext";
+import Spinner from "../../src/components/Common/Spinner";
 
 const Conference = () => {
   // HOOKS
@@ -69,56 +70,51 @@ const Conference = () => {
       </Head>
 
       <div className={styles.wrapper}>
-        <Spin
-          className="spinner"
-          spinning={visible}
-          size="large"
-          tip="Please wait as page loads"
-        >
-          <FloatButton.BackTop
-            style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-          />
+        <Spinner show={visible} />
 
-          <div style={{ paddingLeft: "18vw" }}>
-            <Side />
+        <FloatButton.BackTop
+          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
+        />
 
-            <div className={styles.file_wrapper}>
-              <Top />
+        <div style={{ paddingLeft: "18vw" }}>
+          <Side />
 
-              <div>
-                <ConferenceInfo user={user} setv={setVisible} ID={ID} />
+          <div className={styles.file_wrapper}>
+            <Top />
 
-                <div className={styles.file_btns}>
-                  {[
-                    {
-                      name: "Delete",
-                      function: deleteConf,
-                      class: styles.file_btn2,
-                    },
-                    {
-                      name: "Edit Info",
-                      function: editConf,
-                      class: styles.file_btn1,
-                    },
-                    {
-                      name: "Download",
-                      function: downloadConf,
-                      class: styles.file_btn2,
-                    },
-                  ].map(btn => (
-                    <div
-                      key={btn.name}
-                      onClick={btn.function}
-                      className={btn.class}
-                    >
-                      {btn.name.toUpperCase()}
-                    </div>
-                  ))}
-                </div>
+            <div>
+              <ConferenceInfo user={user} setv={setVisible} ID={ID} />
+
+              <div className={styles.file_btns}>
+                {[
+                  {
+                    name: "Delete",
+                    function: deleteConf,
+                    class: styles.file_btn2,
+                  },
+                  {
+                    name: "Edit Info",
+                    function: editConf,
+                    class: styles.file_btn1,
+                  },
+                  {
+                    name: "Download",
+                    function: downloadConf,
+                    class: styles.file_btn2,
+                  },
+                ].map(btn => (
+                  <div
+                    key={btn.name}
+                    onClick={btn.function}
+                    className={btn.class}
+                  >
+                    {btn.name.toUpperCase()}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
-        </Spin>
+        </div>
       </div>
     </>
   );

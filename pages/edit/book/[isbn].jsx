@@ -7,8 +7,9 @@ import Side from "../../../src/components/Common/Side";
 import Top from "../../../src/components/Common/Top";
 import URLObj from "../../../src/components/baseURL";
 import { Button, DatePicker, FloatButton } from "antd";
-import { Spin, message, Form, Input, Select } from "antd";
+import { message, Form, Input, Select } from "antd";
 import { useUser } from "../../../src/components/context/userContext";
+import Spinner from "../../../src/components/Common/Spinner";
 
 const Books = () => {
   // HOOKS
@@ -105,135 +106,130 @@ const Books = () => {
       </Head>
 
       <div className={styles.wrapper}>
-        <Spin
-          className="spinner"
-          spinning={visible}
-          size="large"
-          tip="Please wait as page loads"
-        >
-          <FloatButton.BackTop
-            style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-          />
+        <Spinner show={visible} />
 
-          <div style={{ paddingLeft: "18vw" }}>
-            <Side />
+        <FloatButton.BackTop
+          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
+        />
 
-            <div className={styles.container}>
-              <Top />
+        <div style={{ paddingLeft: "18vw" }}>
+          <Side />
 
-              <div className={styles.formContainer}>
-                <h1 className={styles.heading}>Edit Books/Chapters</h1>
+          <div className={styles.container}>
+            <Top />
 
-                <Form
-                  name="book"
-                  form={form}
-                  style={{ width: "80vw", padding: "0 10vw" }}
-                  initialValues={
-                    initialValues ?? {
-                      faculty: user?.name,
-                      department: user?.department,
-                      isbn: ISBN,
-                    }
+            <div className={styles.formContainer}>
+              <h1 className={styles.heading}>Edit Books/Chapters</h1>
+
+              <Form
+                name="book"
+                form={form}
+                style={{ width: "80vw", padding: "0 10vw" }}
+                initialValues={
+                  initialValues ?? {
+                    faculty: user?.name,
+                    department: user?.department,
+                    isbn: ISBN,
                   }
-                  onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
+                }
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+              >
+                <Form.Item
+                  label="Name Of Faculty"
+                  name="faculty"
+                  rules={[
+                    { required: true, message: "Please input faculty name!" },
+                  ]}
                 >
-                  <Form.Item
-                    label="Name Of Faculty"
-                    name="faculty"
-                    rules={[
-                      { required: true, message: "Please input faculty name!" },
-                    ]}
+                  <Input disabled />
+                </Form.Item>
+
+                <Form.Item
+                  label="Department"
+                  name="department"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your department!",
+                    },
+                  ]}
+                >
+                  <Input disabled />
+                </Form.Item>
+
+                <Form.Item
+                  label="Publication Type"
+                  name="type"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input publication type!",
+                    },
+                  ]}
+                >
+                  <Select showSearch placeholder="Select a type" allowClear>
+                    <Select.Option value="book">Book</Select.Option>
+                    <Select.Option value="chapter">Chapter</Select.Option>
+                  </Select>
+                </Form.Item>
+
+                <Form.Item label="Chapter Title" name="title">
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  label="Book Title"
+                  name="book"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input the book name!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  label="Year Published"
+                  name="year"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter publishing year!",
+                    },
+                  ]}
+                >
+                  <DatePicker style={{ width: "100%" }} format="YYYY" />
+                </Form.Item>
+
+                <Form.Item
+                  label="ISBN Number"
+                  name="isbn"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input ISBN number!",
+                    },
+                  ]}
+                >
+                  {ISBN ? <Input disabled /> : <Input />}
+                </Form.Item>
+
+                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                  <Button
+                    type="primary"
+                    className={styles.primary}
+                    htmlType="submit"
                   >
-                    <Input disabled />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Department"
-                    name="department"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your department!",
-                      },
-                    ]}
-                  >
-                    <Input disabled />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Publication Type"
-                    name="type"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input publication type!",
-                      },
-                    ]}
-                  >
-                    <Select showSearch placeholder="Select a type" allowClear>
-                      <Select.Option value="book">Book</Select.Option>
-                      <Select.Option value="chapter">Chapter</Select.Option>
-                    </Select>
-                  </Form.Item>
-
-                  <Form.Item label="Chapter Title" name="title">
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Book Title"
-                    name="book"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input the book name!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Year Published"
-                    name="year"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter publishing year!",
-                      },
-                    ]}
-                  >
-                    <DatePicker style={{ width: "100%" }} format="YYYY" />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="ISBN Number"
-                    name="isbn"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input ISBN number!",
-                      },
-                    ]}
-                  >
-                    {ISBN ? <Input disabled /> : <Input />}
-                  </Form.Item>
-
-                  <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button
-                      type="primary"
-                      className={styles.primary}
-                      htmlType="submit"
-                    >
-                      SUBMIT
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </div>
+                    SUBMIT
+                  </Button>
+                </Form.Item>
+              </Form>
             </div>
           </div>
-        </Spin>
+        </div>
       </div>
     </>
   );
