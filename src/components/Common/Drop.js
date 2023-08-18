@@ -31,11 +31,18 @@ const Drop = () => {
             .map((e, i) => ({
               key: `${i + 1}`,
               label: `${e} Level`,
+              style:
+                i + 1 === access
+                  ? { color: "white", backgroundColor: "#9a2827" }
+                  : { fontWeight: 500 },
             })),
           onClick: e => change(e.key),
           selectedKeys: [`${access}`],
           selectable: true,
-          style: { textAlign: "center", border: "1px solid #9a2827" },
+          style: {
+            textAlign: "center",
+            border: "2px solid #9a2827",
+          },
         }}
       >
         <Button

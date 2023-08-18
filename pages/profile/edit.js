@@ -91,7 +91,7 @@ const Edit = () => {
           style={{ left: 30, bottom: 30, borderRadius: "50%" }}
         />
 
-        <div style={{ paddingLeft: "18vw" }}>
+        <div style={{ paddingLeft: "20vw" }}>
           <Side />
 
           <div className={styles.container}>

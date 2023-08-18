@@ -86,7 +86,7 @@ html {
 
 .ant-table-wrapper table {
   table-layout: fixed !important;
-  max-width: calc(100vw - 18vw - 4rem) !important;
+  max-width: calc(100vw - 20vw - 4rem) !important;
 }
 
 .ant-table-thead .ant-table-cell,
@@ -179,7 +179,7 @@ a.ant-typography-expand {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1001;
+  z-index: 10001;
   background-color: rgba(256, 256, 256, 0.9) !important;
 }
 
@@ -197,6 +197,12 @@ a.ant-typography-expand {
   font-weight: bold;
 }
 
+/* MESSAGE */
+
+.ant-message {
+  z-index: 10002;
+}
+
 /* SIDE MENU */
 
 .sideMenu {
@@ -206,7 +212,7 @@ a.ant-typography-expand {
   border: none;
   padding: 10px 0 5px 0;
   margin: 0 10px;
-  width: calc(18vw - 20px);
+  width: calc(20vw - 20px);
 }
 
 .sideMenu .ant-menu-item a:hover {

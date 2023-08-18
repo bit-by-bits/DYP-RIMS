@@ -15,6 +15,9 @@ export default function Home() {
   const router = useRouter();
   const { user, change } = useUser();
 
+  const { useMessage } = message;
+  const [messageApi, contextHolder] = useMessage();
+
   // STATES
 
   const [visible, setVisible] = useState(true);
@@ -22,18 +25,13 @@ export default function Home() {
   // EFFECTS
 
   useEffect(() => {
-    if (user?.token && user?.setUpTime && !user?.name) {
-      if (user.setUpTime + 86400000 > Date.now()) {
+    if (user && user?.token && user?.name) {
+      if (user?.setUpTime + 24 * 60 * 60 * 1000 > Date.now()) {
         router.push("/profile");
         message.success("Session Restored");
-      } else {
-        change({});
-        message.error("Session Expired");
       }
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user, router]);
 
   useEffect(() => {
     /* global google */
@@ -52,6 +50,12 @@ export default function Home() {
         })
           .then(res => {
             const TOKEN = res.data?.token;
+
+            messageApi.open({
+              key: "login",
+              type: "loading",
+              content: "Please wait while we log you in",
+            });
 
             axios({
               method: "GET",
@@ -84,12 +88,24 @@ export default function Home() {
                   access: 1,
                 });
 
-                message.success("Login Successful");
+                messageApi.open({
+                  key: "login",
+                  type: "success",
+                  content: "Login Successful",
+                  duration: 4,
+                });
+
                 router.push("/profile");
               })
               .catch(err => {
                 console.log(err);
-                message.error("Login Failed");
+
+                messageApi.open({
+                  key: "login",
+                  type: "error",
+                  content: "Login Failed",
+                  duration: 2,
+                });
               });
           })
           .catch(err => {
@@ -122,6 +138,7 @@ export default function Home() {
         <link rel="icon" href="logos/dpu-2.png" />
       </Head>
 
+      {contextHolder}
       <Spinner show={visible} />
 
       <div className={styles.main}>
