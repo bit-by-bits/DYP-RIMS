@@ -6,7 +6,7 @@ import styles from "../../../src/styles/add.module.css";
 import Side from "../../../src/components/Common/Side";
 import Top from "../../../src/components/Common/Top";
 import URLObj from "../../../src/components/baseURL";
-import { Button, DatePicker, FloatButton } from "antd";
+import { Button, DatePicker } from "antd";
 import { message, Form, Input, Select } from "antd";
 import { useUser } from "../../../src/components/context/userContext";
 import Spinner from "../../../src/components/Common/Spinner";
@@ -108,10 +108,6 @@ const Awards = () => {
 
       <div className={styles.wrapper}>
         <Spinner show={visible} />
-
-        <FloatButton.BackTop
-          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-        />
 
         <div style={{ paddingLeft: "20vw" }}>
           <Side />

@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import styles from "../src/styles/upload.module.css";
 import Image from "next/image";
 import URLObj from "../src/components/baseURL";
-import { FloatButton, Input, Upload, message } from "antd";
+import { Input, Upload, message } from "antd";
 import Side from "../src/components/Common/Side";
 import Top from "../src/components/Common/Top";
 import { useUser } from "../src/components/context/userContext";
@@ -104,10 +104,6 @@ const Publications = () => {
 
       <div className={styles.wrapper}>
         <Spinner show={visible} />
-
-        <FloatButton.BackTop
-          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-        />
 
         <div style={{ paddingLeft: "20vw" }}>
           <Side />

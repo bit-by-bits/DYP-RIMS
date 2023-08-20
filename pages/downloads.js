@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import styles2 from "../src/styles/add.module.css";
 import { useUser } from "../src/components/context/userContext";
 import { Form, Radio, message, Table } from "antd";
-import { Button, DatePicker, FloatButton, Select } from "antd";
+import { Button, DatePicker, Select } from "antd";
 import Spinner from "../src/components/Common/Spinner";
 
 const Downloads = () => {
@@ -109,10 +109,6 @@ const Downloads = () => {
 
       <div className={styles2.wrapper}>
         <Spinner show={visible} />
-
-        <FloatButton.BackTop
-          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-        />
 
         <div style={{ paddingLeft: "20vw" }}>
           <Side />

@@ -1,4 +1,4 @@
-import { Button, FloatButton, Form, Input, Select, message } from "antd";
+import { Button, Form, Input, Select, message } from "antd";
 import axios from "axios";
 import Head from "next/head";
 import { useEffect, useState } from "react";
@@ -105,10 +105,6 @@ const Student = () => {
 
       <div className={styles.wrapper}>
         <Spinner show={visible} />
-
-        <FloatButton.BackTop
-          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-        />
 
         <div style={{ paddingLeft: "20vw" }}>
           <Side />

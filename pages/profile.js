@@ -4,7 +4,7 @@ import URLObj from "../src/components/baseURL";
 import styles from "../src/styles/profile.module.css";
 import { useState, useEffect, useMemo } from "react";
 import { InboxOutlined } from "@ant-design/icons";
-import { Button, FloatButton, Row, Col } from "antd";
+import { Button, Row, Col } from "antd";
 import { Table, Modal, Upload, message, DatePicker } from "antd";
 
 import Top from "../src/components/Common/Top";
@@ -26,6 +26,7 @@ import useExtraSetter from "../src/utils/dataSetters/useExtraSetter";
 import ScrollBox from "../src/components/Profile/ScrollBox";
 import useDeptPubSetter from "../src/utils/dataSetters/useDeptPubSetter";
 import Spinner from "../src/components/Common/Spinner";
+import { useRouter } from "next/router";
 
 const Profile = () => {
   // HOOKS
@@ -35,6 +36,8 @@ const Profile = () => {
 
   const { user } = useUser();
   const { access } = useAccess();
+
+  const router = useRouter();
 
   const { setExtra } = useExtraSetter();
   const { deptPubData } = useDeptPubSetter();
@@ -90,6 +93,11 @@ const Profile = () => {
   // EFFECTS
 
   useEffect(() => {
+    const hash = router?.asPath?.split("#");
+    if (hash && hash?.length > 1) setSections(hash[1]);
+  }, [router]);
+
+  useEffect(() => {
     setVisible(true);
 
     if (user?.token) {
@@ -119,6 +127,7 @@ const Profile = () => {
           })
           .catch(err => {
             console.log(err);
+            message.error("Could not fetch data");
           });
       } else {
         axios({
@@ -157,6 +166,7 @@ const Profile = () => {
           })
           .catch(err => {
             console.log(err);
+            message.error("Could not fetch data");
           });
       }
     }
@@ -305,36 +315,26 @@ const Profile = () => {
       <div className={styles.wrapper}>
         <Spinner show={visible} />
 
-        <FloatButton.BackTop
-          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-        />
         <div style={{ paddingLeft: "20vw" }}>
-          <Side sets={setSections} />
+          <Side />
+
           <div className={styles.container}>
             <Top main={{ publications, setPublications, setSections }} />
             {sections == "all" && (
               <>
                 <div className={styles.section}>
-                  {access == 2 && (
-                    <div
-                      className={styles.header}
-                    >{`Department of ${user?.department}`}</div>
-                  )}
-                  {access == 1 ? (
-                    <div className={styles.sectionTop}>
-                      <div id="overview" className={styles.heading}>
-                        {`Overview: ${
-                          ["Individual", "Department", "Institute"][access - 1]
-                        } Level`}
-                      </div>
+                  <div className={styles.header}>
+                    {access == 2 && `Department of ${user?.department}`}
+                    {access == 3 &&
+                      `Dr. D.Y. Patil Medical College, Hospital and Research Centre`}
+                  </div>
+                  <div className={styles.sectionTop}>
+                    <div id="overview" className={styles.heading}>
+                      {`Overview: ${
+                        ["Individual", "Department", "Institute"][access - 1]
+                      } Level`}
                     </div>
-                  ) : (
-                    <div className={styles.sectionTop}>
-                      <div id="overview" className={styles.heading}>
-                        {`Overview: ${
-                          ["Individual", "Department", "Institute"][access - 1]
-                        } Level`}
-                      </div>
+                    {access > 1 && (
                       <div style={{ display: "flex", gap: 5 }}>
                         {[
                           ["All Time", ""],
@@ -372,8 +372,8 @@ const Profile = () => {
                           }}
                         />
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                   <Overview
                     one={{ data: data, stats: statistics_1, extra: extra_1 }}
                     two={{ counts: counts_2 }}
@@ -402,7 +402,6 @@ const Profile = () => {
                       <Col span={12}>
                         <ScrollBox
                           title="Faculty with the Highest Publications"
-                          subtitle="Interdepartmental Publications"
                           data={authorsMax_2}
                           type="auths"
                         />
@@ -410,7 +409,6 @@ const Profile = () => {
                       <Col span={12}>
                         <ScrollBox
                           title="Faculty with the Lowest Publications"
-                          subtitle="Interdepartmental Publications"
                           data={authorsMin_2}
                           type="auths"
                         />
@@ -418,13 +416,19 @@ const Profile = () => {
                     </Row>
                     <Section
                       data={publications_2}
-                      head={{ header: "", title: "Faculty Publications" }}
+                      head={{
+                        header: "",
+                        title: `${
+                          access == 2 ? "Faculty" : "Departmental"
+                        } Publications`,
+                      }}
                     />
                   </>
                 )}
               </>
             )}
-            {(sections == "all" || sections == "publications") &&
+            {((sections == "all" && access == 1) ||
+              sections == "publications") &&
               (access == 1 ? (
                 <div className={styles.section}>
                   <div className={styles.sectionTop}>
@@ -456,7 +460,10 @@ const Profile = () => {
                         <Button
                           type="primary"
                           className={styles.sectionButton}
-                          onClick={() => setSections("all")}
+                          onClick={() => {
+                            setSections("all");
+                            router.push("/profile");
+                          }}
                         >
                           Return Back
                         </Button>

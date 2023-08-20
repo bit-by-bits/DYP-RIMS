@@ -1,4 +1,4 @@
-import { Button, DatePicker, FloatButton, Form } from "antd";
+import { Button, DatePicker, Form } from "antd";
 import { Input, Select, message } from "antd";
 import styles from "../../src/styles/add.module.css";
 import Head from "next/head";
@@ -94,10 +94,6 @@ const Projects = () => {
 
       <div className={styles.wrapper}>
         <Spinner show={visible} />
-
-        <FloatButton.BackTop
-          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-        />
 
         <div style={{ paddingLeft: "20vw" }}>
           <Side />

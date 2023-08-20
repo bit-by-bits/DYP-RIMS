@@ -1,7 +1,7 @@
-import { Button, Menu, Popconfirm, Skeleton, message } from "antd";
-import { createElement, useState, useEffect } from "react";
+import { Button, FloatButton, Menu, Popconfirm, Skeleton, message } from "antd";
+import { createElement, useState, useEffect, useRef } from "react";
 import { BookOutlined, TrophyOutlined } from "@ant-design/icons";
-import { UserAddOutlined } from "@ant-design/icons";
+import { UpCircleOutlined, UserAddOutlined } from "@ant-design/icons";
 import { HomeOutlined, BulbOutlined, MessageOutlined } from "@ant-design/icons";
 import { DownloadOutlined, FileTextOutlined } from "@ant-design/icons";
 import { ProjectOutlined, FileAddOutlined } from "@ant-design/icons";
@@ -15,8 +15,10 @@ import axios from "axios";
 import URLObj from "../baseURL";
 import { useRouter } from "next/router";
 
-const Side = ({ sets = () => {} }) => {
+const Side = () => {
   // HOOKS
+
+  const { BackTop } = FloatButton;
 
   const router = useRouter();
   const { innerWidth } = useWindowSize();
@@ -28,6 +30,7 @@ const Side = ({ sets = () => {} }) => {
 
   const [first, setFirst] = useState([]);
   const [second, setSecond] = useState([]);
+
   const [prev, setPrev] = useState(null);
   const [faculty, setFaculty] = useState([]);
 
@@ -94,22 +97,16 @@ const Side = ({ sets = () => {} }) => {
   }, [user]);
 
   useEffect(() => {
-    if (faculty) {
-      setMenuData();
-    }
+    if (faculty) setMenuData();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [faculty]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setPrev(localStorage.getItem("prev"));
-    }
+    if (typeof window !== "undefined") setPrev(localStorage.getItem("prev"));
 
     return () => {
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("prev");
-      }
+      if (typeof window !== "undefined") localStorage.removeItem("prev");
     };
   }, []);
 
@@ -119,10 +116,7 @@ const Side = ({ sets = () => {} }) => {
     axios({
       method: "GET",
       url: `${URLObj.base}/home`,
-      headers: {
-        "X-ACCESS-KEY": URLObj.key,
-        "X-AUTH-TOKEN": token,
-      },
+      headers: { "X-ACCESS-KEY": URLObj.key, "X-AUTH-TOKEN": token },
     })
       .then(resp => {
         const DATA = resp.data?.user;
@@ -222,11 +216,8 @@ const Side = ({ sets = () => {} }) => {
           <Image
             priority={true}
             className={styles.sideImage}
-            alt={user?.username ?? "user"}
-            src={
-              user?.picture ??
-              `https://xsgames.co/randomusers/avatar.php?g=${user?.gender?.toLowerCase()}`
-            }
+            alt={user?.username ?? "you"}
+            src={user?.picture ?? URLObj.dummy}
             width={100}
             height={100}
           />
@@ -254,13 +245,7 @@ const Side = ({ sets = () => {} }) => {
             <Button className={styles.sideButton} type="primary">
               <Link href="/profile/edit">Edit Profile</Link>
             </Button>
-            {access > 1 ? (
-              <Button className={styles.sideButton} type="primary">
-                <Link href="/add/profile">
-                  {innerWidth > 1600 ? "Add/Edit Faculty" : "Add Faculty"}
-                </Link>
-              </Button>
-            ) : (
+            {access == 1 ? (
               prev && (
                 <Button
                   onClick={() => switchUser(JSON.parse(prev)?.token, 2)}
@@ -270,16 +255,26 @@ const Side = ({ sets = () => {} }) => {
                   Return Back
                 </Button>
               )
+            ) : (
+              <Button className={styles.sideButton} type="primary">
+                {access == 2 ? (
+                  <Link href="/add/profile">Add/Edit Faculty</Link>
+                ) : (
+                  <Link href="/add/department">
+                    {innerWidth > 1600
+                      ? "Add/Edit Department"
+                      : "Add/Edit Dept"}
+                  </Link>
+                )}
+              </Button>
             )}
           </div>
         </div>
       </Skeleton>
-
       <Menu
         mode="inline"
         className="sideMenu"
         selectable={false}
-        onClick={() => sets("all")}
         items={[
           { link: "/profile", icon: HomeOutlined, label: "Home" },
           { link: "/downloads", icon: DownloadOutlined, label: "Downloads" },
@@ -288,6 +283,8 @@ const Side = ({ sets = () => {} }) => {
         ]
           ?.filter((_, i) => (access > 1 ? true : i < 3))
           ?.map((item, index) => {
+            if (index == 2 && access > 1) return null;
+
             const ITEM = {
               key: `${index}`,
               icon: createElement(item.icon),
@@ -310,7 +307,6 @@ const Side = ({ sets = () => {} }) => {
         mode="inline"
         className="sideMenu"
         selectable={false}
-        onClick={() => sets("all")}
         items={[
           {
             link: "/profile#publications",
@@ -352,6 +348,10 @@ const Side = ({ sets = () => {} }) => {
           icon: createElement(item.icon),
           label: <Link href={item.link}>{item.label}</Link>,
         }))}
+      />
+      <BackTop
+        icon={<UpCircleOutlined />}
+        style={{ left: 30, bottom: 30, borderRadius: "50%" }}
       />
     </div>
   );

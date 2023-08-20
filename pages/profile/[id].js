@@ -2,7 +2,7 @@ import Head from "next/head";
 import styles from "../../src/styles/profile.module.css";
 import React, { useState, useEffect, useMemo } from "react";
 import { InboxOutlined } from "@ant-design/icons";
-import { Button, FloatButton } from "antd";
+import { Button } from "antd";
 import { Table, Modal, Upload, message } from "antd";
 import axios from "axios";
 
@@ -203,11 +203,9 @@ const Profile = () => {
       <div className={styles.wrapper}>
         <Spinner show={visible} />
 
-        <FloatButton.BackTop
-          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-        />
         <div style={{ paddingLeft: "20vw" }}>
-          <Side sets={setSections} />
+          <Side />
+
           <div className={styles.container}>
             <Top main={{ publications, setPublications, setSections }} />
             {sections == "all" && (
@@ -258,7 +256,10 @@ const Profile = () => {
                       <Button
                         type="primary"
                         className={styles.sectionButton}
-                        onClick={() => setSections("all")}
+                        onClick={() => {
+                          setSections("all");
+                          router.push("/profile");
+                        }}
                       >
                         Return Back
                       </Button>

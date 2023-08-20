@@ -82,6 +82,25 @@ html {
   font-weight: 500 !important;
 }
 
+/* BUTTON */
+
+.ant-btn-default:hover {
+  color: var(--primary) !important;
+  border-color: var(--primary) !important;
+}
+
+/* TABS */
+
+.ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn,
+.ant-tabs .ant-tabs-tab:hover,
+.ant-tabs .ant-tabs-tab-btn:active {
+  color: var(--primary) !important;
+}
+
+.ant-tabs .ant-tabs-ink-bar {
+  background-color: var(--primary);
+}
+
 /* TABLE */
 
 .ant-table-wrapper table {
@@ -165,6 +184,26 @@ a.ant-typography-expand {
   padding: 0 10px;
   background-color: #f7f7f7;
   border-color: grey !important;
+}
+
+.ant-input:hover,
+.ant-input-focused,
+.ant-input:focus {
+  border-color: var(--primary);
+}
+
+/* SELECT */
+
+.ant-select:hover .ant-select-selector,
+.ant-select-focused .ant-select-selector {
+  border-color: var(--primary) !important;
+}
+
+/* PICKER */
+
+.ant-picker:hover,
+.ant-picker-focused {
+  border-color: var(--primary);
 }
 
 /* SPINNER */

@@ -1,14 +1,26 @@
 import { Button, Skeleton, Table } from "antd";
 import styles from "../../styles/profile.module.css";
-import React from "react";
+import React, { useEffect } from "react";
+import { useAccess } from "../context/accessContext";
+import { useRouter } from "next/router";
 
 const Section = ({
   data = { title: [], body: [] },
   head = { header: "", title: "" },
   sections = { sec: "all", setSec: () => {} },
 }) => {
+  // HOOKS
+
+  const router = useRouter();
+  const { access } = useAccess();
+
+  // EFFECTS
+
+  useEffect(() => window?.scrollTo(0, 0), []);
+
   return (
-    (sections?.sec == "all" || sections?.sec == head?.title?.toLowerCase()) && (
+    ((sections?.sec == "all" && access == 1) ||
+      sections?.sec == head?.title?.toLowerCase()) && (
       <Skeleton loading={!data?.title?.length} active>
         <div className={styles.section}>
           <div id={head?.title?.toLowerCase()} className={styles.header}>
@@ -32,7 +44,10 @@ const Section = ({
               <Button
                 type="primary"
                 className={styles.sectionButton}
-                onClick={() => sections?.setSec("all")}
+                onClick={() => {
+                  sections?.setSec("all");
+                  router.push("/profile");
+                }}
               >
                 Return Back
               </Button>

@@ -7,11 +7,11 @@ import Top from "../../src/components/Common/Top";
 import Spinner from "../../src/components/Common/Spinner";
 import AllowPage from "../../src/components/Common/AllowPage";
 import {
-  AddFacultyInfo,
-  EditFacultyInfo,
-} from "../../src/components/Add/FacultyInfo";
+  AddDepartmentInfo,
+  EditDepartmentInfo,
+} from "../../src/components/Add/DepartmentInfo";
 
-const Faculty = () => {
+const Department = () => {
   // HOOKS
 
   const [form] = Form.useForm();
@@ -35,7 +35,7 @@ const Faculty = () => {
   return (
     <AllowPage accesses={[3]}>
       <Head>
-        <title>DYPU RIMS | Add Faculty</title>
+        <title>DYPU RIMS | Add Department</title>
         <link rel="icon" href="../logos/dpu-2.png" />
       </Head>
 
@@ -54,13 +54,13 @@ const Faculty = () => {
               items={[
                 {
                   key: "1",
-                  label: "Add Faculty",
-                  children: <AddFacultyInfo />,
+                  label: "Add Department",
+                  children: <AddDepartmentInfo />,
                 },
                 {
                   key: "2",
-                  label: "Edit Faculty",
-                  children: <EditFacultyInfo />,
+                  label: "Edit Department",
+                  children: <EditDepartmentInfo />,
                 },
               ]}
             />
@@ -71,4 +71,4 @@ const Faculty = () => {
   );
 };
 
-export default Faculty;
+export default Department;

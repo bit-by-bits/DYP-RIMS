@@ -9,6 +9,7 @@ import { LogoutOutlined, BellOutlined } from "@ant-design/icons";
 import Drop from "./Drop";
 import { useUser } from "../context/userContext";
 import usePubSetter from "../../utils/dataSetters/usePubSetter";
+import { useAccess } from "../context/accessContext";
 
 const Top = ({ main = {} }) => {
   // STATES
@@ -21,6 +22,8 @@ const Top = ({ main = {} }) => {
 
   const { Search } = Input;
   const { user, change } = useUser();
+  const { access } = useAccess();
+
   const { pubData } = usePubSetter();
   const debouncedQuery = useDebounce(setQuery, 1000);
 
@@ -158,13 +161,15 @@ const Top = ({ main = {} }) => {
         />
       </AutoComplete>
 
-      <Button
-        type="primary"
-        className={styles.topButton}
-        onClick={() => router.push("/upload")}
-      >
-        Add Publications
-      </Button>
+      {access == 1 && (
+        <Button
+          type="primary"
+          className={styles.topButton}
+          onClick={() => router.push("/upload")}
+        >
+          Add Publications
+        </Button>
+      )}
 
       {[
         [() => change({}), <LogoutOutlined key={1} />, "Logout"],

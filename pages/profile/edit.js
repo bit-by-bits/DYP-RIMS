@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Top from "../../src/components/Common/Top";
 import styles from "../../src/styles/add.module.css";
-import { Button, DatePicker, FloatButton, Input, Radio } from "antd";
+import { Button, DatePicker, Input, Radio } from "antd";
 import { Select, Upload, Form, message } from "antd";
 import { useUser } from "../../src/components/context/userContext";
 import Spinner from "../../src/components/Common/Spinner";
@@ -86,10 +86,6 @@ const Edit = () => {
 
       <div className={styles.wrapper}>
         <Spinner show={visible} />
-
-        <FloatButton.BackTop
-          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-        />
 
         <div style={{ paddingLeft: "20vw" }}>
           <Side />

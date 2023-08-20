@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import styles from "../../src/styles/file.module.css";
 import React, { useState, useEffect } from "react";
 import FileInfo from "../../src/components/File/FileInfo";
-import { FloatButton, message } from "antd";
+import { message } from "antd";
 import Side from "../../src/components/Common/Side";
 import Top from "../../src/components/Common/Top";
 import axios from "axios";
@@ -72,10 +72,6 @@ const File = () => {
 
       <div className={styles.wrapper}>
         <Spinner show={visible} />
-
-        <FloatButton.BackTop
-          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-        />
 
         <div style={{ paddingLeft: "20vw" }}>
           <Side />

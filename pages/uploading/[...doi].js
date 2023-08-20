@@ -3,7 +3,6 @@ import Head from "next/head";
 import styles from "../../src/styles/uploading.module.css";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { FloatButton } from "antd";
 import Side from "../../src/components/Common/Side";
 import Top from "../../src/components/Common/Top";
 import FileInfo from "../../src/components/Upload/FileInfo";
@@ -50,10 +49,6 @@ const Uploading = () => {
 
       <div className={styles.wrapper}>
         <Spinner show={visible} />
-
-        <FloatButton.BackTop
-          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-        />
 
         <div style={{ paddingLeft: "20vw" }}>
           <Side />

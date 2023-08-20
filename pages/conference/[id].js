@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import styles from "../../src/styles/file.module.css";
 import React, { useState, useEffect } from "react";
-import { FloatButton, message } from "antd";
+import { message } from "antd";
 import Side from "../../src/components/Common/Side";
 import Top from "../../src/components/Common/Top";
 import ConferenceInfo from "../../src/components/Add/ConferenceInfo";
@@ -71,10 +71,6 @@ const Conference = () => {
 
       <div className={styles.wrapper}>
         <Spinner show={visible} />
-
-        <FloatButton.BackTop
-          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-        />
 
         <div style={{ paddingLeft: "20vw" }}>
           <Side />

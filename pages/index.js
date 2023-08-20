@@ -27,11 +27,19 @@ export default function Home() {
   useEffect(() => {
     if (user && user?.token && user?.name) {
       if (user?.setUpTime + 24 * 60 * 60 * 1000 > Date.now()) {
+        messageApi.open({
+          key: "login",
+          type: "success",
+          content: "Login Successful",
+          duration: 4,
+        });
+
         router.push("/profile");
-        message.success("Session Restored");
       }
     }
-  }, [user, router]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.setUpTime]);
 
   useEffect(() => {
     /* global google */
@@ -87,15 +95,6 @@ export default function Home() {
                   max_access: LEVEL?.id,
                   access: 1,
                 });
-
-                messageApi.open({
-                  key: "login",
-                  type: "success",
-                  content: "Login Successful",
-                  duration: 4,
-                });
-
-                router.push("/profile");
               })
               .catch(err => {
                 console.log(err);

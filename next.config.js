@@ -4,7 +4,7 @@ const nextConfig = {
   swcMinify: true,
   images: {
     domains: [
-      "xsgames.co",
+      "cquipsplus.ca",
       "lh3.googleusercontent.com",
       "services.journalchecker.com",
     ],

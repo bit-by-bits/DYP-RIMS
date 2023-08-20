@@ -1,4 +1,4 @@
-import { Button, DatePicker, FloatButton, Form, Radio, Upload } from "antd";
+import { Button, DatePicker, Form, Radio, Upload } from "antd";
 import { Input, message } from "antd";
 import Head from "next/head";
 import axios from "axios";
@@ -94,10 +94,6 @@ const Faculty = () => {
 
       <div className={styles.wrapper}>
         <Spinner show={visible} />
-
-        <FloatButton.BackTop
-          style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-        />
 
         <div style={{ paddingLeft: "20vw" }}>
           <Side />

@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { useRouter } from "next/router";
 import React, { useState, useEffect, useContext, createContext } from "react";
 
@@ -13,12 +14,15 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      user
-        ? Date.now() - user?.setUpTime > 86400000 &&
-          localStorage.removeItem("user")
-        : router.push("/");
-    }
+    if (typeof window !== "undefined")
+      if (
+        user &&
+        user?.setUpTime &&
+        user?.setUpTime + 24 * 60 * 60 * 1000 < Date.now()
+      ) {
+        localStorage.removeItem("user");
+        message.error("Oops! Your session ended. Try logging in again.");
+      }
   }, [user, router]);
 
   const change = newUser => {
