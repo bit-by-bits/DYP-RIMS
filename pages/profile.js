@@ -417,7 +417,6 @@ const Profile = () => {
                     <Section
                       data={publications_2}
                       head={{
-                        header: "",
                         title: `${
                           access == 2 ? "Faculty" : "Departmental"
                         } Publications`,

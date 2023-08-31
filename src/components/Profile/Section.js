@@ -18,9 +18,17 @@ const Section = ({
 
   useEffect(() => window?.scrollTo(0, 0), []);
 
+  // FUNCTIONS
+
+  const check = () => {
+    if (sections?.sec == "all" && access == 1) return true;
+    else if (sections?.sec == head?.title?.toLowerCase()) return true;
+    else if (head?.title?.includes("Publications") && access != 1) return true;
+    else return false;
+  };
+
   return (
-    ((sections?.sec == "all" && access == 1) ||
-      sections?.sec == head?.title?.toLowerCase()) && (
+    check() && (
       <Skeleton loading={!data?.title?.length} active>
         <div className={styles.section}>
           <div id={head?.title?.toLowerCase()} className={styles.header}>

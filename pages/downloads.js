@@ -63,6 +63,8 @@ const Downloads = () => {
       .then(res => {
         onReset();
         updateData(values, res.data);
+
+        console.log(res.data);
         message.success("Data fetched successfully");
       })
       .catch(err => {
@@ -92,8 +94,8 @@ const Downloads = () => {
       date: values?.mode
         ? "All"
         : values?.range?.map(i => i?.format("YYYY-MM"))?.join(" to "),
-      file: links.url,
-      softcopy: links.soft_copy,
+      file: links.url ?? "",
+      softcopy: links.soft_copy ?? "",
     };
 
     setData([DATA, ...data]);
@@ -247,15 +249,18 @@ const Downloads = () => {
                     title: item,
                     dataIndex: item?.toLowerCase(),
                     key: item?.toLowerCase(),
-                    render: a => (
-                      <Button
-                        type="primary"
-                        className={styles2.primary}
-                        onClick={() => window.open(a)}
-                      >
-                        Download
-                      </Button>
-                    ),
+                    render: a =>
+                      a ? (
+                        <Button
+                          type="primary"
+                          className={styles2.primary}
+                          onClick={() => window.open(a)}
+                        >
+                          Download
+                        </Button>
+                      ) : (
+                        "N/A"
+                      ),
                   })),
                 ]}
                 dataSource={data}
