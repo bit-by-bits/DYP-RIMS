@@ -120,7 +120,6 @@ const IPR = () => {
               <h1 className={styles.heading}>Edit IPR</h1>
 
               <Form
-                name="ipr"
                 form={form}
                 style={{ width: "80vw", padding: "0 10vw" }}
                 initialValues={

@@ -23,12 +23,14 @@ import useExtraSetter from "../../src/utils/dataSetters/useExtraSetter";
 import URLObj from "../../src/components/baseURL";
 import { useRouter } from "next/router";
 import Spinner from "../../src/components/Common/Spinner";
+import { useAccess } from "../../src/components/context/accessContext";
 
 const Profile = () => {
   // BOILERPLATE
 
   const router = useRouter();
   const { user } = useUser();
+  const { access } = useAccess();
 
   const { id } = router.query;
   const [ID, setID] = useState("");
@@ -91,7 +93,7 @@ const Profile = () => {
         headers: {
           "X-ACCESS-KEY": URLObj.key,
           "X-AUTH-TOKEN": user?.token,
-          "X-ACCESS-LEVEL": "department",
+          "X-ACCESS-LEVEL": access == 2 ? "department" : "hospital",
         },
       })
         .then(res => {

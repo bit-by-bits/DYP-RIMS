@@ -97,7 +97,6 @@ const Edit = () => {
               <h1 className={styles.heading}>Edit Profile</h1>
 
               <Form
-                name="edit"
                 form={form}
                 style={{ width: "80vw", padding: "0 10vw" }}
                 initialValues={{

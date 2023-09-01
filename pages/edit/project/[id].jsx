@@ -130,7 +130,6 @@ const Projects = () => {
               <h1 className={styles.heading}>Edit Projects</h1>
 
               <Form
-                name="project"
                 form={form}
                 style={{ width: "80vw", padding: "0 10vw" }}
                 initialValues={

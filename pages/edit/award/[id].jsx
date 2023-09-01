@@ -120,7 +120,6 @@ const Awards = () => {
 
               <Form
                 form={form}
-                name="award"
                 style={{ width: "80vw", padding: "0 10vw" }}
                 initialValues={
                   initialValues ?? {

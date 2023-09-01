@@ -169,7 +169,6 @@ const Conferences = () => {
 
               <Form
                 form={form}
-                name="conference"
                 style={{ width: "80vw", padding: "0 10vw" }}
                 initialValues={
                   initialValues ?? {

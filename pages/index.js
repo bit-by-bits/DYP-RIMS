@@ -79,7 +79,7 @@ export default function Home() {
                 const LEVEL = DATA?.access_level?.find(
                   e => e.id === Math.max(...DATA?.access_level?.map(e => e.id))
                 );
-                
+
                 localStorage?.removeItem("prev");
 
                 change({

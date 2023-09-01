@@ -10,6 +10,7 @@ import Top from "../../../src/components/Common/Top";
 import URLObj from "../../../src/components/baseURL";
 import { useUser } from "../../../src/components/context/userContext";
 import Spinner from "../../../src/components/Common/Spinner";
+import { useAccess } from "../../../src/components/context/accessContext";
 
 const Faculty = () => {
   // HOOKS
@@ -18,6 +19,7 @@ const Faculty = () => {
   const [form] = Form.useForm();
 
   const { user } = useUser();
+  const { access } = useAccess();
 
   // STATES
 
@@ -66,7 +68,7 @@ const Faculty = () => {
       headers: {
         "X-ACCESS-KEY": URLObj.key,
         "X-AUTH-TOKEN": user?.token,
-        "X-ACCESS-LEVEL": "department",
+        "X-ACCESS-LEVEL": access == 2 ? "department" : "hospital",
       },
       data: formdata,
     })
@@ -105,7 +107,6 @@ const Faculty = () => {
               <h1 className={styles.heading}>Add Faculty</h1>
 
               <Form
-                name="Faculty"
                 form={form}
                 style={{ width: "80vw", padding: "0 10vw" }}
                 onFinish={onFinish}

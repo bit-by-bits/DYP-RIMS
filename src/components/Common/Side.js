@@ -103,7 +103,7 @@ const Side = () => {
         headers: {
           "X-ACCESS-KEY": URLObj.key,
           "X-AUTH-TOKEN": user?.token,
-          "X-ACCESS-LEVEL": "department",
+          "X-ACCESS-LEVEL": access == 2 ? "department" : "hospital",
         },
       })
         .then(res => setFaculty(res.data?.faculty))
@@ -216,7 +216,7 @@ const Side = () => {
                   headers: {
                     "X-ACCESS-KEY": URLObj.key,
                     "X-AUTH-TOKEN": user?.token,
-                    "X-ACCESS-LEVEL": "department",
+                    "X-ACCESS-LEVEL": access == 2 ? "department" : "hospital",
                   },
                 })
                   .then(res => {
@@ -234,7 +234,6 @@ const Side = () => {
             >
               <Tooltip
                 placement="bottom"
-                
                 title={
                   <div style={{ display: "flex", alignItems: "center" }}>
                     <span>{child[1]}</span>

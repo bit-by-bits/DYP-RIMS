@@ -63,7 +63,7 @@ const AddFacultyInfo = () => {
       headers: {
         "X-ACCESS-KEY": URLObj.key,
         "X-AUTH-TOKEN": user?.token,
-        "X-ACCESS-LEVEL": "department",
+        "X-ACCESS-LEVEL": access == 2 ? "department" : "hospital",
       },
       data: formdata,
     })
@@ -87,7 +87,6 @@ const AddFacultyInfo = () => {
       <h1 className={styles.heading}>Add Faculty</h1>
 
       <Form
-        name="Faculty"
         form={form}
         style={{ width: "80vw", padding: "0 10vw" }}
         onFinish={onFinish}
@@ -350,7 +349,7 @@ const EditFacultyInfo = () => {
       headers: {
         "X-ACCESS-KEY": URLObj.key,
         "X-AUTH-TOKEN": user?.token,
-        "X-ACCESS-LEVEL": "department",
+        "X-ACCESS-LEVEL": access == 2 ? "department" : "hospital",
       },
       data: formdata,
     })
@@ -374,7 +373,6 @@ const EditFacultyInfo = () => {
       <h1 className={styles.heading}>Edit Faculty</h1>
 
       <Form
-        name="Faculty"
         form={form}
         style={{ width: "80vw", padding: "0 10vw" }}
         onFinish={onFinish}

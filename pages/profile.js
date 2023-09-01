@@ -138,7 +138,7 @@ const Profile = () => {
           headers: {
             "X-ACCESS-KEY": URLObj.key,
             "X-AUTH-TOKEN": user?.token,
-            "X-ACCESS-LEVEL": "department",
+            "X-ACCESS-LEVEL": access == 2 ? "department" : "hospital",
           },
         })
           .then(res => {

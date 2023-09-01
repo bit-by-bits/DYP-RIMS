@@ -118,7 +118,6 @@ const Books = () => {
               <h1 className={styles.heading}>Edit Books/Chapters</h1>
 
               <Form
-                name="book"
                 form={form}
                 style={{ width: "80vw", padding: "0 10vw" }}
                 initialValues={

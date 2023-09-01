@@ -93,7 +93,6 @@ const Students = () => {
               <h1 className={styles.heading}>Add Students Guided</h1>
 
               <Form
-                name="students"
                 form={form}
                 style={{ width: "80vw", padding: "0 10vw" }}
                 initialValues={{

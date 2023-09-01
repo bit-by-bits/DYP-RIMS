@@ -122,7 +122,6 @@ const Downloads = () => {
               <h1 className={styles2.heading}>Request Download</h1>
 
               <Form
-                name="request"
                 form={form}
                 style={{ width: "80vw", padding: "0 10vw" }}
                 onFinish={onFinish}
