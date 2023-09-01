@@ -6,6 +6,7 @@ const nextConfig = {
     domains: [
       "cquipsplus.ca",
       "lh3.googleusercontent.com",
+      "server.journalchecker.com",
       "services.journalchecker.com",
     ],
   },

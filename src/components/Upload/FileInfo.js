@@ -182,16 +182,18 @@ const FileInfo = ({ user, setp, setv, sett, DOI }) => {
         .map((e, i) => ({
           key: i,
           no: `${i + 1}.`,
-          name: e.given + " " + e.family,
+          name: `${e.given} ${e.family}${
+            e.sequence == "first" ? " (1st)" : ""
+          }`,
           sequence: e.sequence ?? "additional",
           department: e.profile?.[0]?.department?.name ?? "- NA -",
           action: (
             <div
               style={{
                 display: "flex",
+                gap: 10,
                 alignItems: "center",
                 width: "100%",
-                gap: 10,
               }}
             >
               <Button

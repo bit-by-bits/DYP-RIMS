@@ -3,15 +3,15 @@ import styles from "../../styles/profile.module.css";
 import React, { useEffect } from "react";
 import { useAccess } from "../context/accessContext";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const Section = ({
   data = { title: [], body: [] },
   head = { header: "", title: "" },
-  sections = { sec: "all", setSec: () => {} },
+  sections = { sec: "all", setSec: () => {}, setVis: () => {} },
 }) => {
   // HOOKS
 
-  const router = useRouter();
   const { access } = useAccess();
 
   // EFFECTS
@@ -27,6 +27,11 @@ const Section = ({
     else return false;
   };
 
+  const handleSpinner = () => {
+    sections?.setVis(true);
+    setTimeout(() => sections?.setVis(false), 1999);
+  };
+
   return (
     check() && (
       <Skeleton loading={!data?.title?.length} active>
@@ -40,26 +45,19 @@ const Section = ({
               {head?.title}
             </div>
 
-            {sections?.sec == "all" ? (
-              <Button
-                type="primary"
-                className={styles.sectionButton}
-                onClick={() => sections?.setSec(head?.title?.toLowerCase())}
-              >
-                View All
-              </Button>
-            ) : (
-              <Button
-                type="primary"
-                className={styles.sectionButton}
-                onClick={() => {
-                  sections?.setSec("all");
-                  router.push("/profile");
-                }}
-              >
-                Return Back
-              </Button>
-            )}
+            <Button
+              type="primary"
+              className={styles.sectionButton}
+              onClick={handleSpinner}
+            >
+              {sections?.sec == "all" ? (
+                <Link href={`/profile#${head?.title?.toLowerCase()}`}>
+                  View {head?.title}
+                </Link>
+              ) : (
+                <Link href="/profile">Back to Profile</Link>
+              )}
+            </Button>
           </div>
 
           <div className={styles.sectionBottom}>

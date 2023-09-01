@@ -146,7 +146,7 @@ const AddFacultyInfo = () => {
 
         <Form.Item
           label="Department"
-          name="Faculty"
+          name="department"
           rules={[
             {
               required: true,
@@ -433,7 +433,7 @@ const EditFacultyInfo = () => {
 
         <Form.Item
           label="Department"
-          name="Faculty"
+          name="department"
           rules={[
             {
               required: true,

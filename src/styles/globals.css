@@ -30,6 +30,15 @@ html {
   scroll-behavior: smooth;
 }
 
+/* SELECTION */
+
+::selection {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* SCROLLBAR */
+
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -240,6 +249,16 @@ a.ant-typography-expand {
 
 .ant-message {
   z-index: 10002;
+}
+
+/* POP-CONFIRM */
+
+.ant-popconfirm .ant-popconfirm-buttons .ant-btn-primary {
+  background-color: var(--primary);
+}
+
+.ant-popconfirm .ant-popconfirm-buttons .ant-btn-primary:hover {
+  background-color: var(--primary-dark);
 }
 
 /* SIDE MENU */

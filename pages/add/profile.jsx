@@ -33,7 +33,7 @@ const Faculty = () => {
   // FUNCTIONS
 
   return (
-    <AllowPage accesses={[3]}>
+    <AllowPage accesses={[2]}>
       <Head>
         <title>DYPU RIMS | Add Faculty</title>
         <link rel="icon" href="../logos/dpu-2.png" />

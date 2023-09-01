@@ -27,6 +27,7 @@ import ScrollBox from "../src/components/Profile/ScrollBox";
 import useDeptPubSetter from "../src/utils/dataSetters/useDeptPubSetter";
 import Spinner from "../src/components/Common/Spinner";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const Profile = () => {
   // HOOKS
@@ -95,6 +96,7 @@ const Profile = () => {
   useEffect(() => {
     const hash = router?.asPath?.split("#");
     if (hash && hash?.length > 1) setSections(hash[1]);
+    else setSections("all");
   }, [router]);
 
   useEffect(() => {
@@ -447,26 +449,22 @@ const Profile = () => {
                       >
                         Sorting Citations By: {sortBy_1.toUpperCase()}
                       </Button>
-                      {sections == "all" ? (
-                        <Button
-                          type="primary"
-                          className={styles.sectionButton}
-                          onClick={() => setSections("publications")}
-                        >
-                          View All
-                        </Button>
-                      ) : (
-                        <Button
-                          type="primary"
-                          className={styles.sectionButton}
-                          onClick={() => {
-                            setSections("all");
-                            router.push("/profile");
-                          }}
-                        >
-                          Return Back
-                        </Button>
-                      )}
+                      <Button
+                        type="primary"
+                        className={styles.sectionButton}
+                        onClick={() => {
+                          setVisible(true);
+                          setTimeout(() => setVisible(false), 1999);
+                        }}
+                      >
+                        {sections == "all" ? (
+                          <Link href={`/profile#publications`}>
+                            View Publications
+                          </Link>
+                        ) : (
+                          <Link href="/profile">Back to Profile</Link>
+                        )}
+                      </Button>
                     </div>
                   </div>
                   <div className={styles.sectionBottom}>
@@ -482,7 +480,11 @@ const Profile = () => {
                 <Section
                   data={publications}
                   head={{ title: "Publications" }}
-                  sections={{ sec: sections, setSec: setSections }}
+                  sections={{
+                    sec: sections,
+                    setSec: setSections,
+                    setVis: setVisible,
+                  }}
                 />
               ))}
             {[
@@ -515,7 +517,11 @@ const Profile = () => {
                 key={i}
                 data={e.data}
                 head={{ title: e.title }}
-                sections={{ sec: sections, setSec: setSections }}
+                sections={{
+                  sec: sections,
+                  setSec: setSections,
+                  setVis: setVisible,
+                }}
               />
             ))}
             <Modal

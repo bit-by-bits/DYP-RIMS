@@ -63,6 +63,7 @@ export default function Home() {
               key: "login",
               type: "loading",
               content: "Please wait while we log you in",
+              duration: 100,
             });
 
             axios({
@@ -78,7 +79,7 @@ export default function Home() {
                 const LEVEL = DATA?.access_level?.find(
                   e => e.id === Math.max(...DATA?.access_level?.map(e => e.id))
                 );
-
+                
                 localStorage?.removeItem("prev");
 
                 change({

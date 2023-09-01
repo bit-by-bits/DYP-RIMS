@@ -1,6 +1,18 @@
-import { Button, FloatButton, Menu, Popconfirm, Skeleton, message } from "antd";
-import { createElement, useState, useEffect, useRef } from "react";
-import { BookOutlined, TrophyOutlined } from "@ant-design/icons";
+import {
+  Button,
+  FloatButton,
+  Menu,
+  Popconfirm,
+  Skeleton,
+  Tooltip,
+  message,
+} from "antd";
+import { createElement, useState, useEffect } from "react";
+import {
+  BookOutlined,
+  DeleteOutlined,
+  TrophyOutlined,
+} from "@ant-design/icons";
 import { UpCircleOutlined, UserAddOutlined } from "@ant-design/icons";
 import { HomeOutlined, BulbOutlined, MessageOutlined } from "@ant-design/icons";
 import { DownloadOutlined, FileTextOutlined } from "@ant-design/icons";
@@ -25,6 +37,9 @@ const Side = () => {
 
   const { user, change: setU } = useUser();
   const { access, change: setA } = useAccess();
+
+  const { useMessage } = message;
+  const [messageApi, contextHolder] = useMessage();
 
   // DATA
 
@@ -104,10 +119,6 @@ const Side = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") setPrev(localStorage.getItem("prev"));
-
-    return () => {
-      if (typeof window !== "undefined") localStorage.removeItem("prev");
-    };
   }, []);
 
   // FUNCTIONS
@@ -142,12 +153,24 @@ const Side = () => {
           access: 1,
         });
 
-        message.success("Login Successful");
+        messageApi.open({
+          key: "login",
+          type: "success",
+          content: "Login Successful",
+          duration: 4,
+        });
+
         router.push("/profile");
       })
       .catch(err => {
         console.log(err);
-        message.error("Login Failed");
+
+        messageApi.open({
+          key: "login",
+          type: "error",
+          content: "Login Failed",
+          duration: 2,
+        });
       });
   };
 
@@ -169,15 +192,23 @@ const Side = () => {
         label: `${e.label} (${e.children?.length})`,
         children: e.children.map((child, index) => ({
           key: `3.${i}.${index}`,
+          styles: { maxWidth: "200px" },
           label: (
             <Popconfirm
               title="Switch levels"
               description="Do you want to switch to this profile?"
               onConfirm={() => {
-                localStorage.setItem(
-                  "prev",
-                  JSON.stringify({ token: user?.token })
-                );
+                const str = JSON.stringify({ token: user?.token });
+
+                setPrev(str);
+                localStorage.setItem("prev", str);
+
+                messageApi.open({
+                  key: "login",
+                  type: "loading",
+                  content: "Please wait while we log you in",
+                  duration: 100,
+                });
 
                 axios({
                   method: "PUT",
@@ -201,7 +232,23 @@ const Side = () => {
               okText="Yes"
               cancelText="No"
             >
-              {child[1]}
+              <Tooltip
+                placement="bottom"
+                
+                title={
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <span>{child[1]}</span>
+                    <DeleteOutlined
+                      style={{ cursor: "pointer", marginLeft: 5 }}
+                      onClick={() => {
+                        message.error("Not implemented yet");
+                      }}
+                    />
+                  </div>
+                }
+              >
+                {child[1]}
+              </Tooltip>
             </Popconfirm>
           ),
         })),
@@ -211,6 +258,8 @@ const Side = () => {
 
   return (
     <div className={styles.sideWrapper}>
+      {contextHolder}
+
       <Skeleton loading={!user?.name} active paragraph={{ rows: 10 }}>
         <div className={styles.sideProfile}>
           <Image
@@ -248,7 +297,18 @@ const Side = () => {
             {access == 1 ? (
               prev && (
                 <Button
-                  onClick={() => switchUser(JSON.parse(prev)?.token, 2)}
+                  onClick={() => {
+                    messageApi.open({
+                      key: "login",
+                      type: "loading",
+                      content: "Please wait while we take you back",
+                      duration: 100,
+                    });
+
+                    switchUser(JSON.parse(prev)?.token, 2);
+                    setPrev(null);
+                    localStorage.removeItem("prev");
+                  }}
                   className={styles.sideButton}
                   type="primary"
                 >
@@ -309,44 +369,44 @@ const Side = () => {
         selectable={false}
         items={[
           {
-            link: "/profile#publications",
+            link: "publications",
             icon: FileTextOutlined,
             label: "Publications",
           },
           {
-            link: "/profile#conferences",
+            link: "conferences",
             icon: MessageOutlined,
             label: "Conferences",
           },
           {
-            link: "/profile#books",
+            link: "books",
             icon: BookOutlined,
             label: "Books/Chapters",
           },
           {
-            link: "/profile#projects",
+            link: "projects",
             icon: ProjectOutlined,
             label: "Research Projects",
           },
           {
-            link: "/profile#awards",
+            link: "awards",
             icon: TrophyOutlined,
             label: "Awards",
           },
           {
-            link: "/profile#ipr",
+            link: "ipr",
             icon: BulbOutlined,
             label: "IPR",
           },
           {
-            link: "/profile#students",
+            link: "students",
             icon: UserAddOutlined,
             label: "Students Guided",
           },
         ].map((item, index) => ({
           key: String(index + 1),
           icon: createElement(item.icon),
-          label: <Link href={item.link}>{item.label}</Link>,
+          label: <Link href={`/profile#${item.link}`}>{item.label}</Link>,
         }))}
       />
       <BackTop

@@ -53,7 +53,7 @@ const Overview = ({
   // EFFECTS
 
   useEffect(() => {
-    if (user?.token) {
+    if (user?.token && access != 1) {
       axios({
         method: "GET",
         url: `${URLObj.base}/faculty/`,
@@ -73,7 +73,7 @@ const Overview = ({
         )
         .catch(err => console.log(err));
     }
-  }, [user?.token]);
+  }, [user?.token, access]);
 
   useEffect(() => {
     const check = (val1, val2) => {
