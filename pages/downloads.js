@@ -9,11 +9,13 @@ import { useUser } from "../src/components/context/userContext";
 import { Form, Radio, message, Table } from "antd";
 import { Button, DatePicker, Select } from "antd";
 import Spinner from "../src/components/Common/Spinner";
+import { useAccess } from "../src/components/context/accessContext";
 
 const Downloads = () => {
   // HOOKS
 
   const { user } = useUser();
+  const { access } = useAccess();
   const [form] = Form.useForm();
   const { RangePicker } = DatePicker;
 
@@ -26,30 +28,31 @@ const Downloads = () => {
   // EFFECTS
 
   useEffect(() => {
-    const DATA = JSON.parse(localStorage.getItem("downloads"));
-    DATA && DATA?.length && setData(DATA);
+    const DOWNLOADS = JSON.parse(localStorage.getItem("downloads"));
+    setData(DOWNLOADS?.find(i => i?.level === access)?.data ?? []);
 
     setTimeout(() => {
       setVisible(false);
     }, 1200);
-  }, []);
+  }, [access]);
 
   // FUNCTIONS
 
   const onFinish = values => {
     const formdata = new FormData();
 
-    formdata.append("export", values.export?.join(","));
+    formdata.append("export", values.export);
     formdata.append("is_softcopy_required", values.softcopy);
     formdata.append("download", values.softcopy);
-    formdata.append(
-      "date",
-      values.mode
-        ? "all"
-        : `${values.range[0].format("YYYY-MM")} ## ${values.range[1].format(
-            "YYYY-MM"
-          )}`
-    );
+
+    if (values.mode) {
+      formdata.append("date", "all");
+    } else {
+      const startDate = values.range[0]?.format("YYYY");
+      const endDate = values.range[1]?.format("YYYY");
+
+      formdata.append("date", `${startDate}-01 ## ${endDate}-01`);
+    }
 
     axios({
       method: "POST",
@@ -86,11 +89,7 @@ const Downloads = () => {
   const updateData = (values, links) => {
     const DATA = {
       key: data?.length + 1,
-      items: values?.export
-        ?.map(
-          i => i?.charAt(0).toUpperCase() + i?.slice(1)?.toLowerCase() + "s"
-        )
-        .join(", "),
+      items: values?.export?.toUpperCase(),
       date: values?.mode
         ? "All"
         : values?.range?.map(i => i?.format("YYYY-MM"))?.join(" to "),
@@ -98,8 +97,14 @@ const Downloads = () => {
       softcopy: links.soft_copy ?? "",
     };
 
-    setData([DATA, ...data]);
-    localStorage.setItem("downloads", JSON.stringify([DATA, ...data]));
+    const DOWNLOADS = [
+      ...(JSON.parse(localStorage.getItem("downloads")) ?? [])?.filter(
+        i => i?.level !== access
+      ),
+      { data: [DATA, ...data], level: access },
+    ];
+    setData(DOWNLOADS?.find(i => i?.level === access)?.data ?? []);
+    localStorage.setItem("downloads", JSON.stringify(DOWNLOADS));
   };
 
   return (
@@ -142,7 +147,6 @@ const Downloads = () => {
                     placeholder="Select what you want to download"
                     style={{ width: "100%" }}
                     showSearch
-                    mode="multiple"
                     allowClear
                   >
                     {[
@@ -151,6 +155,7 @@ const Downloads = () => {
                       "Conferences",
                       "Books",
                       "IPRs",
+                      "Projects",
                     ].map((item, index) => (
                       <Select.Option
                         key={index}
@@ -205,7 +210,7 @@ const Downloads = () => {
                       },
                     ]}
                   >
-                    <RangePicker picker="month" style={{ width: "100%" }} />
+                    <RangePicker picker="year" style={{ width: "100%" }} />
                   </Form.Item>
                 )}
 

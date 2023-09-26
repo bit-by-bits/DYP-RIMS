@@ -109,7 +109,7 @@ const Side = () => {
         .then(res => setFaculty(res.data?.faculty))
         .catch(err => console.log(err));
     }
-  }, [user]);
+  }, [access, user]);
 
   useEffect(() => {
     if (faculty) setMenuData();

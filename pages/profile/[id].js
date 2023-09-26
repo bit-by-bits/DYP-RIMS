@@ -213,7 +213,7 @@ const Profile = () => {
             {sections == "all" && (
               <div className={styles.section}>
                 <div className={styles.header}>
-                  {`${faculty?.user?.first_name} ${faculty?.user?.last_name} - ${faculty.designation}`}
+                  {`${faculty?.user?.first_name} ${faculty?.user?.last_name} - ${faculty?.designation}`}
                 </div>
                 <div className={styles.sectionTop}>
                   <div id="overview" className={styles.heading}>
