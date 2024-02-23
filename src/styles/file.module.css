@@ -43,6 +43,7 @@
 .file_keywords2 {
   display: flex;
   flex-wrap: wrap;
+  text-transform: capitalize;
   gap: 10px;
 }
 
@@ -257,6 +258,7 @@
 .uploadTableButton:hover,
 .file_btn1:hover {
   background-color: #7e1918 !important;
+  color: white !important;
 }
 
 .file_btn2:hover {

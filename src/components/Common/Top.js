@@ -4,11 +4,12 @@ import router from "next/router";
 import axios from "axios";
 import { useDebounce } from "rooks";
 import URLObj from "../baseURL";
-import { AutoComplete, Button, Input, message, Typography } from "antd";
-import { BellOutlined, LogoutOutlined } from "@ant-design/icons";
+import { AutoComplete, Button, Input, Tooltip, message } from "antd";
+import { LogoutOutlined, BellOutlined } from "@ant-design/icons";
 import Drop from "./Drop";
 import { useUser } from "../context/userContext";
 import usePubSetter from "../../utils/dataSetters/usePubSetter";
+import { useAccess } from "../context/accessContext";
 
 const Top = ({ main = {} }) => {
   // STATES
@@ -21,6 +22,8 @@ const Top = ({ main = {} }) => {
 
   const { Search } = Input;
   const { user, change } = useUser();
+  const { access } = useAccess();
+
   const { pubData } = usePubSetter();
   const debouncedQuery = useDebounce(setQuery, 1000);
 
@@ -158,32 +161,29 @@ const Top = ({ main = {} }) => {
         />
       </AutoComplete>
 
-      <Button
-        type="primary"
-        className={styles.topButton}
-        onClick={() => router.push("/upload")}
-      >
-        Add Publications
-      </Button>
+      {access == 1 && (
+        <Button
+          type="primary"
+          className={styles.topButton}
+          onClick={() => router.push("/upload")}
+        >
+          Add Publications
+        </Button>
+      )}
 
       {[
-        {
-          fxn: () => change({}),
-          icon: LogoutOutlined,
-        },
-        {
-          fxn: openNotifications,
-          icon: BellOutlined,
-        },
-      ].map((e, i) => (
-        <Button
-          key={i}
-          type="primary"
-          className={`${styles.topButtonCircle} ${styles.topButton}`}
-          onClick={e.fxn}
-        >
-          {createElement(e.icon)}
-        </Button>
+        [() => change({}), <LogoutOutlined key={1} />, "Logout"],
+        [openNotifications, <BellOutlined key={1} />, "Notifications"],
+      ].map(([fxn, icon, text]) => (
+        <Tooltip key={text} title={text} placement="bottom">
+          <Button
+            onClick={fxn}
+            type="primary"
+            className={`${styles.topButtonCircle} ${styles.topButton}`}
+          >
+            {icon}
+          </Button>
+        </Tooltip>
       ))}
 
       <Drop />

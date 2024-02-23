@@ -1,7 +1,19 @@
-import { Button, Menu, Popconfirm, Skeleton, message } from "antd";
+import {
+  Button,
+  FloatButton,
+  Menu,
+  Popconfirm,
+  Skeleton,
+  Tooltip,
+  message,
+} from "antd";
 import { createElement, useState, useEffect } from "react";
-import { BookOutlined, TrophyOutlined } from "@ant-design/icons";
-import { UserAddOutlined } from "@ant-design/icons";
+import {
+  BookOutlined,
+  DeleteOutlined,
+  TrophyOutlined,
+} from "@ant-design/icons";
+import { UpCircleOutlined, UserAddOutlined } from "@ant-design/icons";
 import { HomeOutlined, BulbOutlined, MessageOutlined } from "@ant-design/icons";
 import { DownloadOutlined, FileTextOutlined } from "@ant-design/icons";
 import { ProjectOutlined, FileAddOutlined } from "@ant-design/icons";
@@ -15,8 +27,10 @@ import axios from "axios";
 import URLObj from "../baseURL";
 import { useRouter } from "next/router";
 
-const Side = ({ sets = () => {} }) => {
+const Side = () => {
   // HOOKS
+
+  const { BackTop } = FloatButton;
 
   const router = useRouter();
   const { innerWidth } = useWindowSize();
@@ -24,10 +38,14 @@ const Side = ({ sets = () => {} }) => {
   const { user, change: setU } = useUser();
   const { access, change: setA } = useAccess();
 
+  const { useMessage } = message;
+  const [messageApi, contextHolder] = useMessage();
+
   // DATA
 
   const [first, setFirst] = useState([]);
   const [second, setSecond] = useState([]);
+
   const [prev, setPrev] = useState(null);
   const [faculty, setFaculty] = useState([]);
 
@@ -85,32 +103,22 @@ const Side = ({ sets = () => {} }) => {
         headers: {
           "X-ACCESS-KEY": URLObj.key,
           "X-AUTH-TOKEN": user?.token,
-          "X-ACCESS-LEVEL": "department",
+          "X-ACCESS-LEVEL": access == 2 ? "department" : "hospital",
         },
       })
         .then(res => setFaculty(res.data?.faculty))
         .catch(err => console.log(err));
     }
-  }, [user]);
+  }, [access, user]);
 
   useEffect(() => {
-    if (faculty) {
-      setMenuData();
-    }
+    if (faculty) setMenuData();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [faculty]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setPrev(localStorage.getItem("prev"));
-    }
-
-    return () => {
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("prev");
-      }
-    };
+    if (typeof window !== "undefined") setPrev(localStorage.getItem("prev"));
   }, []);
 
   // FUNCTIONS
@@ -119,10 +127,7 @@ const Side = ({ sets = () => {} }) => {
     axios({
       method: "GET",
       url: `${URLObj.base}/home`,
-      headers: {
-        "X-ACCESS-KEY": URLObj.key,
-        "X-AUTH-TOKEN": token,
-      },
+      headers: { "X-ACCESS-KEY": URLObj.key, "X-AUTH-TOKEN": token },
     })
       .then(resp => {
         const DATA = resp.data?.user;
@@ -148,12 +153,24 @@ const Side = ({ sets = () => {} }) => {
           access: 1,
         });
 
-        message.success("Login Successful");
+        messageApi.open({
+          key: "login",
+          type: "success",
+          content: "Login Successful",
+          duration: 4,
+        });
+
         router.push("/profile");
       })
       .catch(err => {
         console.log(err);
-        message.error("Login Failed");
+
+        messageApi.open({
+          key: "login",
+          type: "error",
+          content: "Login Failed",
+          duration: 2,
+        });
       });
   };
 
@@ -175,15 +192,23 @@ const Side = ({ sets = () => {} }) => {
         label: `${e.label} (${e.children?.length})`,
         children: e.children.map((child, index) => ({
           key: `3.${i}.${index}`,
+          styles: { maxWidth: "200px" },
           label: (
             <Popconfirm
               title="Switch levels"
               description="Do you want to switch to this profile?"
               onConfirm={() => {
-                localStorage.setItem(
-                  "prev",
-                  JSON.stringify({ token: user?.token })
-                );
+                const str = JSON.stringify({ token: user?.token });
+
+                setPrev(str);
+                localStorage.setItem("prev", str);
+
+                messageApi.open({
+                  key: "login",
+                  type: "loading",
+                  content: "Please wait while we log you in",
+                  duration: 100,
+                });
 
                 axios({
                   method: "PUT",
@@ -191,7 +216,7 @@ const Side = ({ sets = () => {} }) => {
                   headers: {
                     "X-ACCESS-KEY": URLObj.key,
                     "X-AUTH-TOKEN": user?.token,
-                    "X-ACCESS-LEVEL": "department",
+                    "X-ACCESS-LEVEL": access == 2 ? "department" : "hospital",
                   },
                 })
                   .then(res => {
@@ -207,7 +232,22 @@ const Side = ({ sets = () => {} }) => {
               okText="Yes"
               cancelText="No"
             >
-              {child[1]}
+              <Tooltip
+                placement="bottom"
+                title={
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <span>{child[1]}</span>
+                    <DeleteOutlined
+                      style={{ cursor: "pointer", marginLeft: 5 }}
+                      onClick={() => {
+                        message.error("Not implemented yet");
+                      }}
+                    />
+                  </div>
+                }
+              >
+                {child[1]}
+              </Tooltip>
             </Popconfirm>
           ),
         })),
@@ -217,16 +257,15 @@ const Side = ({ sets = () => {} }) => {
 
   return (
     <div className={styles.sideWrapper}>
+      {contextHolder}
+
       <Skeleton loading={!user?.name} active paragraph={{ rows: 10 }}>
         <div className={styles.sideProfile}>
           <Image
             priority={true}
             className={styles.sideImage}
-            alt={user?.username ?? "user"}
-            src={
-              user?.picture ??
-              `https://xsgames.co/randomusers/avatar.php?g=${user?.gender?.toLowerCase()}`
-            }
+            alt={user?.username ?? "you"}
+            src={user?.picture ?? URLObj.dummy}
             width={100}
             height={100}
           />
@@ -254,32 +293,47 @@ const Side = ({ sets = () => {} }) => {
             <Button className={styles.sideButton} type="primary">
               <Link href="/profile/edit">Edit Profile</Link>
             </Button>
-            {access > 1 ? (
-              <Button className={styles.sideButton} type="primary">
-                <Link href="/add/profile">
-                  {innerWidth > 1600 ? "Add/Edit Faculty" : "Add Faculty"}
-                </Link>
-              </Button>
-            ) : (
+            {access == 1 ? (
               prev && (
                 <Button
-                  onClick={() => switchUser(JSON.parse(prev)?.token, 2)}
+                  onClick={() => {
+                    messageApi.open({
+                      key: "login",
+                      type: "loading",
+                      content: "Please wait while we take you back",
+                      duration: 100,
+                    });
+
+                    switchUser(JSON.parse(prev)?.token, 2);
+                    setPrev(null);
+                    localStorage.removeItem("prev");
+                  }}
                   className={styles.sideButton}
                   type="primary"
                 >
                   Return Back
                 </Button>
               )
+            ) : (
+              <Button className={styles.sideButton} type="primary">
+                {access == 2 ? (
+                  <Link href="/add/profile">Add/Edit Faculty</Link>
+                ) : (
+                  <Link href="/add/department">
+                    {innerWidth > 1600
+                      ? "Add/Edit Department"
+                      : "Add/Edit Dept"}
+                  </Link>
+                )}
+              </Button>
             )}
           </div>
         </div>
       </Skeleton>
-
       <Menu
         mode="inline"
         className="sideMenu"
         selectable={false}
-        onClick={() => sets("all")}
         items={[
           { link: "/profile", icon: HomeOutlined, label: "Home" },
           { link: "/downloads", icon: DownloadOutlined, label: "Downloads" },
@@ -288,6 +342,8 @@ const Side = ({ sets = () => {} }) => {
         ]
           ?.filter((_, i) => (access > 1 ? true : i < 3))
           ?.map((item, index) => {
+            if (index == 2 && access > 1) return null;
+
             const ITEM = {
               key: `${index}`,
               icon: createElement(item.icon),
@@ -310,48 +366,51 @@ const Side = ({ sets = () => {} }) => {
         mode="inline"
         className="sideMenu"
         selectable={false}
-        onClick={() => sets("all")}
         items={[
           {
-            link: "/profile#publications",
+            link: "publications",
             icon: FileTextOutlined,
             label: "Publications",
           },
           {
-            link: "/profile#conferences",
+            link: "conferences",
             icon: MessageOutlined,
             label: "Conferences",
           },
           {
-            link: "/profile#books",
+            link: "books",
             icon: BookOutlined,
             label: "Books/Chapters",
           },
           {
-            link: "/profile#projects",
+            link: "projects",
             icon: ProjectOutlined,
             label: "Research Projects",
           },
           {
-            link: "/profile#awards",
+            link: "awards",
             icon: TrophyOutlined,
             label: "Awards",
           },
           {
-            link: "/profile#ipr",
+            link: "ipr",
             icon: BulbOutlined,
             label: "IPR",
           },
           {
-            link: "/profile#students",
+            link: "students",
             icon: UserAddOutlined,
             label: "Students Guided",
           },
         ].map((item, index) => ({
           key: String(index + 1),
           icon: createElement(item.icon),
-          label: <Link href={item.link}>{item.label}</Link>,
+          label: <Link href={`/profile#${item.link}`}>{item.label}</Link>,
         }))}
+      />
+      <BackTop
+        icon={<UpCircleOutlined />}
+        style={{ left: 30, bottom: 30, borderRadius: "50%" }}
       />
     </div>
   );

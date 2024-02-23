@@ -10,6 +10,7 @@ import Link from "next/link";
 import scopus from "../../../public/logos/scopus.svg";
 import crossref from "../../../public/logos/crossref.jpg";
 import wos from "../../../public/logos/wos.svg";
+import URLObj from "../baseURL";
 
 const PubItem = ({ item, index, limit, type }) => {
   const { Item } = List;
@@ -166,14 +167,7 @@ const AuthItem = ({ item, index, limit }) => {
       }
     >
       <Meta
-        avatar={
-          <Avatar
-            src={
-              item.profile_picture ??
-              `https://xsgames.co/randomusers/avatar.php?g=${item.gender?.toLowerCase()}`
-            }
-          />
-        }
+        avatar={<Avatar src={item.profile_picture ?? URLObj.dummy} />}
         title={
           <Row justify="space-between">
             <div

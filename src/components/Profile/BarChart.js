@@ -34,14 +34,10 @@ const BarChart = ({ trends }) => {
   const options = {
     responsive: true,
     legend: {
-      labels: {
-        fontSize: 200,
-      },
+      labels: { fontSize: 200 },
     },
     plugins: {
-      legend: {
-        position: "bottom",
-      },
+      legend: { position: "bottom" },
       title: {
         display: true,
         color: "black",

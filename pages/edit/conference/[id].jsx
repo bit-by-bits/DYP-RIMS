@@ -7,9 +7,10 @@ import Side from "../../../src/components/Common/Side";
 import Top from "../../../src/components/Common/Top";
 import URLObj from "../../../src/components/baseURL";
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, DatePicker, FloatButton } from "antd";
-import { Spin, Upload, message, Form, Input, Select } from "antd";
+import { Button, DatePicker } from "antd";
+import { Upload, message, Form, Input, Select } from "antd";
 import { useUser } from "../../../src/components/context/userContext";
+import Spinner from "../../../src/components/Common/Spinner";
 
 const Conferences = () => {
   // HOOKS
@@ -155,247 +156,238 @@ const Conferences = () => {
       </Head>
 
       <div className={styles.wrapper}>
-        <Spin
-          className="spinner"
-          spinning={visible}
-          size="large"
-          tip="Please wait as page loads"
-        >
-          <FloatButton.BackTop
-            style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-          />
+        <Spinner show={visible} />
 
-          <div style={{ paddingLeft: "18vw" }}>
-            <Side />
+        <div style={{ paddingLeft: "20vw" }}>
+          <Side />
 
-            <div className={styles.container}>
-              <Top />
+          <div className={styles.container}>
+            <Top />
 
-              <div className={styles.formContainer}>
-                <h1 className={styles.heading}>Edit Conferences</h1>
+            <div className={styles.formContainer}>
+              <h1 className={styles.heading}>Edit Conferences</h1>
 
-                <Form
-                  form={form}
-                  name="conference"
-                  style={{ width: "80vw", padding: "0 10vw" }}
-                  initialValues={
-                    initialValues ?? {
-                      faculty: user?.name,
-                      department: user?.department,
-                    }
+              <Form
+                form={form}
+                style={{ width: "80vw", padding: "0 10vw" }}
+                initialValues={
+                  initialValues ?? {
+                    faculty: user?.name,
+                    department: user?.department,
                   }
-                  onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
+                }
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+              >
+                <Form.Item
+                  label="Name Of Faculty"
+                  name="faculty"
+                  rules={[
+                    { required: true, message: "Please input faculty name!" },
+                  ]}
                 >
-                  <Form.Item
-                    label="Name Of Faculty"
-                    name="faculty"
-                    rules={[
-                      { required: true, message: "Please input faculty name!" },
-                    ]}
-                  >
-                    <Input disabled />
-                  </Form.Item>
+                  <Input disabled />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Department"
-                    name="department"
-                    rules={[
+                <Form.Item
+                  label="Department"
+                  name="department"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your department!",
+                    },
+                  ]}
+                >
+                  <Input disabled />
+                </Form.Item>
+
+                <Form.Item
+                  label="Conference Name"
+                  name="conference"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input conference name!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  label="Type Of Conference"
+                  name="type"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please select type of conference!",
+                    },
+                  ]}
+                >
+                  <Select
+                    showSearch
+                    placeholder="Choose type of conference"
+                    allowClear
+                    options={[
+                      { value: "state", label: "State" },
+                      { value: "national", label: "National" },
+                      { value: "international", label: "International" },
+                    ]}
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  label="Attended As"
+                  name="attended_as"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please select type of conference!",
+                    },
+                  ]}
+                >
+                  <Select
+                    showSearch
+                    placeholder="Choose type of conference"
+                    allowClear
+                    options={[
                       {
-                        required: true,
-                        message: "Please input your department!",
+                        value: "delegate",
+                        label: "Delegate",
+                      },
+                      {
+                        value: "chairperson",
+                        label: "Chairperson",
+                      },
+                      {
+                        value: "faculty",
+                        label: "Faculty",
+                      },
+                      {
+                        value: "judge",
+                        label: "Judge",
                       },
                     ]}
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  label="Conference Dates"
+                  name="date"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter conference dates!",
+                    },
+                  ]}
+                >
+                  <RangePicker style={{ width: "100%" }} />
+                </Form.Item>
+
+                <Form.Item
+                  label="Location"
+                  name="location"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input conference location!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item>
+                  <Button
+                    onClick={() => setPaper(paper + 1)}
+                    type="primary"
+                    className={styles.primary}
                   >
-                    <Input disabled />
-                  </Form.Item>
+                    Add Paper Presentation
+                  </Button>
 
-                  <Form.Item
-                    label="Conference Name"
-                    name="conference"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input conference name!",
-                      },
-                    ]}
+                  <Button
+                    onClick={() => setPoster(poster + 1)}
+                    type="primary"
+                    className={styles.secondary}
                   >
-                    <Input />
-                  </Form.Item>
+                    Add Poster Presentation
+                  </Button>
+                </Form.Item>
 
-                  <Form.Item
-                    label="Type Of Conference"
-                    name="type"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please select type of conference!",
-                      },
-                    ]}
+                {new Array(poster).fill(0).map((e, i) => (
+                  <div key={i}>
+                    <Form.Item label="Poster Title" name={`tposter${i}`}>
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item label="Upload Poster" name={`poster${i}`}>
+                      <Upload
+                        onValuesChange={info => {
+                          if (info.file.status === "done") {
+                            message.success(
+                              `${info.file.name} file uploaded successfully`
+                            );
+                          } else if (info.file.status === "error") {
+                            message.error(
+                              `${info.file.name} file upload failed.`
+                            );
+                          }
+                        }}
+                      >
+                        <Button icon={<UploadOutlined />}>
+                          Click to Upload
+                        </Button>
+                      </Upload>
+                    </Form.Item>
+                  </div>
+                ))}
+
+                {new Array(paper).fill(0).map((e, i) => (
+                  <div key={i}>
+                    <Form.Item label="Paper Title" name={`tpaper${i}`}>
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item label="Upload Paper" name={`paper${i}`}>
+                      <Upload
+                        onValuesChange={info => {
+                          if (info.file.status === "done") {
+                            message.success(
+                              `${info.file.name} file uploaded successfully`
+                            );
+                          } else if (info.file.status === "error") {
+                            message.error(
+                              `${info.file.name} file upload failed.`
+                            );
+                          }
+                        }}
+                      >
+                        <Button icon={<UploadOutlined />}>
+                          Click to Upload
+                        </Button>
+                      </Upload>
+                    </Form.Item>
+                  </div>
+                ))}
+
+                <Form.Item>
+                  <Button
+                    className={styles.primary}
+                    type="primary"
+                    htmlType="submit"
                   >
-                    <Select
-                      showSearch
-                      placeholder="Choose type of conference"
-                      allowClear
-                      options={[
-                        { value: "state", label: "State" },
-                        { value: "national", label: "National" },
-                        { value: "international", label: "International" },
-                      ]}
-                    />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Attended As"
-                    name="attended_as"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please select type of conference!",
-                      },
-                    ]}
-                  >
-                    <Select
-                      showSearch
-                      placeholder="Choose type of conference"
-                      allowClear
-                      options={[
-                        {
-                          value: "delegate",
-                          label: "Delegate",
-                        },
-                        {
-                          value: "chairperson",
-                          label: "Chairperson",
-                        },
-                        {
-                          value: "faculty",
-                          label: "Faculty",
-                        },
-                        {
-                          value: "judge",
-                          label: "Judge",
-                        },
-                      ]}
-                    />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Conference Dates"
-                    name="date"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter conference dates!",
-                      },
-                    ]}
-                  >
-                    <RangePicker style={{ width: "100%" }} />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Location"
-                    name="location"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input conference location!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button
-                      onClick={() => setPaper(paper + 1)}
-                      type="primary"
-                      className={styles.primary}
-                    >
-                      Add Paper Presentation
-                    </Button>
-
-                    <Button
-                      onClick={() => setPoster(poster + 1)}
-                      type="primary"
-                      className={styles.secondary}
-                    >
-                      Add Poster Presentation
-                    </Button>
-                  </Form.Item>
-
-                  {new Array(poster).fill(0).map((e, i) => (
-                    <div key={i}>
-                      <Form.Item label="Poster Title" name={`tposter${i}`}>
-                        <Input />
-                      </Form.Item>
-
-                      <Form.Item label="Upload Poster" name={`poster${i}`}>
-                        <Upload
-                          onValuesChange={info => {
-                            if (info.file.status === "done") {
-                              message.success(
-                                `${info.file.name} file uploaded successfully`
-                              );
-                            } else if (info.file.status === "error") {
-                              message.error(
-                                `${info.file.name} file upload failed.`
-                              );
-                            }
-                          }}
-                        >
-                          <Button icon={<UploadOutlined />}>
-                            Click to Upload
-                          </Button>
-                        </Upload>
-                      </Form.Item>
-                    </div>
-                  ))}
-
-                  {new Array(paper).fill(0).map((e, i) => (
-                    <div key={i}>
-                      <Form.Item label="Paper Title" name={`tpaper${i}`}>
-                        <Input />
-                      </Form.Item>
-
-                      <Form.Item label="Upload Paper" name={`paper${i}`}>
-                        <Upload
-                          onValuesChange={info => {
-                            if (info.file.status === "done") {
-                              message.success(
-                                `${info.file.name} file uploaded successfully`
-                              );
-                            } else if (info.file.status === "error") {
-                              message.error(
-                                `${info.file.name} file upload failed.`
-                              );
-                            }
-                          }}
-                        >
-                          <Button icon={<UploadOutlined />}>
-                            Click to Upload
-                          </Button>
-                        </Upload>
-                      </Form.Item>
-                    </div>
-                  ))}
-
-                  <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button
-                      className={styles.primary}
-                      type="primary"
-                      htmlType="submit"
-                    >
-                      SUBMIT
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </div>
+                    SUBMIT
+                  </Button>
+                </Form.Item>
+              </Form>
             </div>
           </div>
-        </Spin>
+        </div>
       </div>
     </>
   );
 };
+
 export default Conferences;

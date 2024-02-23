@@ -30,6 +30,15 @@ html {
   scroll-behavior: smooth;
 }
 
+/* SELECTION */
+
+::selection {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* SCROLLBAR */
+
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -82,11 +91,30 @@ html {
   font-weight: 500 !important;
 }
 
+/* BUTTON */
+
+.ant-btn-default:hover {
+  color: var(--primary) !important;
+  border-color: var(--primary) !important;
+}
+
+/* TABS */
+
+.ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn,
+.ant-tabs .ant-tabs-tab:hover,
+.ant-tabs .ant-tabs-tab-btn:active {
+  color: var(--primary) !important;
+}
+
+.ant-tabs .ant-tabs-ink-bar {
+  background-color: var(--primary);
+}
+
 /* TABLE */
 
 .ant-table-wrapper table {
   table-layout: fixed !important;
-  max-width: calc(100vw - 18vw - 4rem) !important;
+  max-width: calc(100vw - 20vw - 4rem) !important;
 }
 
 .ant-table-thead .ant-table-cell,
@@ -167,16 +195,44 @@ a.ant-typography-expand {
   border-color: grey !important;
 }
 
+.ant-input:hover,
+.ant-input-focused,
+.ant-input:focus {
+  border-color: var(--primary);
+}
+
+/* SELECT */
+
+.ant-select:hover .ant-select-selector,
+.ant-select-focused .ant-select-selector {
+  border-color: var(--primary) !important;
+}
+
+/* PICKER */
+
+.ant-picker:hover,
+.ant-picker-focused {
+  border-color: var(--primary);
+}
+
 /* SPINNER */
 
-.spinner {
+.spnr {
   top: 0 !important;
   left: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
   max-height: 100vh !important;
   position: fixed !important;
-  background-color: rgba(256, 256, 256, 0.8) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10001;
+  background-color: rgba(256, 256, 256, 0.9) !important;
+}
+
+.spnr.cl {
+  pointer-events: none;
 }
 
 .ant-spin-dot-item {
@@ -189,6 +245,22 @@ a.ant-typography-expand {
   font-weight: bold;
 }
 
+/* MESSAGE */
+
+.ant-message {
+  z-index: 10002;
+}
+
+/* POP-CONFIRM */
+
+.ant-popconfirm .ant-popconfirm-buttons .ant-btn-primary {
+  background-color: var(--primary);
+}
+
+.ant-popconfirm .ant-popconfirm-buttons .ant-btn-primary:hover {
+  background-color: var(--primary-dark);
+}
+
 /* SIDE MENU */
 
 .sideMenu {
@@ -198,7 +270,7 @@ a.ant-typography-expand {
   border: none;
   padding: 10px 0 5px 0;
   margin: 0 10px;
-  width: calc(18vw - 20px);
+  width: calc(20vw - 20px);
 }
 
 .sideMenu .ant-menu-item a:hover {
@@ -208,4 +280,8 @@ a.ant-typography-expand {
 .sideMenu .ant-menu-item-selected,
 .sideMenu .ant-menu-item-selected a:hover {
   color: var(--primary) !important;
+}
+
+.ant-menu-light.ant-menu-root.ant-menu-inline {
+  border-inline-end: 0;
 }

@@ -1,5 +1,5 @@
-import { Button, DatePicker, FloatButton, Form } from "antd";
-import { Input, Select, Spin, message } from "antd";
+import { Button, DatePicker, Form } from "antd";
+import { Input, Select, message } from "antd";
 import styles from "../../src/styles/add.module.css";
 import Head from "next/head";
 import { useEffect, useState } from "react";
@@ -10,6 +10,7 @@ import axios from "axios";
 import URLObj from "../../src/components/baseURL";
 import { useUser } from "../../src/components/context/userContext";
 import { useAccess } from "../../src/components/context/accessContext";
+import Spinner from "../../src/components/Common/Spinner";
 
 const Students = () => {
   // HOOKS
@@ -80,124 +81,114 @@ const Students = () => {
       </Head>
 
       <div className={styles.wrapper}>
-        <Spin
-          className="spinner"
-          spinning={visible}
-          size="large"
-          tip="Please wait as page loads"
-        >
-          <FloatButton.BackTop
-            style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-          />
+        <Spinner show={visible} />
 
-          <div style={{ paddingLeft: "18vw" }}>
-            <Side />
+        <div style={{ paddingLeft: "20vw" }}>
+          <Side />
 
-            <div className={styles.container}>
-              <Top />
+          <div className={styles.container}>
+            <Top />
 
-              <div className={styles.formContainer}>
-                <h1 className={styles.heading}>Add Students Guided</h1>
+            <div className={styles.formContainer}>
+              <h1 className={styles.heading}>Add Students Guided</h1>
 
-                <Form
-                  name="students"
-                  form={form}
-                  style={{ width: "80vw", padding: "0 10vw" }}
-                  initialValues={{
-                    faculty: user?.name,
-                    department: user?.department,
-                  }}
-                  onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
+              <Form
+                form={form}
+                style={{ width: "80vw", padding: "0 10vw" }}
+                initialValues={{
+                  faculty: user?.name,
+                  department: user?.department,
+                }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+              >
+                <Form.Item
+                  label="Name Of Faculty"
+                  name="faculty"
+                  rules={[
+                    { required: true, message: "Please input faculty name!" },
+                  ]}
                 >
-                  <Form.Item
-                    label="Name Of Faculty"
-                    name="faculty"
-                    rules={[
-                      { required: true, message: "Please input faculty name!" },
-                    ]}
-                  >
-                    <Input disabled />
-                  </Form.Item>
+                  <Input disabled />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Department"
-                    name="department"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your department!",
-                      },
-                    ]}
-                  >
-                    <Input disabled />
-                  </Form.Item>
+                <Form.Item
+                  label="Department"
+                  name="department"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your department!",
+                    },
+                  ]}
+                >
+                  <Input disabled />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Student Name"
-                    name="student"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input the student's name!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
+                <Form.Item
+                  label="Student Name"
+                  name="student"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input the student's name!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Student Degree"
-                    name="degree"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input student's degree!",
-                      },
-                    ]}
-                  >
-                    <Select showSearch placeholder="Select a degree" allowClear>
-                      <Select.Option value="MD">MD</Select.Option>
-                      <Select.Option value="MS">MS</Select.Option>
-                      <Select.Option value="MSc">MSc</Select.Option>
-                      <Select.Option value="PhD">PhD</Select.Option>
-                    </Select>
-                  </Form.Item>
+                <Form.Item
+                  label="Student Degree"
+                  name="degree"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input student's degree!",
+                    },
+                  ]}
+                >
+                  <Select showSearch placeholder="Select a degree" allowClear>
+                    <Select.Option value="MD">MD</Select.Option>
+                    <Select.Option value="MS">MS</Select.Option>
+                    <Select.Option value="MSc">MSc</Select.Option>
+                    <Select.Option value="PhD">PhD</Select.Option>
+                  </Select>
+                </Form.Item>
 
-                  <Form.Item
-                    label="Thesis Topic"
-                    name="topic"
-                    rules={[
-                      { required: true, message: "Please input thesis topic!" },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
+                <Form.Item
+                  label="Thesis Topic"
+                  name="topic"
+                  rules={[
+                    { required: true, message: "Please input thesis topic!" },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
 
-                  <Form.Item
-                    label="Guiding Year"
-                    name="year"
-                    rules={[
-                      { required: true, message: "Please input the year!" },
-                    ]}
-                  >
-                    <DatePicker style={{ width: "100%" }} picker="year" />
-                  </Form.Item>
+                <Form.Item
+                  label="Guiding Year"
+                  name="year"
+                  rules={[
+                    { required: true, message: "Please input the year!" },
+                  ]}
+                >
+                  <DatePicker style={{ width: "100%" }} picker="year" />
+                </Form.Item>
 
-                  <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button
-                      className={styles.primary}
-                      type="primary"
-                      htmlType="submit"
-                    >
-                      Submit
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </div>
+                <Form.Item>
+                  <Button
+                    className={styles.primary}
+                    type="primary"
+                    htmlType="submit"
+                  >
+                    Submit
+                  </Button>
+                </Form.Item>
+              </Form>
             </div>
           </div>
-        </Spin>
+        </div>
       </div>
     </>
   );

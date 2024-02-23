@@ -4,15 +4,19 @@ import React, { useState, useEffect } from "react";
 import styles from "../src/styles/login.module.css";
 import { useRouter } from "next/router";
 import URLObj from "../src/components/baseURL";
-import { Spin, message } from "antd";
+import { message } from "antd";
 import Image from "next/image";
 import { useUser } from "../src/components/context/userContext";
+import Spinner from "../src/components/Common/Spinner";
 
 export default function Home() {
   // BOILERPLATE
 
   const router = useRouter();
   const { user, change } = useUser();
+
+  const { useMessage } = message;
+  const [messageApi, contextHolder] = useMessage();
 
   // STATES
 
@@ -21,18 +25,21 @@ export default function Home() {
   // EFFECTS
 
   useEffect(() => {
-    if (user?.token && user?.setUpTime && !user?.name) {
-      if (user.setUpTime + 86400000 > Date.now()) {
+    if (user && user?.token && user?.name) {
+      if (user?.setUpTime + 24 * 60 * 60 * 1000 > Date.now()) {
+        messageApi.open({
+          key: "login",
+          type: "success",
+          content: "Login Successful",
+          duration: 4,
+        });
+
         router.push("/profile");
-        message.success("Session Restored");
-      } else {
-        change({});
-        message.error("Session Expired");
       }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user?.setUpTime]);
 
   useEffect(() => {
     /* global google */
@@ -51,6 +58,13 @@ export default function Home() {
         })
           .then(res => {
             const TOKEN = res.data?.token;
+
+            messageApi.open({
+              key: "login",
+              type: "loading",
+              content: "Please wait while we log you in",
+              duration: 100,
+            });
 
             axios({
               method: "GET",
@@ -82,13 +96,16 @@ export default function Home() {
                   max_access: LEVEL?.id,
                   access: 1,
                 });
-
-                message.success("Login Successful");
-                router.push("/profile");
               })
               .catch(err => {
                 console.log(err);
-                message.error("Login Failed");
+
+                messageApi.open({
+                  key: "login",
+                  type: "error",
+                  content: "Login Failed",
+                  duration: 2,
+                });
               });
           })
           .catch(err => {
@@ -121,57 +138,53 @@ export default function Home() {
         <link rel="icon" href="logos/dpu-2.png" />
       </Head>
 
-      <Spin
-        className="spinner"
-        spinning={visible}
-        size="large"
-        tip="Please wait as page loads"
-      >
-        <div className={styles.main}>
-          <div className={styles.welcome}>
-            <div className={styles.greeting}>
-              <div className={styles.title}>Welcome to RIMS</div>
+      {contextHolder}
+      <Spinner show={visible} />
 
-              <div className={styles.content}>
-                Dr. D.Y. Patil Medical College, Hospital and Research Center's
-                Research Information Manangement System
-              </div>
-            </div>
+      <div className={styles.main}>
+        <div className={styles.welcome}>
+          <div className={styles.greeting}>
+            <div className={styles.title}>Welcome to RIMS</div>
 
-            <div className={styles.login}>
-              {
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src="logos/dpu-1.png" alt="DPU" className={styles.logo} />
-              }
-
-              <div className={styles.login_top}>Login to RIMS</div>
-
-              <div className={styles.login_middle}>
-                Kindly login with your authorized Institute's credentials
-              </div>
-
-              <div className={styles.button} id="signInDiv" />
-
-              <div className={styles.login_bottom}>
-                Having trouble logging in?
-                <a href="mailto:rims@dpu.edu.in?cc=naac.medical@dpu.edu.in&subject=Login not working&body=I am unable to login RIMS with my email id // specify your email here //.">
-                  Click here
-                </a>
-              </div>
+            <div className={styles.content}>
+              Dr. D.Y. Patil Medical College, Hospital and Research Center's
+              Research Information Manangement System
             </div>
           </div>
 
-          <a href="https://www.qtanea.com/" rel="noreferrer" target="_blank">
-            <Image
-              alt="Q"
-              width={60}
-              height={60}
-              className={styles.foot}
-              src="/logos/qtanea-white.png"
-            />
-          </a>
+          <div className={styles.login}>
+            {
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src="logos/dpu-1.png" alt="DPU" className={styles.logo} />
+            }
+
+            <div className={styles.login_top}>Login to RIMS</div>
+
+            <div className={styles.login_middle}>
+              Kindly login with your authorized Institute's credentials
+            </div>
+
+            <div className={styles.button} id="signInDiv" />
+
+            <div className={styles.login_bottom}>
+              Having trouble logging in?
+              <a href="mailto:rims@dpu.edu.in?cc=naac.medical@dpu.edu.in&subject=Login not working&body=I am unable to login RIMS with my email id // specify your email here //.">
+                Click here
+              </a>
+            </div>
+          </div>
         </div>
-      </Spin>
+
+        <a href="https://www.qtanea.com/" rel="noreferrer" target="_blank">
+          <Image
+            alt="Q"
+            width={60}
+            height={60}
+            className={styles.foot}
+            src="/logos/qtanea-white.png"
+          />
+        </a>
+      </div>
     </>
   );
 }

@@ -2,7 +2,7 @@ import Head from "next/head";
 import styles from "../../src/styles/profile.module.css";
 import React, { useState, useEffect, useMemo } from "react";
 import { InboxOutlined } from "@ant-design/icons";
-import { Spin, Button, FloatButton } from "antd";
+import { Button } from "antd";
 import { Table, Modal, Upload, message } from "antd";
 import axios from "axios";
 
@@ -22,12 +22,15 @@ import useStudSetter from "../../src/utils/dataSetters/useStudSetter";
 import useExtraSetter from "../../src/utils/dataSetters/useExtraSetter";
 import URLObj from "../../src/components/baseURL";
 import { useRouter } from "next/router";
+import Spinner from "../../src/components/Common/Spinner";
+import { useAccess } from "../../src/components/context/accessContext";
 
 const Profile = () => {
   // BOILERPLATE
 
   const router = useRouter();
   const { user } = useUser();
+  const { access } = useAccess();
 
   const { id } = router.query;
   const [ID, setID] = useState("");
@@ -90,7 +93,7 @@ const Profile = () => {
         headers: {
           "X-ACCESS-KEY": URLObj.key,
           "X-AUTH-TOKEN": user?.token,
-          "X-ACCESS-LEVEL": "department",
+          "X-ACCESS-LEVEL": access == 2 ? "department" : "hospital",
         },
       })
         .then(res => {
@@ -200,150 +203,145 @@ const Profile = () => {
       </Head>
 
       <div className={styles.wrapper}>
-        <Spin
-          className="spinner"
-          spinning={visible}
-          size="large"
-          tip="Please wait as page loads"
-        >
-          <FloatButton.BackTop
-            style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-          />
-          <div style={{ paddingLeft: "18vw" }}>
-            <Side sets={setSections} />
-            <div className={styles.container}>
-              <Top main={{ publications, setPublications, setSections }} />
-              {sections == "all" && (
-                <div className={styles.section}>
-                  <div className={styles.header}>
-                    {`${faculty?.user?.first_name} ${faculty?.user?.last_name} - ${faculty.designation}`}
-                  </div>
-                  <div className={styles.sectionTop}>
-                    <div id="overview" className={styles.heading}>
-                      Overview: Individual Level
-                    </div>
-                  </div>
+        <Spinner show={visible} />
 
-                  <Overview
-                    mode="two"
-                    one={{ data: data, stats: statistics_1, extra: extra_1 }}
-                    two={{ counts: {}, faculty: 0 }}
-                  />
+        <div style={{ paddingLeft: "20vw" }}>
+          <Side />
+
+          <div className={styles.container}>
+            <Top main={{ publications, setPublications, setSections }} />
+            {sections == "all" && (
+              <div className={styles.section}>
+                <div className={styles.header}>
+                  {`${faculty?.user?.first_name} ${faculty?.user?.last_name} - ${faculty?.designation}`}
                 </div>
-              )}
-              {(sections == "all" || sections == "publications") && (
-                <div className={styles.section}>
-                  <div className={styles.sectionTop}>
-                    <div id="publications" className={styles.heading}>
-                      Publications
-                    </div>
-                    <div style={{ display: "flex", gap: 15 }}>
+                <div className={styles.sectionTop}>
+                  <div id="overview" className={styles.heading}>
+                    Overview: Individual Level
+                  </div>
+                </div>
+
+                <Overview
+                  mode="two"
+                  one={{ data: data, stats: statistics_1, extra: extra_1 }}
+                  two={{ counts: {}, faculty: 0 }}
+                />
+              </div>
+            )}
+            {(sections == "all" || sections == "publications") && (
+              <div className={styles.section}>
+                <div className={styles.sectionTop}>
+                  <div id="publications" className={styles.heading}>
+                    Publications
+                  </div>
+                  <div style={{ display: "flex", gap: 15 }}>
+                    <Button
+                      type="primary"
+                      className={styles.sectionButton}
+                      onClick={() => {
+                        if (sortBy_1 === "scopus") setSortBy_1("wos");
+                        else if (sortBy_1 === "wos") setSortBy_1("crossref");
+                        else if (sortBy_1 === "crossref") setSortBy_1("scopus");
+                      }}
+                    >
+                      Sorting Citations By: {sortBy_1.toUpperCase()}
+                    </Button>
+                    {sections == "all" ? (
+                      <Button
+                        type="primary"
+                        className={styles.sectionButton}
+                        onClick={() => setSections("publications")}
+                      >
+                        View All
+                      </Button>
+                    ) : (
                       <Button
                         type="primary"
                         className={styles.sectionButton}
                         onClick={() => {
-                          if (sortBy_1 === "scopus") setSortBy_1("wos");
-                          else if (sortBy_1 === "wos") setSortBy_1("crossref");
-                          else if (sortBy_1 === "crossref")
-                            setSortBy_1("scopus");
+                          setSections("all");
+                          router.push("/profile");
                         }}
                       >
-                        Sorting Citations By: {sortBy_1.toUpperCase()}
+                        Return Back
                       </Button>
-                      {sections == "all" ? (
-                        <Button
-                          type="primary"
-                          className={styles.sectionButton}
-                          onClick={() => setSections("publications")}
-                        >
-                          View All
-                        </Button>
-                      ) : (
-                        <Button
-                          type="primary"
-                          className={styles.sectionButton}
-                          onClick={() => setSections("all")}
-                        >
-                          Return Back
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                  <div className={styles.sectionBottom}>
-                    <Table
-                      pagination={sections == "all" ? true : false}
-                      columns={publications?.title}
-                      dataSource={publications?.body}
-                      onChange={handleFilterChange}
-                    />
+                    )}
                   </div>
                 </div>
-              )}
-              {[
-                {
-                  title: "Conferences",
-                  data: conferences,
-                },
-                {
-                  title: "Projects",
-                  data: projects,
-                },
-                {
-                  title: "Awards",
-                  data: awards,
-                },
-                {
-                  title: "IPR",
-                  data: ipr,
-                },
-                {
-                  title: "Books",
-                  data: books,
-                },
-                {
-                  title: "Students",
-                  data: students,
-                },
-              ]?.map((e, i) => (
-                <Section
-                  key={i}
-                  data={e.data}
-                  head={{ title: e.title }}
-                  sections={{ sec: sections, setSec: setSections }}
-                />
-              ))}
-              <Modal
-                title="Upload PDF"
-                open={fileData_1?.modal}
-                onCancel={() => setFileData_1({ ...fileData_1, modal: false })}
-                footer={null}
-              >
-                <Dragger
-                  name="file"
-                  multiple={false}
-                  style={{ borderColor: "#9a2827" }}
-                  onChange={info => {
-                    const { status } = info.file;
-                    if (status === "done")
-                      setFileData_1({ ...fileData_1, file: info.file });
-                  }}
-                  beforeUpload={_ => uploadFile()}
-                >
-                  <InboxOutlined
-                    style={{ fontSize: 60, margin: "10px 0", color: "#9a2827" }}
+                <div className={styles.sectionBottom}>
+                  <Table
+                    pagination={sections == "all" ? true : false}
+                    columns={publications?.title}
+                    dataSource={publications?.body}
+                    onChange={handleFilterChange}
                   />
-                  <p className="ant-upload-text">
-                    Click or drag file to this area to upload
-                  </p>
-                  <p className="ant-upload-hint">
-                    Support for a single or bulk upload. Strictly prohibited
-                    from uploading company data or other banned files.
-                  </p>
-                </Dragger>
-              </Modal>
-            </div>
+                </div>
+              </div>
+            )}
+            {[
+              {
+                title: "Conferences",
+                data: conferences,
+              },
+              {
+                title: "Projects",
+                data: projects,
+              },
+              {
+                title: "Awards",
+                data: awards,
+              },
+              {
+                title: "IPR",
+                data: ipr,
+              },
+              {
+                title: "Books",
+                data: books,
+              },
+              {
+                title: "Students",
+                data: students,
+              },
+            ]?.map((e, i) => (
+              <Section
+                key={i}
+                data={e.data}
+                head={{ title: e.title }}
+                sections={{ sec: sections, setSec: setSections }}
+              />
+            ))}
+            <Modal
+              title="Upload PDF"
+              open={fileData_1?.modal}
+              onCancel={() => setFileData_1({ ...fileData_1, modal: false })}
+              footer={null}
+            >
+              <Dragger
+                name="file"
+                multiple={false}
+                style={{ borderColor: "#9a2827" }}
+                onChange={info => {
+                  const { status } = info.file;
+                  if (status === "done")
+                    setFileData_1({ ...fileData_1, file: info.file });
+                }}
+                beforeUpload={_ => uploadFile()}
+              >
+                <InboxOutlined
+                  style={{ fontSize: 60, margin: "10px 0", color: "#9a2827" }}
+                />
+                <p className="ant-upload-text">
+                  Click or drag file to this area to upload
+                </p>
+                <p className="ant-upload-hint">
+                  Support for a single or bulk upload. Strictly prohibited from
+                  uploading company data or other banned files.
+                </p>
+              </Dragger>
+            </Modal>
           </div>
-        </Spin>
+        </div>
       </div>
     </>
   );

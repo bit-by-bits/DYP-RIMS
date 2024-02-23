@@ -1,5 +1,5 @@
-import { Button, DatePicker, FloatButton, Form } from "antd";
-import { Input, Select, Spin, Upload, message } from "antd";
+import { Button, DatePicker, Form } from "antd";
+import { Input, Select, Upload, message } from "antd";
 import styles from "../../src/styles/add.module.css";
 import styles2 from "../../src/styles/upload.module.css";
 import Head from "next/head";
@@ -12,6 +12,7 @@ import axios from "axios";
 import URLObj from "../../src/components/baseURL";
 import { useUser } from "../../src/components/context/userContext";
 import { useAccess } from "../../src/components/context/accessContext";
+import Spinner from "../../src/components/Common/Spinner";
 
 const Awards = () => {
   // HOOKS
@@ -134,239 +135,226 @@ const Awards = () => {
       </Head>
 
       <div className={styles.wrapper}>
-        <Spin
-          className="spinner"
-          spinning={visible}
-          size="large"
-          tip="Please wait as page loads"
-        >
-          <FloatButton.BackTop
-            style={{ left: 30, bottom: 30, borderRadius: "50%" }}
-          />
+        <Spinner show={visible} />
 
-          <div style={{ paddingLeft: "18vw" }}>
-            <Side />
+        <div style={{ paddingLeft: "20vw" }}>
+          <Side />
 
-            <div className={styles.container}>
-              <Top />
+          <div className={styles.container}>
+            <Top />
 
+            <div
+              style={step ? { display: "none" } : { height: "max-content" }}
+              className={styles2.wrapper}
+            >
               <div
-                style={step ? { display: "none" } : { height: "max-content" }}
-                className={styles2.wrapper}
+                style={{ width: "65vw", minHeight: "0" }}
+                className={styles2.upload_wrapper}
               >
-                <div
-                  style={{ width: "65vw", minHeight: "0" }}
-                  className={styles2.upload_wrapper}
+                <Dragger
+                  name="file"
+                  multiple={false}
+                  style={{ border: "none" }}
+                  className={styles2.upload_left}
+                  beforeUpload={file => setFile(file)}
                 >
-                  <Dragger
-                    name="file"
-                    multiple={false}
-                    style={{ border: "none" }}
-                    className={styles2.upload_left}
-                    beforeUpload={file => setFile(file)}
-                  >
-                    <Image
-                      width={60}
-                      height={60}
-                      alt="ADD"
-                      src="/upload.png"
-                      className={styles2.upload_img}
-                    />
-                    <div className={styles2.upload_title}>Add a file</div>
+                  <Image
+                    width={60}
+                    height={60}
+                    alt="ADD"
+                    src="/upload.png"
+                    className={styles2.upload_img}
+                  />
+                  <div className={styles2.upload_title}>Add a file</div>
 
-                    <div className={styles2.upload_msg}>
-                      Click or drag file to this area to upload
-                    </div>
-                  </Dragger>
-                </div>
-
-                <div style={{ display: "flex", gap: "1rem" }}>
-                  {searching ? (
-                    <div className={styles2.upload_btn}>
-                      <div className={styles2.dots} />
-                    </div>
-                  ) : (
-                    <div onClick={add} className={styles2.upload_btn}>
-                      Add File
-                    </div>
-                  )}
-
-                  <div
-                    onClick={() => {
-                      setStep(1);
-                      setData({});
-                    }}
-                    className={styles2.upload_btn2}
-                  >
-                    Skip
+                  <div className={styles2.upload_msg}>
+                    Click or drag file to this area to upload
                   </div>
-                </div>
+                </Dragger>
               </div>
 
-              <div
-                className={styles.formContainer}
-                style={step ? {} : { display: "none" }}
-              >
-                <h1 className={styles.heading}>Add Awards</h1>
+              <div style={{ display: "flex", gap: "1rem" }}>
+                {searching ? (
+                  <div className={styles2.upload_btn}>
+                    <div className={styles2.dots} />
+                  </div>
+                ) : (
+                  <div onClick={add} className={styles2.upload_btn}>
+                    Add File
+                  </div>
+                )}
 
-                <Form
-                  form={form}
-                  name="award"
-                  style={{ width: "80vw", padding: "0 10vw" }}
-                  initialValues={
-                    data?.start_date
-                      ? {
-                          faculty: user?.name,
-                          department: user?.department,
-                          title: data?.award_name,
-                          date: data?.start_date?.split(" ")?.shift(),
-                          location: data?.location,
-                        }
-                      : {
-                          faculty: user?.name,
-                          department: user?.department,
-                          title: data?.award_name,
-                          location: data?.location,
-                        }
-                  }
-                  onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
+                <div
+                  onClick={() => {
+                    setStep(1);
+                    setData({});
+                  }}
+                  className={styles2.upload_btn2}
                 >
-                  <Form.Item
-                    label="Name Of Faculty"
-                    name="faculty"
-                    rules={[
-                      { required: true, message: "Please input faculty name!" },
-                    ]}
-                  >
-                    <Input disabled />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Department"
-                    name="department"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your department!",
-                      },
-                    ]}
-                  >
-                    <Input disabled />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Awarding Agency"
-                    name="agency"
-                    rules={[
-                      { required: true, message: "Please input agency name!" },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Title Of Award"
-                    name="title"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input title of award!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Type Of Award"
-                    name="type"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please select type of award!",
-                      },
-                    ]}
-                  >
-                    <Select
-                      showSearch
-                      placeholder="Choose type of award"
-                      allowClear
-                      options={[
-                        { value: "state", label: "State" },
-                        { value: "national", label: "National" },
-                        { value: "international", label: "International" },
-                      ]}
-                    />
-                  </Form.Item>
-
-                  {data?.start_date ? (
-                    <Form.Item
-                      label="Date"
-                      name="date"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input award date!",
-                        },
-                      ]}
-                    >
-                      <Input disabled />
-                    </Form.Item>
-                  ) : (
-                    <Form.Item
-                      label="Date"
-                      name="date"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input award date!",
-                        },
-                      ]}
-                    >
-                      <DatePicker
-                        format="YYYY-MM-DD"
-                        style={{ width: "100%" }}
-                      />
-                    </Form.Item>
-                  )}
-
-                  <Form.Item
-                    label="Location"
-                    name="location"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input award location!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button
-                      className={styles.primary}
-                      type="primary"
-                      htmlType="submit"
-                    >
-                      SUBMIT
-                    </Button>
-
-                    <Button
-                      type="primary"
-                      className={styles.secondary}
-                      htmlType="reset"
-                      onClick={() => setStep(0)}
-                    >
-                      RETURN BACK
-                    </Button>
-                  </Form.Item>
-                </Form>
+                  Skip
+                </div>
               </div>
             </div>
+
+            <div
+              className={styles.formContainer}
+              style={step ? {} : { display: "none" }}
+            >
+              <h1 className={styles.heading}>Add Awards</h1>
+
+              <Form
+                form={form}
+                style={{ width: "80vw", padding: "0 10vw" }}
+                initialValues={
+                  data?.start_date
+                    ? {
+                        faculty: user?.name,
+                        department: user?.department,
+                        title: data?.award_name,
+                        date: data?.start_date?.split(" ")?.shift(),
+                        location: data?.location,
+                      }
+                    : {
+                        faculty: user?.name,
+                        department: user?.department,
+                        title: data?.award_name,
+                        location: data?.location,
+                      }
+                }
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+              >
+                <Form.Item
+                  label="Name Of Faculty"
+                  name="faculty"
+                  rules={[
+                    { required: true, message: "Please input faculty name!" },
+                  ]}
+                >
+                  <Input disabled />
+                </Form.Item>
+
+                <Form.Item
+                  label="Department"
+                  name="department"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your department!",
+                    },
+                  ]}
+                >
+                  <Input disabled />
+                </Form.Item>
+
+                <Form.Item
+                  label="Awarding Agency"
+                  name="agency"
+                  rules={[
+                    { required: true, message: "Please input agency name!" },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  label="Title Of Award"
+                  name="title"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input title of award!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  label="Type Of Award"
+                  name="type"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please select type of award!",
+                    },
+                  ]}
+                >
+                  <Select
+                    showSearch
+                    placeholder="Choose type of award"
+                    allowClear
+                    options={[
+                      { value: "state", label: "State" },
+                      { value: "national", label: "National" },
+                      { value: "international", label: "International" },
+                    ]}
+                  />
+                </Form.Item>
+
+                {data?.start_date ? (
+                  <Form.Item
+                    label="Date"
+                    name="date"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input award date!",
+                      },
+                    ]}
+                  >
+                    <Input disabled />
+                  </Form.Item>
+                ) : (
+                  <Form.Item
+                    label="Date"
+                    name="date"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input award date!",
+                      },
+                    ]}
+                  >
+                    <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
+                  </Form.Item>
+                )}
+
+                <Form.Item
+                  label="Location"
+                  name="location"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input award location!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item>
+                  <Button
+                    className={styles.primary}
+                    type="primary"
+                    htmlType="submit"
+                  >
+                    SUBMIT
+                  </Button>
+
+                  <Button
+                    type="primary"
+                    className={styles.secondary}
+                    htmlType="reset"
+                    onClick={() => setStep(0)}
+                  >
+                    RETURN BACK
+                  </Button>
+                </Form.Item>
+              </Form>
+            </div>
           </div>
-        </Spin>
+        </div>
       </div>
     </>
   );
